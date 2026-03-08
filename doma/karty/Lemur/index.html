@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lemur — kreativní miniatury</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{--bg:#0f0f0f;--surface:#161616;--surface2:#1c1c1c;--cream:#e8e0d0;--dim:rgba(232,224,208,.42);--accent:#a89880;--border:rgba(168,152,128,.15);--serif:'Cormorant Garamond',Georgia,serif;--mono:'DM Mono',monospace}
+    html{scroll-behavior:smooth}
+    body{background:var(--bg);color:var(--cream);font-family:var(--mono);font-size:14px;line-height:1.8;-webkit-font-smoothing:antialiased}
+    a{color:inherit;text-decoration:none}
+    p{margin-bottom:10px}p:last-child{margin-bottom:0}
+    .wrap{max-width:760px;margin:0 auto;padding:0 28px}
+    nav{position:sticky;top:0;z-index:100;border-bottom:1px solid var(--border);background:rgba(15,15,15,.92);backdrop-filter:blur(12px);padding:14px 28px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+    .nav-back{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);transition:color .2s}
+    .nav-back:hover{color:var(--cream)}
+    .nav-title{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--accent)}
+    .hero{padding:0 0 56px;border-bottom:1px solid var(--border)}
+    .hero-ilustrace{width:100%;max-height:380px;overflow:hidden;margin-bottom:40px;position:relative}
+    .hero-ilustrace img{width:100%;height:380px;object-fit:cover;object-position:center 30%;filter:grayscale(100%) contrast(1.08);display:block}
+    .hero-ilustrace-caption{position:absolute;bottom:12px;right:16px;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:rgba(232,224,208,.3)}
+    .hero-label{font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:var(--accent);margin-bottom:20px}
+    .hero h1{font-family:var(--serif);font-size:clamp(3rem,7vw,5.5rem);font-weight:300;line-height:1.0;color:var(--cream);margin-bottom:8px}
+    .hero h1 em{font-style:italic;color:var(--accent)}
+    .hero-veta{font-family:var(--serif);font-size:clamp(.95rem,2vw,1.25rem);font-style:italic;color:var(--dim);border-left:1px solid var(--accent);padding-left:20px;max-width:500px;margin:20px 0 36px;line-height:1.9}
+    .fenomen-box{border:1px solid var(--accent);padding:20px 22px;margin-bottom:32px;background:rgba(168,152,128,.06)}
+    .fenomen-label{font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin-bottom:10px}
+    .fenomen-text{font-size:13px;color:rgba(232,224,208,.7);line-height:1.8}
+    .var-bar{display:flex;gap:1px;background:var(--border);border:1px solid var(--border)}
+    .var-btn{flex:1;padding:13px 12px;background:var(--surface);border:none;cursor:pointer;font-family:var(--mono);font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;color:var(--dim);transition:background .12s,color .12s;text-align:center}
+    .var-btn:hover{background:#1e1e1e;color:var(--cream)}
+    .var-btn.active{background:var(--accent);color:var(--bg)}
+    .var-popis{padding:12px 16px;font-size:.8rem;color:var(--dim);border:1px solid var(--border);border-top:none;background:var(--surface)}
+    .sekce{padding:56px 0;border-bottom:1px solid var(--border)}
+    .sekce-label{font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin-bottom:16px}
+    h2{font-family:var(--serif);font-size:clamp(1.5rem,3.5vw,2.2rem);font-weight:300;color:var(--cream);margin-bottom:18px}
+    h2 em{font-style:italic;color:var(--accent)}
+    .pohadka-outer{border:1px solid var(--border);background:var(--surface);max-height:360px;overflow-y:auto;padding:0 28px}
+    .pohadka{font-family:var(--serif);font-style:italic;font-size:.97rem}
+    .pohadka p{padding:.45em 0;color:rgba(232,224,208,.8)}
+    .pohadka p strong{font-style:normal;color:var(--accent);font-weight:400}
+    .pohadka-outer::-webkit-scrollbar{width:2px}
+    .pohadka-outer::-webkit-scrollbar-thumb{background:var(--accent)}
+    .otazky{border-top:1px solid var(--border)}
+    .otazka{padding:22px 0;border-bottom:1px solid var(--border)}
+    .q-label{font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);margin-bottom:8px}
+    .q-text{font-size:.95rem;margin-bottom:6px;color:var(--cream)}
+    textarea{width:100%;background:var(--surface);border:1px solid var(--border);color:var(--cream);padding:12px;font-family:var(--mono);font-size:.85rem;line-height:1.7;resize:vertical;min-height:68px}
+    textarea:focus{outline:1px solid var(--accent)}
+    textarea::placeholder{color:rgba(232,224,208,.2)}
+    .btn-diag{margin-top:20px;padding:12px 28px;font-size:11px;letter-spacing:.12em;text-transform:uppercase;background:var(--accent);color:var(--bg);border:none;cursor:pointer;font-family:var(--mono);transition:background .15s}
+    .btn-diag:hover{background:#c0aa90}
+    .diag-vysledek{display:none;border:1px solid var(--accent);padding:24px;margin-top:20px;background:var(--surface)}
+    .diag-vysledek h3{font-family:var(--serif);font-size:1.1rem;font-weight:400;color:var(--cream);margin-bottom:10px}
+    .dominant{font-size:.82rem;color:var(--dim);margin-bottom:16px}
+    .navrh-btn{display:block;width:100%;padding:11px 16px;margin-bottom:6px;background:transparent;border:1px solid var(--border);color:var(--cream);font-family:var(--mono);font-size:.82rem;text-align:left;cursor:pointer;transition:background .12s,border-color .12s}
+    .navrh-btn:hover{background:var(--accent);border-color:var(--accent);color:var(--bg)}
+    .navrh-btn:last-child{margin-bottom:0}
+    .uhel{border-bottom:1px solid var(--border)}
+    .uhel-header{display:grid;grid-template-columns:52px 1fr auto;padding:18px 0;cursor:pointer;align-items:center}
+    .uhel-header:hover .uhel-nazev{color:var(--accent)}
+    .u-num{font-family:var(--serif);font-size:1.7rem;font-weight:300;color:rgba(168,152,128,.2);line-height:1}
+    .uhel-nazev{font-size:.88rem;font-weight:400;color:var(--cream)}
+    .uhel-sub{font-size:.72rem;color:var(--dim);margin-top:3px;font-style:italic;font-family:var(--serif)}
+    .u-toggle{font-size:.72rem;color:var(--dim)}
+    .uhel-body{display:none;padding:0 0 28px 52px}
+    .uhel-body.open{display:block}
+    .blok-label{font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);margin-bottom:6px;margin-top:14px}
+    .blok-label:first-child{margin-top:0}
+    .blok-text{font-size:.86rem;color:rgba(232,224,208,.7);line-height:1.75}
+    .zadani-blok{margin-bottom:14px}
+    .pravidla{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0}
+    .pravidlo{background:var(--surface2);padding:14px;border-left:2px solid var(--border)}
+    .pravidlo.p2{border-left-color:var(--accent)}
+    .jazykovy-blok{background:rgba(168,152,128,.06);border-left:2px solid var(--accent);padding:14px 16px;margin:14px 0}
+    .protilehly-link{font-size:.76rem;color:var(--dim);font-style:italic;margin-top:12px}
+    .protilehly-link a{color:var(--accent);text-decoration:underline;text-underline-offset:2px;cursor:pointer}
+    .pisarna textarea{min-height:110px;margin-top:8px}
+    @media(max-width:560px){.pravidla{grid-template-columns:1fr}}
+    .tbl-outer{border:1px solid var(--border);overflow-x:auto;margin-top:20px}
+    table{width:100%;border-collapse:collapse;font-size:.78rem}
+    thead tr{border-bottom:1px solid var(--border)}
+    thead th{padding:12px 16px;text-align:left;font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);font-weight:400;font-family:var(--mono)}
+    thead th:first-child{color:var(--dim)}
+    tbody tr{border-bottom:1px solid rgba(168,152,128,.07)}
+    tbody tr:last-child{border-bottom:none}
+    tbody td{padding:12px 16px;color:rgba(232,224,208,.6);vertical-align:top;font-size:.78rem}
+    tbody td:first-child{color:var(--accent);font-size:.72rem;white-space:nowrap}
+    tbody td:nth-child(2){color:rgba(232,224,208,.5);font-style:italic}
+    .page-footer{padding:36px 0;border-top:1px solid var(--border);display:flex;justify-content:space-between;flex-wrap:wrap;gap:14px}
+    .page-footer p{font-size:.76rem;color:var(--dim)}
+    .page-footer a{color:var(--accent)}
+    .page-footer a:hover{text-decoration:underline}
+  </style>
+</head>
+<body>
+<nav>
+  <a class="nav-back" href="../../../index.html">← Všechna zvířata</a>
+  <span class="nav-title">Lemur</span>
+</nav>
+<div class="wrap">
+
+<section class="hero">
+  <div class="hero-ilustrace">
+    <img src="../../../../data/ilustrace/lemur.jpg" alt="Lemur">
+    <span class="hero-ilustrace-caption">ilustrace · lemur</span>
+  </div>
+  <p class="hero-label">Kreativní miniatura · Karta Lemur</p>
+  <h1>Lemur</h1>
+  <p class="hero-veta">„Nejlepší je nechat to být. Vše ostatní je moc nápadné."</p>
+  <div class="fenomen-box">
+    <div class="fenomen-label">Fenomén Lemura — Výrazná nenápadnost / být vidět, protože se snažíš nebýt vidět</div>
+    <p class="fenomen-text">Situace, kdy snaha zmizet tě dělá viditelným. Kdy tvoje potřeba být nenápadný je sama o sobě nejnápadnější věcí v místnosti. Kdy máš oči jak lampy, ocas jak vykřičník — a přikrýváš se dekou z nezájmu, která zářila jako reklama na klid. Fenomén Lemura zkoumá paradox výrazné nenápadnosti a ptá se: co se stane, když přestaneš křičet, že nechceš být vidět?</p>
+  </div>
+  <div class="var-bar">
+    <button class="var-btn active" onclick="setVar('A',this)">🎲 Náhodně</button>
+    <button class="var-btn" onclick="setVar('B',this)">🧭 Podle nálady</button>
+    <button class="var-btn" onclick="setVar('C',this)">🔍 Diagnosticky</button>
+  </div>
+  <div class="var-popis" id="var-popis">Zavřete oči, ťukněte prstem na obrazovku a udělejte ten úhel, který vybere prst.</div>
+</section>
+
+<section class="sekce">
+  <p class="sekce-label">Pohádka · přečtěte pomalu</p>
+  <h2>O lemurovi, <em>který nebyl nápadný.</em></h2>
+  <p style="font-size:.82rem;color:var(--dim);margin-bottom:16px;">Sledujte kde vás zastaví — kde cítíte odpor nebo poznání.</p>
+  <div class="pohadka-outer"><div class="pohadka">
+    <p>Lemur se narodil v koutku.<br>V koutku místnosti, v koutku světa, v koutku oka.<br>Tam, kde se věci obvykle nechávají být.<br>Tam, kde se neptá.<br>Tam, kde se neukazuje.</p>
+    <p>A tak si řekl:<br>„Budu nenápadný."<br>„Budu tak nenápadný, že mě ani moje vlastní stín nepozná."<br>„Budu tak tichý, že i ticho bude hlasité vedle mě."</p>
+    <p>Jenže měl oči jak lampy.<br>Ocas vztyčený jak vykřičník.<br>A srst jako výkladní skříň, co se snaží být tapetou.</p>
+    <p>Vedle něj seděla postava.<br>Klidná.<br>Tichá.<br>Bez barvy.<br>Bez pohybu.<br>Bez potřeby být.</p>
+    <p>Řekla:<br><strong>„Nejlepší je nechat to být. Vše ostatní je moc nápadné."</strong><br>A lemur se snažil.</p>
+    <p>Zhasl oči.<br>Zlomil si ocas (jen obrazně).<br>Přikryl se dekou z nezájmu.</p>
+    <p>Ale oči mu svítily i pod dekou.<br>Ocas mu trčel i bez svolení.<br>A srst mu zářila jako reklama na klid, co bliká.</p>
+    <p>„Nejsem nápadný," šeptal.<br>„Jsem jen… <em>výrazně nenápadný.</em>"<br>„Jsem jen… ticho, co má barvy."<br>„Jsem jen… pozadí, co se nedá přehlédnout."</p>
+    <p>Postava vedle něj neřekla nic.<br>Jen se dívala.<br>A to bylo horší než slova.</p>
+    <p>Lemur se pokusil být stínem.<br>Ale jeho stín měl vlastní názor.<br>Lemur se pokusil být flekem na zdi.<br>Ale flek ho odmítl, protože byl moc výrazný.</p>
+    <p>Nakonec si sedl.<br>Přestal se snažit.<br>Oči mu svítily.<br>Ocas mu trčel.<br>Srst mu zářila.</p>
+    <p>A postava vedle něj řekla:<br>„Teď jsi konečně neviditelný."<br>„Jak to?" zeptal se lemur.<br>„Protože už se nesnažíš."</p>
+    <p>A tak se lemur stal mistrem nenápadnosti.<br>Ne tím, že zmizel.<br>Ale tím, že <strong>přestal křičet, že nechce být vidět.</strong></p>
+    <p>Od té doby sedí v koutku.<br>Oči mu svítí.<br>Ocas mu trčí.<br>Srst mu září.</p>
+    <p><em>A každý, kdo ho uvidí, řekne:<br>„To je ten nenápadný lemur."<br>A pak se tváří, že ho nevidí.<br>A to je přesně to, co chtěl.</em></p>
+  </div></div>
+</section>
+
+<section class="sekce" id="otazky">
+  <p class="sekce-label">Diagnostika I — Tři otázky · odpovězte rychle, bez opravování</p>
+  <h2>Co příběh říká <em>vám.</em></h2>
+  <p style="font-size:.82rem;color:var(--dim);margin-bottom:20px;">Vaše odpovědi se přiřazují ke 12 úhlům fenoménu Lemura — každý úhel je jiný způsob, jak prožíváte situaci, kdy se snažíte zmizet a právě tím přitahujete pozornost.</p>
+  <div class="otazky">
+    <div class="otazka"><p class="q-label">Q1 — Smysl</p><p class="q-text">Co je podle vás hlavní pointa nebo sdělení tohoto příběhu? O čem podle vás je?</p><textarea id="q1" placeholder="První věc, která vás napadne..."></textarea></div>
+    <div class="otazka"><p class="q-label">Q2 — Zaujetí</p><p class="q-text">Která konkrétní věta, obraz nebo moment vás nejvíc zaujal — a proč?</p><textarea id="q2" placeholder="Konkrétní věta nebo moment..."></textarea></div>
+    <div class="otazka"><p class="q-label">Q3 — Aplikace</p><p class="q-text">Kdyby tento příběh byl návodem nebo radou, co by vám radil dělat (nebo nedělat) ve vašem osobním nebo pracovním životě?</p><textarea id="q3" placeholder="Rada pohádky pro váš život..."></textarea></div>
+  </div>
+  <button class="btn-diag" onclick="diagnostika()">Zjistit svůj úhel →</button>
+  <div class="diag-vysledek" id="diag-out">
+    <h3>Váš dominantní úhel</h3>
+    <p class="dominant" id="diag-dominant"></p>
+    <p style="font-size:.8rem;color:var(--dim);margin-bottom:14px;">Doporučené úkoly — váš dominantní úhel a jeho protilehlý:</p>
+    <div id="diag-navrhy"></div>
+  </div>
+</section>
+
+<section class="sekce" id="uhly">
+  <p class="sekce-label">12 úhlů fenoménu Lemura · každý s kreativním úkolem a jazykovým zaměřením</p>
+  <h2>Váš úhel — nebo nechte <em>vybrat tabulku.</em></h2>
+  <div id="uhly-list"></div>
+</section>
+
+<section class="sekce">
+  <p class="sekce-label">Diagnostika II — Jazykové fenomény</p>
+  <h2>Co říká váš jazyk — <em>ne obsah, ale forma.</em></h2>
+  <p style="font-size:.82rem;color:var(--dim);margin-bottom:16px;">Použijte tuto tabulku po napsání textu. Ukazuje, kde v jazyce bydlí váš lemur — jestli svítí, šeptá, nebo se schoval pod dekou.</p>
+  <div class="tbl-outer">
+    <table>
+      <thead><tr><th>Úhel</th><th>Co hledat v textu</th><th>Co to znamená pro práci</th></tr></thead>
+      <tbody>
+        <tr><td>1. Koutek</td><td>Krátké věty, útržky, okrajové poznámky — text se drží při zemi</td><td>Věnujte se úhlu č. 8 (Výrazně nenápadný) — hrajte si s paradoxy, buďte výrazní svou nenápadností.</td></tr>
+        <tr><td>2. Budu nenápadný</td><td>Opakování stejného cíle, deklarace — text pořád říká, co chce</td><td>Věnujte se úhlu č. 9 (Ticho, co má barvy) — pište tiše, ale barevně.</td></tr>
+        <tr><td>3. Oči jak lampy</td><td>Hyperbola, nadsázka, přehnané metafory — text křičí obrazy</td><td>Věnujte se úhlu č. 10 (Pozadí, co se nedá přehlédnout) — buďte v pozadí, ale nezapomenutelní.</td></tr>
+        <tr><td>4. Postava vedle</td><td>Střídmost, jednoduchost, absence přívlastků — text je skoro neviditelný</td><td>Věnujte se úhlu č. 11 (Stín s vlastním názorem) — dejte hlas i pasivním věcem.</td></tr>
+        <tr><td>5. Nejlepší je nechat to být</td><td>Imperativy nečinnosti — nech to být, přestaň, nedělej nic</td><td>Věnujte se úhlu č. 12 (Teď jsi konečně neviditelný) — pište o paradoxu, kdy nečinnost vede k cíli.</td></tr>
+        <tr><td>6. Zhasl oči, zlomil ocas</td><td>Sebepoškozující metafory, násilí na sobě — text se snaží změnit a bolí to</td><td>Věnujte se úhlu č. 7 (Svítí i pod dekou) — pište o tom, co nejde skrýt.</td></tr>
+        <tr><td>7. Svítí i pod dekou</td><td>Průhlednost, prosvítání — text prozrazuje víc, než chce</td><td>Věnujte se úhlu č. 6 (Zhasl oči) — pište o marné snaze změnit se.</td></tr>
+        <tr><td>8. Výrazně nenápadný</td><td>Oxymóron, paradox, protimluv — text tvrdí dvě věci najednou</td><td>Věnujte se úhlu č. 1 (Koutek) — pište prosté, bez paradoxů, jen koutek.</td></tr>
+        <tr><td>9. Ticho, co má barvy</td><td>Synestézie — ticho má barvy, zvuky jsou vidět, smysly se mísí</td><td>Věnujte se úhlu č. 2 (Budu nenápadný) — jasně deklarujte, co chcete.</td></tr>
+        <tr><td>10. Pozadí, co se nedá přehlédnout</td><td>Paradoxní figura, kontrast — v pozadí, ale přesto upoutá</td><td>Věnujte se úhlu č. 3 (Oči jak lampy) — buďte od začátku nápadní.</td></tr>
+        <tr><td>11. Stín s vlastním názorem</td><td>Personifikace — i stíny mají svůj hlas, všechno je živé</td><td>Věnujte se úhlu č. 4 (Postava vedle) — pište text, kde je něco opravdu tichého.</td></tr>
+        <tr><td>12. Teď jsi konečně neviditelný</td><td>Pointa, zvrat — text končí překvapením, které převrací smysl</td><td>Věnujte se úhlu č. 5 (Nejlepší je nechat to být) — pište text, který radí k nečinnosti.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<footer class="page-footer">
+  <p>Karta Lemur · Chceš myš? — kreativní miniatury · © 2026 Michaela Nováková</p>
+  <p><a href="../../../index.html">← Zpět</a> · <a href="mailto:chcesmys@gmail.com">chcesmys@gmail.com</a></p>
+</footer>
+</div>
+
+<script>
+const uhly = [
+  { nazev:'Koutek', sub:'Místo, kde se věci nechávají být. Zrození v ústraní.',
+    jad:'Trojí dimenze koutku — fyzická, existenciální i percepční.',
+    q1:'Odpovíš, že lemur se narodil v koutku místnosti, světa, oka. Že jeho podstatou je být na okraji.',
+    q2:'Zaujme ta trojí dimenze — že koutek je fyzický, existenciální i percepční zároveň.',
+    q3:'Poradíš najít si svůj koutek, kde můžeš být, aniž bys musel/a být viděn/a.',
+    ukol:'Napiš text, který je celý v koutku. Třeba o tom, co se děje na okraji, v pozadí, v místech, kde se nic neděje. Krátké věty, útržky, žádné velké obrazy. Jen tiché bytí.',
+    jazyk:'Krátké věty, útržky, okrajové poznámky. Text, který se nepředvádí.',
+    protilehly:7 },
+  { nazev:'Budu nenápadný', sub:'Rozhodnutí, které samo o sobě je nápadné.',
+    jad:'Sebevražedná logika — přiznání cíle ho znemožňuje.',
+    q1:'Odpovíš, že si lemur řekl: „Budu nenápadný." A už tím upoutal pozornost.',
+    q2:'Zaujme ta sebevražedná logika — že přiznání cíle ho znemožňuje.',
+    q3:'Poradíš hlídat si, kdy se snažíš být něčím, co nejde nařídit. Třeba stačí být.',
+    ukol:'Napiš text, ve kterém pořád dokola říkáš, že chceš být nenápadný/á. Třeba: „Chci být nenápadný. Opravdu. Nikdo si mě nevšimne. Budu jako stěna." A sleduj, jak tě to prozrazuje.',
+    jazyk:'Opakování stejného cíle, deklarace. Text, který tím, že říká, co chce, to znemožňuje.',
+    protilehly:8 },
+  { nazev:'Oči jak lampy', sub:'Vrozená výraznost, která nejde skrýt. Co tě dělá tebou, tě zrazuje.',
+    jad:'Chce být nenápadný, ale jeho tělo křičí.',
+    q1:'Odpovíš, že lemur měl oči jak lampy, ocas jak vykřičník, srst jako výkladní skříň.',
+    q2:'Zaujme ten rozpor — chce být nenápadný, ale jeho přirozenost je nápadná.',
+    q3:'Poradíš přijmout to, co na sobě nemůžeš změnit. Třeba to, co tě prozrazuje, tě zároveň dělá tebou.',
+    ukol:'Napiš text plný přehnaných metafor, hyperbol, velkých obrazů. Třeba o obyčejném dni, ale popiš ho, jako by to byl epos. Ať každá věta svítí jako lampa.',
+    jazyk:'Hyperbola, nadsázka, přehnané metafory. Text, který křičí obrazy.',
+    protilehly:9 },
+  { nazev:'Postava vedle', sub:'Ztělesněný klid. Někdo, kdo je opravdu nenápadný, aniž by se snažil.',
+    jad:'Existuje někdo, kdo to umí přirozeně. A to je horší než výčitka.',
+    q1:'Odpovíš, že vedle lemura seděla postava bez barvy, bez pohybu, bez potřeby být.',
+    q2:'Zaujme ta postava — že existuje někdo, kdo to umí, aniž by se snažil.',
+    q3:'Poradíš najít si vzor opravdové nenápadnosti — někoho, kdo to nemusí hrát.',
+    ukol:'Napiš text o někom, kdo je opravdu nenápadný. Třeba o postavě, která sedí vedle, nemá barvu, nemluví, nehýbe se. Popiš ji co nejjednodušeji, bez příkras.',
+    jazyk:'Střídmost, jednoduchost, absence přívlastků. Text jako neviditelná postava.',
+    protilehly:10 },
+  { nazev:'Nejlepší je nechat to být', sub:'Rada, která zní jednoduše a je nejtěžší ze všech.',
+    jad:'Všechny snahy jsou moc nápadné. Nečinnost jako paradoxní strategie.',
+    q1:'Odpovíš, že postava řekla: „Nejlepší je nechat to být. Vše ostatní je moc nápadné."',
+    q2:'Zaujme ta věta — že všechno ostatní, všechny snahy, jsou moc nápadné.',
+    q3:'Poradíš zkusit někdy nic nedělat. Nechat to být.',
+    ukol:'Napiš text, který je samá rada k nečinnosti. Třeba: „Nech to být. Nedělej nic. Přestaň." Ať je to celé o tom, že nejlepší je nic nedělat.',
+    jazyk:'Imperativy nečinnosti, rady k zastavení.',
+    protilehly:11 },
+  { nazev:'Zhasl oči, zlomil ocas', sub:'Násilí na vlastní přirozenosti. Sebezapření jako projekt.',
+    jad:'To nejde — nedokáže se změnit. Snaha jen unaví.',
+    q1:'Odpovíš, že lemur se snažil zhasnout oči, zlomit si ocas, přikrýt se dekou z nezájmu.',
+    q2:'Zaujme ta marná snaha — že to nejde, že se nedokáže změnit.',
+    q3:'Poradíš nebát se, že tě snaha změní. Třeba tě jen unaví.',
+    ukol:'Napiš text o tom, jak ses snažil/a změnit něco na sobě, co nejde změnit. Třeba o tom, jak jsi zhasínal/a oči, lámal/a ocas, přikrýval/a se dekou. A o tom, jak to bolelo a bylo marné.',
+    jazyk:'Sebepoškozující metafory, násilí na sobě. Text o marné snaze.',
+    protilehly:6 },
+  { nazev:'Svítí i pod dekou', sub:'Tvá podstata prosvítá všemi pokrývkami. Nejde to skrýt.',
+    jad:'Nevyhnutelnost — to, co tě tvoří, nejde schovat.',
+    q1:'Odpovíš, že oči mu svítily i pod dekou, ocas trčel i bez svolení, srst zářila jako reklama.',
+    q2:'Zaujme ta nevyhnutelnost — že se nedá schovat to, co tě tvoří.',
+    q3:'Poradíš přestat se schovávat. Třeba to, co svítí, má svítit.',
+    ukol:'Napiš text o něčem, co nejde skrýt. Třeba o své vlastnosti, o svém talentu, o svém prokletí. O tom, že se schováváš, ale ono to prosvítá. Ať je vidět, že pod dekou pořád svítíš.',
+    jazyk:'Průhlednost, prosvítání, nemožnost skrýt se.',
+    protilehly:5 },
+  { nazev:'Výrazně nenápadný', sub:'Paradoxní identita. Nová kategorie bytí, která pojmenovává situaci.',
+    jad:'Oxymóron jako sebeobjevení — výrazná nenápadnost, tiché křiky.',
+    q1:'Odpovíš, že lemur si šeptal: „Nejsem nápadný. Jsem jen výrazně nenápadný."',
+    q2:'Zaujme ten oxymóron — že vytvořil novou kategorii, která ho pojmenovává.',
+    q3:'Poradíš nebát se paradoxů. Třeba v nich najdeš sám/a sebe.',
+    ukol:'Napiš text, který je samý paradox. Třeba: „Jsem výrazně nenápadný. Mé ticho je hlasité. Mé pozadí je v popředí." Hraj si s oxymoróny a protimluvy.',
+    jazyk:'Oxymóron, paradox, protimluv.',
+    protilehly:0 },
+  { nazev:'Ticho, co má barvy', sub:'Ticho, které není prázdné. Zvuk, který není slyšet, ale je vidět.',
+    jad:'Ticho nemusí být šedé — může být barevné.',
+    q1:'Odpovíš, že lemur říkal: „Jsem jen ticho, co má barvy." Že jeho ticho je plné.',
+    q2:'Zaujme ten obraz — že ticho nemusí být šedé, může být barevné.',
+    q3:'Poradíš naslouchat svému tichu. Třeba je barevné.',
+    ukol:'Napiš text, ve kterém mícháš smysly. Třeba: „Ticho mělo barvu staré růže. Zvuk padajícího listí chutnal po medu. Vůně noci byla ostrá jako nůž." Ať ticho mluví barvami.',
+    jazyk:'Synestézie, mísení smyslů.',
+    protilehly:1 },
+  { nazev:'Pozadí, co se nedá přehlédnout', sub:'Odsouzen být v popředí, i když chceš být vzadu.',
+    jad:'Někdo je příliš výrazný na to, aby byl pozadím.',
+    q1:'Odpovíš, že lemur řekl: „Jsem jen pozadí, co se nedá přehlédnout."',
+    q2:'Zaujme ta situace — že můžeš být odsouzen/a k popředí, i když chceš být vzadu.',
+    q3:'Poradíš nestarat se o to, jestli jsi popředí nebo pozadí. Třeba to není důležité.',
+    ukol:'Napiš text, který se tváří jako pozadí, ale je v něm něco, co nejde přehlédnout. Třeba o obyčejné zdi, na které je jeden malý detail, který přitahuje oči. Nebo o člověku, který se snaží být nenápadný, ale má v sobě jiskru.',
+    jazyk:'Paradoxní figura, kontrast. Text v pozadí, který upoutá.',
+    protilehly:2 },
+  { nazev:'Stín s vlastním názorem', sub:'I to, co tě má následovat, tě zrazuje. Vše kolem je svébytné.',
+    jad:'I nejvěrnější průvodce má svou hlavu.',
+    q1:'Odpovíš, že lemur se pokusil být stínem, ale jeho stín měl vlastní názor.',
+    q2:'Zaujme ta personifikace — že i ten nejvěrnější průvodce má svou hlavu.',
+    q3:'Poradíš počítat s tím, že ani tvůj stín tě neposlechne. A je to v pořádku.',
+    ukol:'Napiš text, ve kterém i ty nejpasivnější věci mají svůj hlas. Třeba stín, co nesouhlasí, flek na zdi, co se brání, deka, co nechce přikrývat. Personifikuj všechno.',
+    jazyk:'Personifikace, samostatné prvky. Všechno je živé.',
+    protilehly:3 },
+  { nazev:'Teď jsi konečně neviditelný', sub:'Pointa. Pravá nenápadnost přichází ve chvíli, kdy přestaneš usilovat.',
+    jad:'Snaha byla překážkou. Teprve rezignace přinesla cíl.',
+    q1:'Odpovíš, že když lemur přestal se snažit, postava řekla: „Teď jsi konečně neviditelný."',
+    q2:'Zaujme ta poslední věta — že teprve když rezignoval, dosáhl cíle.',
+    q3:'Poradíš občas přestat. Třeba právě tím dosáhneš toho, co jsi chtěl/a.',
+    ukol:'Napiš text, který má zvrat na konci. Celou dobu se někdo snaží být neviditelný, a nakonec zjistí, že neviditelným se stane, až když se přestane snažit. Ukaž ten paradox v pointě.',
+    jazyk:'Pointa, zvrat, paradoxní rozuzlení.',
+    protilehly:4 }
+];
+
+const klice = {
+  0: ['koutek','okraj','ústraní','kde se neptá','nechává být','v pozadí','nepředvádět'],
+  1: ['budu nenápadný','snaha zmizet','chci být nenápadný','projekt','rozhodl se','přestanu být vidět'],
+  2: ['oči jak lampy','vykřičník','výkladní skříň','přirozenost','srst','výrazný','lampa'],
+  3: ['postava vedle','bez barvy','bez pohybu','klidná','tichá','bez potřeby','neviditelná postava'],
+  4: ['nechat to být','přestat','nic nedělat','nejlepší je','přestat se snažit','nechám to'],
+  5: ['zhasl oči','zlomil ocas','deka z nezájmu','sebezapření','snažil se změnit','bolí','marná snaha'],
+  6: ['svítí pod dekou','prosvítá','nedá se schovat','trčí','zářila','nejde skrýt','i bez svolení'],
+  7: ['výrazně nenápadný','paradox','oxymóron','tiché křiky','protimluv','nová kategorie','výrazná nenápadnost'],
+  8: ['ticho co má barvy','barevné ticho','mísení smyslů','synestézie','zvuk chutnal','barva ticha'],
+  9: ['pozadí co se nedá','odsouzen','přehlédnout','popředí','vzadu','příliš výrazný na pozadí'],
+  10: ['stín s vlastním názorem','stín nesouhlasí','flek odmítl','personifikace','svébytné','má svou hlavu'],
+  11: ['konečně neviditelný','přestal se snažit','rezignoval','dosáhl','snaha byla překážkou','zvrat']
+};
+
+function buildUhly(){
+  const list=document.getElementById('uhly-list');
+  uhly.forEach((u,i)=>{
+    const div=document.createElement('div');div.className='uhel';div.id='u-'+i;
+    div.innerHTML='<div class="uhel-header" onclick="toggleU('+i+')"><span class="u-num">'+String(i+1).padStart(2,'0')+'</span>'
+      +'<div><div class="uhel-nazev">'+u.nazev+'</div><div class="uhel-sub">'+u.sub+'</div></div>'
+      +'<span class="u-toggle" id="t-'+i+'">+</span></div>'
+      +'<div class="uhel-body" id="b-'+i+'">'
+      +'<div class="zadani-blok"><div class="blok-label">Kreativní úkol · 20 minut</div><p class="blok-text">'+u.ukol+'</p></div>'
+      +'<div class="pravidla">'
+      +'<div class="pravidlo p1"><div class="blok-label">Jak to vidí Q1</div><p class="blok-text">'+u.q1+'</p></div>'
+      +'<div class="pravidlo p2"><div class="blok-label">Jak to vidí Q2 + Q3</div><p class="blok-text">'+u.q2+' '+u.q3+'</p></div>'
+      +'</div>'
+      +'<div class="jazykovy-blok"><div class="blok-label">Jazykový fenomén — Diagnostika II</div><p class="blok-text">'+u.jazyk+'</p></div>'
+      +'<div class="pisarna"><div class="blok-label">Váš text</div><textarea placeholder="Pište sem — bez opravování, bez zastavení..."></textarea></div>'
+      +'<p class="protilehly-link">Protilehlý úhel: <a onclick="jumpU('+u.protilehly+')">'+(u.protilehly+1)+'. '+uhly[u.protilehly].nazev+'</a></p>'
+      +'</div>';
+    list.appendChild(div);
+  });
+}
+buildUhly();
+
+function toggleU(i){const b=document.getElementById('b-'+i);const t=document.getElementById('t-'+i);const o=b.classList.toggle('open');t.textContent=o?'−':'+';}
+function jumpU(i){if(!document.getElementById('b-'+i).classList.contains('open'))toggleU(i);document.getElementById('u-'+i).scrollIntoView({behavior:'smooth',block:'start'});}
+
+const varText={
+  A:'Zavřete oči, ťukněte prstem na obrazovku a udělejte ten úhel, který vybere prst.',
+  B:'Přečtěte si 12 úhlů a vyberte ten, který nejlépe popisuje vaši aktuální zkušenost s fenoménem lemura.',
+  C:'Odpovězte na 3 otázky níže — systém přiřadí váš dominantní úhel a doporučí protilehlý.'
+};
+function setVar(v,btn){
+  document.querySelectorAll('.var-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('var-popis').textContent=varText[v];
+  if(v==='A'){const r=Math.floor(Math.random()*12);setTimeout(()=>{jumpU(r);},300);}
+  if(v==='C')document.getElementById('otazky').scrollIntoView({behavior:'smooth'});
+}
+
+function norm(s){
+  return s.toLowerCase()
+    .replace(/[áa]/g,'a').replace(/[éeě]/g,'e').replace(/[íiy]/g,'i')
+    .replace(/[óo]/g,'o').replace(/[úůu]/g,'u').replace(/[čc]/g,'c')
+    .replace(/[ďd]/g,'d').replace(/[ňn]/g,'n').replace(/[řr]/g,'r')
+    .replace(/[šs]/g,'s').replace(/[ťt]/g,'t').replace(/[žz]/g,'z');
+}
+
+function diagnostika(){
+  const raw=['q1','q2','q3'].map(id=>document.getElementById(id).value).join(' ');
+  if(!raw.trim()){alert('Vyplňte alespoň jednu odpověď.');return;}
+  const txt=norm(raw);
+  let maxK=0,maxS=0;
+  Object.entries(klice).forEach(([k,kw])=>{
+    const s=kw.reduce((a,w)=>a+(txt.includes(norm(w))?1:0),0);
+    if(s>maxS){maxS=s;maxK=parseInt(k);}
+  });
+  if(maxS===0)maxK=Math.floor(Math.random()*12);
+  const pI=uhly[maxK].protilehly;
+  document.getElementById('diag-dominant').textContent='Vaše odpovědi ukazují nejsilněji na úhel č. '+(maxK+1)+': '+uhly[maxK].nazev+'.';
+  document.getElementById('diag-navrhy').innerHTML=
+    '<button class="navrh-btn" onclick="jumpU('+maxK+')">→ Váš úhel: '+(maxK+1)+'. '+uhly[maxK].nazev+'</button>'
+    +'<button class="navrh-btn" onclick="jumpU('+pI+')">→ Protilehlý: '+(pI+1)+'. '+uhly[pI].nazev+'</button>';
+  const out=document.getElementById('diag-out');
+  out.style.display='block';
+  out.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+</script>
+</body>
+</html>
