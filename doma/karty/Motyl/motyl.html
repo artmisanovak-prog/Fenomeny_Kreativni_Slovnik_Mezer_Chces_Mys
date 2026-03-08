@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Motýl — kreativní miniatury</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{--bg:#0f0f0f;--surface:#161616;--surface2:#1c1c1c;--cream:#e8e0d0;--dim:rgba(232,224,208,.42);--accent:#a89880;--border:rgba(168,152,128,.15);--serif:'Cormorant Garamond',Georgia,serif;--mono:'DM Mono',monospace}
+    html{scroll-behavior:smooth}
+    body{background:var(--bg);color:var(--cream);font-family:var(--mono);font-size:14px;line-height:1.8;-webkit-font-smoothing:antialiased}
+    a{color:inherit;text-decoration:none}
+    p{margin-bottom:10px}p:last-child{margin-bottom:0}
+    .wrap{max-width:760px;margin:0 auto;padding:0 28px}
+    nav{position:sticky;top:0;z-index:100;border-bottom:1px solid var(--border);background:rgba(15,15,15,.92);backdrop-filter:blur(12px);padding:14px 28px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+    .nav-back{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);transition:color .2s}
+    .nav-back:hover{color:var(--cream)}
+    .nav-title{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--accent)}
+    .hero{padding:0 0 56px;border-bottom:1px solid var(--border)}
+    .hero-ilustrace{width:100%;max-height:380px;overflow:hidden;margin-bottom:40px;position:relative}
+    .hero-ilustrace img{width:100%;height:380px;object-fit:cover;object-position:center 30%;filter:grayscale(100%) contrast(1.08);display:block}
+    .hero-ilustrace-caption{position:absolute;bottom:12px;right:16px;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:rgba(232,224,208,.3)}
+    .hero-label{font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:var(--accent);margin-bottom:20px}
+    .hero h1{font-family:var(--serif);font-size:clamp(3rem,7vw,5.5rem);font-weight:300;line-height:1.0;color:var(--cream);margin-bottom:8px}
+    .hero h1 em{font-style:italic;color:var(--accent)}
+    .hero-veta{font-family:var(--serif);font-size:clamp(.95rem,2vw,1.25rem);font-style:italic;color:var(--dim);border-left:1px solid var(--accent);padding-left:20px;max-width:500px;margin:20px 0 36px;line-height:1.9}
+    .fenomen-box{border:1px solid var(--accent);padding:20px 22px;margin-bottom:32px;background:rgba(168,152,128,.06)}
+    .fenomen-label{font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin-bottom:10px}
+    .fenomen-text{font-size:13px;color:rgba(232,224,208,.7);line-height:1.8}
+    .var-bar{display:flex;gap:1px;background:var(--border);border:1px solid var(--border)}
+    .var-btn{flex:1;padding:13px 12px;background:var(--surface);border:none;cursor:pointer;font-family:var(--mono);font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;color:var(--dim);transition:background .12s,color .12s;text-align:center}
+    .var-btn:hover{background:#1e1e1e;color:var(--cream)}
+    .var-btn.active{background:var(--accent);color:var(--bg)}
+    .var-popis{padding:12px 16px;font-size:.8rem;color:var(--dim);border:1px solid var(--border);border-top:none;background:var(--surface)}
+    .sekce{padding:56px 0;border-bottom:1px solid var(--border)}
+    .sekce-label{font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin-bottom:16px}
+    h2{font-family:var(--serif);font-size:clamp(1.5rem,3.5vw,2.2rem);font-weight:300;color:var(--cream);margin-bottom:18px}
+    h2 em{font-style:italic;color:var(--accent)}
+    .pohadka-outer{border:1px solid var(--border);background:var(--surface);max-height:360px;overflow-y:auto;padding:0 28px}
+    .pohadka{font-family:var(--serif);font-style:italic;font-size:.97rem}
+    .pohadka p{padding:.45em 0;color:rgba(232,224,208,.8)}
+    .pohadka-outer::-webkit-scrollbar{width:2px}
+    .pohadka-outer::-webkit-scrollbar-thumb{background:var(--accent)}
+    .otazky{border-top:1px solid var(--border)}
+    .otazka{padding:22px 0;border-bottom:1px solid var(--border)}
+    .q-label{font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);margin-bottom:8px}
+    .q-text{font-size:.95rem;margin-bottom:6px;color:var(--cream)}
+    textarea{width:100%;background:var(--surface);border:1px solid var(--border);color:var(--cream);padding:12px;font-family:var(--mono);font-size:.85rem;line-height:1.7;resize:vertical;min-height:68px}
+    textarea:focus{outline:1px solid var(--accent)}
+    textarea::placeholder{color:rgba(232,224,208,.2)}
+    .btn-diag{margin-top:20px;padding:12px 28px;font-size:11px;letter-spacing:.12em;text-transform:uppercase;background:var(--accent);color:var(--bg);border:none;cursor:pointer;font-family:var(--mono);transition:background .15s}
+    .btn-diag:hover{background:#c0aa90}
+    .diag-vysledek{display:none;border:1px solid var(--accent);padding:24px;margin-top:20px;background:var(--surface)}
+    .diag-vysledek h3{font-family:var(--serif);font-size:1.1rem;font-weight:400;color:var(--cream);margin-bottom:10px}
+    .dominant{font-size:.82rem;color:var(--dim);margin-bottom:16px}
+    .navrh-btn{display:block;width:100%;padding:11px 16px;margin-bottom:6px;background:transparent;border:1px solid var(--border);color:var(--cream);font-family:var(--mono);font-size:.82rem;text-align:left;cursor:pointer;transition:background .12s,border-color .12s}
+    .navrh-btn:hover{background:var(--accent);border-color:var(--accent);color:var(--bg)}
+    .navrh-btn:last-child{margin-bottom:0}
+    .uhel{border-bottom:1px solid var(--border)}
+    .uhel-header{display:grid;grid-template-columns:52px 1fr auto;padding:18px 0;cursor:pointer;align-items:center}
+    .uhel-header:hover .uhel-nazev{color:var(--accent)}
+    .u-num{font-family:var(--serif);font-size:1.7rem;font-weight:300;color:rgba(168,152,128,.2);line-height:1}
+    .uhel-nazev{font-size:.88rem;font-weight:400;color:var(--cream)}
+    .uhel-sub{font-size:.72rem;color:var(--dim);margin-top:3px;font-style:italic;font-family:var(--serif)}
+    .u-toggle{font-size:.72rem;color:var(--dim)}
+    .uhel-body{display:none;padding:0 0 28px 52px}
+    .uhel-body.open{display:block}
+    .blok-label{font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);margin-bottom:6px;margin-top:14px}
+    .blok-label:first-child{margin-top:0}
+    .blok-text{font-size:.86rem;color:rgba(232,224,208,.7);line-height:1.75}
+    .blok-text.italic{font-family:var(--serif);font-style:italic;font-size:.93rem;color:rgba(232,224,208,.6)}
+    .zadani-blok{margin-bottom:14px}
+    .pravidla{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0}
+    .pravidlo{background:var(--surface2);padding:14px;border-left:2px solid var(--border)}
+    .pravidlo.p2{border-left-color:var(--accent)}
+    .jazykovy-blok{background:rgba(168,152,128,.06);border-left:2px solid var(--accent);padding:14px 16px;margin:14px 0}
+    .protilehly-link{font-size:.76rem;color:var(--dim);font-style:italic;margin-top:12px}
+    .protilehly-link a{color:var(--accent);text-decoration:underline;text-underline-offset:2px;cursor:pointer}
+    .pisarna textarea{min-height:110px;margin-top:8px}
+    @media(max-width:560px){.pravidla{grid-template-columns:1fr}}
+    .tbl-outer{border:1px solid var(--border);overflow-x:auto;margin-top:20px}
+    table{width:100%;border-collapse:collapse;font-size:.78rem}
+    thead tr{border-bottom:1px solid var(--border)}
+    thead th{padding:12px 16px;text-align:left;font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);font-weight:400;font-family:var(--mono)}
+    thead th:first-child{color:var(--dim)}
+    tbody tr{border-bottom:1px solid rgba(168,152,128,.07)}
+    tbody tr:last-child{border-bottom:none}
+    tbody td{padding:12px 16px;color:rgba(232,224,208,.6);vertical-align:top;font-size:.78rem}
+    tbody td:first-child{color:var(--accent);font-size:.72rem;white-space:nowrap}
+    tbody td:nth-child(2){color:rgba(232,224,208,.5);font-style:italic}
+    .profil-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:16px 0}
+    .profil-item{padding:8px;background:var(--surface2);border-left:2px solid var(--border);font-size:.7rem}
+    .profil-item strong{display:block;font-size:.65rem;color:var(--accent);margin-bottom:2px}
+    .profil-item span{color:rgba(232,224,208,.7)}
+    .btn-analyza{margin:10px 0 20px;padding:10px 22px;font-size:11px;background:transparent;border:1px solid var(--accent);color:var(--accent);cursor:pointer;font-family:var(--mono)}
+    .btn-analyza:hover{background:var(--accent);color:var(--bg)}
+    .footer{padding:36px 0;border-top:1px solid var(--border);display:flex;justify-content:space-between;flex-wrap:wrap;gap:14px}
+    .footer p{font-size:.76rem;color:var(--dim)}
+    .footer a{color:var(--accent)}
+    .footer a:hover{text-decoration:underline}
+  </style>
+</head>
+<body>
+<nav>
+  <a class="nav-back" href="../../../index.html">← Všechna zvířata</a>
+  <span class="nav-title">Motýl</span>
+</nav>
+<div class="wrap">
+
+<section class="hero">
+  <div class="hero-ilustrace">
+    <img src="doma/ilustrace/motyl.jpg" alt="Motýl">
+    <span class="hero-ilustrace-caption">ilustrace · motýl</span>
+  </div>
+  <p class="hero-label">Kreativní miniatura · Karta Motýl</p>
+  <h1>Motýl</h1>
+  <p class="hero-veta">„Motýlů v břiše se nenajíš."</p>
+  <div class="fenomen-box">
+    <div class="fenomen-label">Fenomén Motýla — Estetizace hladu / hledání substance</div>
+    <p class="fenomen-text">Situace, kdy dostáváme něco krásného místo něčeho potřebného. Kdy se nabízí křídla, ale chybí chleba. Kdy emoce, umění nebo péče přicházejí v takové formě, že je nelze přijmout — jsou příliš lehké, příliš okrasné, příliš dobře zamaskované za náhražku. Fenomén Motýla zkoumá, jak rozlišovat mezi tím, co nás živí, a tím, co je jen hezké na pohled.</p>
+  </div>
+  <div class="var-bar">
+    <button class="var-btn active" onclick="setVar('A',this)">🎲 Náhodně</button>
+    <button class="var-btn" onclick="setVar('B',this)">🧭 Podle nálady</button>
+    <button class="var-btn" onclick="setVar('C',this)">🔍 Diagnosticky</button>
+  </div>
+  <div class="var-popis" id="var-popis">Zavřete oči, ťukněte prstem na obrazovku a udělejte ten úhel, který vybere prst.</div>
+</section>
+
+<section class="sekce">
+  <p class="sekce-label">Pohádka · přečtěte pomalu</p>
+  <h2>O motýlech, <em>kterých se nenajíš.</em></h2>
+  <p style="font-size:.82rem;color:var(--dim);margin-bottom:16px;">Sledujte kde vás zastaví — kde cítíte odpor nebo poznání.</p>
+  <div class="pohadka-outer"><div class="pohadka">
+    <p>„Já mám hlad," řekla.<br>„Tak tady máš," řekl.<br>A podal jí motýly.<br>Tři.<br>Jeden modrý, jeden žlutý, jeden trochu rozmazaný.<br>Ten třetí se jmenoval Horác, ale to se dozvěděli až později.</p>
+    <p>„To se nedá sníst," řekla.<br>„Ale dá se na to koukat," řekl.<br>„Já nechci koukat. Já chci jíst."<br>„Motýli jsou lehcí. Nezatíží ti žaludek."<br>„Ale já chci, aby mi žaludek zpíval, ne aby si šeptal básničky."</p>
+    <p>Motýli se zatím rozhlíželi.<br>Jeden si lehl do polívky.<br>Druhý se schoval pod rohlík.<br>Třetí Horác se snažil otevřít ledničku, ale neměl palce.</p>
+    <p>„Já mám hlad," řekla znovu.<br>„A ty mi dáváš křídla."<br>„Křídla jsou taky něco," řekl.<br>„Ale nejsou chleba," řekla.<br>„To je pravda," řekl.<br>„Ale chleba neumí lítat."<br>„A ještě je chleba nejvíc emo," řekl polohlasem.<br>„Jakto?" řekla.<br>„Řeže se a má dvě patky." řekl.<br>„Aha." uzavřela.</p>
+    <p>Chvíli bylo ticho.<br>Motýli se tvářili, že rozumí.<br>Ale nerozuměli.<br>Jeden se pokusil být salát.<br>Druhý se schoulil do tvaru knedlíku.<br>Horác se převlékl za banán.<br>A začal si říkat Florián.</p>
+    <p>„Tohle je divný," řekla.<br>„To je umění," řekl.<br>„To je hlad," řekla.<br>„To je interpretace," řekl.<br>„To je nesmysl," řekla.<br>„To je možné," řekl.</p>
+    <p>Nakonec si sedla na zem.<br>Motýli jí kroužili kolem hlavy.<br>Dělal vítr a i víry v myšlenkách.<br>A jeden jí přistál na nose.<br>„Já tě nesním," řekla mu.<br>„To je dobře," řekl Florián.<br>„Já bych stejně chutnal jako neděle."</p>
+    <p>A tak si vzala rohlík.<br>Bez motýlů.<br>Bez klišé.<br>Bez chutí.</p>
+    <p>Ale v hlavě jí drnčela věta:<br>„Motýlů v břiše se nenajíš."</p>
+    <p>A pokaždé, když jí někdo chtěl nakrmit láskou,<br>zeptala se:<br>„A máš k tomu i přílohu?"</p>
+  </div></div>
+</section>
+
+<section class="sekce" id="otazky">
+  <p class="sekce-label">Diagnostika I — Tři otázky · odpovězte rychle, bez opravování</p>
+  <h2>Co příběh říká <em>vám.</em></h2>
+  <p style="font-size:.82rem;color:var(--dim);margin-bottom:20px;">Vaše odpovědi se přiřazují ke 12 kognitivním úhlům — každý úhel je jiný způsob, jak prožíváte situaci, kdy dostáváte něco jiného, než potřebujete.</p>
+  <div class="otazky">
+    <div class="otazka"><p class="q-label">Q1 — Smysl</p><p class="q-text">Co je podle vás hlavní pointa nebo sdělení tohoto příběhu? O čem podle vás je?</p><textarea id="q1" placeholder="První věc, která vás napadne..."></textarea></div>
+    <div class="otazka"><p class="q-label">Q2 — Zaujetí</p><p class="q-text">Která konkrétní věta, obraz nebo moment vás nejvíc zaujal — a proč?</p><textarea id="q2" placeholder="Konkrétní věta nebo moment..."></textarea></div>
+    <div class="otazka"><p class="q-label">Q3 — Aplikace</p><p class="q-text">Kdyby tento příběh byl návodem nebo radou, co by vám radil dělat (nebo nedělat) ve vašem osobním nebo pracovním životě?</p><textarea id="q3" placeholder="Rada pohádky pro váš život..."></textarea></div>
+  </div>
+  <button class="btn-diag" onclick="diagnostikaVyznam()">Zjistit svůj úhel (z významu) →</button>
+  <button class="btn-analyza" onclick="diagnostikaStruktura()">🔬 Analyzovat jazyk (diagnostika II)</button>
+  <div class="diag-vysledek" id="diag-out-vyznam">
+    <h3>Váš dominantní úhel (z významu)</h3>
+    <p class="dominant" id="diag-dominant"></p>
+    <p style="font-size:.8rem;color:var(--dim);margin-bottom:14px;">Doporučené úkoly — váš úhel a protilehlý (intervence):</p>
+    <div id="diag-navrhy"></div>
+  </div>
+  <div class="diag-vysledek" id="diag-out-struktura">
+    <h3>Profil textu — jazykové jevy</h3>
+    <div id="struktura-profil" class="profil-grid"></div>
+    <p id="struktura-doporuceni" style="font-size:.82rem;color:var(--dim);"></p>
+    <div id="struktura-tlacitka"></div>
+  </div>
+</section>
+
+<section class="sekce" id="uhly">
+  <p class="sekce-label">12 kognitivních úhlů · každý s charakteristickou strukturální technikou</p>
+  <h2>Váš úhel — nebo nechte <em>vybrat tabulku.</em></h2>
+  <div id="uhly-list"></div>
+</section>
+
+<section class="sekce">
+  <p class="sekce-label">Tabulka strukturálních technik</p>
+  <h2>Jak formou měnit <em>obsah.</em></h2>
+  <p style="font-size:.82rem;color:var(--dim);margin-bottom:16px;">Každý úhel má svou charakteristickou techniku. Protilehlý úhel = intervence.</p>
+  <div class="tbl-outer">
+    <table>
+      <thead><tr><th>Úhel</th><th>Strukturní technika</th><th>Cíl intervence</th></tr></thead>
+      <tbody>
+        <tr><td>0° Analytický</td><td>Záměrná nejednoznačnost (ambiguitní syntax)</td><td>Hledání paralel a více významů v jedné struktuře.</td></tr>
+        <tr><td>30° Kulturní</td><td>Přesycení / redundance (obecné fráze)</td><td>Ukotvení ve společensky sdílených vzorcích.</td></tr>
+        <tr><td>60° Filozofický</td><td>Záměrná nejednoznačnost</td><td>Zpochybňování pevných významů, hledání abstraktních otázek.</td></tr>
+        <tr><td>90° Naivní</td><td>Minimalismus / elipsa</td><td>Zjednodušení na základní, nehodnotící sdělení.</td></tr>
+        <tr><td>120° Jazykový</td><td>Neobvyklé sousedství slov (kolokace)</td><td>Hra se slovy, objevování estetických kvalit.</td></tr>
+        <tr><td>150° Metaforický</td><td>Neobvyklé sousedství slov (kolokace)</td><td>Spojování vzdálených konceptů, vytváření obrazů.</td></tr>
+        <tr><td>180° Asociační</td><td>Odskoky / rozpad koheze</td><td>Uvolnění myšlenek z logických řetězců, volný tok.</td></tr>
+        <tr><td>210° Introspektivní</td><td>Izolace / vytržení z kontextu</td><td>Zaměření na jednotlivé emoce a myšlenky.</td></tr>
+        <tr><td>240° Ironický</td><td>Neobvyklé sousedství slov (spojení protikladů)</td><td>Napětí a skrytý význam skrze paradox.</td></tr>
+        <tr><td>270° Groteskní</td><td>Změna délky vět / rytmus (extrémní kontrasty)</td><td>Dramatický, přehnaný, emocionálně nabitý projev.</td></tr>
+        <tr><td>300° Absurdní</td><td>Změna slovosledu (permutace)</td><td>Narušení logické stavby, nesmyslné konstrukce.</td></tr>
+        <tr><td>330° Surrealistický</td><td>Odskoky / rozpad koheze (snová logika)</td><td>Propojování nesouvisejících obrazů do snových scén.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<footer class="footer">
+  <p>Karta Motýl · Chceš myš? — kreativní miniatury · © 2026 Michaela Nováková</p>
+  <p><a href="../../../index.html">← Zpět</a> · <a href="mailto:chcesmys@gmail.com">chcesmys@gmail.com</a></p>
+</footer>
+</div>
+
+<script>
+// ========== DATA ==========
+const angles = [
+  { deg:0,  nazev:'Analytický',     tech:'Záměrná nejednoznačnost (ambiguitní syntax)', cil:'Hledání paralel a více významů v jedné struktuře.',
+    zadani:'Napiš krátký text na téma: „Nabídl/a jsem někomu motýly.“ Použij techniku záměrné nejednoznačnosti – věta musí umožňovat alespoň dva různé výklady.',
+    protilehly:6 }, // 180°
+  { deg:30, nazev:'Kulturní',       tech:'Přesycení / redundance (obecně známé fráze)', cil:'Ukotvení ve společensky sdílených vzorcích.',
+    zadani:'Popiš situaci, kdy ti někdo nabídl motýly. Použij co nejvíc obecných frází, klišé a opakujících se obratů.',
+    protilehly:7 }, // 210°
+  { deg:60, nazev:'Filozofický',    tech:'Záměrná nejednoznačnost', cil:'Zpochybňování pevných významů, hledání abstraktních otázek.',
+    zadani:'Zamysli se nad otázkou: „Co je to hlad, který nelze nasytit motýly?“ Napiř odpověď jako řetězec otázek, bez tvrzení.',
+    protilehly:8 }, // 240°
+  { deg:90, nazev:'Naivní',         tech:'Minimalismus / elipsa', cil:'Zjednodušení na základní, nehodnotící sdělení.',
+    zadani:'Popiš svou zkušenost s motýly v co nejkratších větách (max 5 slov). Vynechávej vše, co není nezbytně nutné.',
+    protilehly:9 }, // 270°
+  { deg:120, nazev:'Jazykový',      tech:'Neobvyklé sousedství slov (kolokace)', cil:'Hra se slovy, objevování estetických kvalit.',
+    zadani:'Vytvoř báseň nebo krátkou prózu, kde vedle sebe postavíš slova, která se normálně nepotkávají (např. „motýlí chleba“).',
+    protilehly:10 }, // 300°
+  { deg:150, nazev:'Metaforický',   tech:'Neobvyklé sousedství slov (kolokace)', cil:'Spojování vzdálených konceptů, vytváření obrazů.',
+    zadani:'Napiš metaforický text, ve kterém jsou motýli něčím jiným (např. myšlenky, vzpomínky, sny).',
+    protilehly:11 }, // 330°
+  { deg:180, nazev:'Asociační',     tech:'Odskoky / rozpad koheze', cil:'Uvolnění myšlenek z logických řetězců, volný tok.',
+    zadani:'Piš volně, bez zastavení, co tě napadá ke slovu „motýl“. Skákej mezi tématy, používej „mimochodem“, „a ještě“.',
+    protilehly:0 }, // 0°
+  { deg:210, nazev:'Introspektivní',tech:'Izolace / vytržení z kontextu', cil:'Zaměření na jednotlivé emoce a myšlenky.',
+    zadani:'Vezmi jednu emoci, kterou v tobě motýli vyvolávají, a popiš ji, jako by byla samostatným objektem (např. „můj strach z motýlů“).',
+    protilehly:1 }, // 30°
+  { deg:240, nazev:'Ironický',      tech:'Neobvyklé sousedství slov (spojení protikladů)', cil:'Napětí a skrytý význam skrze paradox.',
+    zadani:'Napiš ironickou oslavu motýlů – chval je slovy, která patří spíš na chleba. Spojuj protiklady.',
+    protilehly:2 }, // 60°
+  { deg:270, nazev:'Groteskní',     tech:'Změna délky vět / rytmus (extrémní kontrasty)', cil:'Dramatický, přehnaný, emocionálně nabitý projev.',
+    zadani:'Přepiš svou původní myšlenku o motýlech pomocí extrémního střídání krátkých a dlouhých vět. Zvelič, přeháněj.',
+    protilehly:3 }, // 90°
+  { deg:300, nazev:'Absurdní',      tech:'Změna slovosledu (permutace)', cil:'Narušení logické stavby, nesmyslné konstrukce.',
+    zadani:'Vezmi jednu větu z pohádky a permutuj v ní slovosled tak, aby vznikla gramaticky možná, ale významově absurdní věta.',
+    protilehly:4 }, // 120°
+  { deg:330, nazev:'Surrealistický',tech:'Odskoky / rozpad koheze (snová logika)', cil:'Propojování nesouvisejících obrazů do snových scén.',
+    zadani:'Napiš snový text, kde se motýli, chleba a ticho proplétají bez logické souvislosti. Nech plynout obrazy.',
+    protilehly:5 } // 150°
+];
+
+// Klíčová slova pro diagnostiku I (podle nových úhlů)
+const keywords = {
+  0: ['paralela','význam','souvislost','logika','struktura','analýza'],
+  1: ['kultura','obecné','fráze','společnost','vzorec','sdílené'],
+  2: ['filozofie','abstraktní','otázka','smysl','existence','podstata'],
+  3: ['jednoduché','naivní','základní','prosté','bez hodnocení'],
+  4: ['jazyk','slovo','hra','estetika','zvuk','forma'],
+  5: ['metafora','obraz','symbol','přirovnání','jinotaj'],
+  6: ['asociace','volný','proud','řetězec','skok','téma'],
+  7: ['pocit','emoce','já','osobní','nitro','cítím'],
+  8: ['ironie','paradox','protiklad','skrytý','napětí'],
+  9: ['groteska','přehnané','dramatické','kontrast','emocionální'],
+  10: ['absurdní','nesmysl','permutace','narušení','nelogické'],
+  11: ['sen','snové','surrealismus','obraz','nereálné']
+};
+
+// ========== FUNKCE PRO ROZHRANÍ ==========
+function buildAngles(){
+  const list=document.getElementById('uhly-list');
+  angles.forEach((a,i)=>{
+    const div=document.createElement('div');div.className='uhel';div.id='u-'+i;
+    div.innerHTML='<div class="uhel-header" onclick="toggleU('+i+')"><span class="u-num">'+a.deg+'°</span><div><div class="uhel-nazev">'+a.nazev+'</div><div class="uhel-sub">'+a.tech+'</div></div><span class="u-toggle" id="t-'+i+'">+</span></div>'
+      +'<div class="uhel-body" id="b-'+i+'">'
+      +'<div class="zadani-blok"><div class="blok-label">Kreativní úkol · 20 minut</div><p class="blok-text">'+a.zadani+'</p></div>'
+      +'<div class="pravidla"><div class="pravidlo p1"><div class="blok-label">Strukturní technika</div><p class="blok-text">'+a.tech+'</p></div>'
+      +'<div class="pravidlo p2"><div class="blok-label">Cíl intervence</div><p class="blok-text">'+a.cil+'</p></div></div>'
+      +'<div class="pisarna"><div class="blok-label">Váš text</div><textarea placeholder="Pište sem — bez opravování, bez zastavení..."></textarea></div>'
+      +'<p class="protilehly-link">Protilehlý úhel: <a onclick="jumpU('+a.protilehly+')">'+angles[a.protilehly].deg+'° '+angles[a.protilehly].nazev+'</a></p>'
+      +'</div>';
+    list.appendChild(div);
+  });
+}
+buildAngles();
+
+function toggleU(i){const b=document.getElementById('b-'+i);const t=document.getElementById('t-'+i);const o=b.classList.toggle('open');t.textContent=o?'−':'+';}
+function jumpU(i){if(!document.getElementById('b-'+i).classList.contains('open'))toggleU(i);document.getElementById('u-'+i).scrollIntoView({behavior:'smooth',block:'start'});}
+
+const varText={
+  A:'Zavřete oči, ťukněte prstem na obrazovku a udělejte ten úhel, který vybere prst.',
+  B:'Přečtěte si 12 úhlů a vyberte ten, který nejlépe popisuje vaši aktuální zkušenost s fenomény motýla.',
+  C:'Odpovězte na 3 otázky níže — systém přiřadí váš dominantní úhel a doporučí protilehlý.'
+};
+function setVar(v,btn){
+  document.querySelectorAll('.var-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('var-popis').textContent=varText[v];
+  if(v==='A'){const r=Math.floor(Math.random()*12);setTimeout(()=>{jumpU(r);},300);}
+  if(v==='C')document.getElementById('otazky').scrollIntoView({behavior:'smooth'});
+}
+
+function norm(s){
+  return s.toLowerCase()
+    .replace(/[áa]/g,'a').replace(/[éeě]/g,'e').replace(/[íiy]/g,'i')
+    .replace(/[óo]/g,'o').replace(/[úůu]/g,'u').replace(/[čc]/g,'c')
+    .replace(/[ďd]/g,'d').replace(/[ňn]/g,'n').replace(/[řr]/g,'r')
+    .replace(/[šs]/g,'s').replace(/[ťt]/g,'t').replace(/[žz]/g,'z');
+}
+
+// ========== DIAGNOSTIKA I ==========
+function diagnostikaVyznam(){
+  const raw=['q1','q2','q3'].map(id=>document.getElementById(id).value).join(' ');
+  if(!raw.trim()){alert('Vyplňte alespoň jednu odpověď.');return;}
+  const txt=norm(raw);
+  let maxIdx=0,maxScore=0;
+  Object.entries(keywords).forEach(([idx,kw])=>{
+    const score = kw.reduce((a,w)=>a+(txt.includes(norm(w))?1:0),0);
+    if(score>maxScore){maxScore=score;maxIdx=parseInt(idx);}
+  });
+  if(maxScore===0)maxIdx=Math.floor(Math.random()*12);
+  const prot = angles[maxIdx].protilehly;
+  document.getElementById('diag-dominant').innerHTML = 
+    `Váš úhel: <strong>${angles[maxIdx].deg}° ${angles[maxIdx].nazev}</strong> (technika: ${angles[maxIdx].tech})`;
+  document.getElementById('diag-navrhy').innerHTML =
+    `<button class="navrh-btn" onclick="jumpU(${maxIdx})">→ Váš úhel: ${angles[maxIdx].deg}° ${angles[maxIdx].nazev}</button>` +
+    `<button class="navrh-btn" onclick="jumpU(${prot})">→ Protilehlý (intervence): ${angles[prot].deg}° ${angles[prot].nazev}</button>`;
+  document.getElementById('diag-out-vyznam').style.display='block';
+}
+
+// ========== DIAGNOSTIKA II ==========
+function diagnostikaStruktura(){
+  const raw=['q1','q2','q3'].map(id=>document.getElementById(id).value).join(' ');
+  if(!raw.trim()){alert('Vyplňte alespoň jednu odpověď.');return;}
+  const text = raw.toLowerCase();
+  const vety = text.split(/[.!?]+/).filter(v=>v.trim().length>0);
+  const slova = text.split(/\s+/);
+  
+  const detekce = [
+    { id:0, vzor: /(\?.*\?.*\?|nebo|buď|ať|zda)/gi },                             // ambiguitní syntax (přibližně)
+    { id:1, vzor: /(jak se říká|známá věc|každý ví|obecně|tradičně|rčení)/gi },   // kulturní fráze
+    { id:2, vzor: /(\?|proč|jaký smysl|co to znamená|existuje)/gi },              // filozofické otázky
+    { id:3, fn: ()=> vety.filter(v=>v.split(/\s+/).length<=4).length },            // minimalistické věty
+    { id:4, fn: ()=>{                                                              // neobvyklá sousedství (počet unikátních bigramů)
+        const bigramy=new Set(); for(let i=0;i<slova.length-1;i++) bigramy.add(slova[i]+' '+slova[i+1]); 
+        return slova.length>1 ? bigramy.size/(slova.length-1)*10 : 0; } },
+    { id:5, vzor: /(jako|jakoby|podobně|připomíná|symbol)/gi },                   // metaforické výrazy
+    { id:6, vzor: /(mimochodem|a ještě|co se týče|ostatně|kromě toho)/gi },       // odskoky
+    { id:7, vzor: /(cítím|pociťuji|můj|moje|mně|já)/gi },                          // introspektivní
+    { id:8, vzor: /(ale|přesto|naopak|paradoxně|ironicky)/gi },                    // ironie / protiklady
+    { id:9, fn: ()=>{                                                              // změna délky vět (extrémní kontrast)
+        const delky=vety.map(v=>v.split(/\s+/).length); 
+        const max=Math.max(...delky), min=Math.min(...delky); 
+        return (max-min>10) ? 3 : 0; } },
+    { id:10, vzor: /(\b\w+\s+\w+\s+\w+\b.*?\b\w+\s+\w+\s+\w+\b){2,}/gi },          // permutace – těžko, alespoň něco
+    { id:11, vzor: /(sen|zdálo se|jako ve snu|surreal|neskutečné|magické)/gi }     // snové obrazy
+  ];
+
+  let skore = new Array(12).fill(0);
+  detekce.forEach(d=>{
+    if(d.vzor) skore[d.id] = (text.match(d.vzor)||[]).length;
+    else if(d.fn) skore[d.id] = d.fn();
+  });
+
+  const maxSkore = Math.max(...skore,1);
+  const normalized = skore.map(s=>Math.min(10,Math.round((s/maxSkore)*10)));
+
+  const profil = document.getElementById('struktura-profil');
+  profil.innerHTML = '';
+  normalized.forEach((val,i)=>{
+    const item = document.createElement('div');
+    item.className='profil-item';
+    item.style.borderLeftColor = i%2===0 ? '#a89880' : '#5a4c3c';
+    item.innerHTML = `<strong>${angles[i].deg}° ${angles[i].nazev}</strong><span>${val}/10</span>`;
+    profil.appendChild(item);
+  });
+
+  let maxIdx = normalized.indexOf(Math.max(...normalized));
+  const prot = angles[maxIdx].protilehly;
+  document.getElementById('struktura-doporuceni').innerHTML = 
+    `Nejsilnější technika: <strong>${angles[maxIdx].deg}° ${angles[maxIdx].nazev}</strong> (${angles[maxIdx].tech}). ` +
+    `Doporučený protilehlý úhel: <strong>${angles[prot].deg}° ${angles[prot].nazev}</strong>.`;
+  document.getElementById('struktura-tlacitka').innerHTML =
+    `<button class="navrh-btn" onclick="jumpU(${maxIdx})">→ Přejít na ${angles[maxIdx].deg}° ${angles[maxIdx].nazev}</button>` +
+    `<button class="navrh-btn" onclick="jumpU(${prot})">→ Přejít na protilehlý ${angles[prot].deg}° ${angles[prot].nazev}</button>`;
+
+  document.getElementById('diag-out-struktura').style.display='block';
+}
+</script>
+</body>
+</html>
