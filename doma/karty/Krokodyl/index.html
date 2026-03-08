@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Krokodýl — kreativní miniatury</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{--bg:#0f0f0f;--surface:#161616;--surface2:#1c1c1c;--cream:#e8e0d0;--dim:rgba(232,224,208,.42);--accent:#a89880;--border:rgba(168,152,128,.15);--serif:'Cormorant Garamond',Georgia,serif;--mono:'DM Mono',monospace}
+    html{scroll-behavior:smooth}
+    body{background:var(--bg);color:var(--cream);font-family:var(--mono);font-size:14px;line-height:1.8;-webkit-font-smoothing:antialiased}
+    a{color:inherit;text-decoration:none}
+    p{margin-bottom:10px}p:last-child{margin-bottom:0}
+    .wrap{max-width:760px;margin:0 auto;padding:0 28px}
+    nav{position:sticky;top:0;z-index:100;border-bottom:1px solid var(--border);background:rgba(15,15,15,.92);backdrop-filter:blur(12px);padding:14px 28px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+    .nav-back{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);transition:color .2s}
+    .nav-back:hover{color:var(--cream)}
+    .nav-title{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--accent)}
+    .hero{padding:0 0 56px;border-bottom:1px solid var(--border)}
+    .hero-ilustrace{width:100%;max-height:380px;overflow:hidden;margin-bottom:40px;position:relative}
+    .hero-ilustrace img{width:100%;height:380px;object-fit:cover;object-position:center 30%;filter:grayscale(100%) contrast(1.08);display:block}
+    .hero-ilustrace-caption{position:absolute;bottom:12px;right:16px;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:rgba(232,224,208,.3)}
+    .hero-label{font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:var(--accent);margin-bottom:20px}
+    .hero h1{font-family:var(--serif);font-size:clamp(3rem,7vw,5.5rem);font-weight:300;line-height:1.0;color:var(--cream);margin-bottom:8px}
+    .hero h1 em{font-style:italic;color:var(--accent)}
+    .hero-veta{font-family:var(--serif);font-size:clamp(.95rem,2vw,1.25rem);font-style:italic;color:var(--dim);border-left:1px solid var(--accent);padding-left:20px;max-width:500px;margin:20px 0 36px;line-height:1.9}
+    .fenomen-box{border:1px solid var(--accent);padding:20px 22px;margin-bottom:32px;background:rgba(168,152,128,.06)}
+    .fenomen-label{font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin-bottom:10px}
+    .fenomen-text{font-size:13px;color:rgba(232,224,208,.7);line-height:1.8}
+    .var-bar{display:flex;gap:1px;background:var(--border);border:1px solid var(--border)}
+    .var-btn{flex:1;padding:13px 12px;background:var(--surface);border:none;cursor:pointer;font-family:var(--mono);font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;color:var(--dim);transition:background .12s,color .12s;text-align:center}
+    .var-btn:hover{background:#1e1e1e;color:var(--cream)}
+    .var-btn.active{background:var(--accent);color:var(--bg)}
+    .var-popis{padding:12px 16px;font-size:.8rem;color:var(--dim);border:1px solid var(--border);border-top:none;background:var(--surface)}
+    .sekce{padding:56px 0;border-bottom:1px solid var(--border)}
+    .sekce-label{font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin-bottom:16px}
+    h2{font-family:var(--serif);font-size:clamp(1.5rem,3.5vw,2.2rem);font-weight:300;color:var(--cream);margin-bottom:18px}
+    h2 em{font-style:italic;color:var(--accent)}
+    .pohadka-outer{border:1px solid var(--border);background:var(--surface);max-height:360px;overflow-y:auto;padding:0 28px}
+    .pohadka{font-family:var(--serif);font-style:italic;font-size:.97rem}
+    .pohadka p{padding:.45em 0;color:rgba(232,224,208,.8)}
+    .pohadka p strong{font-style:normal;color:var(--accent);font-weight:400}
+    .pohadka-outer::-webkit-scrollbar{width:2px}
+    .pohadka-outer::-webkit-scrollbar-thumb{background:var(--accent)}
+    .otazky{border-top:1px solid var(--border)}
+    .otazka{padding:22px 0;border-bottom:1px solid var(--border)}
+    .q-label{font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);margin-bottom:8px}
+    .q-text{font-size:.95rem;margin-bottom:6px;color:var(--cream)}
+    textarea{width:100%;background:var(--surface);border:1px solid var(--border);color:var(--cream);padding:12px;font-family:var(--mono);font-size:.85rem;line-height:1.7;resize:vertical;min-height:68px}
+    textarea:focus{outline:1px solid var(--accent)}
+    textarea::placeholder{color:rgba(232,224,208,.2)}
+    .btn-diag{margin-top:20px;padding:12px 28px;font-size:11px;letter-spacing:.12em;text-transform:uppercase;background:var(--accent);color:var(--bg);border:none;cursor:pointer;font-family:var(--mono);transition:background .15s}
+    .btn-diag:hover{background:#c0aa90}
+    .diag-vysledek{display:none;border:1px solid var(--accent);padding:24px;margin-top:20px;background:var(--surface)}
+    .diag-vysledek h3{font-family:var(--serif);font-size:1.1rem;font-weight:400;color:var(--cream);margin-bottom:10px}
+    .dominant{font-size:.82rem;color:var(--dim);margin-bottom:16px}
+    .navrh-btn{display:block;width:100%;padding:11px 16px;margin-bottom:6px;background:transparent;border:1px solid var(--border);color:var(--cream);font-family:var(--mono);font-size:.82rem;text-align:left;cursor:pointer;transition:background .12s,border-color .12s}
+    .navrh-btn:hover{background:var(--accent);border-color:var(--accent);color:var(--bg)}
+    .navrh-btn:last-child{margin-bottom:0}
+    .uhel{border-bottom:1px solid var(--border)}
+    .uhel-header{display:grid;grid-template-columns:52px 1fr auto;padding:18px 0;cursor:pointer;align-items:center}
+    .uhel-header:hover .uhel-nazev{color:var(--accent)}
+    .u-num{font-family:var(--serif);font-size:1.7rem;font-weight:300;color:rgba(168,152,128,.2);line-height:1}
+    .uhel-nazev{font-size:.88rem;font-weight:400;color:var(--cream)}
+    .uhel-sub{font-size:.72rem;color:var(--dim);margin-top:3px;font-style:italic;font-family:var(--serif)}
+    .u-toggle{font-size:.72rem;color:var(--dim)}
+    .uhel-body{display:none;padding:0 0 28px 52px}
+    .uhel-body.open{display:block}
+    .blok-label{font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);margin-bottom:6px;margin-top:14px}
+    .blok-label:first-child{margin-top:0}
+    .blok-text{font-size:.86rem;color:rgba(232,224,208,.7);line-height:1.75}
+    .blok-text.italic{font-family:var(--serif);font-style:italic;font-size:.93rem;color:rgba(232,224,208,.6)}
+    .zadani-blok{margin-bottom:14px}
+    .pravidla{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0}
+    .pravidlo{background:var(--surface2);padding:14px;border-left:2px solid var(--border)}
+    .pravidlo.p2{border-left-color:var(--accent)}
+    .jazykovy-blok{background:rgba(168,152,128,.06);border-left:2px solid var(--accent);padding:14px 16px;margin:14px 0}
+    .protilehly-link{font-size:.76rem;color:var(--dim);font-style:italic;margin-top:12px}
+    .protilehly-link a{color:var(--accent);text-decoration:underline;text-underline-offset:2px;cursor:pointer}
+    .pisarna textarea{min-height:110px;margin-top:8px}
+    @media(max-width:560px){.pravidla{grid-template-columns:1fr}}
+    .tbl-outer{border:1px solid var(--border);overflow-x:auto;margin-top:20px}
+    table{width:100%;border-collapse:collapse;font-size:.78rem}
+    thead tr{border-bottom:1px solid var(--border)}
+    thead th{padding:12px 16px;text-align:left;font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);font-weight:400;font-family:var(--mono)}
+    thead th:first-child{color:var(--dim)}
+    tbody tr{border-bottom:1px solid rgba(168,152,128,.07)}
+    tbody tr:last-child{border-bottom:none}
+    tbody td{padding:12px 16px;color:rgba(232,224,208,.6);vertical-align:top;font-size:.78rem}
+    tbody td:first-child{color:var(--accent);font-size:.72rem;white-space:nowrap}
+    tbody td:nth-child(2){color:rgba(232,224,208,.5);font-style:italic}
+    .page-footer{padding:36px 0;border-top:1px solid var(--border);display:flex;justify-content:space-between;flex-wrap:wrap;gap:14px}
+    .page-footer p{font-size:.76rem;color:var(--dim)}
+    .page-footer a{color:var(--accent)}
+    .page-footer a:hover{text-decoration:underline}
+  </style>
+</head>
+<body>
+<nav>
+  <a class="nav-back" href="../../../index.html">← Všechna zvířata</a>
+  <span class="nav-title">Krokodýl</span>
+</nav>
+<div class="wrap">
+
+<section class="hero">
+  <div class="hero-ilustrace">
+    <img src="../../../../data/ilustrace/krokodyl.jpg" alt="Krokodýl">
+    <span class="hero-ilustrace-caption">ilustrace · krokodýl</span>
+  </div>
+  <p class="hero-label">Kreativní miniatura · Karta Krokodýl</p>
+  <h1>Krokodýl</h1>
+  <p class="hero-veta">„Tento týden sleva 90 %. Krokodýlí slzy. Totální výprodej."</p>
+  <div class="fenomen-box">
+    <div class="fenomen-label">Fenomén Krokodýla — Komodifikace emocí / zlevněná autenticita</div>
+    <p class="fenomen-text">Situace, kdy se z nás stane zboží — když naše emoce zlevní, přestanou být čerstvé, dostanou cenovku. Kdy pláč vypadá jako reklama a smutek stojí tři za cenu jedné. Fenomén Krokodýla zkoumá hranici mezi pravým a snadno dostupným — a zpochybňuje, jestli ta hranice vůbec existuje.</p>
+  </div>
+  <div class="var-bar">
+    <button class="var-btn active" onclick="setVar('A',this)">🎲 Náhodně</button>
+    <button class="var-btn" onclick="setVar('B',this)">🧭 Podle nálady</button>
+    <button class="var-btn" onclick="setVar('C',this)">🔍 Diagnosticky</button>
+  </div>
+  <div class="var-popis" id="var-popis">Zavřete oči, ťukněte prstem na obrazovku a udělejte ten úhel, který vybere prst.</div>
+</section>
+
+<section class="sekce">
+  <p class="sekce-label">Pohádka · přečtěte pomalu</p>
+  <h2>O krokodýlovi, <em>který šel do výprodeje.</em></h2>
+  <p style="font-size:.82rem;color:var(--dim);margin-bottom:16px;">Sledujte kde vás zastaví — kde cítíte odpor nebo poznání.</p>
+  <div class="pohadka-outer"><div class="pohadka">
+    <p>Krokodýl se jednoho dne probudil a zjistil, že je zboží.<br>Ne zvíře.<br>Ne postava.<br>Ne symbol.<br>Ale produkt.</p>
+    <p>Na čele měl cenovku.<br>Na ocasu slevu.<br>A místo slz měl marketingové sdělení:<br><strong>„Tento týden sleva 90 %. Tři za cenu jedné. Krokodýlí slzy. Totální výprodej."</strong></p>
+    <p>Lidé chodili kolem a ptali se:<br>„Co to vlastně je?"<br>Prodavač se usmál:<br>„To je emoce. Ale levná. Už není čerstvá."</p>
+    <p>Krokodýl se snažil vysvětlit, že jeho slzy nejsou falešné.<br>Jsou jen komerčně dostupné.<br>Že pláče, protože přišel o jazyk, když ztratil smysl.<br>Že kdysi byl symbolem:<br>„Něčeho... Možná... Kdysi... Kdo ví..?<br>Ale teď je tři za cenu jedné."</p>
+    <p>Jedna paní si ho koupila.<br>Dala si ho na poličku vedle keramického smutku a plastového soucitu.<br>A vždycky, když se cítila deprimovaná, zmáčkla tlačítko na jeho břiše.<br>Krokodýl řekl:<br>„Buďte dojatí. Sleva končí v neděli."</p>
+    <p>Jednou přišel jazyk.<br>také se smyslem.<br>Ne jako zákazníci.<br>Ne jako návštěvníci.<br>Jako na kontrolu.</p>
+    <p>Jazyk vrhl na krokodýla pohled plný rozpaků a po hlubokém nádechu vypustil slova:<br>„Tohle není věta. To je výkřik v obalu!! Ale v nepoškozeném, neschváleném."</p>
+    <p>Krokodýl se rozplakal.<br>Ale slzy už nikdo nebral vážně.<br>Byly v akci.<br>Do vyprodání.</p>
+    <p>A krokodýl těchto dob říká, že když někdo pláče a mluví u toho jako leták reklamní,<br>možná to není lež.<br>Možná je to jen <strong>význam v akci</strong>.<br>Sleva na smysl.</p>
+    <p><em>Protože krokodýlí slzy nejsou falešné.<br>Jsou jen snadno dostupné.</em></p>
+  </div></div>
+</section>
+
+<section class="sekce" id="otazky">
+  <p class="sekce-label">Diagnostika I — Tři otázky · odpovězte rychle, bez opravování</p>
+  <h2>Co příběh říká <em>vám.</em></h2>
+  <p style="font-size:.82rem;color:var(--dim);margin-bottom:20px;">Vaše odpovědi se přiřazují ke 12 úhlům fenoménu Krokodýla — každý úhel je jiný způsob, jak prožíváte situaci, kdy se z vás stává zboží, kdy vaše emoce zlevňují.</p>
+  <div class="otazky">
+    <div class="otazka"><p class="q-label">Q1 — Smysl</p><p class="q-text">Co je podle vás hlavní pointa nebo sdělení tohoto příběhu? O čem podle vás je?</p><textarea id="q1" placeholder="První věc, která vás napadne..."></textarea></div>
+    <div class="otazka"><p class="q-label">Q2 — Zaujetí</p><p class="q-text">Která konkrétní věta, obraz nebo moment vás nejvíc zaujal — a proč?</p><textarea id="q2" placeholder="Konkrétní věta nebo moment..."></textarea></div>
+    <div class="otazka"><p class="q-label">Q3 — Aplikace</p><p class="q-text">Kdyby tento příběh byl návodem nebo radou, co by vám radil dělat (nebo nedělat) ve vašem osobním nebo pracovním životě?</p><textarea id="q3" placeholder="Rada pohádky pro váš život..."></textarea></div>
+  </div>
+  <button class="btn-diag" onclick="diagnostika()">Zjistit svůj úhel →</button>
+  <div class="diag-vysledek" id="diag-out">
+    <h3>Váš dominantní úhel</h3>
+    <p class="dominant" id="diag-dominant"></p>
+    <p style="font-size:.8rem;color:var(--dim);margin-bottom:14px;">Doporučené úkoly — váš dominantní úhel a jeho protilehlý:</p>
+    <div id="diag-navrhy"></div>
+  </div>
+</section>
+
+<section class="sekce" id="uhly">
+  <p class="sekce-label">12 úhlů fenoménu Krokodýla · každý s kreativním úkolem a jazykovým zaměřením</p>
+  <h2>Váš úhel — nebo nechte <em>vybrat tabulku.</em></h2>
+  <div id="uhly-list"></div>
+</section>
+
+<section class="sekce">
+  <p class="sekce-label">Diagnostika II — Jazykové fenomény</p>
+  <h2>Co říká váš jazyk — <em>ne obsah, ale forma.</em></h2>
+  <p style="font-size:.82rem;color:var(--dim);margin-bottom:16px;">Tuto tabulku použijte po napsání textu z kreativního úkolu. Ukazuje, kde v jazyce bydlí váš krokodýl.</p>
+  <div class="tbl-outer">
+    <table>
+      <thead><tr><th>Úhel</th><th>Co hledat v textu</th><th>Co to znamená pro práci</th></tr></thead>
+      <tbody>
+        <tr><td>1. Ranní probuzení</td><td>Pasivní konstrukce — byl, mělo se mu, stalo se</td><td>Věnujte se úhlu č. 12 (Snadno dostupné) — pište text, který jedná.</td></tr>
+        <tr><td>2. Cenovka na čele</td><td>Obchodní výrazy, čísla, ceny, procenta</td><td>Věnujte se úhlu č. 10 (Slzy v akci) — pište o pláči, o tom, co nejde vyčíslit.</td></tr>
+        <tr><td>3. Marketingové sdělení</td><td>Floskule, reklamní fráze, prázdná hesla</td><td>Věnujte se úhlu č. 8 (Jazyk na kontrole) — pište pod kontrolou, s pravidly.</td></tr>
+        <tr><td>4. Emoce, ale levná</td><td>Hodnotící výrazy s negativním nádechem, znehodnocování</td><td>Věnujte se úhlu č. 11 (Význam v akci) — pište text, který věří svému významu.</td></tr>
+        <tr><td>5. Tři za cenu jedné</td><td>Opakování, kvantifikace, výčty</td><td>Věnujte se úhlu č. 9 (Výkřik v obalu) — pište text, který křičí, i když je zabalený.</td></tr>
+        <tr><td>6. Polička vedle keramického smutku</td><td>Výčty umělých věcí, kýč, přiznaná neautenticita</td><td>Věnujte se úhlu č. 7 (Tlačítko na břiše) — pište mechanicky, spustitelně.</td></tr>
+        <tr><td>7. Tlačítko na břiše</td><td>Opakování stejné fráze, mechanické věty</td><td>Věnujte se úhlu č. 6 (Polička) — pište o umění, o kýči, o tom, co je vedle vás.</td></tr>
+        <tr><td>8. Jazyk na kontrole</td><td>Normativní výroky, hodnocení správnosti, metajazyk</td><td>Věnujte se úhlu č. 3 (Marketingové sdělení) — pište volně, reklamně, nespoutaně.</td></tr>
+        <tr><td>9. Výkřik v obalu</td><td>Kontrast mezi formou a obsahem — banalita x hloubka</td><td>Věnujte se úhlu č. 5 (Tři za cenu jedné) — pište opakovaně, buďte kvantitou.</td></tr>
+        <tr><td>10. Slzy v akci</td><td>Fráze o konci, o vyprodání, o limitu</td><td>Věnujte se úhlu č. 2 (Cenovka na čele) — pište text, který se nebojí mít cenu.</td></tr>
+        <tr><td>11. Význam v akci</td><td>Filozofické fráze v tržním kontextu, mix hloubky a konzumu</td><td>Věnujte se úhlu č. 4 (Emoce, ale levná) — přiznejte, že jste levní, a nic si z toho nedělejte.</td></tr>
+        <tr><td>12. Snadno dostupné</td><td>Jednoduchá konstatování, přístupný jazyk, absence elitářství</td><td>Věnujte se úhlu č. 1 (Ranní probuzení) — pište aktivně, jako subjekt, ne objekt.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<footer class="page-footer">
+  <p>Karta Krokodýl · Chceš myš? — kreativní miniatury · © 2026 Michaela Nováková</p>
+  <p><a href="../../../index.html">← Zpět</a> · <a href="mailto:chcesmys@gmail.com">chcesmys@gmail.com</a></p>
+</footer>
+</div>
+
+<script>
+const uhly = [
+  { nazev:'Ranní probuzení do zboží', sub:'Zjistit, že nejsi subjekt — ale objekt. Cena stanovena někým jiným.',
+    jad:'Náhlost. Ráno vstaneš a nejsi to, co jsi byl.',
+    q1:'Odpovíš, že krokodýl se jednoho dne probudil a zjistil, že je zboží.',
+    q2:'Zaujme ta náhlost — že se to stane přes noc.',
+    q3:'Poradíš kontrolovat, jestli ses náhodou nestal/a zbožím, aniž bys o tom věděl/a.',
+    ukol:'Napiš text o tom, jak ses jednoho dne probudil/a a zjistil/a, že jsi zboží. Třeba že máš cenovku, že tě někdo ocenil, že jsi v akci. Piš v pasivních konstrukcích, jako by se to dělo tobě, bez tvé vůle.',
+    jazyk:'Pasivní konstrukce — byl, mělo se mu, stalo se. Text o tom, co se s tebou děje.',
+    protilehly:11 },
+  { nazev:'Cenovka na čele, sleva na ocasu', sub:'Být označený, oceněný, zlevněný. Identita redukovaná na cenu.',
+    jad:'Tvoje tělo jako nosič ceny. To, co jsi, se dá vyčíslit.',
+    q1:'Odpovíš, že na čele měl cenovku, na ocasu slevu. Že celý byl jedna reklama.',
+    q2:'Zaujme ta představa — že tvoje tělo může být nosičem ceny.',
+    q3:'Poradíš hlídat si, co nosíš jako cenovku. Třeba to není tvoje cena.',
+    ukol:'Napiš svůj vlastní ceník. Kolik stojí tvůj úsměv? Tvé mlčení? Tvá pozornost? Tvá láska? Máš dnes slevu? Výprodej? Piš to věcně, obchodně, s čísly a procenty.',
+    jazyk:'Obchodní výrazy, čísla, ceny, procenta.',
+    protilehly:9 },
+  { nazev:'Marketingové sdělení místo slz', sub:'Emoce přepsané do reklamního jazyka. Pláč jako slogan.',
+    jad:'Nejhlubší emoce se dá přepsat do letáku. Smutek jako zboží.',
+    q1:'Odpovíš, že místo slz měl marketingové sdělení: Tento týden sleva 90 %. Tři za cenu jedné.',
+    q2:'Zaujme ta proměna — že nejhlubší emoce se dá přepsat do letáku.',
+    q3:'Poradíš oddělovat své emoce od řeči trhu. Nenechat je přepsat.',
+    ukol:'Napiš reklamní text na svůj vlastní smutek. Třeba: Cítíte se špatně? Vyzkoušejte náš smutek! Jen teď, v limitované edici, s 90% slevou! Používej floskule, reklamní fráze, hesla.',
+    jazyk:'Floskule, reklamní fráze, prázdná hesla.',
+    protilehly:7 },
+  { nazev:'Emoce, ale levná, už není čerstvá', sub:'Pocit, že to, co cítíš, je pro druhé bezcenné. Bolest s expirací.',
+    jad:'Emoce může být nečerstvá. Má datum spotřeby.',
+    q1:'Odpovíš, že prodavač řekl: To je emoce. Ale levná. Už není čerstvá.',
+    q2:'Zaujme ta krutost — že emoce může být nečerstvá.',
+    q3:'Poradíš nestarat se o to, jestli je tvá emoce čerstvá. Třeba je stará a pořád platná.',
+    ukol:'Napiš text, ve kterém sám/sama sebe shazuješ. Třeba: Moje radost? Levná, prošlá, nikdo by ji nechtěl. Můj vztek? Už není čerstvý, ztratil na ceně. Hodnoť se, znehodnocuj se.',
+    jazyk:'Hodnotící výrazy s negativním nádechem, znehodnocování.',
+    protilehly:10 },
+  { nazev:'Tři za cenu jedné', sub:'Kvantifikace něčeho, co se nedá kvantifikovat. Pláč v množství.',
+    jad:'Hodnota v počtu, ne v hloubce. Smutek jako násobitelná emoce.',
+    q1:'Odpovíš, že krokodýl byl tři za cenu jedné. Že jeho hodnota byla v počtu, ne v hloubce.',
+    q2:'Zaujme ta absurdita — že se dá koupit víc stejného smutku.',
+    q3:'Poradíš nenechat se spočítat. Tvá hodnota není v množství.',
+    ukol:'Napiš text, který se pořád opakuje. Třeba jednu větu třikrát, ale pokaždé jinak. Nebo jeden pocit ve třech variantách. Ať je v tom kvantita, násobení, množství.',
+    jazyk:'Opakování, kvantifikace, výčty.',
+    protilehly:8 },
+  { nazev:'Polička vedle keramického smutku', sub:'Tvá autentická bolest vystavená vedle umělých náhražek.',
+    jad:'Pravé a umělé vedle sebe — k nerozeznání.',
+    q1:'Odpovíš, že si ho paní dala na poličku vedle keramického smutku a plastového soucitu.',
+    q2:'Zaujme ta rovnost — že vedle sebe stojí pravé a umělé.',
+    q3:'Poradíš nebát se, že si tě někdo splete s náhražkou. Třeba to není tvoje starost.',
+    ukol:'Napiš text o tom, co je vedle tebe. Třeba o umělých věcech, které s tebou sousedí — keramický smutek, plastový soucit, skleněná radost. Popiš je, ať je jasné, že jsou vedle tebe.',
+    jazyk:'Výčty umělých věcí, kýč, přiznaná neautenticita.',
+    protilehly:6 },
+  { nazev:'Tlačítko na břiše', sub:'Tvá emoce se dá spustit na povel. Spontánnost jako servisní funkce.',
+    jad:'Smutek jde vyvolat stisknutím. Už není tvůj.',
+    q1:'Odpovíš, že když se paní cítila deprimovaná, zmáčkla tlačítko a krokodýl řekl: Buďte dojatí.',
+    q2:'Zaujme ta mechaničnost — že smutek jde vyvolat stisknutím.',
+    q3:'Poradíš hlídat si, jestli v tobě někdo nemačká tlačítka.',
+    ukol:'Napiš text, který by se dal spouštět tlačítkem. Třeba deset stejných vět, které bys řekl/a, kdyby tě někdo zmáčkl. Ať je to mechanické, opakované, bez života.',
+    jazyk:'Opakování stejné fráze, reprodukovaný text, mechanické věty.',
+    protilehly:5 },
+  { nazev:'Jazyk na kontrole', sub:'Vnější hlas, který posuzuje legitimitu tvého projevu.',
+    jad:'Někdo přichází a říká, co je správné. Rozhoduje o tvém jazyce.',
+    q1:'Odpovíš, že přišel jazyk se smyslem na kontrolu a řekl: Tohle není věta. To je výkřik v obalu!',
+    q2:'Zaujme ta autorita — že někdo rozhoduje, co je tvůj jazyk.',
+    q3:'Poradíš nenechat si kontrolovat svůj jazyk. Třeba ten výkřik v obalu je to jediné pravdivé.',
+    ukol:'Napiš text, který kontroluje sám sebe. Třeba: Tahle věta je moc dlouhá, měla by být kratší. Tohle slovo sem nepatří. Tenhle odstavec není dost dobrý. Buď svým vlastním cenzorem.',
+    jazyk:'Normativní výroky, hodnocení správnosti, metajazyk.',
+    protilehly:2 },
+  { nazev:'Výkřik v obalu', sub:'Opravdová emoce uvězněná v klišé, v obalu, který ji znemožňuje.',
+    jad:'Výkřik je v obalu, ale obal je nepoškozený. Nikdo se dovnitř nepodíval.',
+    q1:'Odpovíš, že jazyk řekl: To je výkřik v obalu! Ale v nepoškozeném, neschváleném.',
+    q2:'Zaujme ten paradox — že výkřik je v obalu, ale obal je nepoškozený.',
+    q3:'Poradíš rozbalovat obaly. Třeba najdeš výkřik.',
+    ukol:'Napiš text, který vypadá obyčejně, ale něco v něm křičí. Třeba formou nákupního seznamu, pod kterým je schovaný obrovský smutek. Nebo jako návod k použití, který je vlastně o ztrátě smyslu.',
+    jazyk:'Kontrast mezi formou a obsahem — banalita x hloubka.',
+    protilehly:4 },
+  { nazev:'Slzy v akci, do vyprodání', sub:'Tvá bolest má expiraci. Pláčeš, ale všichni si myslí, že je to reklama.',
+    jad:'Bezmoc — pláčeš, ale oni myslí, že je to sleva.',
+    q1:'Odpovíš, že krokodýl se rozplakal, ale slzy už nikdo nebral vážně. Byly v akci. Do vyprodání.',
+    q2:'Zaujme ta bezmoc — že pláčeš, a oni myslí, že je to sleva.',
+    q3:'Poradíš plakat, i když tomu nikdo nevěří. Třeba jednou dojde k vyprodání.',
+    ukol:'Napiš text, který ví, že brzy skončí. Třeba o posledních dnech slevy, o tom, že se vyprodává, že už brzo nebude. Ať je v tom naléhavost konce.',
+    jazyk:'Fráze o konci, o vyprodání, o limitu.',
+    protilehly:1 },
+  { nazev:'Význam v akci', sub:'Samotný smysl je zlevněný, snadno dostupný, a proto podezřelý.',
+    jad:'Hluboké myšlenky v letáku. I tahle pohádka může být v akci.',
+    q1:'Odpovíš, že krokodýl říká: Možná je to jen význam v akci. Sleva na smysl.',
+    q2:'Zaujme ta sebereflexe — že i tohle může být zboží.',
+    q3:'Poradíš brát vážně i věci v akci. Třeba je v nich víc, než se zdá.',
+    ukol:'Napiš text, ve kterém mícháš hluboké myšlenky s reklamním jazykem. Třeba: Smysl života? Jen teď v akci! Kupte si pravdu za polovic! Ať je to filozofie v letáku.',
+    jazyk:'Filozofické fráze v tržním kontextu, mix hloubky a konzumu.',
+    protilehly:3 },
+  { nazev:'Snadno dostupné není falešné', sub:'Klíčový paradox. Dostupnost není důkaz nepravdy.',
+    jad:'To, co je všude, může být skutečné. Krokodýlí slzy nejsou falešné.',
+    q1:'Odpovíš poslední větou: Krokodýlí slzy nejsou falešné. Jsou jen snadno dostupné.',
+    q2:'Zaujme ta pointa — že dostupnost není důkaz nepravdy.',
+    q3:'Poradíš věřit i snadno dostupným věcem. Třeba jsou skutečné.',
+    ukol:'Napiš text, který je snadno dostupný, jednoduchý, srozumitelný. Třeba o tom, že to, co je na dosah, může být skutečné. Žádná elita, žádné šifry. Prostě věta za větou, každý rozumí.',
+    jazyk:'Jednoduchá konstatování, přístupný jazyk, absence elitářství.',
+    protilehly:0 }
+];
+
+const klice = {
+  0: ['probudil','zboží','produkt','náhle','zjistil','objekt','stalo se'],
+  1: ['cenovka','sleva','cena','ocas','čelo','hodnota','kolik stojí'],
+  2: ['marketingové','reklama','slogan','leták','akce','sdělení','jen teď'],
+  3: ['levná','nečerstvá','prošlá','bezcenná','ztratila','shazuji','nestojí'],
+  4: ['tři za','množství','opakuje','výčet','počet','násobení','hloubka'],
+  5: ['polička','keramický','plastový','umělý','náhražka','vedle','nerozezná'],
+  6: ['tlačítko','mechanické','spustit','na povel','nahrávka','opakovaně'],
+  7: ['kontrola','správné','hodnotí','normativní','co je špatně','cenzor','autorita'],
+  8: ['výkřik','obal','zabalený','schovaný','paradox','nákupní seznam','návod'],
+  9: ['vyprodání','slzy','pláče','expiruje','konec','do vyprodání','brzo skončí'],
+  10: ['smysl v akci','filozofie','hluboké','konzum','leták s myšlenkou','sleva na smysl'],
+  11: ['snadno dostupné','přístupný','není falešné','každý rozumí','jednoduché','skutečné']
+};
+
+function buildUhly(){
+  const list=document.getElementById('uhly-list');
+  uhly.forEach((u,i)=>{
+    const div=document.createElement('div');div.className='uhel';div.id='u-'+i;
+    div.innerHTML='<div class="uhel-header" onclick="toggleU('+i+')"><span class="u-num">'+String(i+1).padStart(2,'0')+'</span>'
+      +'<div><div class="uhel-nazev">'+u.nazev+'</div><div class="uhel-sub">'+u.sub+'</div></div>'
+      +'<span class="u-toggle" id="t-'+i+'">+</span></div>'
+      +'<div class="uhel-body" id="b-'+i+'">'
+      +'<div class="zadani-blok"><div class="blok-label">Kreativní úkol · 20 minut</div><p class="blok-text">'+u.ukol+'</p></div>'
+      +'<div class="pravidla">'
+      +'<div class="pravidlo p1"><div class="blok-label">Jak to vidí Q1</div><p class="blok-text">'+u.q1+'</p></div>'
+      +'<div class="pravidlo p2"><div class="blok-label">Jak to vidí Q2 + Q3</div><p class="blok-text">'+u.q2+' '+u.q3+'</p></div>'
+      +'</div>'
+      +'<div class="jazykovy-blok"><div class="blok-label">Jazykový fenomén — Diagnostika II</div><p class="blok-text">'+u.jazyk+'</p></div>'
+      +'<div class="pisarna"><div class="blok-label">Váš text</div><textarea placeholder="Pište sem — bez opravování, bez zastavení..."></textarea></div>'
+      +'<p class="protilehly-link">Protilehlý úhel: <a onclick="jumpU('+u.protilehly+')">'+(u.protilehly+1)+'. '+uhly[u.protilehly].nazev+'</a></p>'
+      +'</div>';
+    list.appendChild(div);
+  });
+}
+buildUhly();
+
+function toggleU(i){const b=document.getElementById('b-'+i);const t=document.getElementById('t-'+i);const o=b.classList.toggle('open');t.textContent=o?'−':'+';}
+function jumpU(i){if(!document.getElementById('b-'+i).classList.contains('open'))toggleU(i);document.getElementById('u-'+i).scrollIntoView({behavior:'smooth',block:'start'});}
+
+const varText={
+  A:'Zavřete oči, ťukněte prstem na obrazovku a udělejte ten úhel, který vybere prst.',
+  B:'Přečtěte si 12 úhlů a vyberte ten, který nejlépe popisuje vaši aktuální zkušenost s fenoménem krokodýla.',
+  C:'Odpovězte na 3 otázky níže — systém přiřadí váš dominantní úhel a doporučí protilehlý.'
+};
+function setVar(v,btn){
+  document.querySelectorAll('.var-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('var-popis').textContent=varText[v];
+  if(v==='A'){const r=Math.floor(Math.random()*12);setTimeout(()=>{jumpU(r);},300);}
+  if(v==='C')document.getElementById('otazky').scrollIntoView({behavior:'smooth'});
+}
+
+function norm(s){
+  return s.toLowerCase()
+    .replace(/[áa]/g,'a').replace(/[éeě]/g,'e').replace(/[íiy]/g,'i')
+    .replace(/[óo]/g,'o').replace(/[úůu]/g,'u').replace(/[čc]/g,'c')
+    .replace(/[ďd]/g,'d').replace(/[ňn]/g,'n').replace(/[řr]/g,'r')
+    .replace(/[šs]/g,'s').replace(/[ťt]/g,'t').replace(/[žz]/g,'z');
+}
+
+function diagnostika(){
+  const raw=['q1','q2','q3'].map(id=>document.getElementById(id).value).join(' ');
+  if(!raw.trim()){alert('Vyplňte alespoň jednu odpověď.');return;}
+  const txt=norm(raw);
+  let maxK=0,maxS=0;
+  Object.entries(klice).forEach(([k,kw])=>{
+    const s=kw.reduce((a,w)=>a+(txt.includes(norm(w))?1:0),0);
+    if(s>maxS){maxS=s;maxK=parseInt(k);}
+  });
+  if(maxS===0)maxK=Math.floor(Math.random()*12);
+  const pI=uhly[maxK].protilehly;
+  document.getElementById('diag-dominant').textContent='Vaše odpovědi ukazují nejsilněji na úhel č. '+(maxK+1)+': '+uhly[maxK].nazev+'.';
+  document.getElementById('diag-navrhy').innerHTML=
+    '<button class="navrh-btn" onclick="jumpU('+maxK+')">→ Váš úhel: '+(maxK+1)+'. '+uhly[maxK].nazev+'</button>'
+    +'<button class="navrh-btn" onclick="jumpU('+pI+')">→ Protilehlý: '+(pI+1)+'. '+uhly[pI].nazev+'</button>';
+  const out=document.getElementById('diag-out');
+  out.style.display='block';
+  out.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+</script>
+</body>
+</html>
