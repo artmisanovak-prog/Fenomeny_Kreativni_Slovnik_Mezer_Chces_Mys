@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Liška — kreativní miniatury</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{--bg:#0f0f0f;--surface:#161616;--surface2:#1c1c1c;--cream:#e8e0d0;--dim:rgba(232,224,208,.42);--accent:#a89880;--border:rgba(168,152,128,.15);--serif:'Cormorant Garamond',Georgia,serif;--mono:'DM Mono',monospace}
+    html{scroll-behavior:smooth}
+    body{background:var(--bg);color:var(--cream);font-family:var(--mono);font-size:14px;line-height:1.8;-webkit-font-smoothing:antialiased}
+    a{color:inherit;text-decoration:none}
+    p{margin-bottom:10px}p:last-child{margin-bottom:0}
+    .wrap{max-width:760px;margin:0 auto;padding:0 28px}
+    nav{position:sticky;top:0;z-index:100;border-bottom:1px solid var(--border);background:rgba(15,15,15,.92);backdrop-filter:blur(12px);padding:14px 28px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+    .nav-back{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);transition:color .2s}
+    .nav-back:hover{color:var(--cream)}
+    .nav-title{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--accent)}
+    .hero{padding:0 0 56px;border-bottom:1px solid var(--border)}
+    .hero-ilustrace{width:100%;max-height:380px;overflow:hidden;margin-bottom:40px;position:relative}
+    .hero-ilustrace img{width:100%;height:380px;object-fit:cover;object-position:center 30%;filter:grayscale(100%) contrast(1.08);display:block}
+    .hero-ilustrace-caption{position:absolute;bottom:12px;right:16px;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:rgba(232,224,208,.3)}
+    .hero-label{font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:var(--accent);margin-bottom:20px}
+    .hero h1{font-family:var(--serif);font-size:clamp(3rem,7vw,5.5rem);font-weight:300;line-height:1.0;color:var(--cream);margin-bottom:8px}
+    .hero h1 em{font-style:italic;color:var(--accent)}
+    .hero-veta{font-family:var(--serif);font-size:clamp(.95rem,2vw,1.25rem);font-style:italic;color:var(--dim);border-left:1px solid var(--accent);padding-left:20px;max-width:500px;margin:20px 0 36px;line-height:1.9}
+    .fenomen-box{border:1px solid var(--accent);padding:20px 22px;margin-bottom:32px;background:rgba(168,152,128,.06)}
+    .fenomen-label{font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin-bottom:10px}
+    .fenomen-text{font-size:13px;color:rgba(232,224,208,.7);line-height:1.8}
+    .var-bar{display:flex;gap:1px;background:var(--border);border:1px solid var(--border)}
+    .var-btn{flex:1;padding:13px 12px;background:var(--surface);border:none;cursor:pointer;font-family:var(--mono);font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;color:var(--dim);transition:background .12s,color .12s;text-align:center}
+    .var-btn:hover{background:#1e1e1e;color:var(--cream)}
+    .var-btn.active{background:var(--accent);color:var(--bg)}
+    .var-popis{padding:12px 16px;font-size:.8rem;color:var(--dim);border:1px solid var(--border);border-top:none;background:var(--surface)}
+    .sekce{padding:56px 0;border-bottom:1px solid var(--border)}
+    .sekce-label{font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin-bottom:16px}
+    h2{font-family:var(--serif);font-size:clamp(1.5rem,3.5vw,2.2rem);font-weight:300;color:var(--cream);margin-bottom:18px}
+    h2 em{font-style:italic;color:var(--accent)}
+    .pohadka-outer{border:1px solid var(--border);background:var(--surface);max-height:420px;overflow-y:auto;padding:0 28px}
+    .pohadka{font-family:var(--serif);font-style:italic;font-size:.97rem}
+    .pohadka p{padding:.45em 0;color:rgba(232,224,208,.8)}
+    .pohadka-outer::-webkit-scrollbar{width:2px}
+    .pohadka-outer::-webkit-scrollbar-thumb{background:var(--accent)}
+    .otazky{border-top:1px solid var(--border)}
+    .otazka{padding:22px 0;border-bottom:1px solid var(--border)}
+    .q-label{font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);margin-bottom:8px}
+    .q-text{font-size:.95rem;margin-bottom:6px;color:var(--cream)}
+    textarea{width:100%;background:var(--surface);border:1px solid var(--border);color:var(--cream);padding:12px;font-family:var(--mono);font-size:.85rem;line-height:1.7;resize:vertical;min-height:68px}
+    textarea:focus{outline:1px solid var(--accent)}
+    textarea::placeholder{color:rgba(232,224,208,.2)}
+    .btn-diag{margin-top:20px;padding:12px 28px;font-size:11px;letter-spacing:.12em;text-transform:uppercase;background:var(--accent);color:var(--bg);border:none;cursor:pointer;font-family:var(--mono);transition:background .15s}
+    .btn-diag:hover{background:#c0aa90}
+    .diag-vysledek{display:none;border:1px solid var(--accent);padding:24px;margin-top:20px;background:var(--surface)}
+    .diag-vysledek h3{font-family:var(--serif);font-size:1.1rem;font-weight:400;color:var(--cream);margin-bottom:10px}
+    .dominant{font-size:.82rem;color:var(--dim);margin-bottom:16px}
+    .navrh-btn{display:block;width:100%;padding:11px 16px;margin-bottom:6px;background:transparent;border:1px solid var(--border);color:var(--cream);font-family:var(--mono);font-size:.82rem;text-align:left;cursor:pointer;transition:background .12s,border-color .12s}
+    .navrh-btn:hover{background:var(--accent);border-color:var(--accent);color:var(--bg)}
+    .navrh-btn:last-child{margin-bottom:0}
+    .uhel{border-bottom:1px solid var(--border)}
+    .uhel-header{display:grid;grid-template-columns:52px 1fr auto;padding:18px 0;cursor:pointer;align-items:center}
+    .uhel-header:hover .uhel-nazev{color:var(--accent)}
+    .u-num{font-family:var(--serif);font-size:1.7rem;font-weight:300;color:rgba(168,152,128,.2);line-height:1}
+    .uhel-nazev{font-size:.88rem;font-weight:400;color:var(--cream)}
+    .uhel-sub{font-size:.72rem;color:var(--dim);margin-top:3px;font-style:italic;font-family:var(--serif)}
+    .u-toggle{font-size:.72rem;color:var(--dim)}
+    .uhel-body{display:none;padding:0 0 28px 52px}
+    .uhel-body.open{display:block}
+    .blok-label{font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);margin-bottom:6px;margin-top:14px}
+    .blok-label:first-child{margin-top:0}
+    .blok-text{font-size:.86rem;color:rgba(232,224,208,.7);line-height:1.75}
+    .blok-text.italic{font-family:var(--serif);font-style:italic;font-size:.93rem;color:rgba(232,224,208,.6)}
+    .zadani-blok{margin-bottom:14px}
+    .pravidla{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0}
+    .pravidlo{background:var(--surface2);padding:14px;border-left:2px solid var(--border)}
+    .pravidlo.p2{border-left-color:var(--accent)}
+    .jazykovy-blok{background:rgba(168,152,128,.06);border-left:2px solid var(--accent);padding:14px 16px;margin:14px 0}
+    .protilehly-link{font-size:.76rem;color:var(--dim);font-style:italic;margin-top:12px}
+    .protilehly-link a{color:var(--accent);text-decoration:underline;text-underline-offset:2px;cursor:pointer}
+    .pisarna textarea{min-height:110px;margin-top:8px}
+    @media(max-width:560px){.pravidla{grid-template-columns:1fr}}
+    .tbl-outer{border:1px solid var(--border);overflow-x:auto;margin-top:20px}
+    table{width:100%;border-collapse:collapse;font-size:.78rem}
+    thead tr{border-bottom:1px solid var(--border)}
+    thead th{padding:12px 16px;text-align:left;font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);font-weight:400;font-family:var(--mono)}
+    thead th:first-child{color:var(--dim)}
+    tbody tr{border-bottom:1px solid rgba(168,152,128,.07)}
+    tbody tr:last-child{border-bottom:none}
+    tbody td{padding:12px 16px;color:rgba(232,224,208,.6);vertical-align:top;font-size:.78rem}
+    tbody td:first-child{color:var(--accent);font-size:.72rem;white-space:nowrap}
+    tbody td:nth-child(2){color:rgba(232,224,208,.5);font-style:italic}
+    .profil-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:16px 0}
+    .profil-item{padding:8px;background:var(--surface2);border-left:2px solid var(--border);font-size:.7rem}
+    .profil-item strong{display:block;font-size:.65rem;color:var(--accent);margin-bottom:2px}
+    .profil-item span{color:rgba(232,224,208,.7)}
+    .btn-analyza{margin:10px 0 20px;padding:10px 22px;font-size:11px;background:transparent;border:1px solid var(--accent);color:var(--accent);cursor:pointer;font-family:var(--mono)}
+    .btn-analyza:hover{background:var(--accent);color:var(--bg)}
+    .footer{padding:36px 0;border-top:1px solid var(--border);display:flex;justify-content:space-between;flex-wrap:wrap;gap:14px}
+    .footer p{font-size:.76rem;color:var(--dim)}
+    .footer a{color:var(--accent)}
+    .footer a:hover{text-decoration:underline}
+  </style>
+</head>
+<body>
+<nav>
+  <a class="nav-back" href="../../../index.html">← Všechna zvířata</a>
+  <span class="nav-title">Liška</span>
+</nav>
+<div class="wrap">
+
+<section class="hero">
+  <div class="hero-ilustrace">
+    <img src="doma/ilustrace/liska.jpg" alt="Liška" onerror="this.style.display='none';this.parentElement.style.background='var(--surface2)'">
+    <span class="hero-ilustrace-caption">ilustrace · liška</span>
+  </div>
+  <p class="hero-label">Kreativní miniatura · Karta Liška</p>
+  <h1>Liška</h1>
+  <p class="hero-veta">„Její srdce je kámen. Ale ne ten, co se nosí. Ten, co se nese."</p>
+  <div class="fenomen-box">
+    <div class="fenomen-label">Fenomén Lišky — bytí z části / esence po ztrátě</div>
+    <p class="fenomen-text">Příběh o tom, když z tebe někdo bere kusy – srst, tlapky, úsměv, srdce – a ty zjišťuješ, že pořád jsi. Že to, co ti zůstane, je někdy víc než to, co měli. Fenomén Lišky zkoumá vztah k celistvosti, ke ztrátě a k tomu, co si ze sebe necháváš, i když už nemáš nic.</p>
+  </div>
+  <div class="var-bar">
+    <button class="var-btn active" onclick="setVar('A',this)">🎲 Náhodně</button>
+    <button class="var-btn" onclick="setVar('B',this)">🧭 Podle nálady</button>
+    <button class="var-btn" onclick="setVar('C',this)">🔍 Diagnosticky</button>
+  </div>
+  <div class="var-popis" id="var-popis">Zavřete oči, ťukněte prstem na obrazovku a udělejte ten úhel, který vybere prst.</div>
+</section>
+
+<section class="sekce">
+  <p class="sekce-label">Pohádka · přečtěte pomalu</p>
+  <h2>O lišce, <em>která byla z části</em></h2>
+  <p style="font-size:.82rem;color:var(--dim);margin-bottom:16px;">Sledujte kde vás zastaví — kde cítíte odpor nebo poznání.</p>
+  <div class="pohadka-outer"><div class="pohadka">
+    <p>Kdysi, v krajině, kde se stromy nekláněly kvůli větru, ale kvůli tíze slov, žila liška. Ne ta z dětských knížek, co krade slepice a směje se pod fousy. Tahle liška byla jiná. Tichá. Pozorující. A hlavně – celá.</p>
+    <p>Měla kožich, který se leskl jako podzimní večer. Tlapky, které uměly chodit po sněhu, aniž by ho rušily. Oči, které viděly věci, co se ještě nestaly. A srdce – těžké, tvrdé, ale průzračné. Diamant. Velký. Ne pro parádu. Pro tíhu.</p>
+    <p>Ale svět si všiml. A jakmile si svět všimne, začne chtít.</p>
+    <p>První přišli obchodníci. S měřítky, s cenami, s rukama připravenýma brát.<br>„Ten kožich,“ řekli. „To je přesně ono. Luxus. Teplo. Lesk.“<br>A tak lišce vzali srst. Zůstala nahá. Ale ne slabá. Jen jiná.</p>
+    <p>Pak přišli ti, co chodí v botách z hadí kůže. Znají cestu. My chceme směr.“<br>A tak jí vzali chodidla. Zůstaly jí jen vzpomínky na stopy.</p>
+    <p>Potom přišli šperkaři. Ne pro krásu, ale pro sílu.<br>„Zuby z mrožoviny? Pche. Ale liščí zuby – to je elegance s ostřím.“<br>A tak jí vzali úsměv. Zůstalo mlčení.</p>
+    <p>Nakonec přišel někdo, kdo se neptal. Nepředstavil se. Jen sáhl do její hrudi a vytáhl srdce. Byl to kámen. Diamant. Velký.<br>„Tohle je to nejcennější,“ řekl. A odešel.</p>
+    <p>A liška? Zůstala. Bez srsti. Bez tlapek. Bez smíchu. Bez srdce. Ale pořád tam byla. Ne jako zvíře. Jako stín. Jako paměť.</p>
+    <p>Začala se pohybovat jinak. Ne kráčet – ale klouzat. Ne mluvit – ale šeptat. Ne žít – ale být.</p>
+    <p>A v tom bytí se začalo něco dít. Lidé, kteří si z ní vzali, začali ztrácet. Kožich se rozpadl na chlupy, které se nedaly sešít. Boty z hadí kůže se rozpadly na šupiny, které klouzaly z nohou. Šperky ze zubů se začaly třepit, jako by se smály těm, kdo je nosí. A diamant? Ten zčernal. Ne z špíny. Z pravdy.</p>
+    <p>Protože to, co se vezme násilím, se neudrží. A to, co se vezme z lišky, se nehodí nikomu jinému.</p>
+    <p>Liška se mezitím stala legendou. Ne tou, co se vypráví dětem. Tou, co se šeptá mezi stromy.<br>„Viděli jste ji?“<br>„Ne, ale cítili jsme ji.“<br>„Jak?“<br>„Jako ticho, které má tvar.“</p>
+    <p>A tak se začalo říkat, že někde běhá liška, která nemá nic – a právě proto má všechno.</p>
+    <p>Její srdce je kámen. Ale ne ten, co se nosí. Ten, co se nese.</p>
+  </div></div>
+</section>
+
+<section class="sekce" id="otazky">
+  <p class="sekce-label">Diagnostika I — Tři otázky · odpovězte rychle, bez opravování</p>
+  <h2>Co příběh říká <em>vám.</em></h2>
+  <p style="font-size:.82rem;color:var(--dim);margin-bottom:20px;">Vaše odpovědi se přiřazují ke 12 úhlům fenoménu Lišky — každý úhel je jiný způsob, jak prožíváte ztrátu a celistvost.</p>
+  <div class="otazky">
+    <div class="otazka"><p class="q-label">Q1 — Smysl</p><p class="q-text">Co je podle vás hlavní pointa nebo sdělení tohoto příběhu? O čem podle vás je?</p><textarea id="q1" placeholder="První věc, která vás napadne..."></textarea></div>
+    <div class="otazka"><p class="q-label">Q2 — Zaujetí</p><p class="q-text">Která konkrétní věta, obraz nebo moment vás nejvíc zaujal — a proč?</p><textarea id="q2" placeholder="Konkrétní věta nebo moment..."></textarea></div>
+    <div class="otazka"><p class="q-label">Q3 — Aplikace</p><p class="q-text">Kdyby tento příběh byl návodem nebo radou, co by vám radil dělat (nebo nedělat) ve vašem osobním nebo pracovním životě?</p><textarea id="q3" placeholder="Rada pohádky pro váš život..."></textarea></div>
+  </div>
+  <button class="btn-diag" onclick="diagnostikaVyznam()">Zjistit svůj úhel (z významu) →</button>
+  <button class="btn-analyza" onclick="diagnostikaStruktura()">🔬 Analyzovat jazyk (diagnostika II)</button>
+  <div class="diag-vysledek" id="diag-out-vyznam">
+    <h3>Váš dominantní úhel (z významu)</h3>
+    <p class="dominant" id="diag-dominant"></p>
+    <p style="font-size:.8rem;color:var(--dim);margin-bottom:14px;">Doporučené úkoly — váš úhel a protilehlý (intervence):</p>
+    <div id="diag-navrhy"></div>
+  </div>
+  <div class="diag-vysledek" id="diag-out-struktura">
+    <h3>Profil textu — jazykové jevy</h3>
+    <div id="struktura-profil" class="profil-grid"></div>
+    <p id="struktura-doporuceni" style="font-size:.82rem;color:var(--dim);"></p>
+    <div id="struktura-tlacitka"></div>
+  </div>
+</section>
+
+<section class="sekce" id="uhly">
+  <p class="sekce-label">12 úhlů fenoménu Lišky</p>
+  <h2>Váš úhel — nebo nechte <em>vybrat příběh.</em></h2>
+  <div id="uhly-list"></div>
+</section>
+
+<section class="sekce">
+  <p class="sekce-label">Tabulka jazykových fenoménů</p>
+  <h2>Co říká váš jazyk — <em>ne obsah, ale forma.</em></h2>
+  <div class="tbl-outer">
+    <table>
+      <thead><tr><th>Úhel</th><th>Jazykový fenomén</th><th>Intervence (protilehlý)</th></tr></thead>
+      <tbody>
+        <tr><td>1. Celá</td><td>Dlouhé, plynulé věty bez přerušení</td><td>Stín – piš ve fragmentech</td></tr>
+        <tr><td>2. Podzimní večer</td><td>Bohaté přívlastky, metaforické obrazy</td><td>Nahá – piš stroze, bez ozdob</td></tr>
+        <tr><td>3. Nerušený sníh</td><td>Krátké věty, jednoduchá slova, lehkost</td><td>Vzpomínky na stopy – vracej se, opakuj</td></tr>
+        <tr><td>4. Co se nestalo</td><td>Podmiňovací způsob, hypotetické věty</td><td>Mlčení – jen to, co je</td></tr>
+        <tr><td>5. Diamant pro tíhu</td><td>Krátké, těžké věty, každé slovo má váhu</td><td>Kámen, který se nese – piš lehčeji, přidej slova</td></tr>
+        <tr><td>6. Nahá</td><td>Absence přívlastků, holé věty, strohost</td><td>Podzimní večer – přidej barvy, metafory</td></tr>
+        <tr><td>7. Vzpomínky na stopy</td><td>Opakování, návraty, reminiscence</td><td>Nerušený sníh – piš dopředu, nenechávej stopy</td></tr>
+        <tr><td>8. Mlčení</td><td>Výpadek, tři tečky, nedokončené věty</td><td>Co se nestalo – piš o možnostech</td></tr>
+        <tr><td>9. Stín</td><td>Rozmazané kontury, abstraktní pojmy</td><td>Celá – piš jasně, konkrétně</td></tr>
+        <tr><td>10. Ztráta dárců</td><td>Změna perspektivy, skok od já k oni</td><td>Legenda mezi stromy – zůstaň u sebe</td></tr>
+        <tr><td>11. Legenda mezi stromy</td><td>Nepřímá řeč, citace, „říká se“</td><td>Ztráta dárců – mluv přímo v 1. osobě</td></tr>
+        <tr><td>12. Kámen, který se nese</td><td>Dlouhá souvětí nesoucí těžká témata</td><td>Diamant pro tíhu – kratší věty s vahou</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<footer class="footer">
+  <p>Karta Liška · Chceš myš? — kreativní miniatury · © 2026 Michaela Nováková</p>
+  <p><a href="../../../index.html">← Zpět</a> · <a href="mailto:chcesmys@gmail.com">chcesmys@gmail.com</a></p>
+</footer>
+</div>
+
+<script>
+// ========== DATA ==========
+const angles = [
+  { 
+    nazev:'Celá', 
+    sub:'Být kompletní, mít všechno, být v sobě – než svět začne brát.',
+    tech:'Dlouhé, plynulé věty bez přerušení',
+    cil:'Věnuj se úkolu Stín – piš ve fragmentech, vynechávej',
+    zadani:'Napiš text o něčem, co je celé, úplné, kompaktní. Piš v dlouhých, plynulých větách, nic nevynechávej.',
+    protilehly:8 // Stín (index 8)
+  },
+  { 
+    nazev:'Podzimní večer', 
+    sub:'Krása, která je vidět, a proto je chtěná.',
+    tech:'Bohaté přívlastky, metaforické obrazy',
+    cil:'Věnuj se úkolu Nahá – piš stroze, bez ozdob',
+    zadani:'Popiš něco, co je krásné, lesklé, nápadné. Použij co nejvíc barevných přívlastků, metafor, obrazů.',
+    protilehly:5 // Nahá (index 5)
+  },
+  { 
+    nazev:'Nerušený sníh', 
+    sub:'Schopnost procházet světem, aniž bys ho narušil.',
+    tech:'Krátké věty, jednoduchá slova, lehkost',
+    cil:'Věnuj se úkolu Vzpomínky na stopy – vracej se, opakuj',
+    zadani:'Napiš text, který je lehký, čistý, nezanechává stopy. Každá věta ať je krátká, jednoduchá.',
+    protilehly:6 // Vzpomínky na stopy (index 6)
+  },
+  { 
+    nazev:'Co se nestalo', 
+    sub:'Vidění dopředu, intuice, schopnost tušit věci dřív, než přijdou.',
+    tech:'Podmiňovací způsob, hypotetické věty (kdyby, mohlo by)',
+    cil:'Věnuj se úkolu Mlčení – piš jen o tom, co je, co se stalo',
+    zadani:'Napiš text o něčem, co se nestalo, ale mohlo. Používej podmiňovací způsob, mluv o možnostech.',
+    protilehly:7 // Mlčení (index 7)
+  },
+  { 
+    nazev:'Diamant pro tíhu', 
+    sub:'Mít v sobě něco těžkého, průzračného, cenného – ne pro parádu, pro váhu.',
+    tech:'Krátké, těžké věty, každé slovo má váhu',
+    cil:'Věnuj se úkolu Kámen, který se nese – piš lehčeji, přidej víc slov',
+    zadani:'Napiš text, ve kterém každé slovo má váhu. Věty ať jsou krátké, hutné, bez zbytečných slov.',
+    protilehly:11 // Kámen, který se nese (index 11)
+  },
+  { 
+    nazev:'Nahá', 
+    sub:'Zůstat bez ochrany, bez srsti, bez krytí – a přesto ne slabý.',
+    tech:'Absence přívlastků, holé věty, strohost',
+    cil:'Věnuj se úkolu Podzimní večer – přidej barvy, metafory',
+    zadani:'Napiš text, ve kterém nic neschováváš, nic nezdobíš. Piš o sobě nahatě – bez metafor, bez příkras.',
+    protilehly:1 // Podzimní večer (index 1)
+  },
+  { 
+    nazev:'Vzpomínky na stopy', 
+    sub:'Mít jen paměť na pohyb, na to, kudy jsi šel, když už nemůžeš chodit.',
+    tech:'Opakování, návraty, reminiscence',
+    cil:'Věnuj se úkolu Nerušený sníh – piš dopředu, nenechávej stopy',
+    zadani:'Napiš text, ve kterém se vracíš do minulosti. Opakuj stejné motivy, vracej se k nim.',
+    protilehly:2 // Nerušený sníh (index 2)
+  },
+  { 
+    nazev:'Mlčení', 
+    sub:'Ztráta hlasu, ztráta úsměvu – a přesto výpověď.',
+    tech:'Výpadek, tři tečky, nedokončené věty',
+    cil:'Věnuj se úkolu Co se nestalo – piš o možnostech, hypotézách',
+    zadani:'Napiš text, který je plný ticha. Na místech, kde by mělo něco být, nech prázdno. Používej tři tečky.',
+    protilehly:3 // Co se nestalo (index 3)
+  },
+  { 
+    nazev:'Stín', 
+    sub:'Být přítomen, i když už nemáš, co tě dělalo živým.',
+    tech:'Rozmazané kontury, abstraktní pojmy, nejasné reference',
+    cil:'Věnuj se úkolu Celá – piš jasně, konkrétně',
+    zadani:'Napiš text, který je nejasný, rozmazaný, neuchopitelný. Vyhýbej se konkrétním jménům a určením.',
+    protilehly:0 // Celá (index 0)
+  },
+  { 
+    nazev:'Ztráta dárců', 
+    sub:'Ti, co brali, začali ztrácet.',
+    tech:'Změna perspektivy, skok od já k oni',
+    cil:'Věnuj se úkolu Legenda mezi stromy – zůstaň u sebe, u své proměny',
+    zadani:'Napiš text o někom, kdo ti něco vzal. A o tom, co se s tím člověkem stalo potom. Nesoustřeď se na sebe.',
+    protilehly:10 // Legenda mezi stromy (index 10)
+  },
+  { 
+    nazev:'Legenda mezi stromy', 
+    sub:'Stát se příběhem, který se šeptá.',
+    tech:'Nepřímá řeč, citace, „říká se“, „prý“',
+    cil:'Věnuj se úkolu Ztráta dárců – mluv přímo, v první osobě',
+    zadani:'Napiš text, který by se o tobě mohl šeptat mezi stromy. Svůj vlastní mýtus. Používej „říká se“, „prý“.',
+    protilehly:9 // Ztráta dárců (index 9)
+  },
+  { 
+    nazev:'Kámen, který se nese', 
+    sub:'Mít v sobě něco, co není na nošení, ale na cestu – na nesení.',
+    tech:'Dlouhá souvětí, která nesou těžká témata, ale unesou je',
+    cil:'Věnuj se úkolu Diamant pro tíhu – kratší věty s maximální vahou',
+    zadani:'Napiš text, ve kterém neseš něco těžkého, ale uneseš to. Piš v dlouhých souvětích.',
+    protilehly:4 // Diamant pro tíhu (index 4)
+  }
+];
+
+// Klíčová slova pro diagnostiku I (podle 12 úhlů Lišky)
+const keywords = {
+  0: ['celá','celistvost','kompletní','všechno','na začátku','úplná','nic nechybí'],                   // Celá
+  1: ['kožich','lesk','krása','podzimní','večer','barevný','nádherný','past na oči'],                 // Podzimní večer
+  2: ['sníh','nerušený','lehce','stopy','tichý','nenarušit','čistý','plynout'],                       // Nerušený sníh
+  3: ['nestalo','vidět dopředu','intuice','tušit','budoucnost','co bude','předtím'],                   // Co se nestalo
+  4: ['diamant','tíha','těžký','průzračný','kámen','váha','nosí','drží'],                              // Diamant pro tíhu
+  5: ['nahá','bez srsti','holý','obnažený','bez ochrany','zranitelný','kůže'],                        // Nahá
+  6: ['vzpomínky','stopy','paměť','vracet','minulost','chodit','zůstalo'],                             // Vzpomínky na stopy
+  7: ['mlčení','ticho','bez hlasu','němý','prázdno','tři tečky','nedokončený'],                       // Mlčení
+  8: ['stín','rozmazaný','nejasný','abstraktní','neuchopitelný','paměť','přítomen'],                   // Stín
+  9: ['ztráta','dárci','oni','ti co brali','rozpadlo','zčernalo','pravda'],                            // Ztráta dárců
+  10: ['legenda','šeptá','mezi stromy','vypráví','mýtus','říká se','prý','cítili'],                    // Legenda mezi stromy
+  11: ['kámen','nese','nosit','nést','unesl','cesta','drží','tíhu unese']                               // Kámen, který se nese
+};
+
+// ========== FUNKCE PRO ROZHRANÍ ==========
+function buildAngles(){
+  const list=document.getElementById('uhly-list');
+  angles.forEach((a,i)=>{
+    const div=document.createElement('div');div.className='uhel';div.id='u-'+i;
+    div.innerHTML='<div class="uhel-header" onclick="toggleU('+i+')"><span class="u-num">'+(i+1)+'</span><div><div class="uhel-nazev">'+a.nazev+'</div><div class="uhel-sub">'+a.sub+'</div></div><span class="u-toggle" id="t-'+i+'">+</span></div>'
+      +'<div class="uhel-body" id="b-'+i+'">'
+      +'<div class="zadani-blok"><div class="blok-label">Kreativní úkol · 20 minut</div><p class="blok-text">'+a.zadani+'</p></div>'
+      +'<div class="pravidla"><div class="pravidlo p1"><div class="blok-label">Jazykové zaměření</div><p class="blok-text">'+a.tech+'</p></div>'
+      +'<div class="pravidlo p2"><div class="blok-label">Co tím trénuješ</div><p class="blok-text">'+a.cil+'</p></div></div>'
+      +'<div class="pisarna"><div class="blok-label">Váš text</div><textarea placeholder="Pište sem — bez opravování, bez zastavení..."></textarea></div>'
+      +'<p class="protilehly-link">Protilehlý úhel: <a onclick="jumpU('+a.protilehly+')">'+(a.protilehly+1)+'. '+angles[a.protilehly].nazev+'</a></p>'
+      +'</div>';
+    list.appendChild(div);
+  });
+}
+buildAngles();
+
+function toggleU(i){const b=document.getElementById('b-'+i);const t=document.getElementById('t-'+i);const o=b.classList.toggle('open');t.textContent=o?'−':'+';}
+function jumpU(i){if(!document.getElementById('b-'+i).classList.contains('open'))toggleU(i);document.getElementById('u-'+i).scrollIntoView({behavior:'smooth',block:'start'});}
+
+const varText={
+  A:'Zavřete oči, ťukněte prstem na obrazovku a udělejte ten úhel, který vybere prst.',
+  B:'Přečtěte si 12 úhlů a vyberte ten, který nejlépe popisuje vaši aktuální zkušenost s fenomény lišky.',
+  C:'Odpovězte na 3 otázky níže — systém přiřadí váš dominantní úhel a doporučí protilehlý.'
+};
+function setVar(v,btn){
+  document.querySelectorAll('.var-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('var-popis').textContent=varText[v];
+  if(v==='A'){const r=Math.floor(Math.random()*12);setTimeout(()=>{jumpU(r);},300);}
+  if(v==='C')document.getElementById('otazky').scrollIntoView({behavior:'smooth'});
+}
+
+function norm(s){
+  return s.toLowerCase()
+    .replace(/[áa]/g,'a').replace(/[éeě]/g,'e').replace(/[íiy]/g,'i')
+    .replace(/[óo]/g,'o').replace(/[úůu]/g,'u').replace(/[čc]/g,'c')
+    .replace(/[ďd]/g,'d').replace(/[ňn]/g,'n').replace(/[řr]/g,'r')
+    .replace(/[šs]/g,'s').replace(/[ťt]/g,'t').replace(/[žz]/g,'z');
+}
+
+// ========== DIAGNOSTIKA I ==========
+function diagnostikaVyznam(){
+  const raw=['q1','q2','q3'].map(id=>document.getElementById(id).value).join(' ');
+  if(!raw.trim()){alert('Vyplňte alespoň jednu odpověď.');return;}
+  const txt=norm(raw);
+  let maxIdx=0,maxScore=0;
+  Object.entries(keywords).forEach(([idx,kw])=>{
+    const score = kw.reduce((a,w)=>a+(txt.includes(norm(w))?1:0),0);
+    if(score>maxScore){maxScore=score;maxIdx=parseInt(idx);}
+  });
+  if(maxScore===0)maxIdx=Math.floor(Math.random()*12);
+  const prot = angles[maxIdx].protilehly;
+  document.getElementById('diag-dominant').innerHTML = 
+    `Váš úhel: <strong>${maxIdx+1}. ${angles[maxIdx].nazev}</strong> (jazyk: ${angles[maxIdx].tech})`;
+  document.getElementById('diag-navrhy').innerHTML =
+    `<button class="navrh-btn" onclick="jumpU(${maxIdx})">→ Váš úhel: ${maxIdx+1}. ${angles[maxIdx].nazev}</button>` +
+    `<button class="navrh-btn" onclick="jumpU(${prot})">→ Protilehlý (intervence): ${prot+1}. ${angles[prot].nazev}</button>`;
+  document.getElementById('diag-out-vyznam').style.display='block';
+}
+
+// ========== DIAGNOSTIKA II ==========
+function diagnostikaStruktura(){
+  const raw=['q1','q2','q3'].map(id=>document.getElementById(id).value).join(' ');
+  if(!raw.trim()){alert('Vyplňte alespoň jednu odpověď.');return;}
+  const text = raw.toLowerCase();
+  const vety = text.split(/[.!?]+/).filter(v=>v.trim().length>0);
+  const slova = text.split(/\s+/);
+  
+  const detekce = [
+    { id:0, fn: ()=> vety.filter(v=>v.split(/\s+/).length>15).length },                               // dlouhé věty
+    { id:1, vzor: /(jako|jakoby|podobně|připomíná|barva|lesk|krásný|nádherný)/gi },                    // bohaté přívlastky
+    { id:2, fn: ()=> vety.filter(v=>v.split(/\s+/).length<=5).length },                                // krátké věty
+    { id:3, vzor: /(kdyby|když by|mohl|mohla|snad|možná|bude|stane se|nestalo)/gi },                   // podmiňovací způsob
+    { id:4, fn: ()=> vety.filter(v=>v.split(/\s+/).length<=4 && v.length>0).length },                  // krátké těžké věty
+    { id:5, vzor: /^[^ ]+ [^ ]+\.?$/gm },                                                              // holé věty (bez přívlastků – aproximace)
+    { id:6, fn: ()=>{                                                                                   // opakování
+        const frekv={}; slova.forEach(s=>{if(s.length>3) frekv[s]=(frekv[s]||0)+1;});
+        return Object.values(frekv).filter(f=>f>=3).length; } },
+    { id:7, vzor: /\.\.\.|…|--|prostě no|ale no/gi },                                                   // výpadky, tři tečky
+    { id:8, vzor: /\b(někdo|něco|tam|ten|ta|ono|jakýsi|jakási)\b/gi },                                 // abstraktní/rozmazané
+    { id:9, vzor: /\b(on|ona|oni|jejich|jim)\b/gi },                                                    // změna k "oni"
+    { id:10, vzor: /\b(říká se|prý|šeptá|povídá se|vypráví)\b/gi },                                     // nepřímá řeč
+    { id:11, fn: ()=> vety.filter(v=>v.split(/\s+/).length>12).length }                                 // dlouhá souvětí
+  ];
+
+  let skore = new Array(12).fill(0);
+  detekce.forEach(d=>{
+    if(d.vzor) skore[d.id] = (text.match(d.vzor)||[]).length;
+    else if(d.fn) skore[d.id] = d.fn();
+  });
+
+  const maxSkore = Math.max(...skore,1);
+  const normalized = skore.map(s=>Math.min(10,Math.round((s/maxSkore)*10)));
+
+  const profil = document.getElementById('struktura-profil');
+  profil.innerHTML = '';
+  normalized.forEach((val,i)=>{
+    const item = document.createElement('div');
+    item.className='profil-item';
+    item.style.borderLeftColor = i%2===0 ? '#a89880' : '#5a4c3c';
+    item.innerHTML = `<strong>${i+1}. ${angles[i].nazev}</strong><span>${val}/10</span>`;
+    profil.appendChild(item);
+  });
+
+  let maxIdx = normalized.indexOf(Math.max(...normalized));
+  const prot = angles[maxIdx].protilehly;
+  document.getElementById('struktura-doporuceni').innerHTML = 
+    `Nejsilnější jazykový jev odpovídá úhlu <strong>${maxIdx+1}. ${angles[maxIdx].nazev}</strong>. ` +
+    `Doporučený protilehlý úhel: <strong>${prot+1}. ${angles[prot].nazev}</strong>.`;
+  document.getElementById('struktura-tlacitka').innerHTML =
+    `<button class="navrh-btn" onclick="jumpU(${maxIdx})">→ Přejít na úhel ${maxIdx+1}</button>` +
+    `<button class="navrh-btn" onclick="jumpU(${prot})">→ Přejít na protilehlý ${prot+1}</button>`;
+
+  document.getElementById('diag-out-struktura').style.display='block';
+}
+</script>
+</body>
+</html>
