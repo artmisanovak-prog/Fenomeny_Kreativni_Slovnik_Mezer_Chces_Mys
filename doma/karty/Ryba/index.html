@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ryba — kreativní miniatury</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{--bg:#0f0f0f;--surface:#161616;--surface2:#1c1c1c;--cream:#e8e0d0;--dim:rgba(232,224,208,.42);--accent:#a89880;--border:rgba(168,152,128,.15);--serif:'Cormorant Garamond',Georgia,serif;--mono:'DM Mono',monospace}
+    html{scroll-behavior:smooth}
+    body{background:var(--bg);color:var(--cream);font-family:var(--mono);font-size:14px;line-height:1.8;-webkit-font-smoothing:antialiased}
+    a{color:inherit;text-decoration:none}
+    p{margin-bottom:10px}p:last-child{margin-bottom:0}
+    .wrap{max-width:760px;margin:0 auto;padding:0 28px}
+    nav{position:sticky;top:0;z-index:100;border-bottom:1px solid var(--border);background:rgba(15,15,15,.92);backdrop-filter:blur(12px);padding:14px 28px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+    .nav-back{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);transition:color .2s}
+    .nav-back:hover{color:var(--cream)}
+    .nav-title{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--accent)}
+    .hero{padding:0 0 56px;border-bottom:1px solid var(--border)}
+    .hero-ilustrace{width:100%;max-height:380px;overflow:hidden;margin-bottom:40px;position:relative}
+    .hero-ilustrace img{width:100%;height:380px;object-fit:cover;object-position:center 30%;filter:grayscale(100%) contrast(1.08);display:block}
+    .hero-ilustrace-caption{position:absolute;bottom:12px;right:16px;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:rgba(232,224,208,.3)}
+    .hero-label{font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:var(--accent);margin-bottom:20px}
+    .hero h1{font-family:var(--serif);font-size:clamp(3rem,7vw,5.5rem);font-weight:300;line-height:1.0;color:var(--cream);margin-bottom:8px}
+    .hero h1 em{font-style:italic;color:var(--accent)}
+    .hero-veta{font-family:var(--serif);font-size:clamp(.95rem,2vw,1.25rem);font-style:italic;color:var(--dim);border-left:1px solid var(--accent);padding-left:20px;max-width:500px;margin:20px 0 36px;line-height:1.9}
+    .fenomen-box{border:1px solid var(--accent);padding:20px 22px;margin-bottom:32px;background:rgba(168,152,128,.06)}
+    .fenomen-label{font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin-bottom:10px}
+    .fenomen-text{font-size:13px;color:rgba(232,224,208,.7);line-height:1.8}
+    .var-bar{display:flex;gap:1px;background:var(--border);border:1px solid var(--border)}
+    .var-btn{flex:1;padding:13px 12px;background:var(--surface);border:none;cursor:pointer;font-family:var(--mono);font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;color:var(--dim);transition:background .12s,color .12s;text-align:center}
+    .var-btn:hover{background:#1e1e1e;color:var(--cream)}
+    .var-btn.active{background:var(--accent);color:var(--bg)}
+    .var-popis{padding:12px 16px;font-size:.8rem;color:var(--dim);border:1px solid var(--border);border-top:none;background:var(--surface)}
+    .sekce{padding:56px 0;border-bottom:1px solid var(--border)}
+    .sekce-label{font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin-bottom:16px}
+    h2{font-family:var(--serif);font-size:clamp(1.5rem,3.5vw,2.2rem);font-weight:300;color:var(--cream);margin-bottom:18px}
+    h2 em{font-style:italic;color:var(--accent)}
+    .pohadka-outer{border:1px solid var(--border);background:var(--surface);max-height:360px;overflow-y:auto;padding:0 28px}
+    .pohadka{font-family:var(--serif);font-style:italic;font-size:.97rem}
+    .pohadka p{padding:.45em 0;color:rgba(232,224,208,.8)}
+    .pohadka p strong{font-style:normal;color:var(--accent);font-weight:400}
+    .pohadka-outer::-webkit-scrollbar{width:2px}
+    .pohadka-outer::-webkit-scrollbar-thumb{background:var(--accent)}
+    .otazky{border-top:1px solid var(--border)}
+    .otazka{padding:22px 0;border-bottom:1px solid var(--border)}
+    .q-label{font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);margin-bottom:8px}
+    .q-text{font-size:.95rem;margin-bottom:6px;color:var(--cream)}
+    textarea{width:100%;background:var(--surface);border:1px solid var(--border);color:var(--cream);padding:12px;font-family:var(--mono);font-size:.85rem;line-height:1.7;resize:vertical;min-height:68px}
+    textarea:focus{outline:1px solid var(--accent)}
+    textarea::placeholder{color:rgba(232,224,208,.2)}
+    .btn-diag{margin-top:20px;padding:12px 28px;font-size:11px;letter-spacing:.12em;text-transform:uppercase;background:var(--accent);color:var(--bg);border:none;cursor:pointer;font-family:var(--mono);transition:background .15s}
+    .btn-diag:hover{background:#c0aa90}
+    .diag-vysledek{display:none;border:1px solid var(--accent);padding:24px;margin-top:20px;background:var(--surface)}
+    .diag-vysledek h3{font-family:var(--serif);font-size:1.1rem;font-weight:400;color:var(--cream);margin-bottom:10px}
+    .dominant{font-size:.82rem;color:var(--dim);margin-bottom:16px}
+    .navrh-btn{display:block;width:100%;padding:11px 16px;margin-bottom:6px;background:transparent;border:1px solid var(--border);color:var(--cream);font-family:var(--mono);font-size:.82rem;text-align:left;cursor:pointer;transition:background .12s,border-color .12s}
+    .navrh-btn:hover{background:var(--accent);border-color:var(--accent);color:var(--bg)}
+    .navrh-btn:last-child{margin-bottom:0}
+    .uhel{border-bottom:1px solid var(--border)}
+    .uhel-header{display:grid;grid-template-columns:52px 1fr auto;padding:18px 0;cursor:pointer;align-items:center}
+    .uhel-header:hover .uhel-nazev{color:var(--accent)}
+    .u-num{font-family:var(--serif);font-size:1.7rem;font-weight:300;color:rgba(168,152,128,.2);line-height:1}
+    .uhel-nazev{font-size:.88rem;font-weight:400;color:var(--cream)}
+    .uhel-sub{font-size:.72rem;color:var(--dim);margin-top:3px;font-style:italic;font-family:var(--serif)}
+    .u-toggle{font-size:.72rem;color:var(--dim)}
+    .uhel-body{display:none;padding:0 0 28px 52px}
+    .uhel-body.open{display:block}
+    .blok-label{font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);margin-bottom:6px;margin-top:14px}
+    .blok-label:first-child{margin-top:0}
+    .blok-text{font-size:.86rem;color:rgba(232,224,208,.7);line-height:1.75}
+    .zadani-blok{margin-bottom:14px}
+    .pravidla{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0}
+    .pravidlo{background:var(--surface2);padding:14px;border-left:2px solid var(--border)}
+    .pravidlo.p2{border-left-color:var(--accent)}
+    .jazykovy-blok{background:rgba(168,152,128,.06);border-left:2px solid var(--accent);padding:14px 16px;margin:14px 0}
+    .protilehly-link{font-size:.76rem;color:var(--dim);font-style:italic;margin-top:12px}
+    .protilehly-link a{color:var(--accent);text-decoration:underline;text-underline-offset:2px;cursor:pointer}
+    .pisarna textarea{min-height:110px;margin-top:8px}
+    @media(max-width:560px){.pravidla{grid-template-columns:1fr}}
+    .tbl-outer{border:1px solid var(--border);overflow-x:auto;margin-top:20px}
+    table{width:100%;border-collapse:collapse;font-size:.78rem}
+    thead tr{border-bottom:1px solid var(--border)}
+    thead th{padding:12px 16px;text-align:left;font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);font-weight:400;font-family:var(--mono)}
+    thead th:first-child{color:var(--dim)}
+    tbody tr{border-bottom:1px solid rgba(168,152,128,.07)}
+    tbody tr:last-child{border-bottom:none}
+    tbody td{padding:12px 16px;color:rgba(232,224,208,.6);vertical-align:top;font-size:.78rem}
+    tbody td:first-child{color:var(--accent);font-size:.72rem;white-space:nowrap}
+    tbody td:nth-child(2){color:rgba(232,224,208,.5);font-style:italic}
+    .page-footer{padding:36px 0;border-top:1px solid var(--border);display:flex;justify-content:space-between;flex-wrap:wrap;gap:14px}
+    .page-footer p{font-size:.76rem;color:var(--dim)}
+    .page-footer a{color:var(--accent)}
+    .page-footer a:hover{text-decoration:underline}
+  </style>
+</head>
+<body>
+<nav>
+  <a class="nav-back" href="../../../index.html">← Všechna zvířata</a>
+  <span class="nav-title">Ryba</span>
+</nav>
+<div class="wrap">
+
+<section class="hero">
+  <div class="hero-ilustrace">
+    <img src="../../../../data/ilustrace/ryba.jpg" alt="Ryba">
+    <span class="hero-ilustrace-caption">ilustrace · ryba</span>
+  </div>
+  <p class="hero-label">Kreativní miniatura · Karta Ryba</p>
+  <h1>Ryba</h1>
+  <p class="hero-veta">„Flow je king a king je ryba. Beat jí dělá sea i jezera."</p>
+  <div class="fenomen-box">
+    <div class="fenomen-label">Fenomén Ryby — Neslyšitelný hlas / rytmus tam, kde ho nikdo nečeká</div>
+    <p class="fenomen-text">Říká se, že ryby mlčí. Ale to je omyl. Ryby rapujou. Jen jinak — ne pro mikrofon, ale pro vodu. Jejich rytmus ovlivňuje proudy, jejich punchline je fontána, jejich hudba se slyší okem a tělem. Fenomén Ryby zkoumá: co se stane, když máš co říct, ale tvůj hlas není slyšet tradičním způsobem — a kdy je ticho nejsilnějším veršem ze všech.</p>
+  </div>
+  <div class="var-bar">
+    <button class="var-btn active" onclick="setVar('A',this)">🎲 Náhodně</button>
+    <button class="var-btn" onclick="setVar('B',this)">🧭 Podle nálady</button>
+    <button class="var-btn" onclick="setVar('C',this)">🔍 Diagnosticky</button>
+  </div>
+  <div class="var-popis" id="var-popis">Zavřete oči, ťukněte prstem na obrazovku a udělejte ten úhel, který vybere prst.</div>
+</section>
+
+<section class="sekce">
+  <p class="sekce-label">Pohádka · přečtěte pomalu</p>
+  <h2>Rybí rap — <em>o rytmu tam, kde ho nikdo nečeká.</em></h2>
+  <p style="font-size:.82rem;color:var(--dim);margin-bottom:16px;">Sledujte kde vás zastaví — kde cítíte odpor nebo poznání.</p>
+  <div class="pohadka-outer"><div class="pohadka">
+    <p>Říká se, že ryby mlčí.<br>Že nemají hlas.<br>Že jen plavou, koukají, a občas se nechají chytit.<br>Ale to je omyl. Kec.<br>Suchozemská lež.</p>
+    <p>Ryby totiž nemlčí.<br><strong>Ryby rapujou.</strong></p>
+    <p>Ne tak, jak si to představuješ — žádné mikrofony, žádné beaty z reprobeden.<br>Rybí rap je jinej.<br>Je to rytmus proudů.<br>Je to nížka, výška vln a vlnek.<br>Je to tempo vodních kruhů.<br>Je to <em>mezera mezi bublinama.</em></p>
+    <p>Pod vodou se zvuk jinak šíří.<br>Hlubší. Širší. Pomalejší.<br>A tak ryby neřvou.<br>Ryby vibrujou.</p>
+    <p>Každej druh rybí má svůj styl hudební.<br>Kosatky zpívají chansony — dlouhé, nostalgické, ovlivňují směry proudů.<br>Žraloci zpívaj gospel — hluboký a s ozvěnou.<br>Velryba si troufne na operu a medúzy jí dělaj vokály.<br>Delfín je folklór. Chobotnice strihne jazzový improvizace.<br>Ryba co se nafukuje zvládá dechovky, ale nemá je ráda.<br>Piraňi balady. A kapr zkouší hrdelní zpěvy.<br>Mušle a lastury pějí lovestory.<br>Ska umí létací ryby. Tučňák se vidí v klasice.<br>Na pop je odbornice bělice. A úhoř nemá hudební ambice.</p>
+    <p>Je toho více.<br>Ale tohle všechno není hudba pro uši.<br>Tohle ovlivňuje různé vodní vlastnosti.</p>
+    <p>A ryba?<br>Ryba má rap.<br>Ne kvůli slávě.<br><strong>Kvůli přesnosti.</strong></p>
+    <p>Flow je king a king je ryba.<br>Beat jí dělá sea i jezera.<br>Riff kape, flow teče.<br>Přesná slova proudí jak voda.<br>Její punchline je fontána.</p>
+    <p>Každý verš má váhu.<br>A tohle ryby umí.<br>Líp než ptáci.</p>
+    <p>Ptačí zpěv? Křikot je to.<br>Řev, ryk, krákot, jekot.<br>Tempo? Melodie? Text?<br>Ptáci neumí dávat.<br>Ptáci umí jen sprostě nadávat.<br>Píp rýmuje s píp, jinak bez ideje.</p>
+    <p>Zato ryby fakt dávaj.<br>Dávaj rytmus vodě.<br>Dávaj smysl tichu.<br>Dávají beaty proudům.</p>
+    <p>A stalo se jednoho dne, že ryba začala rapovat i na hladině.<br>Ne pro ostatní.<br>Pro vodu.</p>
+    <p>A voda odpověděla.<br>Jinak se zavlnila. Do rytmu se natřásala.<br>Mlha, spadlá do polí, opsala jejich flow.<br>A vytvořila kruhy v obilí.<br>Rybí hudba byla slyšet — ne uchem, ale okem, tělem.</p>
+    <p>A tak se po kapkách roznáší všude kolem,<br>že první místo v hitparádě vyhrály ryby — nepochybně.</p>
+    <p>Ne proto, že zpívaj.<br>Ale proto, že ví…</p>
+    <p><strong>…kdy mlčet.</strong></p>
+    <p><em>Možná je čas, aby se ticho konečně dostalo nad hladinu.</em></p>
+  </div></div>
+</section>
+
+<section class="sekce" id="otazky">
+  <p class="sekce-label">Diagnostika I — Tři otázky · odpovězte rychle, bez opravování</p>
+  <h2>Co příběh říká <em>vám.</em></h2>
+  <p style="font-size:.82rem;color:var(--dim);margin-bottom:20px;">Vaše odpovědi se přiřazují ke 12 úhlům fenoménu Ryby — každý úhel je jiný způsob, jak prožíváte situaci, kdy máte co říct, ale váš hlas se šíří pod vodou, jinak, než čekáte.</p>
+  <div class="otazky">
+    <div class="otazka"><p class="q-label">Q1 — Smysl</p><p class="q-text">Co je podle vás hlavní pointa nebo sdělení tohoto příběhu? O čem podle vás je?</p><textarea id="q1" placeholder="První věc, která vás napadne..."></textarea></div>
+    <div class="otazka"><p class="q-label">Q2 — Zaujetí</p><p class="q-text">Která konkrétní věta, obraz nebo moment vás nejvíc zaujal — a proč?</p><textarea id="q2" placeholder="Konkrétní věta nebo moment..."></textarea></div>
+    <div class="otazka"><p class="q-label">Q3 — Aplikace</p><p class="q-text">Kdyby tento příběh byl návodem nebo radou, co by vám radil dělat (nebo nedělat) ve vašem osobním nebo pracovním životě?</p><textarea id="q3" placeholder="Rada pohádky pro váš život..."></textarea></div>
+  </div>
+  <button class="btn-diag" onclick="diagnostika()">Zjistit svůj úhel →</button>
+  <div class="diag-vysledek" id="diag-out">
+    <h3>Váš dominantní úhel</h3>
+    <p class="dominant" id="diag-dominant"></p>
+    <p style="font-size:.8rem;color:var(--dim);margin-bottom:14px;">Doporučené úkoly — váš dominantní úhel a jeho protilehlý:</p>
+    <div id="diag-navrhy"></div>
+  </div>
+</section>
+
+<section class="sekce" id="uhly">
+  <p class="sekce-label">12 úhlů fenoménu Ryby · každý s kreativním úkolem a jazykovým zaměřením</p>
+  <h2>Váš úhel — nebo nechte <em>vybrat tabulku.</em></h2>
+  <div id="uhly-list"></div>
+</section>
+
+<section class="sekce">
+  <p class="sekce-label">Diagnostika II — Jazykové fenomény</p>
+  <h2>Co říká váš jazyk — <em>ne obsah, ale forma.</em></h2>
+  <p style="font-size:.82rem;color:var(--dim);margin-bottom:16px;">Použijte tuto tabulku po napsání textu z kreativního úkolu. Ukazuje, v jakém vodním prostředí se váš text přirozeně pohybuje.</p>
+  <div class="tbl-outer">
+    <table>
+      <thead><tr><th>Úhel</th><th>Co hledat v textu</th><th>Co to znamená pro práci</th></tr></thead>
+      <tbody>
+        <tr><td>1. Ticho, které není prázdné</td><td>Mezera, výpadek — nevím, nepamatuji, tečky, nedořečené</td><td>Věnujte se úhlu č. 7 (Flow) — pište plynule, bez zastavení, ať se ukáže, co se v mezerách skrývalo.</td></tr>
+        <tr><td>2. Rytmus proudů</td><td>Střídání délky vět — dlouhé pomalé, krátké rychlé</td><td>Věnujte se úhlu č. 8 (Smysl v tichu) — pište vědomě v jednom tempu, sledujte, co se stane s rytmem.</td></tr>
+        <tr><td>3. Hloubka</td><td>Dlouhá souvětí, abstraktní pojmy — text je hustý, těžký</td><td>Věnujte se úhlu č. 9 (Ryba na hladině) — pište krátce, lehce, na povrchu.</td></tr>
+        <tr><td>4. Vlna a ohlas</td><td>Opakování slov, motivů — vracíte se k témuž, jako by se to odráželo</td><td>Věnujte se úhlu č. 10 (Hudba pro oko) — každá věta ať je nový obraz, ne ozvěna.</td></tr>
+        <tr><td>5. Mezera mezi bublinama</td><td>Rozpad syntaxe — ..., --, nedokončené věty, bubliny praskají</td><td>Věnujte se úhlu č. 11 (Vodní kruhy) — pište vědomě v celých, uzavřených větách.</td></tr>
+        <tr><td>6. Přesnost bez hlasu</td><td>Izolovaný detail, přesná čísla, konkrétní údaje</td><td>Věnujte se úhlu č. 12 (Poslední verš) — pište volně, bez kontroly přesnosti.</td></tr>
+        <tr><td>7. Flow</td><td>Plynulý text bez členění, dlouhá souvětí navazující jedno na druhé</td><td>Věnujte se úhlu č. 1 (Ticho, které není prázdné) — záměrně dělajte pauzy, nechávejte mezery.</td></tr>
+        <tr><td>8. Smysl v tichu</td><td>Absence otázek, strohost — jen tvrzení, žádné možná</td><td>Věnujte se úhlu č. 2 (Rytmus proudů) — přidejte otázky, změňte tempo, rozhýbejte text.</td></tr>
+        <tr><td>9. Ryba na hladině</td><td>Krátké věty, jednoduchá slova — lehké, srozumitelné, na povrchu</td><td>Věnujte se úhlu č. 3 (Hloubka) — zkuste psát hutně, abstraktně, složitě.</td></tr>
+        <tr><td>10. Hudba pro oko</td><td>Neobvyklé sousedství slov — spojujete to, co k sobě normálně nepatří</td><td>Věnujte se úhlu č. 4 (Vlna a ohlas) — pište věcně, bez obrazů, jen fakta.</td></tr>
+        <tr><td>11. Vodní kruhy</td><td>Fixace, repetice s posunem — vracíte se k tématu, ale vždy jinak</td><td>Věnujte se úhlu č. 5 (Mezera mezi bublinama) — zkuste téma opustit, nechte prázdno.</td></tr>
+        <tr><td>12. Poslední verš</td><td>Přechod do druhé osoby — na konci se obracíte na čtenáře</td><td>Věnujte se úhlu č. 6 (Přesnost bez hlasu) — držte se jedné perspektivy, buďte přesní.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<footer class="page-footer">
+  <p>Karta Ryba · Chceš myš? — kreativní miniatury · © 2026 Michaela Nováková</p>
+  <p><a href="../../../index.html">← Zpět</a> · <a href="mailto:chcesmys@gmail.com">chcesmys@gmail.com</a></p>
+</footer>
+</div>
+
+<script>
+const uhly = [
+  { nazev:'Ticho, které není prázdné', sub:'Mlčení jako výpověď. Nejtišší hlas může být nejplnější.',
+    jad:'To, co se zdá být mlčení, je plné.',
+    q1:'Odpovíš tím, že skutečný hlas není vždy slyšet — někdy je v tichu.',
+    q2:'Zaujme tě věta: „Ryby mlčí. Ale to je omyl." Ten obrat — co se zdá být mlčení, je plné.',
+    q3:'Poradíš nebát se ticha, vnímat, co se v něm děje.',
+    ukol:'Napiš text, ve kterém záměrně použiješ co nejvíc ticha — tedy mezer, výpadků, míst, kde něco chybí. Piš třeba: „Nevím…" a pak nic. Nebo: „Tady mělo být něco, ale není." Hraj si s tím, co všechno může ticho v textu znamenat.',
+    jazyk:'Vědomě používej výpadek, nedokončené věty, tři tečky. Sleduj, kolik významu se dá přenést tím, co není napsané.',
+    protilehly:6 },
+  { nazev:'Rytmus proudů', sub:'Věci mají svůj rytmus. Nejde ho nastolit zvenčí — jen se do něj naladit.',
+    jad:'Rytmus není v beatovém stroji, ale v proudění.',
+    q1:'Odpovíš obrazem rybího rapu — rytmus není v nástroji, ale v proudu.',
+    q2:'Zaujme tě, že rap je „nížka, výška vln a vlnek" — rytmus je v přírodě, ne v nástrojích.',
+    q3:'Poradíš hledat rytmus tam, kde ho nikdo nečeká — v tichu mezi slovy.',
+    ukol:'Napiš text na téma Můj den jako řeka. Každá věta ať má jinou délku — střídej dlouhé, pomalé věty s krátkými, rychlými. Vytvoř rytmus, který odpovídá tomu, co popisuješ.',
+    jazyk:'Hlídej si tempo. Dlouhé věty = pomalý proud, krátké = peřeje. Měň délku vět podle toho, co se děje.',
+    protilehly:7 },
+  { nazev:'Hloubka', sub:'Čím hlouběji jsi, tím jinak se věci šíří. Povrchová řeč nestačí.',
+    jad:'Pod vodou se zvuk šíří jinak — hlubší, širší, pomalejší.',
+    q1:'Odpovíš, že pod vodou se zvuk šíří jinak — hloubka mění způsob komunikace.',
+    q2:'Zaujme tě ta fyzikální metafora — hloubka mění způsob komunikace.',
+    q3:'Poradíš jít do hloubky, i když to zpomaluje a ztěžuje šíření.',
+    ukol:'Vezmi nějakou úplně obyčejnou, povrchní věc (třeba co jsi měl/a dnes k obědu). Napiš o ní tak hluboce, jak to jen jde. Použij abstraktní pojmy, složitá souvětí, filozofické úvahy. Udělej z oběda existenciální zážitek.',
+    jazyk:'Piš v dlouhých, hutných větách. Vyhýbej se krátkým, jednoduchým formulacím. Jdi do hloubky za každou cenu.',
+    protilehly:8 },
+  { nazev:'Vlna a ohlas', sub:'Tvé slovo se vrací, ale nikdy přesně stejně. Dělá kruhy, které dělají další kruhy.',
+    jad:'Voda odpověděla — zavlnila se, natřásala do rytmu.',
+    q1:'Odpovíš obrazem vody, která odpověděla — zavlnila se, natřásala do rytmu.',
+    q2:'Zaujme tě, že voda „tvořila verše jako vodní kruhy, v kterých byly další kruhy".',
+    q3:'Poradíš počítat s tím, že každý tvůj projev zarezonuje, ale nečekaně.',
+    ukol:'Napiš text, ve kterém se něco pořád vrací. Třeba jedna věta, která se opakuje jako refrén. Nebo motiv, který se objevuje v různých obměnách. Sleduj, jak se mění, když se vrací.',
+    jazyk:'Opakuj slova, fráze, motivy. Ale pokaždé je trochu posuň. Dělej vlny — stejné, ale jiné.',
+    protilehly:9 },
+  { nazev:'Mezera mezi bublinama', sub:'To podstatné není v tom, co říkáš, ale v pauzách, v mezerách.',
+    jad:'Rybí rap je i mezera mezi bublinama — počítá se i s tím, co není.',
+    q1:'Odpovíš, že rybí rap je i „mezera mezi bublinama" — že význam je i v prázdnu.',
+    q2:'Zaujme tě, že do výčtu rytmu patří i mezera — počítá se i s tím, co není.',
+    q3:'Poradíš hlídat si mezery — nenechat se ukecat, nechat prostor.',
+    ukol:'Napiš text, který je plný bublin, které praskají — tedy míst, kde věta skončí dřív, než by měla, kde se něco nedopoví, kde zůstane prázdno. Piš třeba: „Chtěl jsem říct, ale…" a pak tečky.',
+    jazyk:'Používej rozpad syntaxe. Nedokončuj věty. Nechávej místa, která čtenář musí vyplnit sám.',
+    protilehly:10 },
+  { nazev:'Přesnost bez hlasu', sub:'Není třeba křičet. Stačí být přesný. Každý verš má váhu.',
+    jad:'Flow není o hlasitosti — přesná slova proudí jak voda.',
+    q1:'Odpovíš, že ryba rapuje kvůli přesnosti, ne kvůli slávě.',
+    q2:'Zaujme tě „přesná slova proudí jak voda" — přesnost sama o sobě je síla.',
+    q3:'Poradíš soustředit se na přesnost, ne na to, jestli tě je slyšet.',
+    ukol:'Popiš nějakou situaci tak přesně, až to bude skoro k neuživení. Kolik bylo hodin a minut? Jaká byla teplota vzduchu? Kolik kroků jsi udělal/a? Jaká byla přesná barva oblohy? Žádné dojmy, jen fakta.',
+    jazyk:'Soustřeď se na izolované detaily, přesná čísla, konkrétní údaje. Žádné emoce, žádné hodnocení.',
+    protilehly:11 },
+  { nazev:'Flow', sub:'Když jsi v proudu, nejde o jednotlivá slova — ale o to, že to celé teče.',
+    jad:'Flow je king. Nejde o obsah, ale o pohyb.',
+    q1:'Odpovíš, že flow je king — a že to není o obsahu, ale o pohybu.',
+    q2:'Zaujme tě ta jednoduchá rovnice: „Flow je king a king je ryba."',
+    q3:'Poradíš nelpět na detailech, když jsi v proudu.',
+    ukol:'Napiš text v jednom dlouhém proudu. Bez odstavců, bez členění, jen jedno souvětí za druhým, jak to přijde. Nesmíš se zastavit, nesmíš se vrátit, prostě jen plyneš.',
+    jazyk:'Potlač všechny pauzy. Piš tak rychle, jak to jde, a nenechávej místo pro ticho. Sleduj, kam tě flow donese.',
+    protilehly:0 },
+  { nazev:'Smysl v tichu', sub:'Ticho může být odpověď. Někdy je v něm víc než ve všech slovech.',
+    jad:'Ryby vyhrály, protože ví, kdy mlčet.',
+    q1:'Odpovíš koncem — ryby vyhrály, protože ví, kdy mlčet.',
+    q2:'Zaujme tě pointa: „Ne proto, že zpívaj. Ale proto, že ví, kdy mlčet."',
+    q3:'Poradíš cvičit se v mlčení — jako aktivní dovednost.',
+    ukol:'Napiš text, který je jen tvrzení, žádné otázky. Všechno, co řekneš, ať je hotové, uzavřené, jasné. Žádné pochybnosti, žádné „možná", žádné „kdyby". Prostě to tak je.',
+    jazyk:'Vyhni se otázkám a podmínovacímu způsobu. Každá věta ať je konstatování. Sleduj, jaký to má pocit — mluvit, jako bys měl/a pravdu.',
+    protilehly:1 },
+  { nazev:'Ryba na hladině', sub:'Když vystoupíš ze svého prostředí, tvá řeč může znít divně. A vytvořit něco nového.',
+    jad:'Ryba rapuje na hladině ne pro publikum — pro živel.',
+    q1:'Odpovíš momentem, kdy ryba začala rapovat na hladině — ne pro ostatní, pro vodu.',
+    q2:'Zaujme tě, že to nedělá pro publikum, ale pro živel. Že zůstává věrná tomu, co dělá.',
+    q3:'Poradíš mluvit i na místech, kde tomu nikdo nerozumí — pro správný živel.',
+    ukol:'Vezmi něco, o čem přemýšlíš, a napiš o tom úplně jednoduše, jako bys to vysvětloval/a dítěti. Žádné odborné termíny, žádné složité věty, žádné abstrakce. Prostě to, co je.',
+    jazyk:'Piš krátké věty. Jednoduchá slova. Žádné metafory. Jen to nejzákladnější.',
+    protilehly:2 },
+  { nazev:'Hudba pro oko', sub:'Existují věci, které nejde slyšet, ale jde je vidět, cítit, zažít.',
+    jad:'Rybí hudba byla slyšet ne uchem, ale okem, tělem.',
+    q1:'Odpovíš, že rybí hudba byla slyšet „ne uchem, ale okem, tělem".',
+    q2:'Zaujme tě ten přestup mezi smysly — zvuk se dá vidět a cítit.',
+    q3:'Poradíš rozvíjet vnímání mimo běžné kanály — dívat se na hudbu, poslouchat obrazy.',
+    ukol:'Vymysli nová slovní spojení, která by mohla být názvy písní, které nikdo neslyší. Třeba: „Rytmus usínající medúzy", „Balada o kaprovi, co zkusil hrdelní zpěv". Napiš jich aspoň deset.',
+    jazyk:'Spojuj slova, která k sobě normálně nepatří. Hledej neobvyklá sousedství, vytvářej nové obrazy.',
+    protilehly:3 },
+  { nazev:'Vodní kruhy', sub:'Každý tvůj čin se šíří dál, i když ho nevidíš. Jako kruhy na vodě.',
+    jad:'Rybí rap vytváří kruhy, ve kterých jsou další kruhy.',
+    q1:'Odpovíš, že rybí rap vytváří kruhy, ve kterých jsou další kruhy.',
+    q2:'Zaujme tě ta nekonečná struktura — dopad může být mnohem větší, než čekáš.',
+    q3:'Poradíš počítat s dopady, které nevidíš — a nestresovat se tím.',
+    ukol:'Napiš text, ve kterém se jedno téma rozšiřuje do dalších a dalších kruhů. Začni u sebe, pak přidej rodinu, pak město, pak svět, pak vesmír. A u každého kruhu zůstaň chvíli, než se posuneš dál.',
+    jazyk:'Opakuj stejné motivy, ale vždy v širším kontextu. Sleduj, jak se věc mění, když se na ni díváš z větší dálky.',
+    protilehly:4 },
+  { nazev:'Poslední verš', sub:'Někdy je potřeba přestat poslouchat a začít vnímat.',
+    jad:'Je možná čas, aby se ticho dostalo nad hladinu.',
+    q1:'Odpovíš, že je možná čas, aby se ticho dostalo nad hladinu.',
+    q2:'Zaujme ta poslední výzva — přestat poslouchat a začít vnímat.',
+    q3:'Poradíš občas vystoupit z role posluchače a jen být.',
+    ukol:'Napiš text, který začne v první osobě a skončí ve druhé. Začni mluvit o sobě, o tom, co cítíš, co chceš. A postupně se obrať na čtenáře — na konci mu něco řekni, něco mu dej, něco po něm chtěj.',
+    jazyk:'Vědomě změň roli, subjekt, perspektivu. Sleduj, co to udělá s textem, když na konci promluvíš k někomu jinému.',
+    protilehly:5 }
+];
+
+const klice = {
+  0: ['ticho','mlčení','prázdné ticho','nemluvit','nevyslovené','není slyšet','co se v tichu'],
+  1: ['rytmus','proud','vlna','vlnek','tempo','naladit','rytmus přírody'],
+  2: ['hloubka','pod vodou','pomalý','hlubší','šíří jinak','do hloubky','existenciální'],
+  3: ['vrací se','kruhy','ohlas','odrážení','echolálie','opakuje','refrén'],
+  4: ['mezera','bublina','přestávka','nedořečené','prostor','ukecat','prázdno'],
+  5: ['přesnost','přesně','bez hlasu','váha','každý verš','stačí být přesný'],
+  6: ['flow','proud','plyne','king','teče','v proudu','neplynout'],
+  7: ['kdy mlčet','aktivní mlčení','smysl v tichu','výhra ryby','konstatování','jen tvrzení'],
+  8: ['hladina','dítěti','jednoduše','povrch','srozumitelné','vystoupit','pro živel'],
+  9: ['hudba pro oko','vidět zvuk','tělem','ne uchem','přestup smyslů','vnímání','neobvyklé sousedství'],
+  10: ['vodní kruhy','šíří dál','dopady','rozšiřuje','kruhy na vodě','nevidíš'],
+  11: ['poslední verš','přestat poslouchat','vnímat','nad hladinu','obrátit se na','čtenáři']
+};
+
+function buildUhly(){
+  const list=document.getElementById('uhly-list');
+  uhly.forEach((u,i)=>{
+    const div=document.createElement('div');div.className='uhel';div.id='u-'+i;
+    div.innerHTML='<div class="uhel-header" onclick="toggleU('+i+')"><span class="u-num">'+String(i+1).padStart(2,'0')+'</span>'
+      +'<div><div class="uhel-nazev">'+u.nazev+'</div><div class="uhel-sub">'+u.sub+'</div></div>'
+      +'<span class="u-toggle" id="t-'+i+'">+</span></div>'
+      +'<div class="uhel-body" id="b-'+i+'">'
+      +'<div class="zadani-blok"><div class="blok-label">Kreativní úkol · 20 minut</div><p class="blok-text">'+u.ukol+'</p></div>'
+      +'<div class="pravidla">'
+      +'<div class="pravidlo p1"><div class="blok-label">Jak to vidí Q1</div><p class="blok-text">'+u.q1+'</p></div>'
+      +'<div class="pravidlo p2"><div class="blok-label">Jak to vidí Q2 + Q3</div><p class="blok-text">'+u.q2+' '+u.q3+'</p></div>'
+      +'</div>'
+      +'<div class="jazykovy-blok"><div class="blok-label">Jazykový fenomén — Diagnostika II</div><p class="blok-text">'+u.jazyk+'</p></div>'
+      +'<div class="pisarna"><div class="blok-label">Váš text</div><textarea placeholder="Pište sem — bez opravování, bez zastavení..."></textarea></div>'
+      +'<p class="protilehly-link">Protilehlý úhel: <a onclick="jumpU('+u.protilehly+')">'+(u.protilehly+1)+'. '+uhly[u.protilehly].nazev+'</a></p>'
+      +'</div>';
+    list.appendChild(div);
+  });
+}
+buildUhly();
+
+function toggleU(i){const b=document.getElementById('b-'+i);const t=document.getElementById('t-'+i);const o=b.classList.toggle('open');t.textContent=o?'−':'+';}
+function jumpU(i){if(!document.getElementById('b-'+i).classList.contains('open'))toggleU(i);document.getElementById('u-'+i).scrollIntoView({behavior:'smooth',block:'start'});}
+
+const varText={
+  A:'Zavřete oči, ťukněte prstem na obrazovku a udělejte ten úhel, který vybere prst.',
+  B:'Přečtěte si 12 úhlů a vyberte ten, který nejlépe popisuje vaši aktuální zkušenost s fenoménem ryby.',
+  C:'Odpovězte na 3 otázky níže — systém přiřadí váš dominantní úhel a doporučí protilehlý.'
+};
+function setVar(v,btn){
+  document.querySelectorAll('.var-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('var-popis').textContent=varText[v];
+  if(v==='A'){const r=Math.floor(Math.random()*12);setTimeout(()=>{jumpU(r);},300);}
+  if(v==='C')document.getElementById('otazky').scrollIntoView({behavior:'smooth'});
+}
+
+function norm(s){
+  return s.toLowerCase()
+    .replace(/[áa]/g,'a').replace(/[éeě]/g,'e').replace(/[íiy]/g,'i')
+    .replace(/[óo]/g,'o').replace(/[úůu]/g,'u').replace(/[čc]/g,'c')
+    .replace(/[ďd]/g,'d').replace(/[ňn]/g,'n').replace(/[řr]/g,'r')
+    .replace(/[šs]/g,'s').replace(/[ťt]/g,'t').replace(/[žz]/g,'z');
+}
+
+function diagnostika(){
+  const raw=['q1','q2','q3'].map(id=>document.getElementById(id).value).join(' ');
+  if(!raw.trim()){alert('Vyplňte alespoň jednu odpověď.');return;}
+  const txt=norm(raw);
+  let maxK=0,maxS=0;
+  Object.entries(klice).forEach(([k,kw])=>{
+    const s=kw.reduce((a,w)=>a+(txt.includes(norm(w))?1:0),0);
+    if(s>maxS){maxS=s;maxK=parseInt(k);}
+  });
+  if(maxS===0)maxK=Math.floor(Math.random()*12);
+  const pI=uhly[maxK].protilehly;
+  document.getElementById('diag-dominant').textContent='Vaše odpovědi ukazují nejsilněji na úhel č. '+(maxK+1)+': '+uhly[maxK].nazev+'.';
+  document.getElementById('diag-navrhy').innerHTML=
+    '<button class="navrh-btn" onclick="jumpU('+maxK+')">→ Váš úhel: '+(maxK+1)+'. '+uhly[maxK].nazev+'</button>'
+    +'<button class="navrh-btn" onclick="jumpU('+pI+')">→ Protilehlý: '+(pI+1)+'. '+uhly[pI].nazev+'</button>';
+  const out=document.getElementById('diag-out');
+  out.style.display='block';
+  out.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+</script>
+</body>
+</html>
