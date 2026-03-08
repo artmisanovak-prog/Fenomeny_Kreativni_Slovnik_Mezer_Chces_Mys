@@ -7,7 +7,7 @@
 
 ---
 
-### [detektor poruch(]https://artmisanovak-prog.github.io/detektor_JAZYKOVYCH_poruch/)
+### [detektor poruch](https://artmisanovak-prog.github.io/detektor_JAZYKOVYCH_poruch/)
 ### [analyzer1](https://artmisanovak-prog.github.io/detektor_JAZYKOVYCH_poruch/home/analyzator_vypovedi.html)
 ### [analyzer2](https://artmisanovak-prog.github.io/detektor_JAZYKOVYCH_poruch/home/analyza.html)
 ### [porovnávač](https://artmisanovak-prog.github.io/detektor_JAZYKOVYCH_poruch/home/porovnani.html)
