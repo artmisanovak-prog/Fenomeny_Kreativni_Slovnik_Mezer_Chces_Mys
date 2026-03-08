@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kocour — kreativní miniatury</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{--bg:#0f0f0f;--surface:#161616;--surface2:#1c1c1c;--cream:#e8e0d0;--dim:rgba(232,224,208,.42);--accent:#a89880;--border:rgba(168,152,128,.15);--serif:'Cormorant Garamond',Georgia,serif;--mono:'DM Mono',monospace}
+    html{scroll-behavior:smooth}
+    body{background:var(--bg);color:var(--cream);font-family:var(--mono);font-size:14px;line-height:1.8;-webkit-font-smoothing:antialiased}
+    a{color:inherit;text-decoration:none}
+    p{margin-bottom:10px}p:last-child{margin-bottom:0}
+    .wrap{max-width:760px;margin:0 auto;padding:0 28px}
+    nav{position:sticky;top:0;z-index:100;border-bottom:1px solid var(--border);background:rgba(15,15,15,.92);backdrop-filter:blur(12px);padding:14px 28px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+    .nav-back{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);transition:color .2s}
+    .nav-back:hover{color:var(--cream)}
+    .nav-title{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--accent)}
+    .hero{padding:0 0 56px;border-bottom:1px solid var(--border)}
+    .hero-ilustrace{width:100%;max-height:380px;overflow:hidden;margin-bottom:40px;position:relative}
+    .hero-ilustrace img{width:100%;height:380px;object-fit:cover;object-position:center 30%;filter:grayscale(100%) contrast(1.08);display:block}
+    .hero-ilustrace-caption{position:absolute;bottom:12px;right:16px;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:rgba(232,224,208,.3)}
+    .hero-label{font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:var(--accent);margin-bottom:20px}
+    .hero h1{font-family:var(--serif);font-size:clamp(3rem,7vw,5.5rem);font-weight:300;line-height:1.0;color:var(--cream);margin-bottom:8px}
+    .hero h1 em{font-style:italic;color:var(--accent)}
+    .hero-veta{font-family:var(--serif);font-size:clamp(.95rem,2vw,1.25rem);font-style:italic;color:var(--dim);border-left:1px solid var(--accent);padding-left:20px;max-width:500px;margin:20px 0 36px;line-height:1.9}
+    .fenomen-box{border:1px solid var(--accent);padding:20px 22px;margin-bottom:32px;background:rgba(168,152,128,.06)}
+    .fenomen-label{font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin-bottom:10px}
+    .fenomen-text{font-size:13px;color:rgba(232,224,208,.7);line-height:1.8}
+    .var-bar{display:flex;gap:1px;background:var(--border);border:1px solid var(--border)}
+    .var-btn{flex:1;padding:13px 12px;background:var(--surface);border:none;cursor:pointer;font-family:var(--mono);font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;color:var(--dim);transition:background .12s,color .12s;text-align:center}
+    .var-btn:hover{background:#1e1e1e;color:var(--cream)}
+    .var-btn.active{background:var(--accent);color:var(--bg)}
+    .var-popis{padding:12px 16px;font-size:.8rem;color:var(--dim);border:1px solid var(--border);border-top:none;background:var(--surface)}
+    .sekce{padding:56px 0;border-bottom:1px solid var(--border)}
+    .sekce-label{font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin-bottom:16px}
+    h2{font-family:var(--serif);font-size:clamp(1.5rem,3.5vw,2.2rem);font-weight:300;color:var(--cream);margin-bottom:18px}
+    h2 em{font-style:italic;color:var(--accent)}
+    .pohadka-outer{border:1px solid var(--border);background:var(--surface);max-height:360px;overflow-y:auto;padding:0 28px}
+    .pohadka{font-family:var(--serif);font-style:italic;font-size:.97rem}
+    .pohadka p{padding:.45em 0;color:rgba(232,224,208,.8)}
+    .pohadka-outer::-webkit-scrollbar{width:2px}
+    .pohadka-outer::-webkit-scrollbar-thumb{background:var(--accent)}
+    .otazky{border-top:1px solid var(--border)}
+    .otazka{padding:22px 0;border-bottom:1px solid var(--border)}
+    .q-label{font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);margin-bottom:8px}
+    .q-text{font-size:.95rem;margin-bottom:6px;color:var(--cream)}
+    textarea{width:100%;background:var(--surface);border:1px solid var(--border);color:var(--cream);padding:12px;font-family:var(--mono);font-size:.85rem;line-height:1.7;resize:vertical;min-height:68px}
+    textarea:focus{outline:1px solid var(--accent)}
+    textarea::placeholder{color:rgba(232,224,208,.2)}
+    .btn-diag{margin-top:20px;padding:12px 28px;font-size:11px;letter-spacing:.12em;text-transform:uppercase;background:var(--accent);color:var(--bg);border:none;cursor:pointer;font-family:var(--mono);transition:background .15s}
+    .btn-diag:hover{background:#c0aa90}
+    .diag-vysledek{display:none;border:1px solid var(--accent);padding:24px;margin-top:20px;background:var(--surface)}
+    .diag-vysledek h3{font-family:var(--serif);font-size:1.1rem;font-weight:400;color:var(--cream);margin-bottom:10px}
+    .dominant{font-size:.82rem;color:var(--dim);margin-bottom:16px}
+    .navrh-btn{display:block;width:100%;padding:11px 16px;margin-bottom:6px;background:transparent;border:1px solid var(--border);color:var(--cream);font-family:var(--mono);font-size:.82rem;text-align:left;cursor:pointer;transition:background .12s,border-color .12s}
+    .navrh-btn:hover{background:var(--accent);border-color:var(--accent);color:var(--bg)}
+    .navrh-btn:last-child{margin-bottom:0}
+    .ukol{border-bottom:1px solid var(--border)}
+    .ukol-header{display:grid;grid-template-columns:52px 1fr auto;padding:18px 0;cursor:pointer;align-items:center}
+    .ukol-header:hover .ukol-nazev{color:var(--accent)}
+    .u-num{font-family:var(--serif);font-size:1.7rem;font-weight:300;color:rgba(168,152,128,.2);line-height:1}
+    .ukol-nazev{font-size:.88rem;font-weight:400;color:var(--cream)}
+    .ukol-par{font-size:.72rem;color:var(--dim);margin-top:3px;font-style:italic;font-family:var(--serif)}
+    .u-toggle{font-size:.72rem;color:var(--dim)}
+    .ukol-body{display:none;padding:0 0 28px 52px}
+    .ukol-body.open{display:block}
+    .par-badge{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);border:1px solid rgba(168,152,128,.2);padding:5px 10px;display:inline-block;margin-bottom:16px}
+    .blok-label{font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
+    .blok-text{font-size:.86rem;color:rgba(232,224,208,.7);line-height:1.75}
+    .blok-text.italic{font-family:var(--serif);font-style:italic;font-size:.93rem;color:rgba(232,224,208,.6)}
+    .ukol-blok{margin-bottom:16px}
+    .pravidla{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
+    .pravidlo{background:var(--surface2);padding:14px;border-left:2px solid var(--border)}
+    .pravidlo.p2{border-left-color:var(--accent)}
+    .podnet-blok{background:rgba(168,152,128,.06);border-left:2px solid var(--accent);padding:14px 16px;margin-bottom:16px}
+    .analyzer-blok{border:1px solid var(--border);padding:12px 16px;margin-bottom:16px;background:var(--surface)}
+    .pisarna textarea{min-height:120px;margin-top:8px}
+    @media(max-width:560px){.pravidla{grid-template-columns:1fr}}
+    .pairs-grid{border:1px solid var(--border)}
+    .pair-row{display:grid;grid-template-columns:1fr 32px 1fr;padding:12px 16px;border-bottom:1px solid rgba(168,152,128,.07);font-size:.78rem;align-items:center}
+    .pair-row:last-child{border-bottom:none}
+    .pair-a{color:rgba(232,224,208,.75)}
+    .pair-deg{font-family:var(--mono);font-size:.68rem;color:var(--accent);text-align:center}
+    .pair-b{color:rgba(232,224,208,.75);text-align:right}
+    .page-footer{padding:36px 0;border-top:1px solid var(--border);display:flex;justify-content:space-between;flex-wrap:wrap;gap:14px}
+    .page-footer p{font-size:.76rem;color:var(--dim)}
+    .page-footer a{color:var(--accent)}
+    .page-footer a:hover{text-decoration:underline}
+  </style>
+</head>
+<body>
+<nav>
+  <a class="nav-back" href="../../../index.html">← Všechna zvířata</a>
+  <span class="nav-title">Kocour</span>
+</nav>
+<div class="wrap">
+
+<section class="hero">
+  <div class="hero-ilustrace">
+    <img src="../../../../data/ilustrace/kocour.jpg" alt="Kocour">
+    <span class="hero-ilustrace-caption">ilustrace · kocour</span>
+  </div>
+  <p class="hero-label">Kreativní miniatura · Karta Kocour</p>
+  <h1>Kocour</h1>
+  <p class="hero-veta">„Kocour sežral dvě berušky a půl hodiny krkal tečky."</p>
+  <div class="fenomen-box">
+    <div class="fenomen-label">Fenomén Kocoura — Anomálie předčasného uzavření</div>
+    <p class="fenomen-text">Situace, kdy mysl nebo text příliš rychle uzavírá význam. Místo aby setrvávala v otevřenosti a možnostech, spěchá k tečce, řešení, pointě. V myšlení: skákání do řeči. V textech: přemíra uzavřených formulací, které nedovolují čtenáři domyslet. Kocour nezlovolně — jen skočil dřív. A tečka se stala silnější než věta.</p>
+  </div>
+  <div class="var-bar">
+    <button class="var-btn active" onclick="setVar('A',this)">🎲 Náhodně</button>
+    <button class="var-btn" onclick="setVar('B',this)">🧭 Podle nálady</button>
+    <button class="var-btn" onclick="setVar('C',this)">🔍 Diagnosticky</button>
+  </div>
+  <div class="var-popis" id="var-popis">Zavřete oči, ťukněte prstem na obrazovku a udělejte ten úkol, který vybere prst.</div>
+</section>
+
+<section class="sekce">
+  <p class="sekce-label">Pohádka · přečtěte pomalu</p>
+  <h2>Jak kocour sežral dvě berušky<br><em>a půl hodiny krkal tečky.</em></h2>
+  <p style="font-size:.82rem;color:var(--dim);margin-bottom:16px;">Sledujte kde vás zastaví — kde cítíte odpor nebo poznání.</p>
+  <div class="pohadka-outer"><div class="pohadka">
+    <p>Sežral dvě — ne tři, ne jednu — dvě — přesně — 14 teček a trvalo to půl hodiny — 30 minut — přesně.</p>
+    <p>Jak to přišlo tak to přestalo.<br>Ráz na ráz.</p>
+    <p>Chňap a hlt a chlamst — nebo něco takového a nakonec — mlask, mlask — dvakrát — přesně.</p>
+    <p>Žily byly dvě berušky, každá sedm teček měla,<br>když uviděl je jeden kocour — byla to mela.<br>Aspoň pro ně.<br>Po 14ti tečkách v jednom mžiku zem se slehla.</p>
+    <p>Ale ta myš, vždycky zvědavá byla.<br>Odmalička chodívala a kde mohla se vyptávala,<br>kde se tečky na beruškách vzaly? K čemu je mají?<br>Proč si radši nevytvoří pravé maskování?</p>
+    <p>A ta přesná matika..<br>Kdo vlastně z těch, co s nimi přijdou do styku, takhle přesně počítá?</p>
+    <p>No a toho dne — náhle — se to stalo a myš svou odpověď měla.</p>
+    <p>Kocour mlaskl a pak znovu a hned na to začalo to.<br>Půl hodiny a bylo to zaznamenáno — přesně.</p>
+    <p>Kocour krkal tečky a dokončoval věty!<br>Někdy celé souvětí!!<br>Jenomže tím zároveň skákal lidem do řeči,<br>tím že za ně dokončoval, co nedokončili.</p>
+    <p>Skočil všem do řeči koncem věty<br>ale vždycky o něco málo<br>někdy i o docela dost<br>dřív, než měla věta původně skončit<br>nebo — než původně věta skončit měla.</p>
+    <p>A celou půlhodinu nemohl tenkrát nikdo nic<br>ne — dokončit.<br>Nešlo to.<br>Každému dřív než se k tomu dostal.<br>Všem kocour větu ukončil. Hned.</p>
+    <p>Kocour se tomu smál, ale krkal dál.<br>A krkal, dokud neskončil.<br>Představte si to: Skončil větu a pak skončil krkat.</p>
+    <p>A lidé zase začali moct své věty ukončovat sami. Hned.</p>
+    <p>Jenže, jak se to tak občas stává, přestože nikdo nevěděl co, každý věděl, že něco nebylo stejné.</p>
+    <p>A to, co jednou není stejné dnes, to není jednou stejné nikdy.</p>
+    <p>Jen nedokončené věty bývají všechny stejné. Jednou, dnes i zítra.</p>
+    <p>Berušky mají na sobě nedokončené konce vět. Věci, které jsou nespolknuté.</p>
+    <p>Kocour to nevěděl — a dvě spolkl.<br>Spolknuté konce ale vykrkal zpátky<br>a lidé se naučili,<br>že všechno se spolknout nedá.<br>A že tečka je někdy silnější, než celá věta.</p>
+    <p>Kocour se nažral a myš i věty zůstali celé. Díky bohu za to.</p>
+    <p>Ale všimly si toho jen kocour a malá myš.<br>A ani jeden neříkali nic.</p>
+  </div></div>
+</section>
+
+<section class="sekce" id="otazky">
+  <p class="sekce-label">Tři otázky · odpovězte rychle, bez opravování</p>
+  <h2>Vaše odpovědi.</h2>
+  <p style="font-size:.82rem;color:var(--dim);margin-bottom:20px;">Na základě vašich odpovědí myš určí, které kreativní úkoly vám doporučí.</p>
+  <div class="otazky">
+    <div class="otazka"><p class="q-label">Q1 — Vstup</p><p class="q-text">Co je podle vás hlavní pointa nebo sdělení tohoto příběhu?</p><textarea id="q1" placeholder="První věc, která vás napadne..."></textarea></div>
+    <div class="otazka"><p class="q-label">Q2 — Zaujetí</p><p class="q-text">Která konkrétní věta, obraz nebo moment vás nejvíc zaujal — a proč?</p><textarea id="q2" placeholder="Konkrétní věta nebo moment..."></textarea></div>
+    <div class="otazka"><p class="q-label">Q3 — Aplikace</p><p class="q-text">Kdyby tento příběh byl zadáním pro vaši tvorbu, co by vám radil dělat (nebo nedělat)?</p><textarea id="q3" placeholder="Rada pohádky pro vaši tvorbu..."></textarea></div>
+  </div>
+  <button class="btn-diag" onclick="diagnostika()">Doporučit úkoly →</button>
+  <div class="diag-vysledek" id="diag-out">
+    <h3>Váš kognitivní profil</h3>
+    <p class="dominant" id="diag-dominant"></p>
+    <p style="font-size:.8rem;color:var(--dim);margin-bottom:14px;">Doporučené úkoly pro trénink protilehlého úhlu:</p>
+    <div id="diag-navrhy"></div>
+  </div>
+</section>
+
+<section class="sekce" id="ukoly">
+  <p class="sekce-label">12 kreativních úkolů · každý 20 minut · každý trénuje jiný protilehlý pár</p>
+  <h2>Vyberte úkol nebo nechte<br><em>vybrat myš.</em></h2>
+  <div id="ukoly-list"></div>
+</section>
+
+<section class="sekce">
+  <p class="sekce-label">Protilehlé páry úhlů</p>
+  <h2>Šest os. <em>Dvanáct stran.</em></h2>
+  <p style="font-size:.82rem;color:var(--dim);margin-bottom:16px;">Kocour uzavírá. Protilehlé úhly otevírají.</p>
+  <div class="pairs-grid">
+    <div class="pair-row"><span class="pair-a">Analytický · 0°</span><span class="pair-deg">↔</span><span class="pair-b">180° · Asociační</span></div>
+    <div class="pair-row"><span class="pair-a">Kulturní · 30°</span><span class="pair-deg">↔</span><span class="pair-b">210° · Introspektivní</span></div>
+    <div class="pair-row"><span class="pair-a">Filozofický · 60°</span><span class="pair-deg">↔</span><span class="pair-b">240° · Ironický</span></div>
+    <div class="pair-row"><span class="pair-a">Naivní · 90°</span><span class="pair-deg">↔</span><span class="pair-b">270° · Groteskní</span></div>
+    <div class="pair-row"><span class="pair-a">Jazykový · 120°</span><span class="pair-deg">↔</span><span class="pair-b">300° · Absurdní</span></div>
+    <div class="pair-row"><span class="pair-a">Metaforický · 150°</span><span class="pair-deg">↔</span><span class="pair-b">330° · Surrealistický</span></div>
+  </div>
+</section>
+
+<footer class="page-footer">
+  <p>Karta Kocour · Chceš myš? — kreativní miniatury · © 2026 Michaela Nováková</p>
+  <p><a href="../../../index.html">← Zpět</a> · <a href="mailto:chcesmys@gmail.com">chcesmys@gmail.com</a></p>
+</footer>
+</div>
+
+<script>
+const ukoly = [
+  { par:'ANALYTICKÝ (0°) — ASOCIAČNÍ (180°)', pKr:'Analytický — Asociační',
+    zadani:'Napiš krátký text (max 200 slov) na téma: Co se dělo v místnosti, když kocour krkal tečky — ale očima myši, která si všechno jen pamatuje, ale nepočítá.',
+    p1:'V textu se nesmí objevit žádné číslo, žádný přesný čas, žádná míra. Pokud popisuješ délku, použij přirovnání — dlouho jako cesta na konec léta.',
+    p2:'Každá věta musí obsahovat alespoň jedno přirovnání nebo asociaci k něčemu, co s příběhem zdánlivě nesouvisí — kocour krkal jako staré rádio, co chytlo cizí vysílání.',
+    podnet:'A ta přesná matika.. Kdo vlastně z těch, co s nimi přijdou do styku, takhle přesně počítá?',
+    analyzer:'Výskyt čísel (ideálně 0). Počet přirovnání a neočekávaných spojení (klíčová slova: jako, jakoby, připomíná to).' },
+  { par:'KULTURNÍ (30°) — INTROSPEKTIVNÍ (210°)', pKr:'Kulturní — Introspektivní',
+    zadani:'Napiš dopis (max 1 normostrana), který píše kocour sám sobě poté, co si uvědomí, že jeho zvyk možná není univerzálně platný.',
+    p1:'V dopisu se kocour odvolává na vžité postupy, jak se to dělá, normální je...',
+    p2:'Každý odstavec musí obsahovat jednu větu začínající: Ale dnes poprvé cítím, že... nebo Uvnitř sebe vím, že...',
+    podnet:'A to, co jednou není stejné dnes, to není jednou stejné nikdy.',
+    analyzer:'Frekvence obecných frází (každý ví, normálně se) vs. počet vět v 1. osobě s emocionálně zabarvenými slovy.' },
+  { par:'FILOZOFICKÝ (60°) — IRONICKÝ (240°)', pKr:'Filozofický — Ironický',
+    zadani:'Napiš krátkou úvahu (max 200 slov), která začíná jako hluboké filozofické zamyšlení, ale postupně se zvrhne v ironickou sebeparodii.',
+    p1:'První polovina textu musí obsahovat alespoň tři hluboké, existenciální otázky — Co je smyslem uzavření?',
+    p2:'Druhá polovina musí ty samé otázky zesměšnit nebo dovést do absurdna — Možná je smyslem uzavření to, abychom mohli jít na oběd.',
+    podnet:'A že tečka je někdy silnější, než celá věta.',
+    analyzer:'Posun tónu — otazníky v první části vs. ironické markery v druhé. Délka vět: filozofické delší, ironické kratší.' },
+  { par:'NAIVNÍ (90°) — GROTESKNÍ (270°)', pKr:'Naivní — Groteskní',
+    zadani:'Převyprávěj celou pohádku o kocourovi očima dítěte, které nechápe, proč je to vlastně problém. A pak ji převyprávěj podruhé jako trapný, přehnaný horor pro dospělé.',
+    p1:'V první verzi používej jen jednoduchá souvětí, slova jako prostě, a pak, a on. Žádné abstraktní pojmy.',
+    p2:'V druhé verzi všechno přežeň — kocour je monstrózní tečkový diktátor, berušky jsou oběti systému, myš je tichý disident.',
+    podnet:'Sežral dvě — ne tři, ne jednu — dvě — přesně — 14 teček a trvalo to půl hodiny — 30 minut — přesně.',
+    analyzer:'Průměrná délka slov a vět (kratší v naivní, delší v groteskní). Výskyt hodnotících slov v groteskní části.' },
+  { par:'JAZYKOVÝ (120°) — ABSURDNÍ (300°)', pKr:'Jazykový — Absurdní',
+    zadani:'Napiš návod k použití kocoura jako kuchyňského spotřebiče. Nejprve jako precizní, jazykově čistý manuál — poté jako návod, který nedává smysl, ale je napsán dokonale spisovně.',
+    p1:'První verze musí obsahovat přesné termíny, jasné instrukce, gramaticky dokonalé věty. Žádné metafory.',
+    p2:'Druhá verze musí být gramaticky bezchybná, ale obsahově naprosto nesmyslná — Kocoura připojte k tečkám teprve poté, co věta usne.',
+    podnet:'Kocour se stal otrokem tečky. Věřil, že hodnota je v ukončení, ne v obsahu.',
+    analyzer:'Gramatická správnost (v obou verzích vysoká). V absurdní: sémantické anomálie a neočekávaná spojení.' },
+  { par:'METAFORICKÝ (150°) — SURREALISTICKÝ (330°)', pKr:'Metaforický — Surrealistický',
+    zadani:'Vezmi větu: Kocour spolkl dvě berušky. Nejprve ji rozveď jako metaforu. Poté ji rozveď jako surrealistický obraz.',
+    p1:'V metaforické části musí být každá věta vysvětlením, co která postava zastupuje.',
+    p2:'V surrealistické části plynule přecházej obrazy — kocour je zároveň kocour, zároveň mrak, zároveň zapomenutý vzkaz.',
+    podnet:'Berušky mají na sobě nedokončené konce vět. Věci, které jsou nespolknuté.',
+    analyzer:'Frekvence sloves je, znamená, představuje (metaforická) vs. neočekávaná spojení (surrealistická).' },
+  { par:'ANALYTICKÝ (0°) — ASOCIAČNÍ (180°) — variace', pKr:'Analytický — Asociační — variace',
+    zadani:'Popiš jednu pracovní schůzku dvěma způsoby: jako kocour — věcně, chronologicky, s přesnými časy a body. Jako myš — co se dělo mezi řečí, co kdo naznačil, co zůstalo viset ve vzduchu.',
+    p1:'První verze obsahuje časové údaje, pořadí, výstupy.',
+    p2:'Druhá verze neobsahuje žádný čas, jen pocity, dojmy, nedokončené věty.',
+    podnet:'Jen nedokončené věty bývají všechny stejné. Jednou, dnes i zítra.',
+    analyzer:'Přítomnost čísel a časových údajů (první). Přítomnost tří teček a emocí (druhá).' },
+  { par:'KULTURNÍ (30°) — INTROSPEKTIVNÍ (210°) — variace', pKr:'Kulturní — Introspektivní — variace',
+    zadani:'Napiš dvouhlasý dialog: kocour říká Všichni to tak dělají, tak je to správně. Myš odpovídá: A jak to cítíš ty? Ne tady, ale uvnitř?',
+    p1:'Kocourovy repliky odkazují na všichni, normální, zažité.',
+    p2:'Myší repliky se ptají na pocity, pochybnosti, osobní pravdu.',
+    podnet:'Ale všimly si toho jen kocour a malá myš. A ani jeden neříkali nic.',
+    analyzer:'Poměr obecných a osobních zájmen. Počet otázek zaměřených na pocity.' },
+  { par:'FILOZOFICKÝ (60°) — IRONICKÝ (240°) — variace', pKr:'Filozofický — Ironický — variace',
+    zadani:'Napiš krátké kázání na téma Blahoslavení, kdo nedokončují, neboť... A poté napiš jeho parodii, kde se káže pravý opak.',
+    p1:'Kázání obsahuje univerzální pravdy, vznešená slova, apely.',
+    p2:'Parodie obsahuje stejná slova, ale v kontextu banality — Blahoslavení, kdo nedokončují, neboť ušetří za inkoust.',
+    podnet:'Myš neříkala nic. Ale všechno si poznamenala.',
+    analyzer:'Frekvence vznešených slov (pravda, smysl, věčnost) vs. banálních (inkoust, oběd, pondělí).' },
+  { par:'NAIVNÍ (90°) — GROTESKNÍ (270°) — variace', pKr:'Naivní — Groteskní — variace',
+    zadani:'Popiš svoji poslední hádku nebo nedorozumění: jednou jako pohádku o zvířátkách, jednou jako poslední scénu z apokalyptického filmu.',
+    p1:'V první verzi používej zdrobněliny, jednoduché motivy.',
+    p2:'V druhé verzi používej superlativy, katastrofické výrazy, absurdní přirovnání.',
+    podnet:'A celou půlhodinu nemohl tenkrát nikdo nic ne-dokončit. Nešlo to.',
+    analyzer:'Výskyt zdrobnělin a citově zabarvených slov (první). Výskyt extrémních výrazů v druhé.' },
+  { par:'JAZYKOVÝ (120°) — ABSURDNÍ (300°) — variace', pKr:'Jazykový — Absurdní — variace',
+    zadani:'Vezmi větu: Kocour krkal tečky a dokončoval věty! Proveď její gramatický rozbor. Pak napiš verzi, kde všechna slova znamenají pravý opak, ale gramatika zůstane stejná.',
+    p1:'Rozbor je přesný, terminologicky správný.',
+    p2:'Druhá verze dává smysl jen na úrovni větné stavby, obsah je nonsens.',
+    podnet:'Skončil větu a pak skončil krkat.',
+    analyzer:'Přítomnost odborné terminologie (první). Sémantická anomálie — slova, která k sobě nepatří (druhá).' },
+  { par:'METAFORICKÝ (150°) — SURREALISTICKÝ (330°) — variace', pKr:'Metaforický — Surrealistický — variace',
+    zadani:'Nakresli slovem portrét kocoura: jako symbol (co všechno zastupuje) a jako sen (plynulý, nelogický, kde se kocour mění v něco jiného a zase zpátky).',
+    p1:'Každá věta v symbolické části obsahuje je nebo představuje.',
+    p2:'Věty ve snové části na sebe nenavazují logicky, jen obrazně.',
+    podnet:'Byl to klíč. A pádlo. A past.',
+    analyzer:'Frekvence identifikačních sloves (je, znamená) vs. koherence textu v surrealistické části.' }
+];
+
+const klice = {
+  analyticky:  ['cislo','presne','pocet','trvalo','fakta','data','cas','merit'],
+  kulturni:    ['vzdycky','vsichni','normalne','zvyk','tradice','zazite','pravidlo'],
+  filozoficky: ['smysl','proc','podstata','existence','pravda','vecnost','otazka'],
+  naivni:      ['proste','a pak','nevim','jednodusse','jen tak','bezne'],
+  jazykovy:    ['slova','veta','gramatika','vyraz','formulace','text','jazyk'],
+  metaforicky: ['jako','znamena','predstavuje','zastupuje','metafora','symbol'],
+  asociacni:   ['pripomina','jakoby','volne','napada','asociace','vzdalene','spojeni'],
+  introspektivni: ['citim','uvnitr','vim','pocit','osobne','sam sebe','prozivam'],
+  ironicky:    ['samozrejme','jasne','no jo','prece','zrejme','jiste','ironie'],
+  groteskni:   ['priserne','straslivy','absolutni','katastrofa','nejhorsi','monstrozni'],
+  absurdni:    ['nesmysl','absurdni','proc vubec','chaoticky','random','nesmyslne'],
+  surrealisticky: ['sen','mrak','zaroven','promenil','plyne','obraz','mizi']
+};
+
+const ukoluMap = {
+  analyticky:[0,6],asociacni:[0,6],kulturni:[1,7],introspektivni:[1,7],
+  filozoficky:[2,8],ironicky:[2,8],naivni:[3,9],groteskni:[3,9],
+  jazykovy:[4,10],absurdni:[4,10],metaforicky:[5,11],surrealisticky:[5,11]
+};
+
+function buildUkoly(){
+  const list=document.getElementById('ukoly-list');
+  ukoly.forEach((u,i)=>{
+    const div=document.createElement('div');
+    div.className='ukol';div.id='u-'+i;
+    div.innerHTML='<div class="ukol-header" onclick="toggleU('+i+')"><span class="u-num">'+String(i+1).padStart(2,'0')+'</span><div><div class="ukol-nazev">Úkol '+(i+1)+'</div><div class="ukol-par">'+u.pKr+'</div></div><span class="u-toggle" id="t-'+i+'">+</span></div><div class="ukol-body" id="b-'+i+'"><div class="par-badge">'+u.par+'</div><div class="ukol-blok"><div class="blok-label">Zadání</div><p class="blok-text">'+u.zadani+'</p></div><div class="pravidla"><div class="pravidlo p1"><div class="blok-label">Pravidlo 1 — Fenomén Kocoura</div><p class="blok-text">'+u.p1+'</p></div><div class="pravidlo p2"><div class="blok-label">Pravidlo 2 — Protilehlý úhel</div><p class="blok-text">'+u.p2+'</p></div></div><div class="podnet-blok"><div class="blok-label">Podnět z pohádky</div><p class="blok-text italic">'+u.podnet+'</p></div><div class="analyzer-blok"><div class="blok-label">Myš sleduje</div><p class="blok-text">'+u.analyzer+'</p></div><div class="pisarna"><div class="blok-label">Váš text · 20 minut</div><textarea placeholder="Pište sem — bez opravování, bez zastavení..."></textarea></div></div>';
+    list.appendChild(div);
+  });
+}
+buildUkoly();
+
+function toggleU(i){
+  const b=document.getElementById('b-'+i);const t=document.getElementById('t-'+i);
+  const o=b.classList.toggle('open');t.textContent=o?'−':'+';
+}
+function jumpU(i){
+  if(!document.getElementById('b-'+i).classList.contains('open'))toggleU(i);
+  document.getElementById('u-'+i).scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+const varText={
+  A:'Zavřete oči, ťukněte prstem na obrazovku a udělejte ten úkol, který vybere prst.',
+  B:'Projděte 12 úkolů a vyberte ten, jehož protilehlý pár vás nejvíc oslovuje.',
+  C:'Odpovězte na 3 otázky níže — myš doporučí úkoly podle vašeho kognitivního profilu.'
+};
+function setVar(v,btn){
+  document.querySelectorAll('.var-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('var-popis').textContent=varText[v];
+  if(v==='A'){const r=Math.floor(Math.random()*12);setTimeout(()=>{jumpU(r);},300);}
+  if(v==='C')document.getElementById('otazky').scrollIntoView({behavior:'smooth'});
+}
+
+function norm(s){
+  return s.toLowerCase()
+    .replace(/[áa]/g,'a').replace(/[éeě]/g,'e').replace(/[íiy]/g,'i')
+    .replace(/[óo]/g,'o').replace(/[úůu]/g,'u').replace(/[čc]/g,'c')
+    .replace(/[ďd]/g,'d').replace(/[ňn]/g,'n').replace(/[řr]/g,'r')
+    .replace(/[šs]/g,'s').replace(/[ťt]/g,'t').replace(/[žz]/g,'z');
+}
+
+function diagnostika(){
+  const raw=['q1','q2','q3'].map(id=>document.getElementById(id).value).join(' ');
+  if(!raw.trim()){alert('Vyplňte alespoň jednu odpověď.');return;}
+  const txt=norm(raw);
+  let maxK='analyticky',maxS=0;
+  Object.entries(klice).forEach(([k,kw])=>{
+    const s=kw.reduce((a,w)=>a+(txt.includes(norm(w))?1:0),0);
+    if(s>maxS){maxS=s;maxK=k;}
+  });
+  if(maxS===0){const ks=Object.keys(klice);maxK=ks[Math.floor(Math.random()*ks.length)];}
+  const doporucene=ukoluMap[maxK]||[0,6];
+  const nazev=maxK.charAt(0).toUpperCase()+maxK.slice(1);
+  document.getElementById('diag-dominant').textContent='Vaše odpovědi ukazují nejsilněji na úhel: '+nazev+'. Systém vám doporučuje tyto úkoly:';
+  document.getElementById('diag-navrhy').innerHTML=doporucene.map(i=>'<button class="navrh-btn" onclick="jumpU('+i+')">→ Úkol '+(i+1)+' — '+ukoly[i].pKr+'</button>').join('');
+  const out=document.getElementById('diag-out');
+  out.style.display='block';
+  out.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+</script>
+</body>
+</html>
