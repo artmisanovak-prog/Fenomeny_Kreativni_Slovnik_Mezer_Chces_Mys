@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Zaječice — Chceš myš?</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --bg:#0e0a07;--s:#161008;--s2:#1e1509;
+      --c:#f0e2cc;--dim:rgba(240,220,190,.36);--a:#d4722a;
+      --b:rgba(212,114,42,.14);--b2:rgba(212,114,42,.28);
+      --serif:'Cormorant Garamond',Georgia,serif;--mono:'DM Mono',monospace;
+    }
+    html{scroll-behavior:smooth}
+    body{background:var(--bg);color:var(--c);font-family:var(--mono);font-size:13px;line-height:1.85;-webkit-font-smoothing:antialiased}
+    a{color:inherit;text-decoration:none}
+    .wrap{max-width:760px;margin:0 auto;padding:0 28px}
+    p{margin-bottom:.75em}p:last-child{margin-bottom:0}
+
+    nav{position:sticky;top:0;z-index:99;border-bottom:1px solid var(--b);background:rgba(14,10,7,.96);backdrop-filter:blur(12px);padding:12px 28px;display:flex;align-items:center;justify-content:space-between}
+    .nav-l{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)}
+    .nav-l:hover{color:var(--c)}
+    .nav-r{display:flex;gap:14px}
+    .nav-r a{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);transition:color .15s}
+    .nav-r a:hover{color:var(--a)}
+
+    .hero{padding:48px 0 34px;border-bottom:1px solid var(--b)}
+    .hero-tag{font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:var(--a);margin-bottom:12px}
+    .hero h1{font-family:var(--serif);font-size:clamp(2.6rem,6vw,4.8rem);font-weight:300;line-height:1;margin-bottom:6px}
+    .hero h1 em{font-style:italic;color:var(--a)}
+    .hero-veta{font-family:var(--serif);font-style:italic;font-size:.97rem;color:var(--dim);border-left:1px solid var(--a);padding-left:15px;margin:16px 0 18px;line-height:1.9;max-width:480px}
+    .fenomen{border:1px solid var(--b2);padding:14px 18px;background:rgba(212,114,42,.04)}
+    .fenomen-tag{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--a);margin-bottom:7px}
+    .fenomen-text{font-size:.82rem;color:rgba(240,220,190,.55);line-height:1.9}
+
+    .faze{padding:24px 0 0;display:flex;gap:0}
+    .faze-item{flex:1;padding:10px 10px;background:var(--s);border:1px solid var(--b);border-right:none;font-size:.67rem;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);transition:all .2s}
+    .faze-item:last-child{border-right:1px solid var(--b)}
+    .faze-item.active{background:rgba(212,114,42,.1);color:var(--a);border-color:var(--a)}
+    .faze-item.done{color:rgba(212,114,42,.28)}
+
+    .sec{padding:40px 0;border-bottom:1px solid var(--b)}
+    .sec-tag{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--a);margin-bottom:14px}
+    h2{font-family:var(--serif);font-size:clamp(1.1rem,3vw,1.7rem);font-weight:300;margin-bottom:18px}
+    h2 em{font-style:italic;color:var(--a)}
+
+    /* Zaječice: narativní pohádka s odstavci + izolované klíčové věty */
+    .pohadka{font-family:var(--serif);font-size:.93rem;color:rgba(240,220,190,.76);border:1px solid var(--b);background:var(--s);padding:26px 30px;max-height:440px;overflow-y:auto;line-height:1.9}
+    .pohadka::-webkit-scrollbar{width:2px}
+    .pohadka::-webkit-scrollbar-thumb{background:var(--a)}
+    .pohadka p{margin-bottom:1.2em}
+    .pohadka p:last-child{margin-bottom:0}
+    .pohadka .hr{border:none;border-top:1px solid var(--b);margin:1em 0}
+    .pohadka .silna{font-style:normal;color:var(--a);font-weight:400}
+    .pohadka .dim{color:rgba(240,220,190,.42);font-style:italic}
+
+    /* Jevy */
+    .j-legenda{border-bottom:1px dotted rgba(212,114,42,.45);cursor:help}
+    .j-verze{border-bottom:1px dashed rgba(212,114,42,.4);cursor:help}
+    .j-meta{border-bottom:1px solid rgba(212,114,42,.3);cursor:help}
+    .j-koruna{background:rgba(212,114,42,.07);padding:0 2px;cursor:help}
+
+    .otazky{padding:40px 0;border-bottom:1px solid var(--b)}
+    .q-block{margin-bottom:30px}
+    .q-num{font-family:var(--serif);font-size:2.4rem;font-weight:300;color:rgba(212,114,42,.1);line-height:1;margin-bottom:4px}
+    .q-label{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--a);margin-bottom:8px}
+    .q-text{font-size:.92rem;color:var(--c);margin-bottom:8px;line-height:1.8}
+    .q-hint{font-size:.76rem;color:var(--dim);margin-bottom:10px;font-style:italic}
+    textarea{width:100%;background:var(--s);border:1px solid var(--b);color:var(--c);padding:12px 14px;font-family:var(--mono);font-size:.82rem;line-height:1.75;resize:vertical;min-height:86px}
+    textarea:focus{outline:1px solid var(--a)}
+    textarea::placeholder{color:rgba(240,220,190,.11)}
+
+    .btn{padding:11px 26px;font-family:var(--mono);font-size:.78rem;letter-spacing:.1em;text-transform:uppercase;border:none;cursor:pointer;transition:all .15s}
+    .btn-p{background:var(--a);color:var(--bg)}
+    .btn-p:hover{background:#e88840}
+    .btn-g{background:transparent;color:var(--dim);border:1px solid var(--b)}
+    .btn-g:hover{color:var(--c);border-color:var(--b2)}
+    .btn-row{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap}
+
+    #vysledek{display:none}
+    .res-sec{padding:44px 0;border-bottom:1px solid var(--b)}
+    .res-tag{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--a);margin-bottom:16px}
+    .res-uhel{font-family:var(--serif);font-size:clamp(1.6rem,4vw,2.8rem);font-weight:300;margin-bottom:8px}
+    .res-uhel em{font-style:italic;color:var(--a)}
+    .res-popis{font-size:.84rem;color:rgba(240,220,190,.6);line-height:1.9;max-width:520px;margin-bottom:24px}
+    .vide-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--b);border:1px solid var(--b);margin-bottom:28px}
+    @media(max-width:480px){.vide-grid{grid-template-columns:1fr}}
+    .vide-item{background:var(--s);padding:12px 15px}
+    .vide-jev{font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:var(--a);margin-bottom:4px}
+    .vide-text{font-size:.78rem;color:rgba(240,220,190,.5);line-height:1.75}
+
+    .intervence{border:1px solid var(--a);background:rgba(212,114,42,.04);padding:22px 24px;margin-bottom:22px}
+    .int-tag{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--a);margin-bottom:10px}
+    .int-uhel{font-family:var(--serif);font-size:1.3rem;font-weight:300;margin-bottom:12px}
+    .int-uhel em{font-style:italic;color:var(--a)}
+    .jev-box{background:var(--s2);border-left:2px solid var(--a);padding:14px 16px;margin:14px 0}
+    .jev-box-tag{font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;color:var(--a);margin-bottom:8px}
+    .jev-box-nazev{font-size:.84rem;color:var(--c);margin-bottom:8px}
+    .jev-box-popis{font-size:.8rem;color:rgba(240,220,190,.56);line-height:1.85;margin-bottom:10px}
+    .jev-box-citace{font-family:var(--serif);font-style:italic;font-size:.84rem;color:rgba(212,114,42,.55);border-left:1px solid var(--b2);padding-left:12px;line-height:1.85}
+    .jev-box-citace span{display:block}
+
+    .ukol-box{background:var(--s);border:1px solid var(--b);padding:20px 22px;margin-bottom:18px}
+    .ukol-tag{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--a);margin-bottom:10px}
+    .ukol-text{font-size:.88rem;color:rgba(240,220,190,.78);line-height:1.9;margin-bottom:12px}
+    .ukol-vzor{font-family:var(--serif);font-style:italic;font-size:.82rem;color:rgba(240,220,190,.34);border-left:1px solid var(--b);padding-left:12px;line-height:1.8}
+    .ukol-vzor span{display:block}
+
+    .pisarna-tag{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--dim);margin:20px 0 8px}
+    footer{padding:32px 0;border-top:1px solid var(--b);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+    footer p{font-size:.72rem;color:var(--dim)}
+    footer a{color:var(--a)}
+  </style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-l" href="../../../index.html">← Všechna zvířata</a>
+  <div class="nav-r">
+    <a href="../../../nastroje/analyzer.html">Analyzátor</a>
+    <a href="../../../nastroje/zapisnik.html">Zápisník</a>
+  </div>
+</nav>
+
+<div class="wrap">
+
+<section class="hero">
+  <p class="hero-tag">Kreativní miniatura · Karta Zaječice</p>
+  <h1>Zaječ<em>ice</em></h1>
+  <p class="hero-veta">„Co přežije proti logice, se stane pohádkou." — Realita je jen podklad. To, co roste nad ní, je řeč.</p>
+  <div class="fenomen">
+    <div class="fenomen-tag">Fenomén — chyba jako zdroj legendy / realita jako podklad příběhu</div>
+    <p class="fenomen-text">Zaječice neshorela ne proto, že byla statečná — ale proto, že se lekla a skočila na špatné místo, které bylo šťastně shořelé. Náhoda. A přesto se z toho stala legenda. Pohádka zkoumá, jak příběhy vznikají: ne z hrdinství, ale z toho, co přežije a co si ostatní potřebují vyprávět. Realita je podklad — řeč je to, co na ní roste.</p>
+  </div>
+</section>
+
+<div class="faze" id="faze">
+  <div class="faze-item active" id="faze-1">1 · pohádka</div>
+  <div class="faze-item" id="faze-2">2 · otázky</div>
+  <div class="faze-item" id="faze-3">3 · váš úhel</div>
+  <div class="faze-item" id="faze-4">4 · intervence</div>
+</div>
+
+<!-- POHÁDKA -->
+<section class="sec" id="sec-pohadka">
+  <p class="sec-tag">Přečtěte · pohádka sleduje, jak se z chyby stane legenda</p>
+  <h2>O zaječici — <em>aneb zajícem nezatopíš</em></h2>
+
+  <div class="pohadka">
+    <p>Bylo jedno pole, takové obyčejné, plné trávy, obilí a prachu. V létě, slunce stálo vysoko, dokázalo se to pole vznítit jedinou jiskrou. A tak se i stalo: zapraskalo suché stéblo, rozfoukal se vítr, a oheň se rozběhl přes lány rychleji než lidský krok. Všechna zvířata, která tam byla, věděla, co mají dělat. Utíkat. Utíkat pryč, co nejdál, co nejrychleji. Utíkal bažant, myši, i celé hejno koroptví. A také zajíci.</p>
+    <hr class="hr">
+    <p>Jenže jeden zajíc – vlastně zaječice – byla jiná. <span class="j-legenda" title="Chyba jako zdroj legendy: neshorela ne z hrdinství, ale z panice a štěstí">Nebyla statečnější než ostatní, nebyla chytřejší, dokonce ani nebyla rychlejší. Jen se lekla tak moc, že zapomněla na všechny instinkty.</span> A zatímco ostatní běželi kupředu před ohněm, ona udělala pravý opak: skočila přímo do plamenů.</p>
+    <hr class="hr">
+    <p>Teď byste čekali, že se promění v popel a zůstane po ní jen smutný pach spálených chlupů. Ale kdepak. Ona dopadla do místa, které už bylo shořelé. Tam, kde oheň už dávno sežral všechen svůj pokrm a nechal jen černou zemi. A tak zaječice prošla plameny, aniž by jí ublížily.</p>
+    <hr class="hr">
+    <p class="silna"><span class="j-meta" title="Pohádka o pohádce: text komentuje mechanismus svého vlastního vzniku">A tohle se stalo legendou. Protože všechno, co přežije proti logice, se stane pohádkou.</span></p>
+    <hr class="hr">
+    <p>Zajíci si pak začali vyprávět, že ona je ohnivzdorná. Že se jí žádný žár nemůže dotknout, protože oheň si ji spletl s popelem a nechal ji být. Jiní říkali, že to byla náhoda – <span class="j-meta" title="Meta-reflexe žánru: pohádky o náhodě nebývají uvěřitelné">že jen zakopla a náhodou dopadla do bezpečí. Ale pohádky o náhodě nebývají uvěřitelné, proto si přidávali vlastní verze.</span></p>
+    <hr class="hr">
+    <p><span class="j-verze" title="Multiplikace výkladů: čtyři verze téhož jevu, žádná bez důkazu, žádná jako pravda">Jedni tvrdili, že zaječice byla vyvolená – že měla v srsti zakódované znamení, neviditelné očima, ale čitelné plamenům. Jiní, že ji chránila pradávná smlouva mezi ohněm a zajíci: „Když skočíš do mých úst dobrovolně, já tě nespálím." A další vykládali, že to byla zkouška – že kdo se dokáže vzdát vlastního pudu sebezáchovy, ten se stává nesmrtelným.</span></p>
+    <hr class="hr">
+    <p>A tak zaječice, která jen zakopla o vlastní strach, byla prohlášena za hrdinku.</p>
+    <hr class="hr">
+    <p>Ale ona sama se nikdy necítila hrdinkou. Když seděla večer na okraji pole a čistila si spálené vousky, říkala si: „Já jsem se jen lekla. Jen jsem skočila blbě." A přitom se kolem ní scházeli ostatní a šeptali: „Podívej, to je ta, co neshoří."</p>
+    <hr class="hr">
+    <p><span class="j-legenda" title="Realita jako podklad, řeč jako to, co roste nad ní">Časem začala chápat, že nezáleží na tom, co se opravdu stalo. Realita byla jen podklad, jako spáleniště pod jejími tlapkami. To, co rostlo nad ní, byla řeč, příběh, legenda.</span> A tak se naučila <span class="j-koruna" title="Koruna z omylu: chyba nemizí, mění funkci — gesto načechrání srsti">nosit svůj omyl jako korunu. Když se jí někdo ptal, jak to udělala, neodpovídala. Jen se tajemně usmála a trochu si načechrala srst, aby to vypadalo, že opravdu skrývá nějaké kouzlo.</span></p>
+    <hr class="hr">
+    <p>Od té doby se traduje, že zajíce nemůžeš zapálit. Že není palivo, že není dřevo na hranici. Oheň ho možná spálí, ale nikdy nepohltí. Protože kdo jednou skočil do plamenů a vyšel ven živý, toho si už žádný oheň netroufne znovu.</p>
+    <hr class="hr">
+    <p class="dim">A děti v lese se učí od matek tuto pohádku: „Neboj se strachu. Strach tě může hodit tam, kam by tě nikdy nenapadlo jít. A možná právě tam je cesta k přežití."</p>
+    <hr class="hr">
+    <p>A tak se stalo, že jedna zaječice, co jen udělala chybu, se zapsala do paměti jako hrdinka.</p>
+    <hr class="hr">
+    <p class="silna"><span class="j-koruna" title="Doutná dál: příběh jako žhavina, ne popel — pokračuje bez ohniště">A její příběh? Ten pořád doutná, i když pole dávno vychladlo.</span></p>
+  </div>
+
+  <div style="margin-top:14px;padding:11px 15px;background:var(--s);border:1px solid var(--b);font-size:.74rem;color:var(--dim);line-height:2">
+    <span style="color:var(--a);font-size:.68rem;letter-spacing:.12em;text-transform:uppercase">Jevy v textu</span><br>
+    <span class="j-legenda" style="cursor:default">tečkovaně</span> = chyba jako zdroj legendy ·
+    <span class="j-verze" style="cursor:default">přerušované</span> = multiplikace výkladů ·
+    <span class="j-meta" style="cursor:default">plné</span> = pohádka o pohádce ·
+    <span class="j-koruna" style="cursor:default;padding:0 3px">podklad</span> = koruna z omylu / doutná dál
+  </div>
+
+  <div class="btn-row">
+    <button class="btn btn-p" onclick="prejitNaOtazky()">Přečetl/a jsem → na otázky</button>
+  </div>
+</section>
+
+<!-- OTÁZKY -->
+<section class="otazky" id="sec-otazky" style="display:none">
+  <p class="sec-tag">Tři otázky · pište první, co vás napadne</p>
+  <p style="font-size:.8rem;color:var(--dim);margin-bottom:28px;max-width:500px;line-height:1.9">Čteme strukturu vašich odpovědí, ne jejich obsah. Délka vět, co opakujete, jak argumentujete — to odhalí váš kognitivní úhel na tento fenomén.</p>
+
+  <div class="q-block">
+    <div class="q-num">1</div>
+    <div class="q-label">Smysl</div>
+    <p class="q-text">Co je podle vás hlavní pointa nebo sdělení této pohádky?</p>
+    <p class="q-hint">Klidně jedna věta nebo deset. Forma je vaše volba.</p>
+    <textarea id="q1" placeholder="Tahle pohádka je pro mě o..."></textarea>
+  </div>
+
+  <div class="q-block">
+    <div class="q-num">2</div>
+    <div class="q-label">Zaujetí</div>
+    <p class="q-text">Která verze příběhu zaječice vás zaujala nejvíce — náhoda, vyvolení, smlouva, nebo zkouška? Proč?</p>
+    <p class="q-hint">Nebo pokud žádná — co vám v pohádce chybělo?</p>
+    <textarea id="q2" placeholder="Zaujala mě verze..."></textarea>
+  </div>
+
+  <div class="q-block">
+    <div class="q-num">3</div>
+    <div class="q-label">Aplikace</div>
+    <p class="q-text">„Realita je jen podklad. To, co roste nad ní, je řeč." — Kdy to ve svém životě nebo práci poznáte?</p>
+    <p class="q-hint">Může to být příklad, vzpomínka, nebo protiargument.</p>
+    <textarea id="q3" placeholder="Poznal/a jsem to, když..."></textarea>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn btn-p" onclick="analyzovat()">Zjistit můj úhel →</button>
+    <button class="btn btn-g" onclick="zpet()">← zpět k pohádce</button>
+  </div>
+</section>
+
+<!-- VÝSLEDEK -->
+<div id="vysledek">
+  <section class="res-sec">
+    <p class="res-tag">Váš kognitivní úhel · z toho, jak jste odpovídali</p>
+    <div class="res-uhel" id="res-uhel-nazev"></div>
+    <p class="res-popis" id="res-uhel-popis"></p>
+    <p class="res-tag">Co v tom, jak píšete, vidíme</p>
+    <div class="vide-grid" id="vide-grid"></div>
+  </section>
+
+  <section class="res-sec">
+    <p class="res-tag">Intervence · jev z pohádky Zaječice + protilehlý úhel</p>
+    <div class="intervence">
+      <div class="int-tag">Protilehlý úhel — kde je prostor pro rozvoj</div>
+      <div class="int-uhel" id="int-uhel-nazev"></div>
+      <div class="jev-box">
+        <div class="jev-box-tag">Konkrétní jev z pohádky Zaječice</div>
+        <div class="jev-box-nazev" id="jev-nazev"></div>
+        <div class="jev-box-popis" id="jev-popis"></div>
+        <div class="jev-box-citace" id="jev-citace"></div>
+      </div>
+    </div>
+    <div class="ukol-box">
+      <div class="ukol-tag">Úkol · 20 minut · záměrná práce s tímto jevem</div>
+      <div class="ukol-text" id="ukol-text"></div>
+      <div class="ukol-vzor" id="ukol-vzor"></div>
+    </div>
+    <p class="pisarna-tag">Pište sem · bez zastavení · bez opravování</p>
+    <textarea id="pisarna" style="min-height:160px" placeholder="Začněte..."></textarea>
+    <div class="btn-row">
+      <button class="btn btn-g" onclick="ulozit()">Uložit do zápisníku</button>
+      <button class="btn btn-g" onclick="resetovat()">Začít znovu</button>
+    </div>
+  </section>
+</div>
+
+<footer>
+  <p>Karta Zaječice · Chceš myš? — kreativní miniatury · © 2026 Michaela Nováková</p>
+  <p><a href="mailto:chcesmys@gmail.com">chcesmys@gmail.com</a></p>
+</footer>
+</div>
+
+<script>
+const UHLY = {
+  0:  { nazev:'0° Analytický', prot:180,
+        popis:'Hledáte logiku, příčinu, systém. Pohádku čtete jako mechanismus — co způsobilo co.',
+        kw:['protože','tedy','neboť','struktura','systém','logika','vztah','analýza','příčina','pořadí','proces','mechanismus','důsledek','vyplývá'] },
+  180:{ nazev:'180° Asociační', prot:0,
+        popis:'Odpovědi skáčou — obraz přivede jiný bez logického mostu. Volná forma, přeskoky.',
+        kw:['napadá','připomíná','evokuje','najednou','mimochodem','vlastně','taky','jinak','zároveň','přitom','to mi','a pak','bez důvodu'] },
+  30: { nazev:'30° Kulturní', prot:210,
+        popis:'Pohádku čtete jako sdílenou výpověď. Kolektivní vzorce, archetypy, obecné pravdy.',
+        kw:['všichni','vždy','každý','společnost','normální','tradičně','obecně','lidé','svět','jak se říká','obvykle','přirozené','typické','kolektivní'] },
+  210:{ nazev:'210° Introspektivní', prot:30,
+        popis:'Mluvíte o vlastním prožitku. Pohádku vztahujete ke svým zkušenostem a pocitům.',
+        kw:['já','mě','mi','mám','cítím','prožívám','vzpomínám','osobně','ve mně','uvnitř','sám','sobě','moje','znám to','zažil','zažila'] },
+  60: { nazev:'60° Filozofický', prot:240,
+        popis:'Hledáte abstraktní pravdu, podstatu, hlubší smysl. Pohádka je výpověď o jazyce, realitě nebo identitě.',
+        kw:['smysl','podstata','pravda','existence','bytí','otázka','hloubka','princip','zákon','vědomí','skutečnost','realita','identita','narativ'] },
+  240:{ nazev:'240° Ironický', prot:60,
+        popis:'Komentujete s odstupem nebo sarkazmem. Pohádku čtete jako satiru na hrdinství nebo na legendy.',
+        kw:['samozřejmě','ale','přitom','paradoxně','ovšem','jak jinak','pochopitelně','nicméně','ačkoliv','jenže','přesto','jistě','logicky'] },
+  90: { nazev:'90° Naivní', prot:270,
+        popis:'Přímočarost, krátké věty. Pohádku čtete doslova — zaječice skočila, neshorela, konec.',
+        kw:['prostě','jednoduše','jasně','tak','ano','je to o','říká','stačí','jen','zkrátka','jasné','přímočaré','jednoduché','hotovo'] },
+  270:{ nazev:'270° Groteskní', prot:90,
+        popis:'Dramatičnost, přehánění, extrémní kontrast. Pohádku prožíváte intenzivně.',
+        kw:['strašně','hrozně','naprosto','absolutně','úplně','totálně','extrémně','neskutečně','šílené','brutální','ohromné','děsivé','fascinující'] },
+  120:{ nazev:'120° Jazykový', prot:300,
+        popis:'Všímáte si formy, jazyka, jak je pohádka napsaná. Komentujete styl, rytmus, jak příběh funguje jako text.',
+        kw:['slovo','jazyk','forma','rytmus','napsáno','věta','text','příběh','vyprávění','styl','formulace','způsob','legenda','narativ'] },
+  300:{ nazev:'300° Absurdní', prot:120,
+        popis:'Logika se vám rozpadá záměrně. Nečekané skoky, záměrná nelogičnost.',
+        kw:['nevím','asi','možná','ale ne','nebo tak','nějak','záhadné','bez důvodu','nemá smysl','přesto','kdoví','nahodile','chaoticky'] },
+  150:{ nazev:'150° Metaforický', prot:330,
+        popis:'Myslíte v obrazech. Pohádku popisujete přirovnáními. Oheň, pole, srst — jako něco jiného.',
+        kw:['jako','připomíná','obraz','symbol','jakoby','ztělesňuje','přirovnal','vypadá jako','funguje jako','je to jako','metafora','symbolizuje'] },
+  330:{ nazev:'330° Surrealistický', prot:150,
+        popis:'Snová logika, nereálné kombinace. Odpovědi mají nečekané přechody.',
+        kw:['sen','snový','podivný','nereálné','plovoucí','magicky','nevysvětlitelně','jak ze sna','záhadně','mysticky','nelogicky','surreálně'] }
+};
+
+const JEVY = {
+  chyba_legenda: {
+    nazev: 'Chyba jako zdroj legendy · zakopla a stala se hrdinkou',
+    popis: 'Pohádka explicitně odhalí, že hrdinka neshorela ne proto, že byla statečná — ale proto, že se lekla a měla štěstí. „Nebyla statečnější, chytřejší, ani rychlejší. Jen se lekla tak moc, že zapomněla na instinkty." A pak to pojmenuje: „Protože všechno, co přežije proti logice, se stane pohádkou." Technika: začít od omylu nebo náhody a sledovat, jak se z ní stane příběh.',
+    citace: ['"Jen se lekla tak moc, že zapomněla na všechny instinkty."', '"Co přežije proti logice, se stane pohádkou."', '"Jedna zaječice, co jen udělala chybu, se zapsala do paměti jako hrdinka."'],
+    ukol: 'Napiš příběh, který začne chybou nebo náhodou — ale vyprávěj ho tak, jak by ho vyprávěl někdo, kdo z toho udělal legendu. Ne jako vysvětlení — jako mýtus. Pak přidej jednu větu z perspektivy toho, kdo tu chybu udělal: co si říkal/a sám/sama? Jak velký je rozdíl mezi oběma hlasy?',
+    vzor: ['"A tak se stalo, že ten, kdo přišel pozdě, zachránil schůzku. Protože pozdní příchod přerušil ticho, ve kterém by všichni souhlasili se špatným rozhodnutím."', '"On si říkal: omlouval jsem se celou cestu."']
+  },
+  multiplikace_vykladu: {
+    nazev: 'Multiplikace výkladů · čtyři verze, žádná pravda',
+    popis: 'Pohádka neprezentuje jeden výklad události — prezentuje čtyři zároveň. Náhoda. Vyvolení. Smlouva. Zkouška. Každý výklad je podán se stejnou jistotou, stejnou délkou, stejnou věrohodností. A pohádka nevybere žádný jako správný. Tato technika říká: pravda události se nedá určit — lze ji jen množit. A množení samo je příběh.',
+    citace: ['"Jedni tvrdili, že zaječice byla vyvolená..."', '"Jiní, že ji chránila pradávná smlouva..."', '"A další vykládali, že to byla zkouška..."'],
+    ukol: 'Vezmi jednu konkrétní událost (svou nebo vymyšlenou) a napiš k ní čtyři různé výklady — každý ze zcela jiné kategorie (náhoda, osud, zásluha, manipulace). Každý výklad musí mít stejnou délku a stejnou jistotu tónu. Žádný nesmí být označen jako správný. Pak přečti: co tato paralelnost říká o povaze pravdy?',
+    vzor: ['"Jedni říkali, že přišel pozdě, protože ho autobus nechal. Jiní, že byl vždy vyvolený přicházet v pravý čas. Další vykládali, že věděl — a počkal. A ti, kteří ho znali nejlépe, říkali, že prostě zapomněl."']
+  },
+  realita_podklad: {
+    nazev: 'Realita jako podklad · spáleniště pod tlapkami',
+    popis: 'Pohádka formuluje explicitní tezi o vztahu události a vyprávění: „Realita byla jen podklad, jako spáleniště pod jejími tlapkami. To, co rostlo nad ní, byla řeč, příběh, legenda." Tato metafora je přesná: podklad existuje, nenachází se — ale to, co roste nad ním, je to, co vidíme a čím žijeme. Technika: pojmenovat realitu jako substát a příběh jako to, co je na ní pěstováno.',
+    citace: ['"Realita byla jen podklad, jako spáleniště pod jejími tlapkami."', '"To, co rostlo nad ní, byla řeč, příběh, legenda."'],
+    ukol: 'Vyber jednu událost, která se ti stala — a napiš ji dvakrát. Jednou jako podklad: co se fakticky stalo, bez interpretace, bez emocí, jen akce. Podruhé jako to, co vyrostlo nad ní: jak jsi to vyprávěl/a ostatním, jak sis to opakoval/a, co z toho zůstalo. Jak velký je prostor mezi oběma texty?',
+    vzor: ['"Podklad: ujel mi vlak. Přišel jsem pozdě. Seděl jsem na nástupišti hodinu."', '"Nad ním: byl to nejklidnější čas toho roku. Nikdo mě nehledal. Měl jsem hodinu, která nebyla nikoho."']
+  },
+  koruna_z_omylu: {
+    nazev: 'Koruna z omylu · nosit chybu jako ozdobu',
+    popis: 'Zaječice se nenaučí lhát ani zapírat. Naučí se transformovat funkci omylu: „nosit svůj omyl jako korunu." A pak přijde konkrétní gesto: načechrala srst. Gesto je fyzické a přesné — není to dramatická proměna, je to malý pohyb, který mění čtení celé situace. Technika: popsat transformaci přes jedno konkrétní fyzické gesto, ne přes vnitřní monolog.',
+    citace: ['"Naučila se nosit svůj omyl jako korunu."', '"Jen se tajemně usmála a trochu si načechrala srst, aby to vypadalo, že opravdu skrývá nějaké kouzlo."'],
+    ukol: 'Napiš scénu, kde postava transformuje chybu nebo slabost v sílu — ale celou transformaci vyjádři JEDNÍM fyzickým gestem. Žádný vnitřní monolog, žádné přemítání. Jen gesto. Pak napiš větu, která popíše, co ostatní v tom gestu viděli — a větu, co postava o gestu věděla sama.',
+    vzor: ['"Vstal a zapnul si knoflík u límce. Ostatní si mysleli, že se chystá mluvit. On věděl, že si zakrývá skvrnu od kávy."']
+  },
+  pohadka_o_pohadce: {
+    nazev: 'Pohádka o pohádce · text komentuje vlastní vznik',
+    popis: 'Pohádka obsahuje věty, které komentují mechanismus pohádek zevnitř. „Co přežije proti logice, se stane pohádkou." „Pohádky o náhodě nebývají uvěřitelné, proto si přidávali vlastní verze." Text ví, že je pohádka — a říká to. Tato meta-reflexe funguje paradoxně: čím víc pohádka říká o sobě, že je konstrukt, tím věrohodnějším konstruktem se stává.',
+    citace: ['"Co přežije proti logice, se stane pohádkou."', '"Pohádky o náhodě nebývají uvěřitelné, proto si přidávali vlastní verze."'],
+    ukol: 'Napiš krátký příběh — a do jeho středu vlož jednu větu, která komentuje, jak příběh funguje jako příběh. Ne jako autorský komentář — jako součást světa textu. Pak přidej na konec větu, která říká, proč se tento příběh bude vyprávět dál. Výsledek musí fungovat jako příběh i jako teorie o příbězích zároveň.',
+    vzor: ['"A protože nikdo z přítomných nechtěl říct, že nerozumí, příběh se usadil jako pravda. Tak jako všechny příběhy, které byly svědkem mlčení."']
+  },
+  doutna_dal: {
+    nazev: 'Doutná dál · příběh jako žhavina bez ohniště',
+    popis: 'Závěrečná věta pohádky je obrazem přesahujícím vlastní příběh: „Ten pořád doutná, i když pole dávno vychladlo." Příběh nekončí — doutná. Doutnat je přechodový stav mezi plamenem a popelem: není to hoření, ale není to ani chlad. Tato technika dá příběhu afektivní přídavné jméno nebo fyzický stav místo uzavření. Výsledek nepřichází s poučením — přichází s žhavinou.',
+    citace: ['"A její příběh? Ten pořád doutná, i když pole dávno vychladlo."'],
+    ukol: 'Napiš závěr textu — ale místo uzavření nebo poučení dej příběhu fyzický stav, který pokračuje. Ne „a od té doby..." — ale stav: doutná, vychládá, roste, stojí, čeká. Fyzický stav musí být přesný pro obsah příběhu. Pak přečti: co tento stav říká o tom, jak příběh existuje v čase?',
+    vzor: ['"A ta věta? Ta se ještě někde pohybuje. Neví, ke komu."', '"Schůzka dávno skončila. Ale to, co se na ní neřeklo, stále visí ve vzduchu konferenční místnosti."']
+  }
+};
+
+const UHEL_NA_JEV = {
+  0:   'realita_podklad',       // Analytický: systém neumí popsat, co roste nad daty
+  180: 'multiplikace_vykladu',  // Asociační: dát skokům formu paralelních výkladů
+  30:  'chyba_legenda',         // Kulturní: legenda jako kolektivní projekt nad náhodou
+  210: 'koruna_z_omylu',        // Introspektivní: přejít od vnitřního monologu k fyzickému gestu
+  60:  'realita_podklad',       // Filozofický: teze o vztahu reality a narativu
+  240: 'pohadka_o_pohadce',     // Ironický: ironie odhalí mechanismus — pohádka komentuje sebe
+  90:  'doutna_dal',            // Naivní: přidat přechodový stav místo uzavření
+  270: 'koruna_z_omylu',        // Groteskní: stlačit dramatičnost do jednoho gesta
+  120: 'pohadka_o_pohadce',     // Jazykový: text který ví, že je text
+  300: 'multiplikace_vykladu',  // Absurdní: absurditě dát formu paralelních výkladů
+  150: 'doutna_dal',            // Metaforický: fyzický stav místo uzavírající metafory
+  330: 'chyba_legenda'          // Surrealistický: ukotvit sen přes konkrétní původ legendy
+};
+
+function skore(text){
+  const s={};
+  Object.keys(UHLY).forEach(k=>s[k]=0);
+  Object.entries(UHLY).forEach(([k,u])=>{
+    u.kw.forEach(kw=>{
+      const re=new RegExp('(?<![a-záčďéěíňóřšťůúýž])'+kw.replace(/[-\/\\^$*+?.()|[\]{}]/g,'\\$&')+'(?![a-záčďéěíňóřšťůúýž])','gi');
+      s[k]+=(text.match(re)||[]).length*2;
+    });
+  });
+  const vety=text.split(/[.!?…]+/).filter(v=>v.trim().length>2);
+  const avg=vety.length?vety.reduce((a,v)=>a+v.trim().split(/\s+/).length,0)/vety.length:0;
+  const ja=(text.match(/\bjá\b|\bjsem\b|\bmi\b|\bmě\b/gi)||[]).length;
+  const jako=(text.match(/\bjako\b/gi)||[]).length;
+  const ale=(text.match(/\bale\b/gi)||[]).length;
+  const q=(text.match(/\?/g)||[]).length;
+  const verze=(text.match(/\bjedni\b|\bjiní\b|\bdruzí\b|\bdalší\b|\bněkteří\b/gi)||[]).length;
+
+  if(avg<7)s[90]+=4;
+  if(avg>16){s[60]+=3;s[0]+=2;}
+  s[210]+=ja; s[150]+=jako*2; s[240]+=ale; s[60]+=q*2;
+  if(verze>1)s[180]+=verze*2; // více verzí → asociační
+  if(vety.length>=3){
+    const lens=vety.map(v=>v.trim().split(/\s+/).length);
+    const av=lens.reduce((a,b)=>a+b)/lens.length;
+    const sd=Math.sqrt(lens.map(l=>(l-av)**2).reduce((a,b)=>a+b)/lens.length);
+    if(sd>5)s[270]+=4;
+  }
+  if((text.match(/\.\.\.|–\s*$|—\s*$/gm)||[]).length>1)s[300]+=3;
+  return s;
+}
+function top(s){return Object.entries(s).sort((a,b)=>b[1]-a[1])[0][0];}
+function vidJevy(text,uhel){
+  const vety=text.split(/[.!?…]+/).filter(v=>v.trim().length>2);
+  const avg=vety.length?vety.reduce((a,v)=>a+v.trim().split(/\s+/).length,0)/vety.length:0;
+  const ja=(text.match(/\bjá\b|\bjsem\b|\bmi\b|\bmě\b/gi)||[]).length;
+  const jako=(text.match(/\bjako\b/gi)||[]).length;
+  const ale=(text.match(/\bale\b/gi)||[]).length;
+  const q=(text.match(/\?/g)||[]).length;
+  const r=[];
+  if(avg<8)r.push({j:'Délka vět',t:'Krátké věty — každá myšlenka stojí sama.'});
+  else if(avg>15)r.push({j:'Délka vět',t:`Dlouhé věty — průměr ${Math.round(avg)} slov.`});
+  else r.push({j:'Délka vět',t:`Průměr ${Math.round(avg)} slov.`});
+  if(ja>4)r.push({j:'Perspektiva',t:'Osobní pohled — pohádku vztahujete ke svým zkušenostem.'});
+  if(jako>1)r.push({j:'Obrazy',t:`${jako}× „jako" — myslíte v přirovnáních.`});
+  if(q>1)r.push({j:'Otázky',t:`${q} otázky — hledáte, nestanovujete.`});
+  if(ale>2)r.push({j:'Kontrast',t:`${ale}× „ale" — napětí mezi dvěma stranami.`});
+  if(r.length<3)r.push({j:'Vzorec',t:UHLY[uhel].popis.split('.')[0]+'.'});
+  return r.slice(0,4);
+}
+function faze(n){
+  [1,2,3,4].forEach(i=>{
+    const el=document.getElementById('faze-'+i);
+    el.className='faze-item';
+    if(i<n)el.classList.add('done');
+    else if(i===n)el.classList.add('active');
+  });
+}
+function prejitNaOtazky(){
+  document.getElementById('sec-pohadka').style.display='none';
+  document.getElementById('sec-otazky').style.display='block';
+  faze(2);window.scrollTo({top:0,behavior:'smooth'});
+}
+function zpet(){
+  document.getElementById('sec-otazky').style.display='none';
+  document.getElementById('sec-pohadka').style.display='block';
+  faze(1);window.scrollTo({top:0,behavior:'smooth'});
+}
+function analyzovat(){
+  const q1=document.getElementById('q1').value.trim();
+  const q2=document.getElementById('q2').value.trim();
+  const q3=document.getElementById('q3').value.trim();
+  if(!q1&&!q2&&!q3){alert('Vyplňte alespoň jednu odpověď.');return;}
+  const vše=q1+' '+q2+' '+q3;
+  const s=skore(vše);
+  const u=top(s);
+  const U=UHLY[u],P=UHLY[U.prot];
+  const j=JEVY[UHEL_NA_JEV[u]];
+  document.getElementById('res-uhel-nazev').innerHTML=`<em>${U.nazev}</em>`;
+  document.getElementById('res-uhel-popis').textContent=U.popis;
+  const g=document.getElementById('vide-grid');g.innerHTML='';
+  vidJevy(vše,u).forEach(i=>{
+    const d=document.createElement('div');d.className='vide-item';
+    d.innerHTML=`<div class="vide-jev">${i.j}</div><div class="vide-text">${i.t}</div>`;
+    g.appendChild(d);
+  });
+  document.getElementById('int-uhel-nazev').innerHTML=`<em>${P.nazev}</em>`;
+  document.getElementById('jev-nazev').textContent=j.nazev;
+  document.getElementById('jev-popis').textContent=j.popis;
+  document.getElementById('jev-citace').innerHTML=j.citace.map(c=>`<span>${c}</span>`).join('');
+  document.getElementById('ukol-text').textContent=j.ukol;
+  document.getElementById('ukol-vzor').innerHTML=j.vzor.map(v=>`<span>${v}</span>`).join('');
+  document.getElementById('sec-otazky').style.display='none';
+  document.getElementById('vysledek').style.display='block';
+  faze(4);
+  document.getElementById('vysledek').scrollIntoView({behavior:'smooth',block:'start'});
+}
+function ulozit(){
+  const z={datum:new Date().toLocaleDateString('cs-CZ'),karta:'Zaječice',
+    uhel:document.getElementById('res-uhel-nazev').textContent,
+    text:document.getElementById('pisarna').value,
+    q1:document.getElementById('q1').value,q2:document.getElementById('q2').value,q3:document.getElementById('q3').value};
+  const e=JSON.parse(localStorage.getItem('chcesmys_zapisnik')||'[]');
+  e.push(z);localStorage.setItem('chcesmys_zapisnik',JSON.stringify(e));
+  alert('Uloženo. ('+e.length+' záznamů)');
+}
+function resetovat(){
+  ['q1','q2','q3','pisarna'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('vysledek').style.display='none';
+  document.getElementById('sec-pohadka').style.display='block';
+  document.getElementById('sec-otazky').style.display='none';
+  faze(1);window.scrollTo({top:0,behavior:'smooth'});
+}
+</script>
+</body>
+</html>
