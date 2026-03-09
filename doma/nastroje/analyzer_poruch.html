@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🐁 Interaktivní úhloměr myšlení</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#fff;color:#111;max-width:1000px;margin:0 auto;padding:2rem 1rem;line-height:1.6}
+h1{font-size:1.8rem;margin-bottom:.2rem;display:flex;align-items:center;gap:10px}
+.sub{color:#888;font-size:.9rem;margin-bottom:2rem}
+.container{display:flex;flex-wrap:wrap;gap:2rem;margin-bottom:2rem}
+.viz-panel{flex:1;min-width:300px}
+.text-panel{flex:2;min-width:400px}
+textarea{width:100%;padding:.8rem;border:1px solid #ccc;font-family:Georgia,serif;font-size:.95rem;resize:vertical;min-height:250px;margin-bottom:1rem;border-radius:4px}
+.btn{padding:.6rem 1.5rem;background:#111;color:#fff;border:none;cursor:pointer;font-size:.95rem;font-family:Georgia,serif;border-radius:4px}
+.btn:hover{background:#333}
+.btn-outline{background:#fff;color:#111;border:1px solid #111}
+.row{display:flex;gap:.8rem;flex-wrap:wrap;margin:1rem 0 1.5rem}
+.highlighted{width:100%;padding:.8rem;border:1px solid #ccc;font-size:.95rem;min-height:250px;background:#fafafa;line-height:1.8;white-space:pre-wrap;border-radius:4px;overflow-y:auto;max-height:500px}
+canvas{width:100%;max-width:350px;height:auto;display:block;margin:0 auto;cursor:pointer}
+.legend{margin-top:1.5rem;display:flex;flex-wrap:wrap;gap:.5rem}
+.legend-item{font-size:.8rem;padding:.3rem .8rem;border-radius:20px;cursor:pointer;transition:opacity 0.2s;border:1px solid transparent}
+.legend-item:hover{opacity:0.8;border-color:#000}
+.legend-item.active{font-weight:bold;border-color:#000;box-shadow:0 2px 4px rgba(0,0,0,0.1)}
+.info-panel{margin-top:2rem;padding:1.5rem;background:#f5f5f5;border-radius:8px;border-left:5px solid #111}
+.info-panel h3{margin-bottom:.5rem;font-size:1.2rem}
+.info-panel p{margin-bottom:.3rem;color:#333}
+.info-panel .cil{font-style:italic;color:#555;margin-top:.5rem;padding-top:.5rem;border-top:1px dashed #aaa}
+#technika-popis{min-height:100px}
+.stats{display:flex;justify-content:space-between;margin-top:.5rem;font-size:.85rem;color:#666}
+</style>
+</head>
+<body>
+
+<h1>🐁 Interaktivní úhloměr myšlení <span style="font-size:1rem;color:#888;font-weight:normal">(klikni na segment → zvýrazní v textu)</span></h1>
+<div class="sub">Mapování 10 strukturálních technik na 12 kognitivních úhlů</div>
+
+<div class="container">
+  <div class="viz-panel">
+    <canvas id="protractor" width="400" height="400"></canvas>
+    <div class="stats" id="stats"></div>
+    <div class="legend" id="legend"></div>
+  </div>
+  <div class="text-panel">
+    <textarea id="input-text" placeholder="Vložte text (e-mail, chat, přepis rozhovoru, deník, úvaha…)"></textarea>
+    <div class="row">
+      <button class="btn" onclick="analyze()">🔍 Analyzovat</button>
+      <button class="btn btn-outline" onclick="resetText()">✕ Smazat</button>
+    </div>
+    <div class="highlighted" id="highlighted"></div>
+  </div>
+</div>
+
+<div class="info-panel" id="info-panel">
+  <h3 id="technika-nazev">✨ Klikni na segment nebo položku v legendě</h3>
+  <div id="technika-popis">Zobrazí se podrobné vysvětlení vybrané techniky a její dopad na myšlení.</div>
+  <div id="technika-cil" class="cil"></div>
+</div>
+
+<script>
+// Definice technik podle tabulky (10 technik)
+const TECHNIKY = [
+  { 
+    id: 'permutace', 
+    nazev: 'Změna slovosledu (Permutace)', 
+    barva: '#FF6384', 
+    textBarva: '#fff',
+    popis: 'Záměrné přeskupení slov ve větě nebo frází v souvětí, které mění obvyklý pořádek, ale zachovává (nebo narušuje) gramatickou správnost.',
+    cil: 'Narušuje automatické vnímání kauzality a hierarchie. Nutí k novému propojování myšlenek a objevování skrytých vztahů. Může vést k absurdním nebo poetickým významům.',
+    patterns: ['pak', 'potom', 'nejdřív', 'nakonec', 'a tak', 'proto', 'neboť', 'jelikož'] // slova indikující možnou permutaci
+  },
+  { 
+    id: 'kolokace', 
+    nazev: 'Neobvyklé sousedství slov (Kolokace)', 
+    barva: '#36A2EB', 
+    textBarva: '#fff',
+    popis: 'Spojení slov, která se v běžném jazyce nevyskytují pohromadě, čímž vzniká překvapivý nebo paradoxní význam.',
+    cil: 'Rozbíjí stereotypní asociace a otevírá prostor pro metaforické a symbolické myšlení. Podporuje laterální myšlení a generování nových konceptů.',
+    patterns: ['jako', 'metafora', 'obraz', 'symbol', 'připomíná', 'vyjadřuje', 'znamená']
+  },
+  { 
+    id: 'fixace', 
+    nazev: 'Fixace / Opakování', 
+    barva: '#FFCE56', 
+    textBarva: '#000',
+    popis: 'Záměrné opakování určitého slova, fráze nebo větné konstrukce v textu. Může být v pravidelných intervalech nebo nahodile.',
+    cil: 'Zdůrazňuje určitý prvek, ale zároveň může vést k pocitu obsesivity, rituálu nebo k odhalení skrytého významu skrze repetici. Může simulovat úzkost nebo posedlost.',
+    patterns: [] // bude detekováno přes wordCount
+  },
+  { 
+    id: 'odskok', 
+    nazev: 'Odskoky / Rozpad koheze', 
+    barva: '#4BC0C0', 
+    textBarva: '#fff',
+    popis: 'Náhlé přechody mezi tématy, myšlenkami nebo časovými rovinami bez zjevné logické spojitosti. Může se projevovat i jako nedokončené věty nebo myšlenky.',
+    cil: 'Simuluje asociativní myšlení, sny nebo stav toku vědomí. Pomáhá uniknout z lineárního uvažování a objevovat vzdálené souvislosti.',
+    patterns: ['najednou', 'mimochodem', 'ale jinak', 'kromě toho', 'a ještě', 'a vlastně', 'co se týče', 'vlastně']
+  },
+  { 
+    id: 'rytmus', 
+    nazev: 'Změna délky vět / Rytmus', 
+    barva: '#9966FF', 
+    textBarva: '#fff',
+    popis: 'Záměrné střídání velmi krátkých a velmi dlouhých vět, nebo vytváření specifického rytmu textu.',
+    cil: 'Mění tempo a dynamiku vyprávění nebo popisu. Krátké věty mohou zdůraznit údernost, dlouhé věty komplexnost. Může ovlivnit emocionální vnímání textu.',
+    patterns: [] // bude detekováno přes délky vět
+  },
+  { 
+    id: 'izolace', 
+    nazev: 'Izolace / Vytržení z kontextu', 
+    barva: '#FF9F40', 
+    textBarva: '#fff',
+    popis: 'Vyjmutí slova nebo fráze z původní věty a jeho prezentace samostatně, nebo v novém, nesouvisejícím kontextu.',
+    cil: 'Zvýrazňuje význam izolovaného prvku a nutí k jeho novému interpretování. Odhaluje, jak moc je význam závislý na kontextu.',
+    patterns: ['přesně', 'konkrétně', 'jen', 'pouze', 'sám', 'samotný', 'izolovaně']
+  },
+  { 
+    id: 'ambiguita', 
+    nazev: 'Záměrná nejednoznačnost (Ambiguitní syntax)', 
+    barva: '#C9CBCF', 
+    textBarva: '#000',
+    popis: 'Konstrukce vět, které umožňují více gramaticky správných, ale významově odlišných interpretací.',
+    cil: 'Podporuje schopnost vidět více perspektiv najednou a tolerovat nejistotu. Nutí k aktivnímu hledání různých možných významů.',
+    patterns: ['nebo', 'může', 'možná', 'buď', 'anebo', 'někdy', 'někteří']
+  },
+  { 
+    id: 'redundance', 
+    nazev: 'Přesycení / Redundance', 
+    barva: '#E7C9FF', 
+    textBarva: '#000',
+    popis: 'Použití nadměrného množství slov nebo frází k vyjádření jednoduché myšlenky, často s opakovanými nebo synonymními výrazy.',
+    cil: 'Může vést k pocitu zahlcení, nudy nebo naopak k odhalení skrytých nuancí. Simuluje byrokratický nebo obsedantní styl.',
+    patterns: ['tedy', 'prostě', 'jakoby', 'v podstatě', 'v zásadě', 'jednoduše řečeno', 'dalo by se říct']
+  },
+  { 
+    id: 'minimalismus', 
+    nazev: 'Minimalismus / Elipsa', 
+    barva: '#FFB3B3', 
+    textBarva: '#000',
+    popis: 'Záměrné vynechání slov nebo částí vět, které jsou pro porozumění nezbytné, ale lze je odvodit z kontextu (nebo je nelze odvodit, čímž vzniká mezera).',
+    cil: 'Nutí k aktivnímu doplňování informací a zapojení představivosti. Otevírá prostor pro vlastní interpretaci a vyplňování „mezer“.',
+    patterns: ['…', '...', 'prostě', 'jasné', 'hotovo', 'konec']
+  }
+];
+
+// Vazba technik na úhly (pro informaci)
+const VAZBY = [
+  { technika: 'permutace', uhly: ['300° Absurdní'] },
+  { technika: 'kolokace', uhly: ['240° Ironický', '120° Jazykový', '150° Metaforický'] },
+  { technika: 'fixace', uhly: ['30° Kulturní', '120° Jazykový', '270° Groteskní'] },
+  { technika: 'odskok', uhly: ['180° Asociační', '330° Surrealistický'] },
+  { technika: 'rytmus', uhly: ['270° Groteskní'] },
+  { technika: 'izolace', uhly: ['210° Introspektivní'] },
+  { technika: 'ambiguita', uhly: ['0° Analogický', '60° Filozofický'] },
+  { technika: 'redundance', uhly: ['30° Kulturní'] },
+  { technika: 'minimalismus', uhly: ['90° Naivní'] }
+];
+
+let markedText = '';
+let technikaSkore = {};
+let technikaCounts = {};
+let totalMatches = 0;
+let selectedTechnikaId = null;
+
+function analyze() {
+  const text = document.getElementById('input-text').value;
+  if (!text.trim()) { alert('Vložte text'); return; }
+  
+  const sentences = text.split(/(?<=[.!?…])\s+/).filter(s => s.trim().length > 3);
+  const allWords = text.toLowerCase().split(/\s+/);
+  const wordCount = {};
+  allWords.forEach(w => { if (w.length > 4) wordCount[w] = (wordCount[w]||0)+1; });
+  
+  // Inicializace skóre
+  TECHNIKY.forEach(t => { technikaSkore[t.id] = 0; technikaCounts[t.id] = 0; });
+  totalMatches = 0;
+  
+  let workingText = text;
+  
+  // 1. Detekce podle klíčových slov
+  TECHNIKY.forEach(t => {
+    if (!t.patterns.length) return;
+    t.patterns.forEach(pat => {
+      const re = new RegExp(`\\b${escapeReg(pat)}\\b`, 'gi');
+      const matches = text.match(re);
+      if (matches) {
+        technikaSkore[t.id] += matches.length;
+        technikaCounts[t.id] += matches.length;
+        totalMatches += matches.length;
+        workingText = workingText.replace(re, m =>
+          `<span class="tech-${t.id}" data-tech="${t.id}" style="background:${t.barva};color:${t.textBarva};border-radius:2px;cursor:pointer" title="${t.nazev}">${m}</span>`
+        );
+      }
+    });
+  });
+  
+  // 2. Fixace / opakování
+  Object.entries(wordCount).forEach(([w, cnt]) => {
+    if (cnt >= 3) {
+      technikaSkore.fixace += cnt;
+      technikaCounts.fixace += cnt;
+      totalMatches += cnt;
+      const re = new RegExp(`\\b${escapeReg(w)}\\b`, 'gi');
+      workingText = workingText.replace(re, m =>
+        `<span class="tech-fixace" data-tech="fixace" style="background:${TECHNIKY.find(t=>t.id==='fixace').barva};color:${TECHNIKY.find(t=>t.id==='fixace').textBarva};border-radius:2px;cursor:pointer" title="Fixace / opakování">${m}</span>`
+      );
+    }
+  });
+  
+  // 3. Změna délky vět (Rytmus)
+  if (sentences.length >= 3) {
+    const lens = sentences.map(s => s.split(/\s+/).length);
+    const avg = lens.reduce((a,b)=>a+b,0)/lens.length;
+    const std = Math.sqrt(lens.map(l => (l-avg)**2).reduce((a,b)=>a+b,0)/lens.length);
+    if (std > 3) {
+      technikaSkore.rytmus += 3;
+      technikaCounts.rytmus += 3;
+      totalMatches += 3;
+    }
+    // Krátké věty pro minimalismus
+    if (lens.filter(l => l <= 3).length > sentences.length * 0.3) {
+      technikaSkore.minimalismus += 2;
+      technikaCounts.minimalismus += 2;
+      totalMatches += 2;
+    }
+  }
+  
+  // 4. Neobvyklé sousedství (kolokace) - zjednodušená detekce
+  const words = text.split(/\s+/);
+  for (let i = 0; i < words.length - 1; i++) {
+    const word1 = words[i].toLowerCase().replace(/[.,!?…]/g, '');
+    const word2 = words[i+1].toLowerCase().replace(/[.,!?…]/g, '');
+    if (word1.length > 3 && word2.length > 3) {
+      // Detekce protikladů
+      if ((word1.match(/krásný|dobrý|velký|světlý/) && word2.match(/ošklivý|špatný|malý|tmavý/)) ||
+          (word2.match(/krásný|dobrý|velký|světlý/) && word1.match(/ošklivý|špatný|malý|tmavý/))) {
+        technikaSkore.kolokace += 1;
+        technikaCounts.kolokace += 1;
+        totalMatches += 1;
+      }
+    }
+  }
+  
+  // 5. Izolace - slova v uvozovkách nebo oddělená
+  const isolatedMatches = text.match(/„[^“]+“|"[^"]+"|‘[^’]+’|\([^)]+\)/g);
+  if (isolatedMatches) {
+    technikaSkore.izolace += isolatedMatches.length;
+    technikaCounts.izolace += isolatedMatches.length;
+    totalMatches += isolatedMatches.length;
+  }
+  
+  markedText = workingText;
+  document.getElementById('highlighted').innerHTML = markedText;
+  
+  // Přidání click listenerů na zvýrazněné span
+  document.querySelectorAll('[data-tech]').forEach(span => {
+    span.addEventListener('click', (e) => {
+      const techId = e.target.dataset.tech;
+      selectTechnika(techId);
+    });
+  });
+  
+  // Vytvoření legendy
+  updateLegendAndGraph();
+  
+  document.getElementById('info-panel').style.display = 'block';
+}
+
+function updateLegendAndGraph() {
+  const legEl = document.getElementById('legend');
+  const statsEl = document.getElementById('stats');
+  
+  // Filtrovat techniky s nenulovým skóre
+  const activeTechniky = TECHNIKY.filter(t => technikaSkore[t.id] > 0);
+  
+  legEl.innerHTML = activeTechniky.map(t => 
+    `<span class="legend-item" style="background:${t.barva};color:${t.textBarva}" onclick="selectTechnika('${t.id}')">${t.nazev} (${technikaSkore[t.id]})</span>`
+  ).join('');
+  
+  statsEl.innerHTML = `Celkem detekcí: ${totalMatches} | Aktivních technik: ${activeTechniky.length}`;
+  
+  drawProtractor(activeTechniky);
+}
+
+function drawProtractor(activeTechniky) {
+  const canvas = document.getElementById('protractor');
+  const ctx = canvas.getContext('2d');
+  const w = canvas.width, h = canvas.height;
+  const centerX = w/2, centerY = h/2;
+  const radius = 140;
+  
+  ctx.clearRect(0, 0, w, h);
+  
+  if (activeTechniky.length === 0) {
+    ctx.font = '14px Georgia';
+    ctx.fillStyle = '#aaa';
+    ctx.textAlign = 'center';
+    ctx.fillText('Žádné techniky nenalezeny', centerX, centerY);
+    return;
+  }
+  
+  let startAngle = -Math.PI / 2; // Začátek nahoře (12 hodin)
+  const total = Object.values(technikaSkore).reduce((a,b)=>a+b,0);
+  
+  activeTechniky.forEach((t, i) => {
+    const value = technikaSkore[t.id];
+    const sliceAngle = (value / total) * 2 * Math.PI;
+    
+    ctx.beginPath();
+    ctx.moveTo(centerX, centerY);
+    ctx.arc(centerX, centerY, radius, startAngle, startAngle + sliceAngle);
+    ctx.closePath();
+    ctx.fillStyle = t.barva;
+    ctx.fill();
+    ctx.strokeStyle = '#fff';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+    
+    // Přidání popisku procent
+    const midAngle = startAngle + sliceAngle / 2;
+    const labelRadius = radius * 0.7;
+    const x = centerX + Math.cos(midAngle) * labelRadius;
+    const y = centerY + Math.sin(midAngle) * labelRadius;
+    ctx.font = 'bold 12px Georgia';
+    ctx.fillStyle = t.textBarva;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(Math.round((value/total)*100) + '%', x, y);
+    
+    startAngle += sliceAngle;
+  });
+  
+  // Obvodová kružnice (úhloměr)
+  ctx.beginPath();
+  ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
+  ctx.strokeStyle = '#333';
+  ctx.lineWidth = 1;
+  ctx.stroke();
+  
+  // Stupnice (čárky po 30°)
+  for (let i = 0; i < 12; i++) {
+    const angle = i * 30 * Math.PI/180 - Math.PI/2;
+    const x1 = centerX + Math.cos(angle) * radius;
+    const y1 = centerY + Math.sin(angle) * radius;
+    const x2 = centerX + Math.cos(angle) * (radius - 10);
+    const y2 = centerY + Math.sin(angle) * (radius - 10);
+    ctx.beginPath();
+    ctx.moveTo(x1, y1);
+    ctx.lineTo(x2, y2);
+    ctx.strokeStyle = '#999';
+    ctx.lineWidth = 1;
+    ctx.stroke();
+    
+    // Popisky úhlů (0°, 30°, 60°...)
+    if (i % 2 === 0) {
+      const labelX = centerX + Math.cos(angle) * (radius - 20);
+      const labelY = centerY + Math.sin(angle) * (radius - 20);
+      ctx.font = '10px Georgia';
+      ctx.fillStyle = '#666';
+      ctx.fillText(i*30 + '°', labelX, labelY);
+    }
+  }
+  
+  // Přidání interaktivity - kliknutí na canvas
+  canvas.onclick = (e) => {
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = canvas.width / rect.width;
+    const scaleY = canvas.height / rect.height;
+    
+    const mouseX = (e.clientX - rect.left) * scaleX;
+    const mouseY = (e.clientY - rect.top) * scaleY;
+    
+    const dx = mouseX - centerX;
+    const dy = mouseY - centerY;
+    const distance = Math.sqrt(dx*dx + dy*dy);
+    
+    if (distance <= radius) {
+      let angle = Math.atan2(dy, dx);
+      if (angle < -Math.PI/2) angle += 2 * Math.PI;
+      
+      let start = -Math.PI/2;
+      for (let t of activeTechniky) {
+        const sliceAngle = (technikaSkore[t.id] / total) * 2 * Math.PI;
+        if (angle >= start && angle < start + sliceAngle) {
+          selectTechnika(t.id);
+          break;
+        }
+        start += sliceAngle;
+      }
+    }
+  };
+}
+
+function selectTechnika(techId) {
+  selectedTechnikaId = techId;
+  const technika = TECHNIKY.find(t => t.id === techId);
+  if (!technika) return;
+  
+  // Aktualizace informačního panelu
+  document.getElementById('technika-nazev').textContent = `✨ ${technika.nazev}`;
+  document.getElementById('technika-popis').innerHTML = `<strong>Popis:</strong> ${technika.popis}`;
+  
+  // Najít vazby na úhly
+  const vazba = VAZBY.find(v => v.technika === techId);
+  const uhlyText = vazba ? vazba.uhly.join(', ') : 'není definováno';
+  document.getElementById('technika-cil').innerHTML = `<strong>Cíl intervence:</strong> ${technika.cil}<br><strong>Vazba na úhly:</strong> ${uhlyText}`;
+  
+  // Zvýraznění v legendě
+  document.querySelectorAll('.legend-item').forEach(el => el.classList.remove('active'));
+  const legendItems = document.querySelectorAll('.legend-item');
+  legendItems.forEach(el => {
+    if (el.textContent.includes(technika.nazev)) el.classList.add('active');
+  });
+  
+  // Zvýraznění v textu
+  if (markedText) {
+    // Dočasné zvýraznění vybrané techniky
+    const spans = document.querySelectorAll('[data-tech]');
+    spans.forEach(span => {
+      span.style.border = span.dataset.tech === techId ? '2px solid black' : 'none';
+      span.style.boxShadow = span.dataset.tech === techId ? '0 0 5px rgba(0,0,0,0.5)' : 'none';
+    });
+  }
+}
+
+function resetText() {
+  document.getElementById('input-text').value = '';
+  document.getElementById('highlighted').innerHTML = '';
+  document.getElementById('legend').innerHTML = '';
+  document.getElementById('stats').innerHTML = '';
+  document.getElementById('technika-nazev').textContent = '✨ Klikni na segment nebo položku v legendě';
+  document.getElementById('technika-popis').innerHTML = 'Zobrazí se podrobné vysvětlení vybrané techniky a její dopad na myšlení.';
+  document.getElementById('technika-cil').innerHTML = '';
+  selectedTechnikaId = null;
+  
+  // Reset canvasu
+  const canvas = document.getElementById('protractor');
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.font = '14px Georgia';
+  ctx.fillStyle = '#aaa';
+  ctx.textAlign = 'center';
+  ctx.fillText('Sem vložte text a analyzujte', canvas.width/2, canvas.height/2);
+}
+
+function escapeReg(s) { return s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'); }
+
+// Inicializace
+resetText();
+</script>
+</body>
+</html>
