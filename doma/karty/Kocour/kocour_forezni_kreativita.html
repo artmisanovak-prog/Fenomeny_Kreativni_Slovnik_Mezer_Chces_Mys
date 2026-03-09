@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kocour — Chceš myš?</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM Mono:wght@300;400&display=swap" rel="stylesheet">
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --bg:#0d0a07;--s:#151009;--s2:#1c1510;
+      --c:#eedfc8;--dim:rgba(230,210,180,.36);--a:#c8903a;
+      --b:rgba(200,144,58,.14);--b2:rgba(200,144,58,.28);
+      --serif:'Cormorant Garamond',Georgia,serif;--mono:'DM Mono',monospace;
+    }
+    html{scroll-behavior:smooth}
+    body{background:var(--bg);color:var(--c);font-family:var(--mono);font-size:13px;line-height:1.85;-webkit-font-smoothing:antialiased}
+    a{color:inherit;text-decoration:none}
+    .wrap{max-width:760px;margin:0 auto;padding:0 28px}
+    p{margin-bottom:.75em}p:last-child{margin-bottom:0}
+
+    nav{position:sticky;top:0;z-index:99;border-bottom:1px solid var(--b);background:rgba(13,10,7,.96);backdrop-filter:blur(12px);padding:12px 28px;display:flex;align-items:center;justify-content:space-between}
+    .nav-l{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)}
+    .nav-l:hover{color:var(--c)}
+    .nav-r{display:flex;gap:14px}
+    .nav-r a{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);transition:color .15s}
+    .nav-r a:hover{color:var(--a)}
+
+    .hero{padding:48px 0 34px;border-bottom:1px solid var(--b)}
+    .hero-tag{font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:var(--a);margin-bottom:12px}
+    .hero h1{font-family:var(--serif);font-size:clamp(2.6rem,6vw,4.8rem);font-weight:300;line-height:1;margin-bottom:6px}
+    .hero h1 em{font-style:italic;color:var(--a)}
+    .hero-veta{font-family:var(--serif);font-style:italic;font-size:.97rem;color:var(--dim);border-left:1px solid var(--a);padding-left:15px;margin:16px 0 18px;line-height:1.9;max-width:460px}
+    .fenomen{border:1px solid var(--b2);padding:14px 18px;background:rgba(200,144,58,.04)}
+    .fenomen-tag{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--a);margin-bottom:7px}
+    .fenomen-text{font-size:.82rem;color:rgba(230,210,180,.55);line-height:1.9}
+
+    .faze{padding:24px 0 0;display:flex;gap:0}
+    .faze-item{flex:1;padding:10px 10px;background:var(--s);border:1px solid var(--b);border-right:none;font-size:.67rem;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);transition:all .2s}
+    .faze-item:last-child{border-right:1px solid var(--b)}
+    .faze-item.active{background:rgba(200,144,58,.1);color:var(--a);border-color:var(--a)}
+    .faze-item.done{color:rgba(200,144,58,.28)}
+
+    /* POHÁDKA */
+    .sec{padding:40px 0;border-bottom:1px solid var(--b)}
+    .sec-tag{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--a);margin-bottom:14px}
+    h2{font-family:var(--serif);font-size:clamp(1.1rem,3vw,1.7rem);font-weight:300;margin-bottom:18px}
+    h2 em{font-style:italic;color:var(--a)}
+
+    /* Kocour: pohádka má husté komprimované bloky + izolované řádky */
+    .pohadka{font-family:var(--serif);font-size:.93rem;color:rgba(230,210,180,.76);border:1px solid var(--b);background:var(--s);padding:26px 30px;line-height:1}
+    .d{display:block;padding:.22em 0}
+    .d.br{padding:.6em 0;display:block}
+    .d.silna{font-style:normal;color:var(--a);font-weight:400}
+    .d.it{font-style:italic}
+    .d.dim{color:rgba(230,210,180,.38);font-style:italic}
+    .d.husty{padding:.06em 0} /* komprimované řádky pro matematické bloky */
+
+    /* Jevy */
+    .j-cislo{border-bottom:1px dotted rgba(200,144,58,.45);cursor:help}
+    .j-zvuk{border-bottom:1px dashed rgba(200,144,58,.4);cursor:help}
+    .j-tecka{border-bottom:1px solid rgba(200,144,58,.3);cursor:help}
+    .j-vet{background:rgba(200,144,58,.07);padding:0 2px;cursor:help}
+
+    /* OTÁZKY */
+    .otazky{padding:40px 0;border-bottom:1px solid var(--b)}
+    .q-block{margin-bottom:30px}
+    .q-num{font-family:var(--serif);font-size:2.4rem;font-weight:300;color:rgba(200,144,58,.1);line-height:1;margin-bottom:4px}
+    .q-label{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--a);margin-bottom:8px}
+    .q-text{font-size:.92rem;color:var(--c);margin-bottom:8px;line-height:1.8}
+    .q-hint{font-size:.76rem;color:var(--dim);margin-bottom:10px;font-style:italic}
+    textarea{width:100%;background:var(--s);border:1px solid var(--b);color:var(--c);padding:12px 14px;font-family:var(--mono);font-size:.82rem;line-height:1.75;resize:vertical;min-height:86px}
+    textarea:focus{outline:1px solid var(--a)}
+    textarea::placeholder{color:rgba(230,210,180,.11)}
+
+    .btn{padding:11px 26px;font-family:var(--mono);font-size:.78rem;letter-spacing:.1em;text-transform:uppercase;border:none;cursor:pointer;transition:all .15s}
+    .btn-p{background:var(--a);color:var(--bg)}
+    .btn-p:hover{background:#e0a855}
+    .btn-g{background:transparent;color:var(--dim);border:1px solid var(--b)}
+    .btn-g:hover{color:var(--c);border-color:var(--b2)}
+    .btn-row{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap}
+
+    /* VÝSLEDEK */
+    #vysledek{display:none}
+    .res-sec{padding:44px 0;border-bottom:1px solid var(--b)}
+    .res-tag{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--a);margin-bottom:16px}
+    .res-uhel{font-family:var(--serif);font-size:clamp(1.6rem,4vw,2.8rem);font-weight:300;margin-bottom:8px}
+    .res-uhel em{font-style:italic;color:var(--a)}
+    .res-popis{font-size:.84rem;color:rgba(230,210,180,.6);line-height:1.9;max-width:520px;margin-bottom:24px}
+    .vide-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--b);border:1px solid var(--b);margin-bottom:28px}
+    @media(max-width:480px){.vide-grid{grid-template-columns:1fr}}
+    .vide-item{background:var(--s);padding:12px 15px}
+    .vide-jev{font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:var(--a);margin-bottom:4px}
+    .vide-text{font-size:.78rem;color:rgba(230,210,180,.5);line-height:1.75}
+
+    .intervence{border:1px solid var(--a);background:rgba(200,144,58,.04);padding:22px 24px;margin-bottom:22px}
+    .int-tag{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--a);margin-bottom:10px}
+    .int-uhel{font-family:var(--serif);font-size:1.3rem;font-weight:300;margin-bottom:12px}
+    .int-uhel em{font-style:italic;color:var(--a)}
+    .jev-box{background:var(--s2);border-left:2px solid var(--a);padding:14px 16px;margin:14px 0}
+    .jev-box-tag{font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;color:var(--a);margin-bottom:8px}
+    .jev-box-nazev{font-size:.84rem;color:var(--c);margin-bottom:8px}
+    .jev-box-popis{font-size:.8rem;color:rgba(230,210,180,.56);line-height:1.85;margin-bottom:10px}
+    .jev-box-citace{font-family:var(--serif);font-style:italic;font-size:.84rem;color:rgba(200,144,58,.55);border-left:1px solid var(--b2);padding-left:12px;line-height:1.85}
+    .jev-box-citace span{display:block}
+
+    .ukol-box{background:var(--s);border:1px solid var(--b);padding:20px 22px;margin-bottom:18px}
+    .ukol-tag{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--a);margin-bottom:10px}
+    .ukol-text{font-size:.88rem;color:rgba(230,210,180,.78);line-height:1.9;margin-bottom:12px}
+    .ukol-vzor{font-family:var(--serif);font-style:italic;font-size:.82rem;color:rgba(230,210,180,.34);border-left:1px solid var(--b);padding-left:12px;line-height:1.8}
+    .ukol-vzor span{display:block}
+
+    .pisarna-tag{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--dim);margin:20px 0 8px}
+    footer{padding:32px 0;border-top:1px solid var(--b);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+    footer p{font-size:.72rem;color:var(--dim)}
+    footer a{color:var(--a)}
+  </style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-l" href="../../../index.html">← Všechna zvířata</a>
+  <div class="nav-r">
+    <a href="../../../nastroje/analyzer.html">Analyzátor</a>
+    <a href="../../../nastroje/zapisnik.html">Zápisník</a>
+  </div>
+</nav>
+
+<div class="wrap">
+
+<section class="hero">
+  <p class="hero-tag">Kreativní miniatura · Karta Kocour</p>
+  <h1>Ko<em>cour</em></h1>
+  <p class="hero-veta">„Tečka je někdy silnější, než celá věta." — A spolknout se nedá všechno.</p>
+  <div class="fenomen">
+    <div class="fenomen-tag">Fenomén — interpunkce jako hmota / věta dokončená dřív</div>
+    <p class="fenomen-text">Kocour sežral dvě berušky — a s nimi 14 teček. Tečky jsou v této pohádce fyzické věci: nosí je hmyz, polyká je šelma, vykrká je zpátky. A po celých 30 minut dokončoval lidem věty dřív, než skončily. Pohádka zkoumá: co se stane s jazykem, když se odebere interpunkce? A kdo má právo ukončit větu?</p>
+  </div>
+</section>
+
+<div class="faze" id="faze">
+  <div class="faze-item active" id="faze-1">1 · pohádka</div>
+  <div class="faze-item" id="faze-2">2 · otázky</div>
+  <div class="faze-item" id="faze-3">3 · váš úhel</div>
+  <div class="faze-item" id="faze-4">4 · intervence</div>
+</div>
+
+<!-- POHÁDKA -->
+<section class="sec" id="sec-pohadka">
+  <p class="sec-tag">Přečtěte · pohádka přesně počítá — sledujte jak</p>
+  <h2>O kocourovi — <em>jak sežral dvě berušky a půl hodiny krkal tečky</em></h2>
+
+  <div class="pohadka">
+    <span class="d silna"><span class="j-cislo" title="Obsesivní přesnost: číslo opakované, potvrzené, bráněné zpochybnění">Sežral dvě — ne tři, ne jednu — dvě — přesně — 14 teček</span></span>
+    <span class="d silna"><span class="j-cislo">a trvalo to půl hodiny — 30 minut — přesně.</span></span>
+    <span class="d br"></span>
+    <span class="d">Jak to přišlo tak to přestalo.</span>
+    <span class="d">Ráz na ráz.</span>
+    <span class="d br"></span>
+    <span class="d silna"><span class="j-zvuk" title="Zvukomalba jako děj: zvuky jsou akce, ne popis akce">Chňap a hlt a chlamst</span> — nebo něco takového — a nakonec — <span class="j-zvuk">mlask, mlask</span> — <span class="j-cislo">dvakrát — přesně</span>.</span>
+    <span class="d br"></span>
+    <span class="d it">Žily byly dvě berušky, každá sedm teček měla,</span>
+    <span class="d it">když uviděl je jeden kocour byla to mela.</span>
+    <span class="d it">Aspoň pro ně.</span>
+    <span class="d br"></span>
+    <span class="d dim"><span class="j-cislo" title="14 = 2 berušky × 7 teček: biologicky přesná matematika v pohádce">Po 14ti tečkách</span></span>
+    <span class="d dim">v jednom mžiku</span>
+    <span class="d dim">zem se slehla.</span>
+    <span class="d">Rozhodně aspoň kocour se svými útrobami.</span>
+    <span class="d br"></span>
+    <span class="d">Ale ta myš, vždycky zvědavá byla.</span>
+    <span class="d it">Odmalička chodívala a kde mohla se vyptávala,</span>
+    <span class="d it">kde se tečky na beruškách vzaly?</span>
+    <span class="d it">K čemu je mají?</span>
+    <span class="d it">Proč si radši nevytvoří pravé maskování?</span>
+    <span class="d br"></span>
+    <span class="d">A ta přesná matika..</span>
+    <span class="d it">Kdo vlastně z těch, co s nimi přijdou do styku,</span>
+    <span class="d it">takhle přesně počítá?</span>
+    <span class="d br"></span>
+    <span class="d">No a toho dne — náhle — se to stalo</span>
+    <span class="d">a myš svou odpověď měla.</span>
+    <span class="d br"></span>
+    <span class="d">Kocour mlaskl a pak znovu</span>
+    <span class="d">a hned na to začalo to.</span>
+    <span class="d">Půl hodiny a bylo to zaznamenáno — přesně.</span>
+    <span class="d br"></span>
+    <span class="d silna"><span class="j-tecka" title="Interpunkce jako fyzická substance: tečky se polyká, vykrká, jsou hmotné">Kocour krkal tečky a dokončoval věty!</span></span>
+    <span class="d">Někdy celé souvětí!!</span>
+    <span class="d">Jenomže tím zároveň skákal lidem do řeči,</span>
+    <span class="d">tím že za ně dokončoval, co nedokončili.</span>
+    <span class="d br"></span>
+    <span class="d">Skočil všem do řeči koncem věty</span>
+    <span class="d br"></span>
+    <span class="d dim">ale vždycky o něco málo</span>
+    <span class="d br"></span>
+    <span class="d dim">někdy i o docela dost</span>
+    <span class="d br"></span>
+    <span class="d dim">dřív, než měla věta původně skončit</span>
+    <span class="d br"></span>
+    <span class="d dim"><span class="j-vet" title="Věta přeskočená dopředu: syntaxe se sama přeskupí — forma napodobuje obsah">nebo — než původně věta skončit měla.</span></span>
+    <span class="d br"></span>
+    <span class="d">A celou půlhodinu nemohl tenkrát nikdo nic</span>
+    <span class="d silna">ne — dokončit.</span>
+    <span class="d">Nešlo to.</span>
+    <span class="d br"></span>
+    <span class="d dim">Každému dřív.</span>
+    <span class="d br"></span>
+    <span class="d dim">než se k tomu dostal.</span>
+    <span class="d br"></span>
+    <span class="d dim">všem kocour větu ukončil.</span>
+    <span class="d br"></span>
+    <span class="d dim">Hned.</span>
+    <span class="d br"></span>
+    <span class="d">Kocour se tomu smál, ale krkal dál.</span>
+    <span class="d">A krkal, dokud neskončil.</span>
+    <span class="d br"></span>
+    <span class="d it">Představte si to:</span>
+    <span class="d silna">Skončil větu a pak skončil krkat.</span>
+    <span class="d br"></span>
+    <span class="d">A lidé zase začali moct své věty ukončovat sami.</span>
+    <span class="d">Hned.</span>
+    <span class="d br"></span>
+    <span class="d it">Jenže, jak se to tak občas stává,</span>
+    <span class="d it">přestože nikdo nevěděl co,</span>
+    <span class="d it">každý věděl,</span>
+    <span class="d it">že něco nebylo stejné.</span>
+    <span class="d br"></span>
+    <span class="d silna"><span class="j-vet" title="Nedokončená věta jako kategorie: typ existence, ne chyba">A to, co jednou není stejné dnes, to není jednou stejné nikdy.</span></span>
+    <span class="d br"></span>
+    <span class="d dim">Jen nedokončené věty bývají všechny stejné. Jednou, dnes i zítra.</span>
+    <span class="d br"></span>
+    <span class="d"><span class="j-tecka" title="Tečka = nespolknutý konec věty: berušky nesou nevyslovené závěry">Berušky mají na sobě nedokončené konce vět. Věci, které jsou nespolknuté.</span></span>
+    <span class="d br"></span>
+    <span class="d">Kocour to nevěděl — a dvě spolknul.</span>
+    <span class="d">Spolknuté konce ale vykrkal zpátky</span>
+    <span class="d">a lidé se naučili,</span>
+    <span class="d">že všechno se spolknout nedá.</span>
+    <span class="d silna">A že tečka je někdy silnější, než celá věta.</span>
+    <span class="d br"></span>
+    <span class="d">Kocour se nažral a myš i věty zůstali celé.</span>
+    <span class="d dim">Díky bohu za to.</span>
+    <span class="d dim">Štěstí dvou berušek se vrátilo zpátky.</span>
+    <span class="d br"></span>
+    <span class="d it">Ale všimly si toho jen kocour a malá myš.</span>
+    <span class="d it">A ani jeden neříkali nic.</span>
+    <span class="d br"></span>
+    <span class="d dim">KONEC</span>
+  </div>
+
+  <div style="margin-top:14px;padding:11px 15px;background:var(--s);border:1px solid var(--b);font-size:.74rem;color:var(--dim);line-height:2">
+    <span style="color:var(--a);font-size:.68rem;letter-spacing:.12em;text-transform:uppercase">Jevy v textu</span><br>
+    <span class="j-cislo" style="cursor:default">tečkovaně</span> = obsesivní přesnost čísla ·
+    <span class="j-zvuk" style="cursor:default">přerušované</span> = zvukomalba jako děj ·
+    <span class="j-tecka" style="cursor:default">plné</span> = interpunkce jako hmota ·
+    <span class="j-vet" style="cursor:default;padding:0 3px">podklad</span> = věta přeskočená/nedokončená
+  </div>
+
+  <div class="btn-row">
+    <button class="btn btn-p" onclick="prejitNaOtazky()">Přečetl/a jsem → na otázky</button>
+  </div>
+</section>
+
+<!-- OTÁZKY -->
+<section class="otazky" id="sec-otazky" style="display:none">
+  <p class="sec-tag">Tři otázky · pište první, co vás napadne</p>
+  <p style="font-size:.8rem;color:var(--dim);margin-bottom:28px;max-width:500px;line-height:1.9">Čteme strukturu vašich odpovědí, ne jejich obsah. Délka vět, co opakujete, jak argumentujete — to odhalí váš kognitivní úhel na tento fenomén.</p>
+
+  <div class="q-block">
+    <div class="q-num">1</div>
+    <div class="q-label">Smysl</div>
+    <p class="q-text">Co je podle vás hlavní pointa nebo sdělení této pohádky?</p>
+    <p class="q-hint">Klidně jedna věta nebo deset. Forma je vaše volba.</p>
+    <textarea id="q1" placeholder="Tahle pohádka je pro mě o..."></textarea>
+  </div>
+
+  <div class="q-block">
+    <div class="q-num">2</div>
+    <div class="q-label">Zaujetí</div>
+    <p class="q-text">Která věta, moment nebo jev vás nejvíce zaujal? Proč právě ten?</p>
+    <p class="q-hint">Může to být přesnost čísla, zvuk, tečka — nebo to, co vám vadilo.</p>
+    <textarea id="q2" placeholder="Zaujalo mě..."></textarea>
+  </div>
+
+  <div class="q-block">
+    <div class="q-num">3</div>
+    <div class="q-label">Aplikace</div>
+    <p class="q-text">„Tečka je někdy silnější, než celá věta." — Kdy to platí ve vašem životě nebo práci?</p>
+    <p class="q-hint">Neexistuje správná odpověď. Zajímá nás vaše první reakce.</p>
+    <textarea id="q3" placeholder="Tečka je silnější, když..."></textarea>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn btn-p" onclick="analyzovat()">Zjistit můj úhel →</button>
+    <button class="btn btn-g" onclick="zpet()">← zpět k pohádce</button>
+  </div>
+</section>
+
+<!-- VÝSLEDEK -->
+<div id="vysledek">
+  <section class="res-sec">
+    <p class="res-tag">Váš kognitivní úhel · z toho, jak jste odpovídali</p>
+    <div class="res-uhel" id="res-uhel-nazev"></div>
+    <p class="res-popis" id="res-uhel-popis"></p>
+    <p class="res-tag">Co v tom, jak píšete, vidíme</p>
+    <div class="vide-grid" id="vide-grid"></div>
+  </section>
+
+  <section class="res-sec">
+    <p class="res-tag">Intervence · jev z pohádky Kocour + protilehlý úhel</p>
+    <div class="intervence">
+      <div class="int-tag">Protilehlý úhel — kde je prostor pro rozvoj</div>
+      <div class="int-uhel" id="int-uhel-nazev"></div>
+      <div class="jev-box">
+        <div class="jev-box-tag">Konkrétní jev z pohádky Kocour</div>
+        <div class="jev-box-nazev" id="jev-nazev"></div>
+        <div class="jev-box-popis" id="jev-popis"></div>
+        <div class="jev-box-citace" id="jev-citace"></div>
+      </div>
+    </div>
+    <div class="ukol-box">
+      <div class="ukol-tag">Úkol · 20 minut · záměrná práce s tímto jevem</div>
+      <div class="ukol-text" id="ukol-text"></div>
+      <div class="ukol-vzor" id="ukol-vzor"></div>
+    </div>
+    <p class="pisarna-tag">Pište sem · bez zastavení · bez opravování</p>
+    <textarea id="pisarna" style="min-height:160px" placeholder="Začněte..."></textarea>
+    <div class="btn-row">
+      <button class="btn btn-g" onclick="ulozit()">Uložit do zápisníku</button>
+      <button class="btn btn-g" onclick="resetovat()">Začít znovu</button>
+    </div>
+  </section>
+</div>
+
+<footer>
+  <p>Karta Kocour · Chceš myš? — kreativní miniatury · © 2026 Michaela Nováková</p>
+  <p><a href="mailto:chcesmys@gmail.com">chcesmys@gmail.com</a></p>
+</footer>
+</div>
+
+<script>
+const UHLY = {
+  0:  { nazev:'0° Analytický', prot:180,
+        popis:'Hledáte systém, logiku, kauzalitu. Věty na sebe navazují jako argument. Pohádku čtete jako strukturu s příčinami.',
+        kw:['protože','tedy','neboť','struktura','systém','logika','vztah','analýza','příčina','pořadí','proces','mechanismus','důsledek','vyplývá'] },
+  180:{ nazev:'180° Asociační', prot:0,
+        popis:'Odpovědi skáčou — jeden obraz přivede jiný bez logického mostu. Volná forma, přeskoky.',
+        kw:['napadá','připomíná','evokuje','najednou','mimochodem','vlastně','taky','jinak','zároveň','přitom','to mi','a pak'] },
+  30: { nazev:'30° Kulturní', prot:210,
+        popis:'Pohádku čtete jako sdílenou výpověď. Kolektivní vzorce, obecné pravdy. Pohádka mluví za všechny.',
+        kw:['všichni','vždy','každý','společnost','normální','tradičně','obecně','lidé','svět','jak se říká','obvykle','přirozené','typické'] },
+  210:{ nazev:'210° Introspektivní', prot:30,
+        popis:'Mluvíte o vlastním prožitku. Pohádku vztahujete ke svým zkušenostem.',
+        kw:['já','mě','mi','mám','cítím','prožívám','vzpomínám','osobně','ve mně','uvnitř','sám','sobě','moje','připomíná mi'] },
+  60: { nazev:'60° Filozofický', prot:240,
+        popis:'Hledáte abstraktní pravdu, podstatu. Pohádka je pro vás výpověď o jazyce, moci nebo bytí.',
+        kw:['smysl','podstata','pravda','existence','bytí','otázka','hloubka','princip','zákon','vědomí','skutečnost','jazyk','moc','právo'] },
+  240:{ nazev:'240° Ironický', prot:60,
+        popis:'Komentujete s odstupem. Pohádku čtete jako satiru. Říkáte A a myslíte B.',
+        kw:['samozřejmě','ale','přitom','paradoxně','ovšem','jak jinak','pochopitelně','nicméně','ačkoliv','jenže','přesto','vlastně'] },
+  90: { nazev:'90° Naivní', prot:270,
+        popis:'Přímočarost, krátké věty, žádné elaborace. Pohádku čtete doslova — tečka je tečka.',
+        kw:['prostě','jednoduše','jasně','tak','ano','je to o','říká','stačí','jen','zkrátka','jasné','přímočaré','jednoduché'] },
+  270:{ nazev:'270° Groteskní', prot:90,
+        popis:'Dramatičnost, přehánění, extrémní kontrast. Pohádku prožíváte s plným nasazením.',
+        kw:['strašně','hrozně','naprosto','absolutně','úplně','totálně','extrémně','neskutečně','šílené','brutální','ohromné','nevýslovné'] },
+  120:{ nazev:'120° Jazykový', prot:300,
+        popis:'Všímáte si formy, jazyka, jak je pohádka napsaná. Komentujete slova, interpunkci, rytmus.',
+        kw:['slovo','jazyk','forma','rytmus','napsáno','věta','text','interpunkce','tečka','výraz','styl','formulace','pojmenování','syntaxe'] },
+  300:{ nazev:'300° Absurdní', prot:120,
+        popis:'Logika se vám rozpadá záměrně. Nečekané skoky, nedokončené věty, záměrná nelogičnost.',
+        kw:['nevím','asi','možná','ale ne','nebo tak','nějak','záhadné','bez důvodu','nemá smysl','přesto','kdoví','nahodile'] },
+  150:{ nazev:'150° Metaforický', prot:330,
+        popis:'Myslíte v obrazech. Pohádku popisujete přirovnáními. „Je to jako..."',
+        kw:['jako','připomíná','obraz','symbol','jakoby','ztělesňuje','přirovnal','vypadá jako','funguje jako','je to jako','metafora'] },
+  330:{ nazev:'330° Surrealistický', prot:150,
+        popis:'Snová logika, fyzikálně nepravděpodobné kombinace. Odpovědi mají nereálné přechody.',
+        kw:['sen','snový','podivný','nereálné','plovoucí','magicky','nevysvětlitelně','jak ze sna','záhadně','mysticky','nelogicky'] }
+};
+
+const JEVY = {
+  obsesivni_cislo: {
+    nazev: 'Obsesivní přesnost čísla · dvě — ne tři, ne jednu — dvě — přesně',
+    popis: 'Pohádka číslo nezmiňuje — pohádka číslo brání. „Dvě — ne tři, ne jednu — dvě — přesně — 14 teček — půl hodiny — 30 minut — přesně." Každé číslo je zopakováno a potvrzeno. Tato obsesivní přesnost je zároveň anxieta i poetika: přesnost jako způsob zvládání neurčitosti. A přitom 14 = 2 × 7 — biologicky správně. Technika: číslo jako argument, který se brání zpochybnění opakováním.',
+    citace: ['"Sežral dvě — ne tři, ne jednu — dvě — přesně — 14 teček"', '"a trvalo to půl hodiny — 30 minut — přesně."', '"mlask, mlask — dvakrát — přesně."'],
+    ukol: 'Napiš text o čemkoli — ale vyber jedno číslo a to opakuj, potvrzuj, brání zpochybnění. „Ne víc, ne míň — přesně X." Minimálně pětkrát, vždy jiným způsobem potvrzení. Co dělá tato repetice s věrohodností textu? A kde je hranice mezi precizností a obsesí?',
+    vzor: ['"Přišel třikrát. Ne dvakrát, ne čtyřikrát — třikrát — přesně. Ráno, poledne, večer. Tři. To se počítat dalo."']
+  },
+  zvukomalba_dej: {
+    nazev: 'Zvukomalba jako děj · chňap a hlt a chlamst',
+    popis: 'Pohádka neříká „kocour snědl berušky" — říká zvuky: „Chňap a hlt a chlamst." Zvuky jsou akce, ne popis akce. Žádná věta neříká co se stalo; zvukosled to demonstruje. Pak „mlask, mlask — dvakrát — přesně." Zvukomalba nese narativ. Technika: nahradit popis děje sekvencí zvuků — čtenář si příběh sestaví ze zvukové stopy.',
+    citace: ['"Chňap a hlt a chlamst — nebo něco takového"', '"a nakonec — mlask, mlask — dvakrát — přesně."'],
+    ukol: 'Napiš krátkou scénu — ale místo popisu děje piš zvuky. Každá akce = jeden nebo více zvuků. Žádná věta nesmí říct co se stalo — jen jaký zvuk to udělalo. Přečti nahlas: příběh musí být rekonstruovatelný jen ze zvuků. Pak přidej jeden řádek ticha — jak se ticho zapíše zvukem?',
+    vzor: ['"Klíč. Zámek. Kroky. Ticho. Prasknutí. Déšť."', '"Pak nic. Pak znovu klíč — jiný."']
+  },
+  tecka_hmota: {
+    nazev: 'Interpunkce jako fyzická hmota · tečky se nosí, polyká, vykrká',
+    popis: 'Nejzásadnější jev pohádky. Tečky nejsou grafické značky — jsou hmotné věci. Berušky je nosí na zádech. Kocour je sežere. Pak je půl hodiny vykrká. A lidé dostávají zpátky konce svých vět. Technika: vzít abstraktní jazykový prvek a zacházet s ním jako s fyzickým objektem — co váží? Co chutná? Kde ho necháš? Kdo ho může vzít?',
+    citace: ['"Kocour krkal tečky a dokončoval věty!"', '"Berušky mají na sobě nedokončené konce vět. Věci, které jsou nespolknuté."', '"A že tečka je někdy silnější, než celá věta."'],
+    ukol: 'Vyber jeden abstraktní jazykový prvek — středník, otazník, pomlčku, mezeru, kurzívu, nebo třeba „ticho na konci věty." Zacházej s ním jako s fyzickým objektem: kdo ho nosí? Jak těžký je? Kde se ukládá? Co se stane, když ho někdo ukradne nebo sní? Napiš scénu, kde tento prvek existuje fyzicky.',
+    vzor: ['"Nosila v kapse otazníky. Ne malé — velké, zakroucené. Dva. Jeden si ponechala, druhý vhodila do dopisu bez textu."']
+  },
+  veta_preskocena: {
+    nazev: 'Věta přeskočená dopředu · nebo — než původně věta skončit měla',
+    popis: 'Pohádka popisuje kocourovo skákání do vět — a forma textu to napodobuje. „nebo — než původně věta skončit měla." Syntaxe se sama přeskupí: příslovce přijde na konec místo do středu, sloveso se posune. Věta popisuje jev tím, že ho sama demonstruje. Technika: forma jako demonstrace obsahu — struktura věty napodobuje to, o čem věta mluví.',
+    citace: ['"dřív, než měla věta původně skončit"', '"nebo — než původně věta skončit měla."', '"Skončil větu a pak skončil krkat."'],
+    ukol: 'Napiš sérii vět, kde forma napodobuje obsah — kde syntaxe demonstruje jev, který popisuje. Věta o přerušení se přeruší. Věta o opakování se opakuje. Věta o mlčení mlčí — tedy zůstane nedokončená. Věta o kruhu se vrátí k začátku. Minimálně šest takových vět. Přečti nahlas — kde to funguje?',
+    vzor: ['"Říkal, že se zastaví — zastavil — se že říkal."', '"A znovu. A znovu. A znovu. A znovu začal."']
+  },
+  nedokoncena_kategorie: {
+    nazev: 'Nedokončená věta jako kategorie · jednou, dnes i zítra',
+    popis: 'Pohádka formuluje paradox nedokončenosti: „Jen nedokončené věty bývají všechny stejné. Jednou, dnes i zítra." Nedokončenost není chyba — je to druh. Typ existence. A berušky nesou „nedokončené konce vět — věci, které jsou nespolknuté." Technika: pojmenovat nedokončenost jako kategorii, ne jako absenci. Co patří do třídy „věcí, které nejsou dokončené a nikdy nebudou"?',
+    citace: ['"Jen nedokončené věty bývají všechny stejné. Jednou, dnes i zítra."', '"Berušky mají na sobě nedokončené konce vět. Věci, které jsou nespolknuté."'],
+    ukol: 'Napiš katalog nedokončených věcí — ale ne jako seznam chyb. Jako klasifikaci druhu existence. „Věci, které jsou nedokončené: — [co tam patří, proč tam patří, jak se liší od věcí dokončených]." Minimálně osm položek ze zcela různých kategorií. Pak napiš jednu větu, která formuluje, co všechny nedokončené věci sdílí.',
+    vzor: ['"Věci, které jsou nedokončené: rozhovory na nástupišti. Sny ráno v šest. Dopisy odeslané bez posledního odstavce. Láska, která přišla před slovníkem."']
+  },
+  moralni_rovnice: {
+    nazev: 'Morální rovnice číslem · 14 teček, 30 minut, dvakrát',
+    popis: 'Pohádka buduje morální poučení na exaktní matematice. „Kocour sežral 14 teček" — a celý příběh trvá přesně 30 minut. Výsledek: „tečka je silnější než celá věta." Tato rovnice funguje: 14 spolknutých teček = 30 minut narušeného jazyka = jedno nezapomenutelné poučení. Technika: přiřadit abstraktní morální výpovědi konkrétní čísla — jako kdyby poučení mělo matematický důkaz.',
+    citace: ['"14 teček — 30 minut — přesně"', '"A že tečka je někdy silnější, než celá věta."'],
+    ukol: 'Napiš morální nebo filozofické poučení — ale dokaž ho čísly. Přiřaď každému kroku příběhu konkrétní číslo: kolik, jak dlouho, kolikrát, jaká přesně vzdálenost nebo váha. Výsledek musí být exaktní rovnice, z níž poučení vyplyne jako součet. Pak zkus, co se stane, když jedno číslo změníš — změní se i poučení?',
+    vzor: ['"Tři roky. Čtyřiadvacet pokusů. Nula vysvětlení. Jedno ráno bez otázek. Rovnice: tři roky ÷ nula vysvětlení = jedno ráno."']
+  }
+};
+
+const UHEL_NA_JEV = {
+  0:   'moralni_rovnice',       // Analytický: systém + číslo jako argument
+  180: 'zvukomalba_dej',        // Asociační: zvuky místo logické posloupnosti
+  30:  'nedokoncena_kategorie', // Kulturní: nedokončenost jako sdílená třída
+  210: 'veta_preskocena',       // Introspektivní: forma věty jako sebeodhalení
+  60:  'tecka_hmota',           // Filozofický: abstraktní prvek jako fyzická substance
+  240: 'obsesivni_cislo',       // Ironický: přesnost jako ironická strategie
+  90:  'zvukomalba_dej',        // Naivní: zvuk místo elaborace
+  270: 'obsesivni_cislo',       // Groteskní: přehánění přes číslo
+  120: 'tecka_hmota',           // Jazykový: interpunkce jako fyzická látka
+  300: 'veta_preskocena',       // Absurdní: syntaxe, která se sama přeskupí
+  150: 'nedokoncena_kategorie', // Metaforický: nedokončenost jako obraz
+  330: 'moralni_rovnice'        // Surrealistický: sen s exaktní matematikou
+};
+
+function skore(text){
+  const s={};
+  Object.keys(UHLY).forEach(k=>s[k]=0);
+  Object.entries(UHLY).forEach(([k,u])=>{
+    u.kw.forEach(kw=>{
+      const re=new RegExp('(?<![a-záčďéěíňóřšťůúýž])'+kw.replace(/[-\/\\^$*+?.()|[\]{}]/g,'\\$&')+'(?![a-záčďéěíňóřšťůúýž])','gi');
+      s[k]+=(text.match(re)||[]).length*2;
+    });
+  });
+  const vety=text.split(/[.!?…]+/).filter(v=>v.trim().length>2);
+  const avg=vety.length?vety.reduce((a,v)=>a+v.trim().split(/\s+/).length,0)/vety.length:0;
+  const ja=(text.match(/\bjá\b|\bjsem\b|\bmi\b|\bmě\b/gi)||[]).length;
+  const jako=(text.match(/\bjako\b/gi)||[]).length;
+  const ale=(text.match(/\bale\b/gi)||[]).length;
+  const q=(text.match(/\?/g)||[]).length;
+  const cisla=(text.match(/\d+/g)||[]).length;
+
+  if(avg<7)s[90]+=4;
+  if(avg>16){s[60]+=3;s[0]+=2;}
+  s[210]+=ja; s[150]+=jako*2; s[240]+=ale; s[60]+=q*2;
+  if(cisla>3)s[0]+=cisla; // čísla → analytický
+  if(vety.length>=3){
+    const lens=vety.map(v=>v.trim().split(/\s+/).length);
+    const av=lens.reduce((a,b)=>a+b)/lens.length;
+    const sd=Math.sqrt(lens.map(l=>(l-av)**2).reduce((a,b)=>a+b)/lens.length);
+    if(sd>5)s[270]+=4;
+  }
+  if((text.match(/\.\.\.|–\s*$|—\s*$/gm)||[]).length>1)s[300]+=3;
+  return s;
+}
+function top(s){return Object.entries(s).sort((a,b)=>b[1]-a[1])[0][0];}
+function vidJevy(text,uhel){
+  const vety=text.split(/[.!?…]+/).filter(v=>v.trim().length>2);
+  const avg=vety.length?vety.reduce((a,v)=>a+v.trim().split(/\s+/).length,0)/vety.length:0;
+  const ja=(text.match(/\bjá\b|\bjsem\b|\bmi\b|\bmě\b/gi)||[]).length;
+  const jako=(text.match(/\bjako\b/gi)||[]).length;
+  const ale=(text.match(/\bale\b/gi)||[]).length;
+  const q=(text.match(/\?/g)||[]).length;
+  const cisla=(text.match(/\d+/g)||[]).length;
+  const r=[];
+  if(avg<8)r.push({j:'Délka vět',t:'Krátké věty — každá myšlenka stojí sama.'});
+  else if(avg>15)r.push({j:'Délka vět',t:`Dlouhé věty — průměr ${Math.round(avg)} slov.`});
+  else r.push({j:'Délka vět',t:`Průměr ${Math.round(avg)} slov.`});
+  if(cisla>3)r.push({j:'Čísla',t:`${cisla} čísel v odpovědích — myslíte přesností a daty.`});
+  if(ja>4)r.push({j:'Perspektiva',t:'Osobní pohled — pohádku vztahujete k vlastní zkušenosti.'});
+  if(jako>1)r.push({j:'Obrazy',t:`${jako}× „jako" — myslíte v přirovnáních.`});
+  if(q>1)r.push({j:'Otázky',t:`${q} otázky — hledáte, nestanovujete.`});
+  if(ale>2)r.push({j:'Kontrast',t:`${ale}× „ale" — napětí mezi dvěma stranami.`});
+  if(r.length<3)r.push({j:'Vzorec',t:UHLY[uhel].popis.split('.')[0]+'.'});
+  return r.slice(0,4);
+}
+function faze(n){
+  [1,2,3,4].forEach(i=>{
+    const el=document.getElementById('faze-'+i);
+    el.className='faze-item';
+    if(i<n)el.classList.add('done');
+    else if(i===n)el.classList.add('active');
+  });
+}
+function prejitNaOtazky(){
+  document.getElementById('sec-pohadka').style.display='none';
+  document.getElementById('sec-otazky').style.display='block';
+  faze(2);window.scrollTo({top:0,behavior:'smooth'});
+}
+function zpet(){
+  document.getElementById('sec-otazky').style.display='none';
+  document.getElementById('sec-pohadka').style.display='block';
+  faze(1);window.scrollTo({top:0,behavior:'smooth'});
+}
+function analyzovat(){
+  const q1=document.getElementById('q1').value.trim();
+  const q2=document.getElementById('q2').value.trim();
+  const q3=document.getElementById('q3').value.trim();
+  if(!q1&&!q2&&!q3){alert('Vyplňte alespoň jednu odpověď.');return;}
+  const vše=q1+' '+q2+' '+q3;
+  const s=skore(vše);
+  const u=top(s);
+  const U=UHLY[u],P=UHLY[U.prot];
+  const j=JEVY[UHEL_NA_JEV[u]];
+  document.getElementById('res-uhel-nazev').innerHTML=`<em>${U.nazev}</em>`;
+  document.getElementById('res-uhel-popis').textContent=U.popis;
+  const g=document.getElementById('vide-grid');g.innerHTML='';
+  vidJevy(vše,u).forEach(i=>{
+    const d=document.createElement('div');d.className='vide-item';
+    d.innerHTML=`<div class="vide-jev">${i.j}</div><div class="vide-text">${i.t}</div>`;
+    g.appendChild(d);
+  });
+  document.getElementById('int-uhel-nazev').innerHTML=`<em>${P.nazev}</em>`;
+  document.getElementById('jev-nazev').textContent=j.nazev;
+  document.getElementById('jev-popis').textContent=j.popis;
+  document.getElementById('jev-citace').innerHTML=j.citace.map(c=>`<span>${c}</span>`).join('');
+  document.getElementById('ukol-text').textContent=j.ukol;
+  document.getElementById('ukol-vzor').innerHTML=j.vzor.map(v=>`<span>${v}</span>`).join('');
+  document.getElementById('sec-otazky').style.display='none';
+  document.getElementById('vysledek').style.display='block';
+  faze(4);
+  document.getElementById('vysledek').scrollIntoView({behavior:'smooth',block:'start'});
+}
+function ulozit(){
+  const z={datum:new Date().toLocaleDateString('cs-CZ'),karta:'Kocour',
+    uhel:document.getElementById('res-uhel-nazev').textContent,
+    text:document.getElementById('pisarna').value,
+    q1:document.getElementById('q1').value,q2:document.getElementById('q2').value,q3:document.getElementById('q3').value};
+  const e=JSON.parse(localStorage.getItem('chcesmys_zapisnik')||'[]');
+  e.push(z);localStorage.setItem('chcesmys_zapisnik',JSON.stringify(e));
+  alert('Uloženo. ('+e.length+' záznamů)');
+}
+function resetovat(){
+  ['q1','q2','q3','pisarna'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('vysledek').style.display='none';
+  document.getElementById('sec-pohadka').style.display='block';
+  document.getElementById('sec-otazky').style.display='none';
+  faze(1);window.scrollTo({top:0,behavior:'smooth'});
+}
+</script>
+</body>
+</html>
