@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Liška — 12 úhlů · Chceš myš?</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --bg:#0f0f0f;--s:#161616;--s2:#1c1c1c;
+      --c:#e8e0d0;--dim:rgba(232,224,208,.4);--a:#a89880;
+      --b:rgba(168,152,128,.15);--b2:rgba(168,152,128,.3);
+      --serif:'Cormorant Garamond',Georgia,serif;--mono:'DM Mono',monospace;
+    }
+    html{scroll-behavior:smooth}
+    body{background:var(--bg);color:var(--c);font-family:var(--mono);font-size:13px;line-height:1.85;-webkit-font-smoothing:antialiased}
+    a{color:inherit;text-decoration:none}
+    .wrap{max-width:800px;margin:0 auto;padding:0 28px}
+    p{margin-bottom:.8em}p:last-child{margin-bottom:0}
+
+    nav{position:sticky;top:0;z-index:99;border-bottom:1px solid var(--b);background:rgba(15,15,15,.94);backdrop-filter:blur(12px);padding:12px 28px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+    .nav-l{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);transition:color .15s}
+    .nav-l:hover{color:var(--c)}
+    .nav-r{display:flex;gap:14px}
+    .nav-r a{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);transition:color .15s}
+    .nav-r a:hover{color:var(--a)}
+
+    /* HERO */
+    .hero{padding:52px 0 40px;border-bottom:1px solid var(--b)}
+    .hero-tag{font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:var(--a);margin-bottom:12px}
+    .hero h1{font-family:var(--serif);font-size:clamp(2.8rem,6vw,5rem);font-weight:300;line-height:1;margin-bottom:8px}
+    .hero h1 em{font-style:italic;color:var(--a)}
+    .hero-veta{font-family:var(--serif);font-style:italic;font-size:1rem;color:var(--dim);border-left:1px solid var(--a);padding-left:16px;margin:16px 0 20px;line-height:1.9;max-width:480px}
+    .fenomen{border:1px solid var(--a);padding:16px 20px;background:rgba(168,152,128,.05);margin-bottom:0}
+    .fenomen-tag{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--a);margin-bottom:8px}
+    .fenomen-text{font-size:.82rem;color:rgba(232,224,208,.65);line-height:1.9}
+
+    /* METODICKÁ POZNÁMKA */
+    .metoda{padding:36px 0;border-bottom:1px solid var(--b)}
+    .metoda-text{font-family:var(--serif);font-style:italic;font-size:.95rem;color:rgba(232,224,208,.55);line-height:2;border-left:1px solid var(--b);padding-left:20px;max-width:600px}
+
+    /* POHÁDKA */
+    .sec{padding:44px 0;border-bottom:1px solid var(--b)}
+    .sec-tag{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--a);margin-bottom:16px}
+    h2{font-family:var(--serif);font-size:clamp(1.4rem,3.5vw,2rem);font-weight:300;margin-bottom:14px}
+    h2 em{font-style:italic;color:var(--a)}
+    .pohadka-box{border:1px solid var(--b);background:var(--s);padding:22px 26px;max-height:340px;overflow-y:auto}
+    .pohadka-box::-webkit-scrollbar{width:2px}
+    .pohadka-box::-webkit-scrollbar-thumb{background:var(--a)}
+    .pohadka{font-family:var(--serif);font-style:italic;font-size:.94rem;line-height:2.05;color:rgba(232,224,208,.75)}
+    .pohadka p{margin-bottom:.75em}
+    .pohadka strong{font-style:normal;color:var(--a);font-weight:400}
+    .pohadka .uhel-mark{font-style:normal;border-bottom:1px dotted rgba(168,152,128,.5);cursor:help}
+
+    /* MAPA ÚHLŮ V TEXTU */
+    .mapa{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--b);border:1px solid var(--b);margin-top:20px}
+    @media(max-width:540px){.mapa{grid-template-columns:1fr}}
+    .mapa-item{background:var(--s);padding:13px 16px}
+    .mapa-uhel{font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:var(--a);margin-bottom:4px}
+    .mapa-citace{font-family:var(--serif);font-style:italic;font-size:.8rem;color:rgba(232,224,208,.55);line-height:1.7}
+    .mapa-struktura{font-size:.72rem;color:var(--dim);margin-top:4px}
+
+    /* 12 WORKSHOPŮ */
+    .workshops{padding:44px 0}
+    .workshops-intro{font-size:.82rem;color:var(--dim);max-width:540px;line-height:1.9;margin-bottom:28px}
+    .workshop{border-bottom:1px solid var(--b)}
+    .w-header{display:grid;grid-template-columns:56px 1fr auto;align-items:start;padding:20px 0;cursor:pointer;gap:0}
+    .w-header:hover .w-nazev{color:var(--a)}
+    .w-num{font-family:var(--serif);font-size:2rem;font-weight:300;color:rgba(168,152,128,.16);line-height:1.1}
+    .w-meta{}
+    .w-nazev{font-size:.88rem;color:var(--c);margin-bottom:3px}
+    .w-uhel{font-size:.7rem;color:var(--a);letter-spacing:.12em;text-transform:uppercase}
+    .w-toggle{font-size:.72rem;color:var(--dim);padding-top:3px}
+    .w-body{display:none;padding:0 0 28px 56px}
+    .w-body.open{display:block}
+
+    /* BLOK: citace z pohádky */
+    .blok-citace{font-family:var(--serif);font-style:italic;font-size:.9rem;color:rgba(232,224,208,.5);border-left:2px solid var(--b2);padding:10px 16px;margin-bottom:14px;line-height:1.9}
+    .blok-citace strong{font-style:normal;color:var(--a);font-weight:400;font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;display:block;margin-bottom:4px}
+
+    /* BLOK: analýza struktury */
+    .blok-analyza{background:var(--s2);padding:13px 16px;margin-bottom:14px;border-left:1px solid var(--b2)}
+    .blok-tag{font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;color:var(--a);margin-bottom:6px}
+    .blok-text{font-size:.82rem;color:rgba(232,224,208,.65);line-height:1.85}
+
+    /* BLOK: task */
+    .blok-ukol{margin-bottom:14px}
+    .blok-zadani{font-size:.88rem;color:rgba(232,224,208,.8);line-height:1.9;margin-bottom:10px}
+
+    /* BLOK: intervence */
+    .blok-intervence{background:rgba(168,152,128,.06);border:1px solid var(--b2);padding:13px 16px;margin-bottom:14px}
+    .blok-intervence .blok-tag{color:var(--a)}
+    .blok-opak{font-family:var(--serif);font-style:italic;font-size:.84rem;color:rgba(232,224,208,.55);margin-top:8px;line-height:1.85}
+
+    /* textarea */
+    textarea{width:100%;background:var(--s);border:1px solid var(--b);color:var(--c);padding:11px;font-family:var(--mono);font-size:.82rem;line-height:1.75;resize:vertical;min-height:80px;margin-top:8px}
+    textarea:focus{outline:1px solid var(--a)}
+    textarea::placeholder{color:rgba(232,224,208,.14)}
+
+    footer{padding:32px 0;border-top:1px solid var(--b);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+    footer p{font-size:.72rem;color:var(--dim)}
+    footer a{color:var(--a)}
+  </style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-l" href="../../../index.html">← Všechna zvířata</a>
+  <div class="nav-r">
+    <a href="../../../nastroje/analyzer.html">Analyzátor</a>
+    <a href="../../../nastroje/zapisnik.html">Zápisník</a>
+  </div>
+</nav>
+
+<div class="wrap">
+
+<!-- HERO -->
+<section class="hero">
+  <p class="hero-tag">Kreativní miniatura · Karta Liška</p>
+  <h1>Li<em>ška</em></h1>
+  <p class="hero-veta">„To, co se vezme násilím, se neudrží. A to, co se vezme z lišky, se nehodí nikomu jinému."</p>
+  <div class="fenomen">
+    <div class="fenomen-tag">Fenomén — Ztráta po částech / hodnota, která se nedrží cizíma rukama</div>
+    <p class="fenomen-text">Pohádka o lišce zkoumá, co se stane, když je z bytosti postupně odebíráno vše — každá část zvlášť, se zdánlivou logikou. Každá ztráta je zdůvodněna. A přesto na konci je liška celá — ne přes odpor, ale přes to, že přestala být věcí. Fenomén Lišky: jak si udržet podstatu, když svět chce jen části.</p>
+  </div>
+</section>
+
+<!-- METODICKÁ POZNÁMKA -->
+<section class="metoda">
+  <p class="metoda-text">Každý z 12 úhlů níže je nejprve nalezen přímo v textu pohádky — v konkrétní větě nebo struktuře. Úkol pak tuto strukturu procvičuje záměrně. Protilehlý úhel je intervence: co pohádka záměrně nevyužívá, co chybí, co by ji změnilo.</p>
+</section>
+
+<!-- POHÁDKA -->
+<section class="sec">
+  <p class="sec-tag">Pohádka · přečtěte a sledujte, kde se jazyk mění</p>
+  <h2>O lišce, <em>která byla z části</em></h2>
+  <div class="pohadka-box"><div class="pohadka">
+    <p>Kdysi, v krajině, kde se <span class="uhel-mark" title="Surrealistický: obrácená fyzika">stromy nekláněly kvůli větru, ale kvůli tíze slov</span>, žila liška. Ne ta z dětských knížek, co krade slepice a směje se pod fousy. <span class="uhel-mark" title="Kulturní: odkaz na sdílený vzorec">Tahle liška byla jiná.</span> Tichá. Pozorující. A hlavně — celá.</p>
+    <p>Měla kožich, <span class="uhel-mark" title="Metaforický: tělo jako krajina">který se leskl jako podzimní večer</span>. Tlapky, které uměly chodit po sněhu, aniž by ho rušily. Oči, které viděly věci, co se ještě nestaly. A srdce — <span class="uhel-mark" title="Groteskní: extrémní kontrast vlastností">těžké, tvrdé, ale průzračné. Diamant.</span></p>
+    <p>Ale svět si všiml. A jakmile si svět všimne, začne chtít.</p>
+    <p><span class="uhel-mark" title="Analytický: katalog s opakující se strukturou">První přišli obchodníci. S měřítky, s cenami, s rukama připravenýma brát. „Ten kožich," řekli. „To je přesně ono. Luxus. Teplo. Lesk." A tak lišce vzali srst. <strong>Zůstala nahá. Ale ne slabá. Jen jiná.</strong></span></p>
+    <p><span class="uhel-mark" title="Analytický: druhá iterace katalogu">Pak přišli ti, co chodí v botách z hadí kůže. „Znají cestu. My chceme směr." A tak jí vzali chodidla. Zůstaly jí jen vzpomínky na stopy.</span></p>
+    <p>Potom přišli šperkaři. „Liščí zuby — to je elegance s ostřím." A tak jí vzali úsměv. <strong>Zůstalo mlčení.</strong></p>
+    <p>Nakonec přišel někdo, kdo se neptal. Nepředstavil se. Jen sáhl do její hrudi a vytáhl srdce. Byl to kámen. Diamant. „Tohle je to nejcennější," řekl. A odešel.</p>
+    <p>A liška? Zůstala. Bez srsti. Bez tlapek. Bez smíchu. Bez srdce. <span class="uhel-mark" title="Naivní: krátká konstatující věta po ztrátě">Ale pořád tam byla.</span></p>
+    <p>Ne jako zvíře. <span class="uhel-mark" title="Jazykový: rytmus přes negaci">Jako stín. Jako paměť.</span></p>
+    <p>Začala se pohybovat jinak. Ne kráčet — ale klouzat. Ne mluvit — ale šeptat. Ne žít — ale být.</p>
+    <p>A v tom bytí se začalo něco dít. Lidé, kteří si z ní vzali, začali ztrácet. Kožich se rozpadl na chlupy. Boty se rozpadly na šupiny. Šperky se začaly třepit. <span class="uhel-mark" title="Ironický: poetická spravedlnost jako subverze žánru">A diamant? Ten zčernal. Ne z špíny. Z pravdy.</span></p>
+    <p>Protože to, co se vezme násilím, se neudrží. A to, co se vezme z lišky, se nehodí nikomu jinému.</p>
+    <p>„Viděli jste ji?" „Ne, ale cítili jsme ji." „Jak?" „<span class="uhel-mark" title="Surrealistický: synestézie, ticho má tvar">Jako ticho, které má tvar.</span>"</p>
+    <p>A tak se začalo říkat, že někde běhá liška, která nemá nic — a právě proto má všechno.</p>
+    <p>Její srdce je kámen. Ale ne ten, co se nosí. <span class="uhel-mark" title="Jazykový: zvuková distinktivnost nosí/nese">Ten, co se nese.</span></p>
+  </div></div>
+
+  <p class="sec-tag" style="margin-top:28px">Mapa úhlů v textu pohádky · kde a jak</p>
+  <div class="mapa">
+    <div class="mapa-item"><div class="mapa-uhel">0° Analytický</div><div class="mapa-citace">„První přišli… vzali… zůstala. Pak přišli… vzali… zůstaly. Potom… nakonec…"</div><div class="mapa-struktura">Katalog s opakující se třídílnou strukturou. Systematická eroze.</div></div>
+    <div class="mapa-item"><div class="mapa-uhel">180° Asociační</div><div class="mapa-citace">„Ne jako zvíře. Jako stín. Jako paměť."</div><div class="mapa-struktura">Volné asociativní přirovnání bez vysvětlení. Skok přes kategorii.</div></div>
+    <div class="mapa-item"><div class="mapa-uhel">30° Kulturní</div><div class="mapa-citace">„Ne ta z dětských knížek, co krade slepice."</div><div class="mapa-struktura">Odkaz na sdílený kulturní vzorec. Pohádka definuje se přes negaci klišé.</div></div>
+    <div class="mapa-item"><div class="mapa-uhel">210° Introspektivní</div><div class="mapa-citace">— (záměrná absence)</div><div class="mapa-struktura">Liška nikde nevyjadřuje vnitřní prožitek. Nulová perspektiva 1. osoby. Deficitní úhel.</div></div>
+    <div class="mapa-item"><div class="mapa-uhel">60° Filozofický</div><div class="mapa-citace">„Nemá nic — a právě proto má všechno."</div><div class="mapa-struktura">Paradox jako závěrečné tvrzení. Pravda jako substance diamantu.</div></div>
+    <div class="mapa-item"><div class="mapa-uhel">240° Ironický</div><div class="mapa-citace">„A diamant? Ten zčernal. Ne z špíny. Z pravdy."</div><div class="mapa-struktura">Poetická spravedlnost jako ironie. Ukradené věci se vrátí jako prokletí.</div></div>
+    <div class="mapa-item"><div class="mapa-uhel">90° Naivní</div><div class="mapa-citace">„Zůstala nahá. Ale ne slabá. Jen jiná."</div><div class="mapa-struktura">Tříčlenná konstatující věta po každé ztrátě. Bezpříznakové, bez emoce.</div></div>
+    <div class="mapa-item"><div class="mapa-uhel">270° Groteskní</div><div class="mapa-citace">„srdce — těžké, tvrdé, ale průzračné. Diamant."</div><div class="mapa-struktura">Extrémní kontrast vlastností v jednom obrazu. Tělo jako minerál.</div></div>
+    <div class="mapa-item"><div class="mapa-uhel">120° Jazykový</div><div class="mapa-citace">„Ne kráčet — ale klouzat. Ne mluvit — ale šeptat. Ne žít — ale být." / „nosí / nese"</div><div class="mapa-struktura">Anafora přes negaci. Zvuková distinktivnost v závěru.</div></div>
+    <div class="mapa-item"><div class="mapa-uhel">300° Absurdní</div><div class="mapa-citace">— (záměrná absence)</div><div class="mapa-struktura">Pohádka nepracuje s absurdní logikou. Deficitní úhel — vše má kauzální řád.</div></div>
+    <div class="mapa-item"><div class="mapa-uhel">150° Metaforický</div><div class="mapa-citace">„kožich, který se leskl jako podzimní večer" / „stromy nekláněné tíží slov"</div><div class="mapa-struktura">Dominantní úhel pohádky. Tělo + příroda + emoce jako jedno pole.</div></div>
+    <div class="mapa-item"><div class="mapa-uhel">330° Surrealistický</div><div class="mapa-citace">„stromy se nekláněly kvůli větru, ale kvůli tíze slov" / „ticho, které má tvar"</div><div class="mapa-struktura">Obrácená fyzika světa. Smysly se míchají (ticho má tvar = hmat + zvuk).</div></div>
+  </div>
+</section>
+
+<!-- 12 WORKSHOPŮ -->
+<section class="workshops">
+  <p class="sec-tag">12 workshopů · každý 20 minut</p>
+  <p class="workshops-intro">Každý workshop vychází z konkrétního místa v pohádce. Nejdřív vidíte, jak pohádka techniku používá. Pak ji procvičíte záměrně. Protilehlý úhel je intervence — technika, kterou pohádka záměrně nepoužívá.</p>
+
+  <div id="ws-list"></div>
+</section>
+
+<footer>
+  <p>Karta Liška · Chceš myš? — kreativní miniatury · © 2026 Michaela Nováková</p>
+  <p><a href="mailto:chcesmys@gmail.com">chcesmys@gmail.com</a></p>
+</footer>
+</div>
+
+<script>
+const workshops = [
+  {
+    cislo: '01', uhel: '0° Analytický', protilehly: '180° Asociační',
+    nazev: 'Katalog ztráty — systematická eroze',
+    citace: 'První přišli… vzali… zůstala. Pak přišli… vzali… zůstaly. Potom… nakonec…',
+    analyza_tag: 'Jazyková struktura v pohádce',
+    analyza: 'Pohádka staví katalog ztrát jako přesný analytický systém: každá strofa má tři kroky — příchod, odebrání, zbytek. Nic se neopakuje. Nic se nepřeskočí. Systematičnost sama o sobě vytváří napětí — čtenář ví, že přijde další krok, než ho přečte. Analytický úhel zde funguje jako architektura hrůzy.',
+    ukol_tag: 'Váš úkol — záměrné použití',
+    ukol: 'Napiš katalog čehokoli, co postupně zmizelo nebo se mění. Každá položka musí mít přesně stejnou tříkrokovou strukturu: kdo přišel / co vzal / co zbylo. Minimálně pět iterací. Žádná nesmí být stejná — každá přidá jiný typ příchozího, ztráty, zbytku. Cíl: pocítit, jak systematičnost buduje napětí.',
+    intervence_tag: 'Protilehlý úhel: 180° Asociační — záměrné přerušení systému',
+    intervence: 'Napiš jednu iteraci katalogu záměrně asociativně: místo třetího kroku udělej nečekaný skok. Co přijde po ztrátě smíchu? Ne „zůstalo mlčení" — ale třeba „přišel podzim a zapomněl odejít." Sleduj, co tento skok dělá s napětím celého textu.',
+    vzor: '„Přišli geologové. Vzali jí sklon svahu. Zůstala v rovině, kde se nechodí — klouzá."'
+  },
+  {
+    cislo: '02', uhel: '180° Asociační', protilehly: '0° Analytický',
+    nazev: 'Skok přes kategorii — stín, paměť',
+    citace: '„Ne jako zvíře. Jako stín. Jako paměť."',
+    analyza_tag: 'Jazyková struktura v pohádce',
+    analyza: 'Pohádka v jednom momentě opustí narativní logiku a přejde do série volných přirovnání. „Stín" a „paměť" nejsou vysvětlena — jsou jen přiložena vedle sebe. Čtenář musí sám vyplnit, co mají společného. Asociativní úhel zde funguje jako otevírání prostoru po uzavření katalogu.',
+    ukol_tag: 'Váš úkol — záměrné použití',
+    ukol: 'Napiš sérii přirovnání bez vysvětlení. Zvolte subjekt (osobu, místo, pocit) a napište za sebou 10 přirovnání formou: „Ne jako X. Jako Y." Kategorie Y musí být vždy z jiného světa než X. Žádná dvě Y nesmí být příbuzné. Výsledek přečtěte nahlas — co říká celkový obraz?',
+    intervence_tag: 'Protilehlý úhel: 0° Analytický — záměrné uzavření asociace',
+    intervence: 'Vezmi dvě ze svých nejabsurdnějších přirovnání a napiš větu, která mezi nimi vysvětlí logické spojení. Proč stín a proč paměť? Co mají opravdu společného? Co se ztratí, když to vysvětlíš?',
+    vzor: '„Ne jako dveře. Jako vlhkost. Ne jako vlhkost. Jako slovo, co se řekne v jiném jazyce."'
+  },
+  {
+    cislo: '03', uhel: '30° Kulturní', protilehly: '210° Introspektivní',
+    nazev: 'Negace klišé — pohádka, co se liší',
+    citace: '„Ne ta z dětských knížek, co krade slepice a směje se pod fousy."',
+    analyza_tag: 'Jazyková struktura v pohádce',
+    analyza: 'Pohádka se definuje přes odkaz na sdílený vzorec — a jeho okamžitou negaci. „Ne ta z dětských knížek" předpokládá, že čtenář vzorec zná. Aktivuje kulturní paměť jen proto, aby ji přepsala. Tato technika funguje jako kontrast — čtenář sám vyplní, co pohádka není, a tím lépe vnímá, co je.',
+    ukol_tag: 'Váš úkol — záměrné použití',
+    ukol: 'Vyber žánr nebo typ postavy, který má silné kulturní klišé (detektiv, matka, startup zakladatel, umělec). Napiš úvod textu, který aktivuje toto klišé — a pak ho systematicky přepíše negacemi. Každá negace musí odkrýt něco konkrétního o skutečné postavě. Minimálně šest negací.',
+    intervence_tag: 'Protilehlý úhel: 210° Introspektivní — přechod zevnitř',
+    intervence: 'Napiš tutéž postavu, ale tentokrát bez odkazu na kulturní vzorce. Čistě vnitřní perspektiva: co postava cítí, vidí, neřekne. Žádné „ne jako ta z knížky." Jen: co je uvnitř. Srovnej oba texty — co každý z nich umí.',
+    vzor: '„Ne ten z krimi seriálů, co nosí plášť a nikdy nespí. Tento detektiv spí. Hodně. A ještě se omlouvá, že ho vzbudili."'
+  },
+  {
+    cislo: '04', uhel: '210° Introspektivní', protilehly: '30° Kulturní',
+    nazev: 'Záměrná absence vnitřního hlasu',
+    citace: '— (liška nikde nevyjadřuje, co cítí)',
+    analyza_tag: 'Jazyková struktura v pohádce',
+    analyza: 'Toto je deficitní úhel pohádky. Liška NIKDY nemluví o tom, co cítí. Ztrácí srst, tlapky, zuby, srdce — a text to zachycuje bez jejího vnitřního komentáře. Tato absence je záměrná a silná: čtenář si vnitřní prožitek doplňuje sám, přesně tam, kde ho pohádka odepírá. Absence jako technika.',
+    ukol_tag: 'Váš úkol — záměrné použití záměrné absence',
+    ukol: 'Napiš scénu, kde se hlavní postavě stane něco velmi emotivního. Ale pohádku píš bez jediné zmínky o jejím vnitřním stavu — žádné „cítila," „myslela," „bolelo ji," „litovala." Jen vnější popis: co se stalo, co udělala, co řekla. Sleduj, jak absence vnitřního hlasu čtenáře vtáhne dovnitř.',
+    intervence_tag: 'Protilehlý úhel: 30° Kulturní — sdílený vzorec jako náhrada introspekce',
+    intervence: 'Přidej na konec scény jednu větu, která dá postavě vnitřní hlas — ale přes kulturní vzorec. Ne „cítila smutek," ale „bylo to jako v té písni, co ji zpívala maminka, ale slova zapomněla." Jak se změní postava?',
+    vzor: '„Sáhli do hrudi a vytáhli srdce. Řekli, že je hezké. Odešli. Zůstala stát. Pak šla k oknu."'
+  },
+  {
+    cislo: '05', uhel: '60° Filozofický', protilehly: '240° Ironický',
+    nazev: 'Paradox jako závěrečné tvrzení',
+    citace: '„Nemá nic — a právě proto má všechno."',
+    analyza_tag: 'Jazyková struktura v pohádce',
+    analyza: 'Pohádka si drží filozofický paradox na konec — jako rozuzlení, které není rozuzlení, ale přeformulování otázky. „Nemá nic / má všechno" není vysvětlení, co se stalo, ale ontologické tvrzení o podstatě věci. Filozofický úhel zde funguje jako závěr, který otevírá místo aby zavíral.',
+    ukol_tag: 'Váš úkol — záměrné použití',
+    ukol: 'Napiš krátký text (5–8 odstavců) o čemkoli konkrétním — a ukonči ho filozofickým paradoxem. Ale paradox musí VYPLYNOUT z textu, ne být přilepen zvenčí. Procvičuj: jak celý text připravit tak, aby paradox na konci zněl jako nevyhnutelný závěr, ne jako trik.',
+    intervence_tag: 'Protilehlý úhel: 240° Ironický — paradox jako sarkazmus',
+    intervence: 'Vezmi závěrečný paradox svého textu a přepiš ho ironicky. Místo „nemá nic — a proto má vše" zkus: „nemá nic — a to jim říkala tři hodiny na teambuildingovém workshopu." Jak ironie změní váhu paradoxu?',
+    vzor: '„Čím méně věděl, tím víc rozuměl. Což je buď moudrost, nebo diagnóza — a on stále neví která."'
+  },
+  {
+    cislo: '06', uhel: '240° Ironický', protilehly: '60° Filozofický',
+    nazev: 'Poetická spravedlnost — ukradené se vrátí jako prokletí',
+    citace: '„A diamant? Ten zčernal. Ne z špíny. Z pravdy."',
+    analyza_tag: 'Jazyková struktura v pohádce',
+    analyza: 'Pohádka používá ironický obrat jako subverzi žánrového očekávání. Čtenář čeká pohádkovou spravedlnost (zloděj je potrestán) — ale dostane lingvisticky přesnější verzi: věci se vrátí jako vlastní negace. Diamant zčernal „z pravdy" — to je ironická formulace, kde „pravda" funguje jako korodující látka.',
+    ukol_tag: 'Váš úkol — záměrné použití',
+    ukol: 'Napiš text o věci nebo vlastnosti, která se zdá cenná — ale v rukách jiného člověka nebo v jiném kontextu se obrátí v pravý opak. Každá věta by měla nést ironie skrze kontrast: co se slibovalo a co se dostavilo. Bez moralizování — jen přesný popis proměny.',
+    intervence_tag: 'Protilehlý úhel: 60° Filozofický — proč se pravda stala korozí?',
+    intervence: 'Vezmi svůj ironický text a doplň jednu filozofickou větu, která se neptá „co se stalo" ale „proč tomu tak muselo být." Jak filozofická otázka změní tón ironického textu?',
+    vzor: '„Koupila si klid za drahé peníze. Klid jí vydržel čtrnáct minut. Pak si ho nechala opravit. Záruka nepokrývá použití."'
+  },
+  {
+    cislo: '07', uhel: '90° Naivní', protilehly: '270° Groteskní',
+    nazev: 'Bezpříznakové konstatování po ztrátě',
+    citace: '„Zůstala nahá. Ale ne slabá. Jen jiná."',
+    analyza_tag: 'Jazyková struktura v pohádce',
+    analyza: 'Po každé velké ztrátě pohádka přejde do tříčlenné konstatující věty. Žádná emoce, žádné hodnocení — jen trojí pojmenování. „Nahá. Ale ne slabá. Jen jiná." Tato naivní jednoduchost po groteskním odebrání vytváří silnější efekt než pláč by vytvořil. Naivní forma jako pojímač šoku.',
+    ukol_tag: 'Váš úkol — záměrné použití',
+    ukol: 'Napiš sérii krátkých, bezpříznakových vět po velkých událostech. Zvolte si pět emotivně nábitých momentů (vztah skončil, dostal práci, ztratil se v lese) — a každý zachyť v maximálně třech krátkých větách bez jediného přídavného jména hodnotícího charakteru. Jen konstatování.',
+    intervence_tag: 'Protilehlý úhel: 270° Groteskní — přehání to, co naivní skrývá',
+    intervence: 'Vezmi jednu ze svých krátkých konstatujících vět a přepiš ji groteskně: přidej extrémní kontrast, dramatické přívlastky, střídání délky vět. Co skrývala naivní forma? Co groteskní forma odkryje?',
+    vzor: '„Odjel. Byly tři hodiny. Okno zůstalo otevřené."'
+  },
+  {
+    cislo: '08', uhel: '270° Groteskní', protilehly: '90° Naivní',
+    nazev: 'Srdce jako diamant — extrémní kontrast',
+    citace: '„srdce — těžké, tvrdé, ale průzračné. Diamant. Velký."',
+    analyza_tag: 'Jazyková struktura v pohádce',
+    analyza: 'Pohádka v jednom momentě nakupí do jednoho obrazu vlastnosti, které se normálně vylučují: srdce je ZÁROVEŇ těžké, tvrdé a průzračné. A pak přijde jedno slovo: „Diamant." Tato groteskní kondenzace — organické + minerální, cit + kámen — funguje jako šok. A pak „Velký" — jako lakonické potvrzení absurdity.',
+    ukol_tag: 'Váš úkol — záměrné použití',
+    ukol: 'Napiš popis čehokoli abstraktního (strach, naděje, zodpovědnost) jako fyzického objektu s extrémně kontradiktorními vlastnostmi. Nejméně čtyři přídavná jména, která se navzájem vylučují. Pak jedno podstatné jméno, které to vše pojmenuje. Pak jedno přídavné jméno navíc — jako nečekaný komentář.',
+    intervence_tag: 'Protilehlý úhel: 90° Naivní — co zůstane, když odebereme kontrast',
+    intervence: 'Vezmi svůj groteskní obraz a zjednodušuj ho, dokud nezůstane jedna věta. Pak jednou slovo. Pak nic. V kterém bodě obraz ztratil smysl — a v kterém ho získal?',
+    vzor: '„Zodpovědnost — lehká, těžká, sametová, ostrá. Hrb. Starý."'
+  },
+  {
+    cislo: '09', uhel: '120° Jazykový', protilehly: '300° Absurdní',
+    nazev: 'Anafora přes negaci + zvuková distinktivnost',
+    citace: '„Ne kráčet — ale klouzat. Ne mluvit — ale šeptat. Ne žít — ale být." / „nosí / nese"',
+    analyza_tag: 'Jazyková struktura v pohádce',
+    analyza: 'Pohádka má dvě jazykové techniky, které jsou slyšet: (1) anafora přes „Ne X — ale Y" — tříčlenná série, kde každý pár graduje od fyzického ke spirituálnímu. (2) Závěrečná zvuková hra „nosí/nese" — dvě slova, která se liší jedinou samohláskou, ale nesou zcela odlišný smysl (pasivní vs. aktivní, lehké vs. těžké). Jazykový úhel je v pohádce přítomný i v rytmu anaforické struktury.',
+    ukol_tag: 'Váš úkol — záměrné použití',
+    ukol: 'Část A: Napiš vlastní tříčlennou anaforu „Ne X — ale Y" kde každý pár graduje od konkrétního k abstraktnímu. Část B: Najdi v češtině dvojici slov lišících se jednou hláskou nebo slabikou, která nesou zcela odlišné konotace (jako nosí/nese). Napiš větu, kde tato distinktivnost nese celý smysl.',
+    intervence_tag: 'Protilehlý úhel: 300° Absurdní — záměrné přerušení rytmu',
+    intervence: 'Vezmi svou anaforu a do třetího páru vlož nečekaný absurdní skok — nikoliv gradaci, ale pád do nesmyslu. Co se stane s celou sérií? Kde je hranice mezi jazykovou hrou a rozpadem syntaxe?',
+    vzor: '„Ne spát — ale snít. Ne snít — ale vědět. Ne vědět — ale." / „Záleží mi. Záleží na mně."'
+  },
+  {
+    cislo: '10', uhel: '300° Absurdní', protilehly: '120° Jazykový',
+    nazev: 'Záměrná absence absurdity — prostor pro intervenci',
+    citace: '— (pohádka má přísnou kauzální logiku, absurdita chybí)',
+    analyza_tag: 'Jazyková struktura v pohádce',
+    analyza: 'Toto je druhý deficitní úhel. Pohádka Liška má přísnou kauzální logiku: každý příchod má svůj motiv, každá ztráta svůj účel, každý důsledek svou příčinu. Není v ní jediný moment, kde by logika selhala nebo byla záměrně rozbitá. Tato absence absurdity je silná — ale také vytváří uzavřený svět bez výjimky.',
+    ukol_tag: 'Váš úkol — záměrné vložení absurdity do kauzálního textu',
+    ukol: 'Napiš text s přísnou kauzální logikou (A způsobí B, B způsobí C) — a pak do středu textu vlož jednu absurdní větu, která kauzální řetězec přeruší, ale pokračuje, jako by se nic nestalo. Sleduj, co tato věta udělá s důvěryhodností celého textu.',
+    intervence_tag: 'Protilehlý úhel: 120° Jazykový — absurditu utlumit jazykem',
+    intervence: 'Přečti absurdní větu, kterou jsi vložil/a. Zkus ji přepsat tak, aby zněla kauzálně — přidej spojku „protože" nebo „a tedy." Stane se méně absurdní? Nebo se stane ještě absurdnější?',
+    vzor: '„Přišli zedníci. Vzali jí zeď. V pondělí přišel slon a omluvil se. Zůstaly jen stopy. Pak přišla zdravotní pojišťovna."'
+  },
+  {
+    cislo: '11', uhel: '150° Metaforický', protilehly: '330° Surrealistický',
+    nazev: 'Tělo jako krajina, krajina jako emoce',
+    citace: '„kožich, který se leskl jako podzimní večer" / „stromy nekláněné tíží slov"',
+    analyza_tag: 'Jazyková struktura v pohádce',
+    analyza: 'Dominantní úhel pohádky. Liška funguje jako metaforické pole, kde se tělo, příroda a emoce překrývají v jednom obrazu. Kožich = podzimní večer propojí povrch těla s denní dobou a ročním obdobím. Stromy nekláněné větrem, ale tíží slov: kauzalita ve fyzickém světě je nahrazena kauzalitou jazykovou. Metafory v pohádce nejsou ozdoba — jsou nosná konstrukce.',
+    ukol_tag: 'Váš úkol — záměrné použití',
+    ukol: 'Napiš popis krajiny, která nereaguje na fyzické příčiny, ale na jazykové nebo emocionální. Co ohýbá stromy? Co způsobuje vítr? Co roztaje led? Každá přírodní reakce musí mít neviditelnou, ale logickou příčinu ze světa slov, emocí nebo myšlenek.',
+    intervence_tag: 'Protilehlý úhel: 330° Surrealistický — přerušit metaforické pole',
+    intervence: 'Vezmi jednu ze svých metafor a rozviň ji surrealisticky: co se stane, když metaforu dovedeme doslova? Pokud stromy klání tíži slov — kolik kilo váží věta „miluji tě"? A co udělá s kořeny?',
+    vzor: '„V parku rostly lavičky směrem, odkud přišel poslední dopis. V zimě zmrzly v půl slova."'
+  },
+  {
+    cislo: '12', uhel: '330° Surrealistický', protilehly: '150° Metaforický',
+    nazev: 'Obrácená fyzika — ticho má tvar',
+    citace: '„stromy nekláněly kvůli větru, ale kvůli tíze slov" / „ticho, které má tvar"',
+    analyza_tag: 'Jazyková struktura v pohádce',
+    analyza: 'Pohádka otevírá surrealistickým obrazem: fyzika světa je obrácená — příčina a efekt jsou prohozeny. Stromy reagují na jazyk, ne na vzduch. „Ticho, které má tvar" je synestézie — abstraktní zvukový pojem dostane hmatovou vlastnost. Surrealistický úhel pohádky funguje jako rámec (úvod + závěr), zatímco vnitřek pohádky je kauzálně přísný.',
+    ukol_tag: 'Váš úkol — záměrné použití',
+    ukol: 'Napiš světopis: popis světa, kde fyzikální zákony reagují na jazyk nebo emoce. Minimálně pět pravidel tohoto světa. Pak napiš jednu scénu, kde postava v tomto světě žije, aniž by ho komentovala — jako by to bylo přirozené.',
+    intervence_tag: 'Protilehlý úhel: 150° Metaforický — ukotvit surreální obraz',
+    intervence: 'Vezmi jeden ze svých obrácených fyzikálních zákonů a napiš metaforu, která ho vysvětlí srozumitelně pro čtenáře z normálního světa. Ne vysvětlení — metaforu. Co metafora přidá nebo ubere ze surreálního efektu?',
+    vzor: '„V tomto světě voda teče tam, kde je nejvíce ticho. Proto jsou studny tam, kde se přestalo mluvit."'
+  }
+];
+
+const list = document.getElementById('ws-list');
+workshops.forEach(w => {
+  const div = document.createElement('div');
+  div.className = 'workshop';
+  div.innerHTML = `
+    <div class="w-header" onclick="toggle(this)">
+      <span class="w-num">${w.cislo}</span>
+      <div class="w-meta">
+        <div class="w-nazev">${w.nazev}</div>
+        <div class="w-uhel">${w.uhel} · protilehlý: ${w.protilehly}</div>
+      </div>
+      <span class="w-toggle">+</span>
+    </div>
+    <div class="w-body">
+      <div class="blok-citace"><strong>Z pohádky</strong>${w.citace}</div>
+      <div class="blok-analyza">
+        <div class="blok-tag">${w.analyza_tag}</div>
+        <div class="blok-text">${w.analyza}</div>
+      </div>
+      <div class="blok-ukol">
+        <div class="blok-tag">${w.ukol_tag}</div>
+        <p class="blok-zadani">${w.ukol}</p>
+      </div>
+      <div class="blok-citace" style="color:rgba(168,152,128,.4);border-left-color:rgba(168,152,128,.2)"><strong>Vzorová věta</strong>${w.vzor}</div>
+      <div class="blok-intervence">
+        <div class="blok-tag">${w.intervence_tag}</div>
+        <p class="blok-opak">${w.intervence}</p>
+      </div>
+      <div>
+        <div class="blok-tag" style="margin-top:14px;margin-bottom:6px">Váš text · 20 minut</div>
+        <textarea placeholder="Pište sem — bez zastavení, bez opravování..."></textarea>
+      </div>
+    </div>`;
+  list.appendChild(div);
+});
+
+function toggle(header) {
+  const body = header.nextElementSibling;
+  const tog = header.querySelector('.w-toggle');
+  const open = body.classList.toggle('open');
+  tog.textContent = open ? '−' : '+';
+}
+</script>
+</body>
+</html>
