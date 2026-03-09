@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Osel — kreativní miniatury</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{--bg:#0f0f0f;--surface:#161616;--surface2:#1c1c1c;--cream:#e8e0d0;--dim:rgba(232,224,208,.42);--accent:#7a8090;--border:rgba(122,128,144,.2);--serif:'Cormorant Garamond',Georgia,serif;--mono:'DM Mono',monospace}
+    html{scroll-behavior:smooth}
+    body{background:var(--bg);color:var(--cream);font-family:var(--mono);font-size:14px;line-height:1.8;-webkit-font-smoothing:antialiased}
+    a{color:inherit;text-decoration:none}
+    p{margin-bottom:10px}p:last-child{margin-bottom:0}
+    .wrap{max-width:760px;margin:0 auto;padding:0 28px}
+    nav{position:sticky;top:0;z-index:100;border-bottom:1px solid var(--border);background:rgba(15,15,15,.92);backdrop-filter:blur(12px);padding:14px 28px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+    .nav-back{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);transition:color .2s}
+    .nav-back:hover{color:var(--cream)}
+    .nav-title{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--accent)}
+    .hero{padding:0 0 56px;border-bottom:1px solid var(--border)}
+    .hero-ilustrace{width:100%;max-height:380px;overflow:hidden;margin-bottom:40px;position:relative}
+    .hero-ilustrace img{width:100%;height:380px;object-fit:cover;object-position:center 30%;filter:grayscale(100%) contrast(1.08);display:block}
+    .hero-ilustrace-caption{position:absolute;bottom:12px;right:16px;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:rgba(232,224,208,.3)}
+    .hero-label{font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:var(--accent);margin-bottom:20px}
+    .hero h1{font-family:var(--serif);font-size:clamp(3rem,7vw,5.5rem);font-weight:300;line-height:1.0;color:var(--cream);margin-bottom:8px}
+    .hero h1 em{font-style:italic;color:var(--accent)}
+    .hero-veta{font-family:var(--serif);font-size:clamp(.95rem,2vw,1.25rem);font-style:italic;color:var(--dim);border-left:1px solid var(--accent);padding-left:20px;max-width:500px;margin:20px 0 36px;line-height:1.9}
+    .fenomen-box{border:1px solid var(--accent);padding:20px 22px;margin-bottom:32px;background:rgba(122,128,144,.06)}
+    .fenomen-label{font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin-bottom:10px}
+    .fenomen-text{font-size:13px;color:rgba(232,224,208,.7);line-height:1.8}
+    .var-bar{display:flex;gap:1px;background:var(--border);border:1px solid var(--border)}
+    .var-btn{flex:1;padding:13px 12px;background:var(--surface);border:none;cursor:pointer;font-family:var(--mono);font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;color:var(--dim);transition:background .12s,color .12s;text-align:center}
+    .var-btn:hover{background:#1e1e1e;color:var(--cream)}
+    .var-btn.active{background:var(--accent);color:var(--bg)}
+    .var-popis{padding:12px 16px;font-size:.8rem;color:var(--dim);border:1px solid var(--border);border-top:none;background:var(--surface)}
+    .sekce{padding:56px 0;border-bottom:1px solid var(--border)}
+    .sekce-label{font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin-bottom:16px}
+    h2{font-family:var(--serif);font-size:clamp(1.5rem,3.5vw,2.2rem);font-weight:300;color:var(--cream);margin-bottom:18px}
+    h2 em{font-style:italic;color:var(--accent)}
+    .pohadka-outer{border:1px solid var(--border);background:var(--surface);max-height:420px;overflow-y:auto;padding:0 28px}
+    .pohadka{font-family:var(--serif);font-style:italic;font-size:.97rem}
+    .pohadka p{padding:.45em 0;color:rgba(232,224,208,.8)}
+    .pohadka-outer::-webkit-scrollbar{width:2px}
+    .pohadka-outer::-webkit-scrollbar-thumb{background:var(--accent)}
+    .btn-diag{margin-top:20px;padding:12px 28px;font-size:11px;letter-spacing:.12em;text-transform:uppercase;background:var(--accent);color:var(--bg);border:none;cursor:pointer;font-family:var(--mono);transition:background .15s}
+    .btn-diag:hover{background:#8a92a8}
+    .diag-vysledek{display:none;border:1px solid var(--accent);padding:24px;margin-top:20px;background:var(--surface)}
+    .diag-vysledek h3{font-family:var(--serif);font-size:1.1rem;font-weight:400;color:var(--cream);margin-bottom:10px}
+    .dominant{font-size:.82rem;color:var(--dim);margin-bottom:16px}
+    .navrh-btn{display:block;width:100%;padding:11px 16px;margin-bottom:6px;background:transparent;border:1px solid var(--border);color:var(--cream);font-family:var(--mono);font-size:.82rem;text-align:left;cursor:pointer;transition:background .12s,border-color .12s}
+    .navrh-btn:hover{background:var(--accent);border-color:var(--accent);color:var(--bg)}
+    .navrh-btn:last-child{margin-bottom:0}
+    .uhel{border-bottom:1px solid var(--border)}
+    .uhel-header{display:grid;grid-template-columns:52px 1fr auto;padding:18px 0;cursor:pointer;align-items:center}
+    .uhel-header:hover .uhel-nazev{color:var(--accent)}
+    .u-num{font-family:var(--serif);font-size:1.7rem;font-weight:300;color:rgba(122,128,144,.2);line-height:1}
+    .uhel-nazev{font-size:.88rem;font-weight:400;color:var(--cream)}
+    .uhel-sub{font-size:.72rem;color:var(--dim);margin-top:3px;font-style:italic;font-family:var(--serif)}
+    .u-toggle{font-size:.72rem;color:var(--dim)}
+    .uhel-body{display:none;padding:0 0 28px 52px}
+    .uhel-body.open{display:block}
+    .blok-label{font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);margin-bottom:6px;margin-top:14px}
+    .blok-label:first-child{margin-top:0}
+    .blok-text{font-size:.86rem;color:rgba(232,224,208,.7);line-height:1.75}
+    .blok-text.italic{font-family:var(--serif);font-style:italic;font-size:.93rem;color:rgba(232,224,208,.6)}
+    .zadani-blok{margin-bottom:14px}
+    .pravidla{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0}
+    .pravidlo{background:var(--surface2);padding:14px;border-left:2px solid var(--border)}
+    .pravidlo.p2{border-left-color:var(--accent)}
+    .jazykovy-blok{background:rgba(122,128,144,.06);border-left:2px solid var(--accent);padding:14px 16px;margin:14px 0}
+    .protilehly-link{font-size:.76rem;color:var(--dim);font-style:italic;margin-top:12px}
+    .protilehly-link a{color:var(--accent);text-decoration:underline;text-underline-offset:2px;cursor:pointer}
+    .pisarna textarea{width:100%;background:var(--surface);border:1px solid var(--border);color:var(--cream);padding:12px;font-family:var(--mono);font-size:.85rem;line-height:1.7;resize:vertical;min-height:90px;margin-top:8px}
+    textarea:focus{outline:1px solid var(--accent)}
+    textarea::placeholder{color:rgba(232,224,208,.2)}
+    .tbl-outer{border:1px solid var(--border);overflow-x:auto;margin-top:20px}
+    table{width:100%;border-collapse:collapse;font-size:.78rem}
+    thead tr{border-bottom:1px solid var(--border)}
+    thead th{padding:12px 16px;text-align:left;font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);font-weight:400;font-family:var(--mono)}
+    tbody tr{border-bottom:1px solid rgba(122,128,144,.07)}
+    tbody td{padding:12px 16px;color:rgba(232,224,208,.6);vertical-align:top}
+    tbody td:first-child{color:var(--accent);font-size:.72rem;white-space:nowrap}
+    tbody td:nth-child(2){color:rgba(232,224,208,.5);font-style:italic}
+    .footer{padding:36px 0;border-top:1px solid var(--border);display:flex;justify-content:space-between;flex-wrap:wrap;gap:14px}
+    .footer p{font-size:.76rem;color:var(--dim)}
+    .footer a{color:var(--accent)}
+    .footer a:hover{text-decoration:underline}
+    @media(max-width:560px){.pravidla{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+<nav>
+  <a class="nav-back" href="../../../index.html">← Všechna zvířata</a>
+  <span class="nav-title">Osel</span>
+</nav>
+<div class="wrap">
+
+<section class="hero">
+  <div class="hero-ilustrace">
+    <img src="/doma/ilustrace/osel.jpg" alt="Osel" onerror="this.style.display='none';this.parentElement.style.background='var(--surface2)'">
+    <span class="hero-ilustrace-caption">ilustrace · osel</span>
+  </div>
+  <p class="hero-label">Kreativní miniatura · Karta Osel</p>
+  <h1>Osel</h1>
+  <p class="hero-veta">„Levá. Pravá. Seno. Sláma. — všechno se mi míchá."</p>
+  <div class="fenomen-box">
+    <div class="fenomen-label">Fenomén Osla — pohyb bez orientace jako forma moudrosti</div>
+    <p class="fenomen-text">Příběh o tom, když se binární opozice (levá/pravá, seno/sláma) stanou nerozlišitelnými. Osel zkoumá, co znamená jít dál, i když nevíš, kam. A jak se z toho může stát průvodcovství. Cedulka s relativním smyslem, myš jako neutrální svědek, oslovina jako definice pohybu skrze pohyb.</p>
+  </div>
+  <div class="var-bar">
+    <button class="var-btn active" onclick="setVar('A',this)">🎲 Náhodně</button>
+    <button class="var-btn" onclick="setVar('B',this)">🧭 Podle nálady</button>
+    <button class="var-btn" onclick="setVar('C',this)">🔍 Diagnosticky</button>
+  </div>
+  <div class="var-popis" id="var-popis">Zavřete oči, ťukněte prstem na obrazovku a udělejte ten úhel, který vybere prst.</div>
+</section>
+
+<section class="sekce">
+  <p class="sekce-label">Pohádka · přečtěte pomalu</p>
+  <h2>O oslovi, <em>který šel vlevo, ale myslel si, že jde vpravo</em></h2>
+  <p style="font-size:.82rem;color:var(--dim);margin-bottom:16px;">Sledujte kde vás zastaví — kde cítíte odpor nebo poznání.</p>
+  <div class="pohadka-outer"><div class="pohadka">
+    <p>Osel se narodil mezi dvěma hromadami.  <br>Jedna byla seno.  <br>Druhá sláma.  <br>A nikdo mu neřekl, která je která.</p>
+    <p>„Levá,“ řekl někdo.  <br>„Pravá,“ řekl jiný.  <br>„Seno,“ řekl hlas.  <br>„Sláma,“ řekl stín.</p>
+    <p>Osel se podíval.  <br>Obě hromady vypadaly stejně.  <br>Jedna trochu měkčí.  <br>Jedna trochu hlučnější.  <br>Ale jinak? Chaos.</p>
+    <p>„Pro jednoho psina,“ řekl hlas.  <br>„Pro druhého oslovina,“ dodal jiný.  <br>A osel se zamyslel:  <br>„Kdo jsem já? Psina, nebo oslovina?“</p>
+    <p>Šel vlevo.  <br>Pak se otočil.  <br>A šel vpravo.  <br>Ale vypadalo to stejně.  <br>Země byla země.  <br>Hromada byla hromada.  <br>A pravidla? Neviditelná.</p>
+    <p>Potkal myš.  <br>Ta si zapisovala, co se děje.  <br>„Kam jdeš?“ zeptala se.  <br>„Nevím,“ řekl osel.  <br>„Levá, pravá, seno, sláma. Všechno se mi míchá.“</p>
+    <p>Myš si poznamenala:  <br>Osel – zmatený, ale důsledný.</p>
+    <p>„A co hledáš?“  <br>„Správnost,“ řekl osel.  <br>„A co to je?“  <br>„To, co se neřekne nahlas, ale všichni to očekávají.“</p>
+    <p>Myš se zamyslela.  <br>A pak mu podala cedulku.  <br>Na jedné straně bylo napsáno „seno“.  <br>Na druhé „sláma“.  <br>Ale písmo bylo stejné.</p>
+    <p>Osel si ji pověsil na krk.  <br>A šel dál.  <br>Levá.  <br>Pravá.  <br>Seno.  <br>Sláma.</p>
+    <p>A když ho někdo zastavil a zeptal se:  <br>„Kam jdeš?“  <br>Řekl:  <br>„Podle cedulky.“  <br>„A co je na ní?“  <br>„To, co si myslíš, že tam je.“</p>
+    <p>A tak se stal průvodcem.  <br>Ne tím, co ví.  <br>Ale tím, co jde.  <br>A když se někdo ztratil,  <br>šel za oslem.  <br>Protože i když neví,  <br>vypadá, že ví.</p>
+    <p>A když se někdo ptal, co je to „oslovina“,  <br>myš řekla:  <br>„To je, když jdeš dál, i když nevíš, kam.“</p>
+  </div></div>
+</section>
+
+<section class="sekce">
+  <p class="sekce-label">Jazykové jevy v pohádce</p>
+  <h2>Co pohádka dělá s jazykem — <em>a co z toho cvičíme</em></h2>
+  <div class="tbl-outer">
+    <table>
+      <thead><tr><th>Jev</th><th>Ukázka z textu</th></tr></thead>
+      <tbody>
+        <tr><td>Binární opozice bez rozlišení</td><td>„Levá. Pravá. Seno. Sláma. — obojí stejně."</td></tr>
+        <tr><td>Hlas bez těla (ztráta agenta)</td><td>„řekl někdo", „řekl hlas", „řekl stín"</td></tr>
+        <tr><td>Rytmická série / parataxe</td><td>„Levá. / Pak se otočil. / A šel vpravo."</td></tr>
+        <tr><td>Neutrální svědek</td><td>„Myš si poznamenala: Osel – zmatený, ale důsledný."</td></tr>
+        <tr><td>Tautologie jako osvícení</td><td>„To, co si myslíš, že tam je."</td></tr>
+        <tr><td>Neologismus jako definice pohybu</td><td>„oslovina = jít dál, i když nevíš, kam"</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="sekce" id="uhly">
+  <p class="sekce-label">12 úhlů fenoménu Osla</p>
+  <h2>Váš úhel — nebo nechte <em>vybrat příběh.</em></h2>
+  <div id="uhly-list"></div>
+</section>
+
+<section class="sekce">
+  <p class="sekce-label">Tabulka jazykových fenoménů</p>
+  <h2>Co říká váš jazyk — <em>ne obsah, ale forma.</em></h2>
+  <div class="tbl-outer">
+    <table>
+      <thead><tr><th>Úhel</th><th>Jazykový fenomén</th><th>Intervence (protilehlý)</th></tr></thead>
+      <tbody id="tabulka-jevy"></tbody>
+    </table>
+  </div>
+</section>
+
+<footer class="footer">
+  <p>Karta Osel · Chceš myš? — kreativní miniatury · © 2026 Michaela Nováková</p>
+  <p><a href="../../../index.html">← Zpět</a> · <a href="mailto:chcesmys@gmail.com">chcesmys@gmail.com</a></p>
+</footer>
+</div>
+
+<script>
+// ========== DATA ==========
+const angles = [
+  {
+    nazev: 'Levá. Pravá. — parataxe bez hierarchie',
+    sub: 'Rytmická série / věty bez spojek',
+    tech: 'Parataxe — věty vedle sebe bez nadřazenosti — vytváří jiný rytmus než hypotaxe. Pohádka Osel ji používá jako formu zmatku i klidné jistoty zároveň.',
+    cil: 'Věnuj se úkolu Hlas bez těla – pracuj s neurčitými mluvčími',
+    zadani: 'Napiš text, kde každá věta je stejně krátká, stejně důležitá, bez spojek. Žádná hierarchie. Žádné „protože“, „ale“, „a“. Jen věty za sebou. Nech čtenáře, aby si hierarchii vytvořil sám.',
+    protilehly: 1
+  },
+  {
+    nazev: 'Řekl někdo. Řekl hlas. Řekl stín.',
+    sub: 'Hlas bez těla / ztráta agenta',
+    tech: 'Pohádka Osel záměrně vynechává agenta. Tato technika pracuje se ztrátou identity mluvčího jako dramatickým nástrojem — kde přijde nejistota, přijde napětí.',
+    cil: 'Věnuj se úkolu Parataxe – piš krátké věty bez určení mluvčího',
+    zadani: 'Napiš dialog, kde nikdo z mluvčích nemá jméno ani tělo — jen označení: Hlas, Stín, Někdo, Ticho, Pauza. Přesto musí dialog mít napětí, smysl, konflikt. Co se přihodí, když neurčíme, kdo mluví?',
+    protilehly: 0
+  },
+  {
+    nazev: 'Cedulka s prázdnou instrukcí',
+    sub: 'Prázdný / relativní signifier',
+    tech: 'Myš dá Oslovi cedulku, jejíž obsah je relativní. Tato technika rozvíjí schopnost pracovat s polysémií — text nemá jeden správný výklad.',
+    cil: 'Věnuj se úkolu Neutrální svědek – piš bez hodnocení',
+    zadani: 'Vymysli cedulku s nápisem, který každý čte jinak. Napiš text o čtyřech různých lidech, kteří cedulku vidí — a každý z ní odečte jiné sdělení. Nesmíš říct, co na cedulce „opravdu“ stojí.',
+    protilehly: 3
+  },
+  {
+    nazev: 'Neutrální svědek — zápis bez hodnocení',
+    sub: 'Neutrální svědek (Myš)',
+    tech: 'Myš zapisuje „Osel — zmatený, ale důsledný“ — bez moralizování. Neutrální svědek je technika z terapeutického psaní i z reportáže.',
+    cil: 'Věnuj se úkolu Prázdný signifier – pracuj s významem, který si čtenář dotváří sám',
+    zadani: 'Napiš zprávu o události, ve které se ti stalo něco emočně nabitého. Ale piš jako myš — jen fakta, žádné hodnocení. „Osoba X učinila Y. Výsledek: Z.“ Na konci jeden řádek: co si to prohlédnutí udělalo s tebou.',
+    protilehly: 2
+  },
+  {
+    nazev: 'Dvě hromady, které vypadají stejně',
+    sub: 'Binární opozice bez rozlišení',
+    tech: 'Pohádka Osel pracuje s nerozlišitelností binárních opozic — tato technika procvičuje epistemologickou skromnost a odmítnutí falešné jasnosti.',
+    cil: 'Věnuj se úkolu Neologismus – vytvoř vlastní slovo pro nejistotu',
+    zadani: 'Vyber dvě věci, které by měly být jasně odlišené, ale pro tebe nejsou. Napiš text, kde se je pokoušíš rozlišit — a stále nemůžeš. Co to říká o tobě? O věcech? O jazyce?',
+    protilehly: 5
+  },
+  {
+    nazev: 'Jít dál, i když nevíš, kam — oslovina',
+    sub: 'Neologismus jako definice pohybu',
+    tech: 'Pohádka Osel vytvoří slovo „oslovina“ jako vědomý neologismus. Tato technika — lexikální tvorba — patří k nejstarším literárním nástrojům.',
+    cil: 'Věnuj se úkolu Binární opozice – zkoumej hranice mezi zdánlivě jasnými dvojicemi',
+    zadani: 'Vymysli slovo pro způsob bytí, pro který čeština nemá výraz. Napiš jeho definici — ale ne slovníkovou, spíš narativní. Co toto slovo dělá? Kdy nastane? Kdo ho zná?',
+    protilehly: 4
+  },
+  {
+    nazev: 'Průvodce, který neví',
+    sub: 'Paradoxní autorita',
+    tech: 'Osel se stane průvodcem ne proto, že ví — ale proto, že jde. Tato technika pracuje s paradoxem kompetence: důvěra se nebuduje znalostí, ale pohybem.',
+    cil: 'Věnuj se úkolu Tautologie – hledej pravdu v kruhových definicích',
+    zadani: 'Napiš průvodcovský text (k místu, situaci, textu) — ale průvodce upřímně neví. Přiznává to, ale pokračuje dál. Jak vypadá autorita, která je transparentní ohledně své nevědomosti?',
+    protilehly: 7
+  },
+  {
+    nazev: 'Tautologie jako osvícení',
+    sub: 'Kruhová definice',
+    tech: 'Myš závěrem definuje oslovinu skrze pohyb pohybem — tautologie, která ale nese obsah. Tato technika prozkoumává hranici mezi prázdnou řečí a zenovou moudrostí.',
+    cil: 'Věnuj se úkolu Paradoxní autorita – veď, i když nevíš',
+    zadani: 'Napiš deset tautologií. Věty, které říkají totéž jinými slovy — ale přesto v nich cítíš pravdu. „Pravda je to, co je pravdivé.“ Proč některé tautologie zní jako moudrost a jiné jako nesmysl?',
+    protilehly: 6
+  },
+  {
+    nazev: 'Zmatený, ale důsledný',
+    sub: 'Paradoxní charakterizace',
+    tech: 'Myš popisuje Osla jako „zmatený, ale důsledný“ — tato antitetická charakterizace zachytí víc než jednorozměrný popis. Technika pochází z dramatické charakterizace.',
+    cil: 'Věnuj se úkolu Militarní rytmus – piš text jako pochod',
+    zadani: 'Popiš postavu nebo sebe pomocí paradoxních přívlastků — vlastností, které se vylučují, ale přesto oba platí. Minimálně osm párů. Pak jeden odstavec: jak tyto paradoxy spolupracují?',
+    protilehly: 9
+  },
+  {
+    nazev: 'Levá pravá seno sláma — text jako pochod',
+    sub: 'Militarní rytmus / echo',
+    tech: 'Text pohádky Osel je psaný jako vojenský pokyn — Levá. Pravá. — přenesený na existenciální otázku. Technika kontrastu formy a obsahu.',
+    cil: 'Věnuj se úkolu Paradoxní charakterizace – spoj protiklady v jedné postavě',
+    zadani: 'Napiš text, jehož rytmus napodobuje pochod: pravidelný, opakující se, bez zastavení. Každé dva kroky — jedna informace. Zvol téma, které se zdá neslučitelné s pochodem (smutek, pochybnost, láska).',
+    protilehly: 8
+  },
+  {
+    nazev: 'Co si myslíš, že tam je',
+    sub: 'Relativní signifier / Reader-response',
+    tech: 'Cedulka v pohádce funguje jako prázdný signifier — každý si přečte co chce. Tato technika pracuje s reader-response teorií: text dokončuje čtenář.',
+    cil: 'Věnuj se úkolu Prázdná místa – nech čtenáře spolupracovat',
+    zadani: 'Napiš text, který záměrně zanechává prázdná místa — místa, která čtenář musí vyplnit sám. Nesmíš je označit jako prázdná. Čtenář musí sám přijít na to, že text počítá s jeho spoluautorstvím.',
+    protilehly: 11
+  },
+  {
+    nazev: 'Osel jako průvodce — mapa neorientace',
+    sub: 'Navigace bez kompasu',
+    tech: 'Osel se orientuje skrze dezorientaci — tato technika využívá ztrátu jako kognitivní nástroj. Psychogeografie, dérive, situacionismus.',
+    cil: 'Věnuj se úkolu Prázdný signifier – význam se tvoří až v hlavě čtenáře',
+    zadani: 'Napiš průvodce místem, které dobře znáš — ale z pohledu někoho, kdo se tam ztratí. Každý bod: kde si byl a co jsi si myslel, kde jsi. Na konci: jak se ztracení stalo jinou formou poznání místa.',
+    protilehly: 10
+  }
+];
+
+// Tabulka jevů pro rychlý přehled
+const tabulkaJevy = [
+  { uhel: 'Levá. Pravá.', jev: 'Parataxe, krátké věty bez spojek', intervence: 'Hlas bez těla – dialog bez určených mluvčích' },
+  { uhel: 'Řekl někdo. Řekl hlas.', jev: 'Ztráta agenta, neurčitý mluvčí', intervence: 'Parataxe – věty bez hierarchie' },
+  { uhel: 'Cedulka', jev: 'Prázdný / relativní signifier', intervence: 'Neutrální svědek – zápis bez hodnocení' },
+  { uhel: 'Myš', jev: 'Neutrální svědek, faktický záznam', intervence: 'Prázdný signifier – význam si čtenář dotváří sám' },
+  { uhel: 'Seno / sláma', jev: 'Binární opozice bez rozlišení', intervence: 'Neologismus – tvorba nových slov' },
+  { uhel: 'Oslovina', jev: 'Neologismus, definice pohybu', intervence: 'Binární opozice – zkoumání hranic' },
+  { uhel: 'Průvodce', jev: 'Paradoxní autorita (ví, že neví)', intervence: 'Tautologie – kruhové definice' },
+  { uhel: 'Tautologie', jev: 'Kruhová definice jako moudrost', intervence: 'Paradoxní autorita – veď, i když nevíš' },
+  { uhel: 'Zmatený, ale důsledný', jev: 'Paradoxní charakterizace', intervence: 'Militarní rytmus – text jako pochod' },
+  { uhel: 'Text jako pochod', jev: 'Militarní rytmus, kontrast formy a obsahu', intervence: 'Paradoxní charakterizace – spojování protikladů' },
+  { uhel: 'Co si myslíš, že tam je', jev: 'Relativní signifier, reader-response', intervence: 'Prázdná místa – nechat čtenáře spolupracovat' },
+  { uhel: 'Mapa neorientace', jev: 'Navigace bez kompasu, ztráta jako nástroj', intervence: 'Prázdný signifier – význam se tvoří až v hlavě čtenáře' }
+];
+
+// ========== FUNKCE PRO ROZHRANÍ ==========
+function buildAngles() {
+  const list = document.getElementById('uhly-list');
+  angles.forEach((a, i) => {
+    const div = document.createElement('div');
+    div.className = 'uhel';
+    div.id = 'u-' + i;
+    div.innerHTML = `
+      <div class="uhel-header" onclick="toggleU(${i})">
+        <span class="u-num">${i + 1}</span>
+        <div>
+          <div class="uhel-nazev">${a.nazev}</div>
+          <div class="uhel-sub">${a.sub}</div>
+        </div>
+        <span class="u-toggle" id="t-${i}">+</span>
+      </div>
+      <div class="uhel-body" id="b-${i}">
+        <div class="zadani-blok">
+          <div class="blok-label">Kreativní úkol · 20 minut</div>
+          <p class="blok-text">${a.zadani}</p>
+        </div>
+        <div class="pravidla">
+          <div class="pravidlo p1">
+            <div class="blok-label">Jazykové zaměření</div>
+            <p class="blok-text">${a.tech}</p>
+          </div>
+          <div class="pravidlo p2">
+            <div class="blok-label">Co tím trénuješ</div>
+            <p class="blok-text">${a.cil}</p>
+          </div>
+        </div>
+        <div class="pisarna">
+          <div class="blok-label">Váš text</div>
+          <textarea placeholder="Pište sem — bez opravování, bez zastavení..."></textarea>
+        </div>
+        <p class="protilehly-link">Protilehlý úhel: <a onclick="jumpU(${a.protilehly})">${a.protilehly + 1}. ${angles[a.protilehly].nazev}</a></p>
+      </div>`;
+    list.appendChild(div);
+  });
+}
+buildAngles();
+
+function buildTabulku() {
+  const tbody = document.getElementById('tabulka-jevy');
+  tabulkaJevy.forEach((row, i) => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td>${i + 1}. ${row.uhel}</td><td>${row.jev}</td><td>${row.intervence}</td>`;
+    tbody.appendChild(tr);
+  });
+}
+buildTabulku();
+
+function toggleU(i) {
+  const b = document.getElementById('b-' + i);
+  const t = document.getElementById('t-' + i);
+  const o = b.classList.toggle('open');
+  t.textContent = o ? '−' : '+';
+}
+
+function jumpU(i) {
+  if (!document.getElementById('b-' + i).classList.contains('open')) toggleU(i);
+  document.getElementById('u-' + i).scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+const varText = {
+  A: 'Zavřete oči, ťukněte prstem na obrazovku a udělejte ten úhel, který vybere prst.',
+  B: 'Přečtěte si 12 úhlů a vyberte ten, který nejlépe popisuje vaši aktuální zkušenost s fenomény osla.',
+  C: 'Klikněte na tlačítko níže — systém vybere náhodný úhel (diagnostika zatím pracuje s náhodou).'
+};
+
+function setVar(v, btn) {
+  document.querySelectorAll('.var-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('var-popis').textContent = varText[v];
+  if (v === 'A') {
+    const r = Math.floor(Math.random() * 12);
+    setTimeout(() => { jumpU(r); }, 300);
+  }
+  if (v === 'C') {
+    const r = Math.floor(Math.random() * 12);
+    document.getElementById('diag-out-vyznam').style.display = 'block';
+    document.getElementById('diag-dominant').innerHTML = `Váš náhodný úhel: <strong>${r + 1}. ${angles[r].nazev}</strong>`;
+    document.getElementById('diag-navrhy').innerHTML = `
+      <button class="navrh-btn" onclick="jumpU(${r})">→ Přejít na úhel ${r + 1}</button>
+      <button class="navrh-btn" onclick="jumpU(${angles[r].protilehly})">→ Protilehlý (intervence): ${angles[r].protilehly + 1}. ${angles[angles[r].protilehly].nazev}</button>`;
+  }
+}
+</script>
+</body>
+</html>
