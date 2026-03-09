@@ -4,7 +4,7 @@
 - [analyzér](doma/nastroje/analyzer.html)
 - [analyzér](doma/nastroje/analyzer_poruch.html)
 - [LIŠKA](doma/karty/Liska/liska_forezni_kreativita.html)
-- [Liška](liska-workshop.html)
+- [Liška](liska_workshop.html)
 - [Liška](doma/karty/Liska/liska.html)
 - [Myš](doma/karty/Mys/index.html)
 - [manifest mezer](doma/data/manifest_mezer.md)
