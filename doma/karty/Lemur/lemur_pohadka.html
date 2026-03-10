@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lemur — pohádka · Chceš myš?</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#07090f;--s:#0d1018;--s2:#12161f;
+  --c:#cdd8e8;--dim:rgba(180,200,230,.35);--a:#7f8c8d;--a2:#5d6d6e;
+  --b:rgba(127,140,141,.12);--b2:rgba(127,140,141,.26);
+  --serif:'Cormorant Garamond',Georgia,serif;--mono:'DM Mono',monospace;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--c);font-family:var(--mono);font-size:13px;line-height:1.85;-webkit-font-smoothing:antialiased}
+.wrap{max-width:780px;margin:0 auto;padding:0 24px}
+
+nav{position:sticky;top:0;z-index:99;border-bottom:1px solid var(--b);background:rgba(7,9,15,.96);backdrop-filter:blur(14px);padding:11px 24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
+.nav-l{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);text-decoration:none;transition:color .15s}
+.nav-l:hover{color:var(--c)}
+.nav-links{display:flex;flex-wrap:wrap;gap:4px}
+.nav-links a{font-size:9px;letter-spacing:.11em;text-transform:uppercase;color:var(--dim);text-decoration:none;padding:4px 8px;border:1px solid transparent;border-radius:2px;transition:all .15s;white-space:nowrap}
+.nav-links a:hover,.nav-links a.active{color:var(--a);border-color:var(--b2)}
+
+.hero{padding:52px 0 36px;border-bottom:1px solid var(--b)}
+.hero-tag{font-size:10px;letter-spacing:.26em;text-transform:uppercase;color:var(--a2);margin-bottom:14px}
+.hero h1{font-family:var(--serif);font-size:clamp(3rem,8vw,5.4rem);font-weight:300;line-height:.95;letter-spacing:-.02em;margin-bottom:6px}
+.hero h1 em{font-style:italic;color:var(--a)}
+.hero-sub{font-family:var(--serif);font-style:italic;font-size:.9rem;color:var(--dim);border-left:1px solid var(--a2);padding-left:16px;margin:18px 0 20px;line-height:2;max-width:500px}
+.fenomen{border:1px solid var(--b2);padding:14px 20px;background:rgba(127,140,141,.03)}
+.fenomen-tag{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--a);margin-bottom:7px}
+.fenomen-text{font-size:.8rem;color:rgba(180,200,230,.52);line-height:1.95}
+
+.sec{padding:38px 0;border-bottom:1px solid var(--b)}
+.sec-tag{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--a2);margin-bottom:12px}
+h2{font-family:var(--serif);font-size:clamp(1.1rem,3vw,1.6rem);font-weight:300;margin-bottom:18px}
+h2 em{font-style:italic;color:var(--a)}
+
+/* POHÁDKA */
+.pohadka{font-family:var(--serif);font-size:.94rem;color:rgba(200,218,238,.74);border:1px solid var(--b);background:var(--s);padding:28px 32px;line-height:1}
+.d{display:block;padding:.22em 0}
+.d.br{padding:.55em 0}
+.d.silna{color:var(--a);font-weight:400}
+.d.dim{color:rgba(180,200,230,.38);font-style:italic}
+.d.it{font-style:italic}
+.d.dl{padding-left:1.4em;font-style:italic}
+/* třídy pro 13 anomálií */
+.j1{border-bottom:1px dotted var(--a);cursor:help}
+.j2{border-bottom:1px dashed var(--a2);cursor:help}
+.j3{background:rgba(127,140,141,.1);padding:0 2px;cursor:help}
+.j4{border-bottom:2px dotted var(--a);cursor:help}
+.j5{border-bottom:1px solid var(--a2);cursor:help}
+.j6{background:rgba(127,140,141,.2);padding:0 2px;cursor:help}
+.j7{border-bottom:1px double var(--a);cursor:help}
+.j8{text-decoration:underline wavy var(--a2);cursor:help}
+.j9{border-bottom:1px dashed var(--a);cursor:help}
+.j10{background:rgba(127,140,141,.05);border-bottom:1px dotted var(--a2);cursor:help}
+.j11{text-decoration:line-through 1px solid var(--a);cursor:help}
+.j12{border-left:2px solid var(--a);padding-left:4px;cursor:help}
+.j13{background:rgba(127,140,141,.15);border-radius:2px;padding:0 2px;cursor:help}
+.legenda{margin-top:10px;padding:10px 14px;background:var(--s);border:1px solid var(--b);font-size:.71rem;color:var(--dim);display:flex;flex-wrap:wrap;gap:4px 18px}
+
+/* ANOMÁLIE */
+.anomalie{border:1px solid var(--b);background:var(--s);margin-bottom:3px;overflow:hidden}
+.anomalie-header{display:flex;align-items:center;gap:14px;padding:14px 18px;cursor:pointer;user-select:none}
+.anomalie-header:hover{background:rgba(127,140,141,.04)}
+.a-num{font-family:var(--serif);font-size:1.5rem;font-weight:300;color:rgba(127,140,141,.2);min-width:28px;line-height:1}
+.a-meta{flex:1}
+.a-nazev{font-size:.83rem;color:var(--c);margin-bottom:2px}
+.a-termin{font-size:.69rem;color:var(--a2);letter-spacing:.06em;font-style:italic}
+.a-toggle{font-size:.68rem;color:var(--dim);letter-spacing:.1em;text-transform:uppercase;transition:transform .2s;white-space:nowrap}
+.anomalie.open .a-toggle{transform:rotate(180deg)}
+.anomalie-body{display:none;padding:4px 18px 20px;border-top:1px solid var(--b)}
+.anomalie.open .anomalie-body{display:block}
+.a-citace{font-family:var(--serif);font-style:italic;font-size:.83rem;color:rgba(127,140,141,.5);border-left:1px solid var(--b2);padding:7px 13px;margin:12px 0;line-height:1.85}
+.a-citace span{display:block}
+.a-popis{font-size:.78rem;color:rgba(180,200,230,.54);line-height:1.92;margin-bottom:0}
+
+.cta-box{margin-top:32px;padding:20px 22px;background:var(--s);border:1px solid var(--b2);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+.cta-text{font-size:.8rem;color:var(--dim);max-width:360px;line-height:1.85}
+.btn{padding:10px 22px;font-family:var(--mono);font-size:.75rem;letter-spacing:.1em;text-transform:uppercase;border:none;cursor:pointer;border-radius:2px;transition:all .15s;text-decoration:none;display:inline-block}
+.btn-p{background:var(--a);color:var(--bg)}
+.btn-p:hover{background:#96a3a4}
+.btn-g{background:transparent;color:var(--dim);border:1px solid var(--b)}
+.btn-g:hover{color:var(--c);border-color:var(--b2)}
+
+footer{padding:26px 0;border-top:1px solid var(--b);display:flex;flex-direction:column;gap:12px}
+.footer-links{display:flex;flex-wrap:wrap;gap:8px 16px;justify-content:center}
+.footer-links a{color:var(--a2);font-size:.7rem;text-decoration:none;border-bottom:1px dotted var(--b2)}
+.footer-links a:hover{color:var(--a)}
+footer p{font-size:.7rem;color:var(--dim);text-align:center}
+footer a{color:var(--a)}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-l" href="../../../index.html">← Všechna zvířata</a>
+  <div class="nav-links">
+    <a href="lemur_pohadka.html" class="active">Lemur</a>
+    <a href="mys_pohadka.html">Myš</a>
+    <a href="cap_pohadka.html">Čáp</a>
+    <a href="pav_pohadka.html">Páv</a>
+    <a href="tygr_pohadka.html">Tygr</a>
+    <a href="zelva_pohadka.html">Želva</a>
+    <a href="krokodyl_pohadka.html">Krokodýl</a>
+    <a href="hyena_pohadka.html">Hyena</a>
+    <a href="slon_pohadka.html">Slon</a>
+    <a href="jednorozec_pohadka.html">Jednorožec</a>
+    <a href="ryba_pohadka.html">Ryba</a>
+    <a href="parohy_pohadka.html">Parohy</a>
+    <a href="kravy_pohadka.html">Krávy</a>
+    <a href="beran_pohadka.html">Beran</a>
+    <a href="veverka_pohadka.html">Veverka</a>
+    <a href="husy_pohadka.html">Husy</a>
+    <a href="analyzer.html">Analyzátor</a>
+  </div>
+</nav>
+
+<div class="wrap">
+
+<section class="hero">
+  <p class="hero-tag">Kreativní miniatura · Karta Lemur</p>
+  <h1>Lemur</h1>
+  <p class="hero-sub">„nejlepší je nechat to být vše ostatní je moc nápadné“</p>
+  <div class="fenomen">
+    <div class="fenomen-tag">Fenomén — paradox nenápadnosti</div>
+    <p class="fenomen-text">Lemur se chtěl stát nenápadným. Ale měl oči jak lampy, ocas jak vykřičník a srst jako výkladní skříň. Čím víc se snažil zmizet, tím víc byl vidět. Až když přestal, stal se pravým mistrem nenápadnosti. Pohádka o tom, že někdy je největším úspěchem přestat se snažit.</p>
+  </div>
+</section>
+
+<!-- POHÁDKA -->
+<section class="sec">
+  <p class="sec-tag">Pohádka · čtěte pomalu</p>
+  <h2>O LEMUROVI <em>který nebyl nápadný</em></h2>
+
+  <div class="pohadka">
+    <span class="d">—</span>
+    <span class="d br"></span>
+    <span class="d"><span class="j1" title="Rytmus, opakování předložky">Lemur se narodil v koutku.</span></span>
+    <span class="d"><span class="j1">V koutku místnosti, v koutku světa, v koutku oka.</span></span>
+    <span class="d"><span class="j2" title="Vymezení místa, kde se nic neděje">Tam, kde se věci obvykle nechávají být.</span></span>
+    <span class="d"><span class="j2">Tam, kde se neptá.</span></span>
+    <span class="d"><span class="j2">Tam, kde se neukazuje.</span></span>
+    <span class="d br"></span>
+    <span class="d">A tak si řekl:</span>
+    <span class="d"><span class="j3" title="Hyperbola, přehánění">„Budu nenápadný.“</span></span>
+    <span class="d"><span class="j3">„Budu tak nenápadný, že mě ani moje vlastní stín nepozná.“</span></span>
+    <span class="d"><span class="j3">„Budu tak tichý, že i ticho bude hlasité vedle mě.“</span></span>
+    <span class="d br"></span>
+    <span class="d"><span class="j4" title="Ironie, kontrast mezi snahou a skutečností">Jenže měl oči jak lampy.</span></span>
+    <span class="d"><span class="j4">Ocas vztyčený jak vykřičník.</span></span>
+    <span class="d"><span class="j4">A srst jako výkladní skříň, co se snaží být tapetou.</span></span>
+    <span class="d br"></span>
+    <span class="d"><span class="j5" title="Nedefinovaná postava, archetyp">Vedle něj seděla postava.</span></span>
+    <span class="d"><span class="j5">Klidná.</span></span>
+    <span class="d"><span class="j5">Tichá.</span></span>
+    <span class="d"><span class="j5">Bez barvy.</span></span>
+    <span class="d"><span class="j5">Bez pohybu.</span></span>
+    <span class="d"><span class="j5">Bez potřeby být.</span></span>
+    <span class="d br"></span>
+    <span class="d"><span class="j6" title="Klíčová věta, motto">Řekla: „Nejlepší je nechat to být. Vše ostatní je moc nápadné.“</span></span>
+    <span class="d">A lemur se snažil.</span>
+    <span class="d br"></span>
+    <span class="d"><span class="j7" title="Pokus o potlačení sebe sama">Zhasl oči.</span></span>
+    <span class="d"><span class="j7">Zlomil si ocas (jen obrazně).</span></span>
+    <span class="d"><span class="j7">Přikryl se dekou z nezájmu.</span></span>
+    <span class="d br"></span>
+    <span class="d"><span class="j8" title="Neúspěch snahy, humor">Ale oči mu svítily i pod dekou.</span></span>
+    <span class="d"><span class="j8">Ocas mu trčel i bez svolení.</span></span>
+    <span class="d"><span class="j8">A srst mu zářila jako reklama na klid, co bliká.</span></span>
+    <span class="d br"></span>
+    <span class="d"><span class="j9" title="Paradoxní sebedefinice">„Nejsem nápadný,“ šeptal.</span></span>
+    <span class="d"><span class="j9">„Jsem jen… výrazně nenápadný.“</span></span>
+    <span class="d"><span class="j9">„Jsem jen… ticho, co má barvy.“</span></span>
+    <span class="d"><span class="j9">„Jsem jen… pozadí, co se nedá přehlédnout.“</span></span>
+    <span class="d br"></span>
+    <span class="d"><span class="j10" title="Síla mlčení">Postava vedle něj neřekla nic.</span></span>
+    <span class="d"><span class="j10">Jen se dívala.</span></span>
+    <span class="d"><span class="j10">A to bylo horší než slova.</span></span>
+    <span class="d br"></span>
+    <span class="d"><span class="j11" title="Marné pokusy o splynutí">Lemur se pokusil být stínem.</span></span>
+    <span class="d"><span class="j11">Ale jeho stín měl vlastní názor.</span></span>
+    <span class="d"><span class="j11">Lemur se pokusil být flekem na zdi.</span></span>
+    <span class="d"><span class="j11">Ale flek ho odmítl, protože byl moc výrazný.</span></span>
+    <span class="d br"></span>
+    <span class="d"><span class="j12" title="Kapitulace, přijetí">Nakonec si sedl.</span></span>
+    <span class="d"><span class="j12">Přestal se snažit.</span></span>
+    <span class="d"><span class="j12">Oči mu svítily.</span></span>
+    <span class="d"><span class="j12">Ocas mu trčel.</span></span>
+    <span class="d"><span class="j12">Srst mu zářila.</span></span>
+    <span class="d br"></span>
+    <span class="d">A postava vedle něj řekla:</span>
+    <span class="d"><span class="j13" title="Paradoxní rozuzlení">„Teď jsi konečně neviditelný.“</span></span>
+    <span class="d"><span class="j13">„Jak to?“ zeptal se lemur.</span></span>
+    <span class="d"><span class="j13">„Protože už se nesnažíš.“</span></span>
+    <span class="d br"></span>
+    <span class="d">A tak se lemur stal mistrem nenápadnosti.</span>
+    <span class="d">Ne tím, že zmizel.</span>
+    <span class="d">Ale tím, že přestal křičet, že nechce být vidět.</span>
+    <span class="d br"></span>
+    <span class="d">Od té doby sedí v koutku.</span>
+    <span class="d">Oči mu svítí.</span>
+    <span class="d">Ocas mu trčí.</span>
+    <span class="d">Srst mu září.</span>
+    <span class="d br"></span>
+    <span class="d">A každý, kdo ho uvidí, řekne:</span>
+    <span class="d">„To je ten nenápadný lemur.“</span>
+    <span class="d">A pak se tváří, že ho nevidí.</span>
+    <span class="d">A to je přesně to, co chtěl.</span>
+  </div>
+
+  <div class="legenda">
+    <span><span class="j1" style="cursor:default">tečkovaně</span> = rytmus, opakování předložky</span>
+    <span><span class="j2" style="cursor:default">přerušovaně</span> = vymezení místa</span>
+    <span><span class="j3" style="cursor:default">podklad světlý</span> = hyperbola</span>
+    <span><span class="j4" style="cursor:default">dvojitě tečkovaně</span> = ironie, kontrast</span>
+    <span><span class="j5" style="cursor:default">plně</span> = nedefinovaná postava</span>
+    <span><span class="j6" style="cursor:default">podklad tmavší</span> = motto</span>
+    <span><span class="j7" style="cursor:default">dvojitě</span> = pokus o potlačení</span>
+    <span><span class="j8" style="cursor:default">vlnovka</span> = neúspěch snahy</span>
+    <span><span class="j9" style="cursor:default">přerušovaně</span> = paradoxní sebedefinice</span>
+    <span><span class="j10" style="cursor:default">podklad + tečky</span> = síla mlčení</span>
+    <span><span class="j11" style="cursor:default">přeškrtnuto</span> = marné pokusy</span>
+    <span><span class="j12" style="cursor:default">levá linka</span> = kapitulace, přijetí</span>
+    <span><span class="j13" style="cursor:default">podklad tmavý</span> = paradoxní rozuzlení</span>
+  </div>
+</section>
+
+<!-- 13 ANOMÁLIÍ -->
+<section class="sec">
+  <p class="sec-tag">13 jazykových anomálií · kliknutím otevřete</p>
+  <h2>Co pohádka dělá s jazykem</h2>
+
+  <div id="anomalie-list"></div>
+
+  <div class="cta-box">
+    <p class="cta-text">Pokračujte diagnostikou — zjistěte svůj kognitivní úhel a dostanete workshop přizpůsobený vám. Někdy je největším úspěchem přestat se snažit.</p>
+    <a href="lemur_diagnostika.html" class="btn btn-p">Přejít na diagnostiku →</a>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-links">
+    <a href="mys_pohadka.html">Myš</a> · <a href="cap_pohadka.html">Čáp</a> · <a href="pav_pohadka.html">Páv</a> · <a href="tygr_pohadka.html">Tygr</a> · <a href="zelva_pohadka.html">Želva</a> · <a href="krokodyl_pohadka.html">Krokodýl</a> · <a href="hyena_pohadka.html">Hyena</a> · <a href="slon_pohadka.html">Slon</a> · <a href="jednorozec_pohadka.html">Jednorožec</a> · <a href="ryba_pohadka.html">Ryba</a> · <a href="parohy_pohadka.html">Parohy</a> · <a href="kravy_pohadka.html">Krávy</a> · <a href="beran_pohadka.html">Beran</a> · <a href="veverka_pohadka.html">Veverka</a> · <a href="husy_pohadka.html">Husy</a> · <a href="analyzer.html">Analyzátor</a>
+  </div>
+  <p>Karta Lemur · Chceš myš? · © 2026 Michaela Nováková</p>
+  <p><a href="mailto:chcesmys@gmail.com">chcesmys@gmail.com</a></p>
+</footer>
+</div>
+
+<script>
+const ANOMALIE = [
+  {
+    nazev:'Rytmus, opakování předložky',
+    termin:'v koutku, v koutku, v koutku',
+    citace:['"Lemur se narodil v koutku."','"V koutku místnosti, v koutku světa, v koutku oka."'],
+    popis:'Opakování stejné předložky a slova vytváří rytmus a zdůrazňuje, že lemur je od začátku v pozadí.'
+  },
+  {
+    nazev:'Vymezení místa',
+    termin:'tam, kde...',
+    citace:['"Tam, kde se věci obvykle nechávají být."','"Tam, kde se neptá."','"Tam, kde se neukazuje."'],
+    popis:'Třikrát opakované „tam, kde“ vymezuje prostor, kde se nic neděje, kde se nejsme.'
+  },
+  {
+    nazev:'Hyperbola',
+    termin:'přehánění nenápadnosti',
+    citace:['"Budu tak nenápadný, že mě ani moje vlastní stín nepozná."','"Budu tak tichý, že i ticho bude hlasité vedle mě."'],
+    popis:'Přehánění, které je samo o sobě nápadné – snaha o nenápadnost vede k paradoxně nápadným prohlášením.'
+  },
+  {
+    nazev:'Ironie, kontrast',
+    termin:'oči jak lampy, ocas jak vykřičník',
+    citace:['"Jenže měl oči jak lampy."','"Ocas vztyčený jak vykřičník."','"A srst jako výkladní skříň, co se snaží být tapetou."'],
+    popis:'Kontrast mezi tím, čím lemur chce být, a tím, čím doopravdy je. Každý jeho rys je nápadný.'
+  },
+  {
+    nazev:'Nedefinovaná postava',
+    termin:'postava bez vlastností',
+    citace:['"Vedle něj seděla postava."','"Klidná."','"Tichá."','"Bez barvy."','"Bez pohybu."','"Bez potřeby být."'],
+    popis:'Postava je definována pouze negativně – není to nic konkrétního, je to spíš archetyp nebo zrcadlo.'
+  },
+  {
+    nazev:'Motto',
+    termin:'klíčová věta',
+    citace:['"Řekla: „Nejlepší je nechat to být. Vše ostatní je moc nápadné.“"'],
+    popis:'Věta, která je jádrem celé pohádky. Je to rada, kterou lemur potřebuje slyšet.'
+  },
+  {
+    nazev:'Pokus o potlačení',
+    termin:'zhasl, zlomil, přikryl',
+    citace:['"Zhasl oči."','"Zlomil si ocas (jen obrazně)."','"Přikryl se dekou z nezájmu."'],
+    popis:'Snaha o potlačení vlastní podstaty. Vědomé, ale marné úsilí.'
+  },
+  {
+    nazev:'Neúspěch snahy, humor',
+    termin:'svítily i pod dekou, trčel bez svolení',
+    citace:['"Ale oči mu svítily i pod dekou."','"Ocas mu trčel i bez svolení."','"A srst mu zářila jako reklama na klid, co bliká."'],
+    popis:'Humor pramenící z marnosti – ať dělá cokoli, jeho podstata proráží ven.'
+  },
+  {
+    nazev:'Paradoxní sebedefinice',
+    termin:'výrazně nenápadný, ticho co má barvy',
+    citace:['"„Nejsem nápadný,“ šeptal."','"„Jsem jen… výrazně nenápadný.“"','"„Jsem jen… ticho, co má barvy.“"','"„Jsem jen… pozadí, co se nedá přehlédnout.“"'],
+    popis:'Pokus o definici, která je vnitřně rozporná. Lemur se snaží popsat svůj paradox.'
+  },
+  {
+    nazev:'Síla mlčení',
+    termin:'neřekla nic, jen se dívala',
+    citace:['"Postava vedle něj neřekla nic."','"Jen se dívala."','"A to bylo horší než slova."'],
+    popis:'Mlčení a pohled mohou být silnější než jakákoli slova. Ticho jako zpětná vazba.'
+  },
+  {
+    nazev:'Marné pokusy o splynutí',
+    termin:'být stínem, být flekem',
+    citace:['"Lemur se pokusil být stínem."','"Ale jeho stín měl vlastní názor."','"Lemur se pokusil být flekem na zdi."','"Ale flek ho odmítl, protože byl moc výrazný."'],
+    popis:'Pokusy splynout s okolím selhávají, protože i okolí má vlastní identitu a lemura odmítá.'
+  },
+  {
+    nazev:'Kapitulace, přijetí',
+    termin:'nakonec si sedl, přestal se snažit',
+    citace:['"Nakonec si sedl."','"Přestal se snažit."','"Oči mu svítily."','"Ocas mu trčel."','"Srst mu zářila."'],
+    popis:'Přijetí sebe sama. Když přestane bojovat, jeho rysy zůstávají, ale už nejsou problémem.'
+  },
+  {
+    nazev:'Paradoxní rozuzlení',
+    termin:'teď jsi neviditelný, protože už se nesnažíš',
+    citace:['"„Teď jsi konečně neviditelný.“"','"„Jak to?“ zeptal se lemur."','"„Protože už se nesnažíš.“"'],
+    popis:'Závěr, který obrací celou logiku – neviditelnost není o zmizení, ale o přijetí.'
+  }
+];
+
+const list = document.getElementById('anomalie-list');
+ANOMALIE.forEach((a,i)=>{
+  const el = document.createElement('div');
+  el.className = 'anomalie';
+  el.innerHTML = `
+    <div class="anomalie-header" onclick="this.parentElement.classList.toggle('open')">
+      <div class="a-num">${String(i+1).padStart(2,'0')}</div>
+      <div class="a-meta">
+        <div class="a-nazev">${a.n}</div>
+        <div class="a-termin">${a.t}</div>
+      </div>
+      <div class="a-toggle">▾</div>
+    </div>
+    <div class="anomalie-body">
+      <div class="a-citace">${a.c.map(c=>`<span>${c}</span>`).join('')}</div>
+      <p class="a-popis">${a.popis}</p>
+    </div>`;
+  list.appendChild(el);
+});
+</script>
+</body>
+</html>
