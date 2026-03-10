@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ryba — pohádka · Chceš myš?</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#07090f;--s:#0d1018;--s2:#12161f;
+  --c:#cdd8e8;--dim:rgba(180,200,230,.35);--a:#4a7a8c;--a2:#2d5a6a;
+  --b:rgba(74,122,140,.12);--b2:rgba(74,122,140,.26);
+  --serif:'Cormorant Garamond',Georgia,serif;--mono:'DM Mono',monospace;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--c);font-family:var(--mono);font-size:13px;line-height:1.85;-webkit-font-smoothing:antialiased}
+.wrap{max-width:780px;margin:0 auto;padding:0 24px}
+
+nav{position:sticky;top:0;z-index:99;border-bottom:1px solid var(--b);background:rgba(7,9,15,.96);backdrop-filter:blur(14px);padding:11px 24px;display:flex;align-items:center;justify-content:space-between}
+.nav-l{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);text-decoration:none;transition:color .15s}
+.nav-l:hover{color:var(--c)}
+.nav-links{display:flex;gap:4px}
+.nav-links a{font-size:10px;letter-spacing:.11em;text-transform:uppercase;color:var(--dim);text-decoration:none;padding:5px 10px;border:1px solid transparent;border-radius:2px;transition:all .15s}
+.nav-links a:hover,.nav-links a.active{color:var(--a);border-color:var(--b2)}
+
+.hero{padding:52px 0 36px;border-bottom:1px solid var(--b)}
+.hero-tag{font-size:10px;letter-spacing:.26em;text-transform:uppercase;color:var(--a2);margin-bottom:14px}
+.hero h1{font-family:var(--serif);font-size:clamp(3rem,8vw,5.4rem);font-weight:300;line-height:.95;letter-spacing:-.02em;margin-bottom:6px}
+.hero h1 em{font-style:italic;color:var(--a)}
+.hero-sub{font-family:var(--serif);font-style:italic;font-size:.9rem;color:var(--dim);border-left:1px solid var(--a2);padding-left:16px;margin:18px 0 20px;line-height:2;max-width:500px}
+.fenomen{border:1px solid var(--b2);padding:14px 20px;background:rgba(74,122,140,.03)}
+.fenomen-tag{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--a);margin-bottom:7px}
+.fenomen-text{font-size:.8rem;color:rgba(180,200,230,.52);line-height:1.95}
+
+.sec{padding:38px 0;border-bottom:1px solid var(--b)}
+.sec-tag{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--a2);margin-bottom:12px}
+h2{font-family:var(--serif);font-size:clamp(1.1rem,3vw,1.6rem);font-weight:300;margin-bottom:18px}
+h2 em{font-style:italic;color:var(--a)}
+
+/* POHÁDKA */
+.pohadka{font-family:var(--serif);font-size:.94rem;color:rgba(200,218,238,.74);border:1px solid var(--b);background:var(--s);padding:28px 32px;line-height:1}
+.d{display:block;padding:.22em 0}
+.d.br{padding:.55em 0}
+.d.silna{color:var(--a);font-weight:400}
+.d.dim{color:rgba(180,200,230,.38);font-style:italic}
+.d.it{font-style:italic}
+.d.dl{padding-left:1.4em;font-style:italic}
+/* třídy pro 13 anomálií */
+.j1{border-bottom:1px dotted var(--a);cursor:help}
+.j2{border-bottom:1px dashed var(--a2);cursor:help}
+.j3{background:rgba(74,122,140,.1);padding:0 2px;cursor:help}
+.j4{border-bottom:2px dotted var(--a);cursor:help}
+.j5{border-bottom:1px solid var(--a2);cursor:help}
+.j6{background:rgba(74,122,140,.2);padding:0 2px;cursor:help}
+.j7{border-bottom:1px double var(--a);cursor:help}
+.j8{text-decoration:underline wavy var(--a2);cursor:help}
+.j9{border-bottom:1px dashed var(--a);cursor:help}
+.j10{background:rgba(74,122,140,.05);border-bottom:1px dotted var(--a2);cursor:help}
+.j11{text-decoration:line-through 1px solid var(--a);cursor:help}
+.j12{border-left:2px solid var(--a);padding-left:4px;cursor:help}
+.j13{background:rgba(74,122,140,.15);border-radius:2px;padding:0 2px;cursor:help}
+.legenda{margin-top:10px;padding:10px 14px;background:var(--s);border:1px solid var(--b);font-size:.71rem;color:var(--dim);display:flex;flex-wrap:wrap;gap:4px 18px}
+
+/* ANOMÁLIE */
+.anomalie{border:1px solid var(--b);background:var(--s);margin-bottom:3px;overflow:hidden}
+.anomalie-header{display:flex;align-items:center;gap:14px;padding:14px 18px;cursor:pointer;user-select:none}
+.anomalie-header:hover{background:rgba(74,122,140,.04)}
+.a-num{font-family:var(--serif);font-size:1.5rem;font-weight:300;color:rgba(74,122,140,.2);min-width:28px;line-height:1}
+.a-meta{flex:1}
+.a-nazev{font-size:.83rem;color:var(--c);margin-bottom:2px}
+.a-termin{font-size:.69rem;color:var(--a2);letter-spacing:.06em;font-style:italic}
+.a-toggle{font-size:.68rem;color:var(--dim);letter-spacing:.1em;text-transform:uppercase;transition:transform .2s;white-space:nowrap}
+.anomalie.open .a-toggle{transform:rotate(180deg)}
+.anomalie-body{display:none;padding:4px 18px 20px;border-top:1px solid var(--b)}
+.anomalie.open .anomalie-body{display:block}
+.a-citace{font-family:var(--serif);font-style:italic;font-size:.83rem;color:rgba(74,122,140,.5);border-left:1px solid var(--b2);padding:7px 13px;margin:12px 0;line-height:1.85}
+.a-citace span{display:block}
+.a-popis{font-size:.78rem;color:rgba(180,200,230,.54);line-height:1.92;margin-bottom:0}
+
+.cta-box{margin-top:32px;padding:20px 22px;background:var(--s);border:1px solid var(--b2);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+.cta-text{font-size:.8rem;color:var(--dim);max-width:360px;line-height:1.85}
+.btn{padding:10px 22px;font-family:var(--mono);font-size:.75rem;letter-spacing:.1em;text-transform:uppercase;border:none;cursor:pointer;border-radius:2px;transition:all .15s;text-decoration:none;display:inline-block}
+.btn-p{background:var(--a);color:var(--bg)}
+.btn-p:hover{background:#5e9aaf}
+.btn-g{background:transparent;color:var(--dim);border:1px solid var(--b)}
+.btn-g:hover{color:var(--c);border-color:var(--b2)}
+
+footer{padding:26px 0;border-top:1px solid var(--b);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+footer p{font-size:.7rem;color:var(--dim)}
+footer a{color:var(--a)}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-l" href="../../../index.html">← Všechna zvířata</a>
+  <div class="nav-links">
+    <a href="ryba_pohadka.html" class="active">Pohádka</a>
+    <a href="ryba_diagnostika.html">Diagnostika</a>
+    <a href="ryba_workshop.html">Workshop</a>
+    <a href="analyzer.html">Analyzátor</a>
+  </div>
+</nav>
+
+<div class="wrap">
+
+<section class="hero">
+  <p class="hero-tag">Kreativní miniatura · Karta Ryba</p>
+  <h1>Ryba</h1>
+  <p class="hero-sub">„rybí rap“</p>
+  <div class="fenomen">
+    <div class="fenomen-tag">Fenomén — rytmus ticha / hudba pod hladinou</div>
+    <p class="fenomen-text">Říká se, že ryby mlčí. Ale to je omyl. Ryby rapujou. Ne pro uši, ale pro vodu. Jejich flow mění proudění, jejich beat tvoří kruhy. Pohádka o tom, že důležité věci nejsou slyšet – jsou cítit, vidět, vnímat tělem. A že ticho je nejvyšší forma hudby.</p>
+  </div>
+</section>
+
+<!-- POHÁDKA -->
+<section class="sec">
+  <p class="sec-tag">Pohádka · čtěte pomalu</p>
+  <h2>O RYBĚ <em>(která rapovala)</em></h2>
+
+  <div class="pohadka">
+    <span class="d">—</span>
+    <span class="d">—</span>
+    <span class="d br"></span>
+    <span class="d"><span class="j1" title="Negace na začátku jako destrukční formule">Říká se, že ryby mlčí.</span></span>
+    <span class="d"><span class="j1">Že nemají hlas.</span></span>
+    <span class="d"><span class="j1">Že jen plavou, koukají, a občas se nechají chytit.</span></span>
+    <span class="d"><span class="j1">Ale to je omyl. Kec.</span></span>
+    <span class="d"><span class="j1">Suchozemská lež.</span></span>
+    <span class="d br"></span>
+    <span class="d">Ryby totiž nemlčí.</span>
+    <span class="d"><span class="j2" title="Hybridizace žánrů (rap + pohádka)">Ryby rapujou.</span></span>
+    <span class="d br"></span>
+    <span class="d">Ne tak, jak si to představuješ – žádné mikrofony, žádné beaty z repro beden.</span>
+    <span class="d"><span class="j3" title="Přepisování fyzikálních zákonů jazykem">„Rybí rap je jinej.</span></span>
+    <span class="d"><span class="j3">Je to rytmus proudů.</span></span>
+    <span class="d"><span class="j3">Je to nížka, výška vln a vlnek.</span></span>
+    <span class="d"><span class="j3">Je to tempo vodních kruhů.</span></span>
+    <span class="d"><span class="j3">Je to mezera mezi bublinama.</span></span>
+    <span class="d br"></span>
+    <span class="d">Pod vodou se zvuk jinak šíří.</span>
+    <span class="d">Hlubší. Širší. Pomalejší.</span>
+    <span class="d">A tak ryby neřvou.</span>
+    <span class="d">Ryby vibrujou.</span>
+    <span class="d br"></span>
+    <span class="d"><span class="j4" title="Enumerativní styl (hromadění živočichů a stylů)">Každej druh rybí má svůj styl hudební.</span></span>
+    <span class="d"><span class="j4">Kosatky zpívají chansony – dlouhé, nostalgické, ovlivňují směry proudů.</span></span>
+    <span class="d"><span class="j4">Žraloci zpívaj gospel – hluboký a s ozvěnou. Míchají barevné odstíny hladin s tóny hlubin.</span></span>
+    <span class="d"><span class="j4">Velryba si troufne na operu </span></span>
+    <span class="d"><span class="j4">a medúzy jí dělaj vokály nebo se daj na triangly, rolničky, zvonce.</span></span>
+    <span class="d"><span class="j4">Delfin je folklor.</span></span>
+    <span class="d"><span class="j4">Chobotnice strihne jazzove imprivizace.</span></span>
+    <span class="d"><span class="j4">Ryba co se nafukuje zvládá dechovky, ale nemá je ráda.</span></span>
+    <span class="d"><span class="j4">Piraňi balady.</span></span>
+    <span class="d"><span class="j4">A kapr zkouší hrdelní zpěvy.</span></span>
+    <span class="d"><span class="j4">Mušle a lastury pějí lovestory.</span></span>
+    <span class="d"><span class="j4">Ska umí létací ryby.</span></span>
+    <span class="d"><span class="j4">Tučňák se vidí v klasice.</span></span>
+    <span class="d"><span class="j4">Na pop je odbornice bělice.</span></span>
+    <span class="d"><span class="j5" title="Neologismy a hovorové tvary">A úhoř nemá hudební ambice.</span></span>
+    <span class="d br"></span>
+    <span class="d">Je toho více.</span>
+    <span class="d"><span class="j7" title="Metafora vody jako nositele významu">Ale tohle všechno není hudba pro uši,</span></span>
+    <span class="d"><span class="j7">Tohle ovlivňuje různé vodní vlastnosti.</span></span>
+    <span class="d br"></span>
+    <span class="d">A ryba?</span>
+    <span class="d">Ryba má rap.</span>
+    <span class="d">Ne kvůli slávě.</span>
+    <span class="d">Kvůli přesnosti.</span>
+    <span class="d br"></span>
+    <span class="d"><span class="j8" title="Záměna subjektu a objektu">Flow je king a king je ryba.</span></span>
+    <span class="d">Beat jí dělá sea i jezera.</span>
+    <span class="d">Riff kape, flow teče.</span>
+    <span class="d">Přesná slova proudí jak voda.</span>
+    <span class="d">Její punchline je fontána.</span>
+    <span class="d br"></span>
+    <span class="d">Každý verš má váhu.</span>
+    <span class="d">A tohle ryby umí.</span>
+    <span class="d">Líp než ptáci.</span>
+    <span class="d br"></span>
+    <span class="d"><span class="j9" title="Srovnání s ptáky jako rivaly">Ptačí zpěv?</span></span>
+    <span class="d"><span class="j9">Křikot je to.</span></span>
+    <span class="d"><span class="j9">Řev, ryk, krákot, jekot.</span></span>
+    <span class="d">Tempo? Melodie? Text?</span>
+    <span class="d">Ptáci neumí dávat.</span>
+    <span class="d">Ptáci umí jen sprostě nadávat.</span>
+    <span class="d">Píp rýmuje s píp, jinak bez ideje.</span>
+    <span class="d">Cokoli řeknou hned se cenzuruje.</span>
+    <span class="d br"></span>
+    <span class="d"><span class="j10" title="Zvuková instrumentace textu (rytmus)">Zato ryby fakt dávaj.</span></span>
+    <span class="d"><span class="j10">Dávaj rytmus vodě.</span></span>
+    <span class="d"><span class="j10">Dávaj smysl tichu.</span></span>
+    <span class="d"><span class="j10">Dávají beaty proudům.</span></span>
+    <span class="d br"></span>
+    <span class="d">A stalo se jednoho dne, že ryba začala rapovat i na hladině.</span>
+    <span class="d">Ne pro ostatní.</span>
+    <span class="d">Pro vodu.</span>
+    <span class="d br"></span>
+    <span class="d"><span class="j11" title="Reakce vody jako partnera v dialogu">A voda odpověděla.</span></span>
+    <span class="d"><span class="j11">Jinak se zavlnila.</span></span>
+    <span class="d"><span class="j11">Do rytmu se natřásala.</span></span>
+    <span class="d"><span class="j11">Tvořila verše jako vodní kruhy, v kterých byly další kruhy.</span></span>
+    <span class="d"><span class="j12" title="Přesah do vizuálního (kruhy v obilí)">Mlha, spadlá do polí, opsala jejich flow.</span></span>
+    <span class="d"><span class="j12">A vytvořila kruhy v obilí.</span></span>
+    <span class="d">Rybí hudba byla slyšet – ne uchem, ale okem, tělem.</span>
+    <span class="d br"></span>
+    <span class="d">A tak se po kapkách roznáší všude kolem,</span>
+    <span class="d">že prvni místo v hitparádě,</span>
+    <span class="d">vyhrály ryby - nepochybně.</span>
+    <span class="d br"></span>
+    <span class="d">Ne proto, že zpívaj.</span>
+    <span class="d">Ale proto, že ví..</span>
+    <span class="d br"></span>
+    <span class="d">..kdy mlčet.</span>
+    <span class="d br"></span>
+    <span class="d">Možná je čas,</span>
+    <span class="d">aby se svět dozvěděl o rybím rapu.</span>
+    <span class="d br"></span>
+    <span class="d">Možná je čas,</span>
+    <span class="d">aby se</span>
+    <span class="d">přestalo poslouchat a začalo se vnímat.</span>
+    <span class="d br"></span>
+    <span class="d"><span class="j13" title="Bonus: ticho nad hladinou">Možná je čas,</span></span>
+    <span class="d"><span class="j13">aby se ticho konečně dostalo nad hladinu.</span></span>
+  </div>
+
+  <div class="legenda">
+    <span><span class="j1" style="cursor:default">tečkovaně</span> = negace na začátku</span>
+    <span><span class="j2" style="cursor:default">přerušovaně</span> = hybridizace žánrů</span>
+    <span><span class="j3" style="cursor:default">podklad světlý</span> = přepis fyziky</span>
+    <span><span class="j4" style="cursor:default">dvojitě tečkovaně</span> = enumerativní styl</span>
+    <span><span class="j5" style="cursor:default">plně</span> = neologismy</span>
+    <span><span class="j6" style="cursor:default">podklad tmavší</span> = vážné/absurdní</span>
+    <span><span class="j7" style="cursor:default">dvojitě</span> = voda jako nositel</span>
+    <span><span class="j8" style="cursor:default">vlnovka</span> = záměna subjektu</span>
+    <span><span class="j9" style="cursor:default">přerušovaně</span> = srovnání s ptáky</span>
+    <span><span class="j10" style="cursor:default">podklad + tečky</span> = zvuková instrumentace</span>
+    <span><span class="j11" style="cursor:default">přeškrtnuto</span> = reakce vody</span>
+    <span><span class="j12" style="cursor:default">levá linka</span> = kruhy v obilí</span>
+    <span><span class="j13" style="cursor:default">podklad tmavý</span> = ticho nad hladinou</span>
+  </div>
+</section>
+
+<!-- 13 ANOMÁLIÍ -->
+<section class="sec">
+  <p class="sec-tag">13 jazykových anomálií · kliknutím otevřete</p>
+  <h2>Co pohádka dělá s jazykem</h2>
+
+  <div id="anomalie-list"></div>
+
+  <div class="cta-box">
+    <p class="cta-text">Pokračujte diagnostikou — zjistěte svůj kognitivní úhel a dostanete workshop přizpůsobený vám.</p>
+    <a href="ryba_diagnostika.html" class="btn btn-p">Přejít na diagnostiku →</a>
+  </div>
+</section>
+
+<footer>
+  <p>Karta Ryba · Chceš myš? · © 2026 Michaela Nováková</p>
+  <p><a href="mailto:chcesmys@gmail.com">chcesmys@gmail.com</a></p>
+</footer>
+</div>
+
+<script>
+const ANOMALIE = [
+  {n:'Negace na začátku',t:'destrukční formule',
+   c:['"Říká se, že ryby mlčí."','"Že nemají hlas."','"Že jen plavou, koukají, a občas se nechají chytit."','"Ale to je omyl. Kec."','"Suchozemská lež."'],
+   p:'Text začíná tím, že popírá obecně přijímanou „pravdu“. Vytváří si vlastní mýtus.'},
+  {n:'Hybridizace žánrů',t:'rap + pohádka',
+   c:['"Ryby rapujou."'],
+   p:'Spojení rapové estetiky (flow, beat, punchline) s pohádkovým vyprávěním. Dva světy, které k sobě nepatří, jsou násilně spojeny.'},
+  {n:'Přepisování fyzikálních zákonů',t:'jazykem',
+   c:['"Je to rytmus proudů."','"Je to nížka, výška vln a vlnek."','"Je to tempo vodních kruhů."','"Je to mezera mezi bublinama."'],
+   p:'Vlastnosti vody jsou najednou hudební kategorie. Jazyk redefinuje realitu.'},
+  {n:'Enumerativní styl',t:'hromadění',
+   c:['"Kosatky zpívají chansony…"','"Žraloci zpívaj gospel…"','"Velryba si troufne na operu…"','"medúzy jí dělaj vokály…"','"Delfin je folklor."','"Chobotnice strihne jazz…"','"Ryba co se nafukuje zvládá dechovky…"','"Piraňi balady."','"A kapr zkouší hrdelní zpěvy."','"Mušle a lastury pějí lovestory."','"Ska umí létací ryby."','"Tučňák se vidí v klasice."','"Na pop je odbornice bělice."','"A úhoř nemá hudební ambice."'],
+   p:'Dlouhý katalog, který je sám o sobě hudební – rytmus vzniká řazením.'},
+  {n:'Neologismy a hovorové tvary',t:'slang',
+   c:['"imprivizace"','"dělaj"','"strihne"','"vokály"','"lovestory"'],
+   p:'Jazyk se přizpůsobuje neformálnímu, skoro slangovému projevu, ale v pohádce.'},
+  {n:'Přechod mezi vážným a absurdním',t:'suchá poznámka',
+   c:['"A úhoř nemá hudební ambice."'],
+   p:'Po dlouhé, téměř encyklopedické výčtu najednou suchá, lidská poznámka o úhořově lenosti. Narušuje to vážnost celého systému.'},
+  {n:'Metafora vody jako nositele',t:'materializace',
+   c:['"Ale tohle všechno není hudba pro uši, / Tohle ovlivňuje různé vodní vlastnosti."'],
+   p:'Zvuk se stává fyzikální silou, která mění chování vody. Jazyk materializuje.'},
+  {n:'Záměna subjektu a objektu',t:'kruhová definice',
+   c:['"Flow je king a king je ryba."'],
+   p:'Identita se převrací. Není jasné, kdo je kdo – flow je král, král je ryba, ryba je flow.'},
+  {n:'Srovnání s ptáky jako rivaly',t:'hromadění hanlivých výrazů',
+   c:['"Ptačí zpěv?"','"Křikot je to."','"Řev, ryk, krákot, jekot."'],
+   p:'Hromadění hanlivých výrazů pro ptačí zvuky vytváří nepřátelský vztah mezi dvěma říšemi.'},
+  {n:'Zvuková instrumentace textu (rytmus)',t:'beat z vět',
+   c:['"Zato ryby fakt dávaj."','"Dávaj rytmus vodě."','"Dávaj smysl tichu."','"Dávají beaty proudům."'],
+   p:'Krátké, úsečné věty. Opakování stejné struktury vytváří beat, o kterém text mluví.'},
+  {n:'Reakce vody jako partnera',t:'příroda ožívá',
+   c:['"A voda odpověděla."','"Jinak se zavlnila."','"Do rytmu se natřásala."','"Tvořila verše jako vodní kruhy."'],
+   p:'Příroda ožívá a stává se aktivním účastníkem komunikace.'},
+  {n:'Přesah do vizuálního',t:'kruhy v obilí',
+   c:['"Mlha, spadlá do polí, opsala jejich flow."','"A vytvořila kruhy v obilí."'],
+   p:'Rybí rap se přenáší z vody na souš a vytváří fyzické stopy. Text končí tím, že se stal viditelným.'},
+  {n:'Ticho nad hladinou (bonus)',t:'paradox',
+   c:['"Možná je čas, / aby se ticho konečně dostalo nad hladinu."'],
+   p:'Ticho, o kterém celá pohádka mluví jako o něčem, co ryby umí používat, má „vystoupit nad hladinu“. Ticho se stává aktérem.'}
+];
+
+const list = document.getElementById('anomalie-list');
+ANOMALIE.forEach((a,i)=>{
+  const el = document.createElement('div');
+  el.className = 'anomalie';
+  el.innerHTML = `
+    <div class="anomalie-header" onclick="this.parentElement.classList.toggle('open')">
+      <div class="a-num">${String(i+1).padStart(2,'0')}</div>
+      <div class="a-meta">
+        <div class="a-nazev">${a.n}</div>
+        <div class="a-termin">${a.t}</div>
+      </div>
+      <div class="a-toggle">▾</div>
+    </div>
+    <div class="anomalie-body">
+      <div class="a-citace">${a.c.map(c=>`<span>${c}</span>`).join('')}</div>
+      <p class="a-popis">${a.p}</p>
+    </div>`;
+  list.appendChild(el);
+});
+</script>
+</body>
+</html>
