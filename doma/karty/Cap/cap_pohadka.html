@@ -1,1 +1,322 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Čáp — pohádka · Chceš myš?</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#07090f;--s:#0d1018;--s2:#12161f;
+  --c:#cdd8e8;--dim:rgba(180,200,230,.35);--a:#c94f4f;--a2:#a03a3a;
+  --b:rgba(201,79,79,.12);--b2:rgba(201,79,79,.26);
+  --serif:'Cormorant Garamond',Georgia,serif;--mono:'DM Mono',monospace;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--c);font-family:var(--mono);font-size:13px;line-height:1.85;-webkit-font-smoothing:antialiased}
+.wrap{max-width:780px;margin:0 auto;padding:0 24px}
 
+nav{position:sticky;top:0;z-index:99;border-bottom:1px solid var(--b);background:rgba(7,9,15,.96);backdrop-filter:blur(14px);padding:11px 24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
+.nav-l{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);text-decoration:none;transition:color .15s}
+.nav-l:hover{color:var(--c)}
+.nav-links{display:flex;flex-wrap:wrap;gap:4px}
+.nav-links a{font-size:9px;letter-spacing:.11em;text-transform:uppercase;color:var(--dim);text-decoration:none;padding:4px 8px;border:1px solid transparent;border-radius:2px;transition:all .15s;white-space:nowrap}
+.nav-links a:hover,.nav-links a.active{color:var(--a);border-color:var(--b2)}
+
+.hero{padding:52px 0 36px;border-bottom:1px solid var(--b)}
+.hero-tag{font-size:10px;letter-spacing:.26em;text-transform:uppercase;color:var(--a2);margin-bottom:14px}
+.hero h1{font-family:var(--serif);font-size:clamp(3rem,8vw,5.4rem);font-weight:300;line-height:.95;letter-spacing:-.02em;margin-bottom:6px}
+.hero h1 em{font-style:italic;color:var(--a)}
+.hero-sub{font-family:var(--serif);font-style:italic;font-size:.9rem;color:var(--dim);border-left:1px solid var(--a2);padding-left:16px;margin:18px 0 20px;line-height:2;max-width:500px}
+.fenomen{border:1px solid var(--b2);padding:14px 20px;background:rgba(201,79,79,.03)}
+.fenomen-tag{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--a);margin-bottom:7px}
+.fenomen-text{font-size:.8rem;color:rgba(180,200,230,.52);line-height:1.95}
+
+.sec{padding:38px 0;border-bottom:1px solid var(--b)}
+.sec-tag{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--a2);margin-bottom:12px}
+h2{font-family:var(--serif);font-size:clamp(1.1rem,3vw,1.6rem);font-weight:300;margin-bottom:18px}
+h2 em{font-style:italic;color:var(--a)}
+
+/* POHÁDKA */
+.pohadka{font-family:var(--serif);font-size:.94rem;color:rgba(200,218,238,.74);border:1px solid var(--b);background:var(--s);padding:28px 32px;line-height:1}
+.d{display:block;padding:.22em 0}
+.d.br{padding:.55em 0}
+.d.silna{color:var(--a);font-weight:400}
+.d.dim{color:rgba(180,200,230,.38);font-style:italic}
+.d.it{font-style:italic}
+.d.dl{padding-left:1.4em;font-style:italic}
+/* třídy pro 13 anomálií */
+.j1{border-bottom:1px dotted var(--a);cursor:help}
+.j2{border-bottom:1px dashed var(--a2);cursor:help}
+.j3{background:rgba(201,79,79,.1);padding:0 2px;cursor:help}
+.j4{border-bottom:2px dotted var(--a);cursor:help}
+.j5{border-bottom:1px solid var(--a2);cursor:help}
+.j6{background:rgba(201,79,79,.2);padding:0 2px;cursor:help}
+.j7{border-bottom:1px double var(--a);cursor:help}
+.j8{text-decoration:underline wavy var(--a2);cursor:help}
+.j9{border-bottom:1px dashed var(--a);cursor:help}
+.j10{background:rgba(201,79,79,.05);border-bottom:1px dotted var(--a2);cursor:help}
+.j11{text-decoration:line-through 1px solid var(--a);cursor:help}
+.j12{border-left:2px solid var(--a);padding-left:4px;cursor:help}
+.j13{background:rgba(201,79,79,.15);border-radius:2px;padding:0 2px;cursor:help}
+.legenda{margin-top:10px;padding:10px 14px;background:var(--s);border:1px solid var(--b);font-size:.71rem;color:var(--dim);display:flex;flex-wrap:wrap;gap:4px 18px}
+
+/* ANOMÁLIE */
+.anomalie{border:1px solid var(--b);background:var(--s);margin-bottom:3px;overflow:hidden}
+.anomalie-header{display:flex;align-items:center;gap:14px;padding:14px 18px;cursor:pointer;user-select:none}
+.anomalie-header:hover{background:rgba(201,79,79,.04)}
+.a-num{font-family:var(--serif);font-size:1.5rem;font-weight:300;color:rgba(201,79,79,.2);min-width:28px;line-height:1}
+.a-meta{flex:1}
+.a-nazev{font-size:.83rem;color:var(--c);margin-bottom:2px}
+.a-termin{font-size:.69rem;color:var(--a2);letter-spacing:.06em;font-style:italic}
+.a-toggle{font-size:.68rem;color:var(--dim);letter-spacing:.1em;text-transform:uppercase;transition:transform .2s;white-space:nowrap}
+.anomalie.open .a-toggle{transform:rotate(180deg)}
+.anomalie-body{display:none;padding:4px 18px 20px;border-top:1px solid var(--b)}
+.anomalie.open .anomalie-body{display:block}
+.a-citace{font-family:var(--serif);font-style:italic;font-size:.83rem;color:rgba(201,79,79,.5);border-left:1px solid var(--b2);padding:7px 13px;margin:12px 0;line-height:1.85}
+.a-citace span{display:block}
+.a-popis{font-size:.78rem;color:rgba(180,200,230,.54);line-height:1.92;margin-bottom:0}
+
+.cta-box{margin-top:32px;padding:20px 22px;background:var(--s);border:1px solid var(--b2);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+.cta-text{font-size:.8rem;color:var(--dim);max-width:360px;line-height:1.85}
+.btn{padding:10px 22px;font-family:var(--mono);font-size:.75rem;letter-spacing:.1em;text-transform:uppercase;border:none;cursor:pointer;border-radius:2px;transition:all .15s;text-decoration:none;display:inline-block}
+.btn-p{background:var(--a);color:var(--bg)}
+.btn-p:hover{background:#d97a7a}
+.btn-g{background:transparent;color:var(--dim);border:1px solid var(--b)}
+.btn-g:hover{color:var(--c);border-color:var(--b2)}
+
+footer{padding:26px 0;border-top:1px solid var(--b);display:flex;flex-direction:column;gap:12px}
+.footer-links{display:flex;flex-wrap:wrap;gap:8px 16px;justify-content:center}
+.footer-links a{color:var(--a2);font-size:.7rem;text-decoration:none;border-bottom:1px dotted var(--b2)}
+.footer-links a:hover{color:var(--a)}
+footer p{font-size:.7rem;color:var(--dim);text-align:center}
+footer a{color:var(--a)}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-l" href="../../../index.html">← Všechna zvířata</a>
+  <div class="nav-links">
+    <a href="cap_pohadka.html" class="active">Čáp</a>
+    <a href="mys_pohadka.html">Myš</a>
+    <a href="pav_pohadka.html">Páv</a>
+    <a href="tygr_pohadka.html">Tygr</a>
+    <a href="zelva_pohadka.html">Želva</a>
+    <a href="krokodyl_pohadka.html">Krokodýl</a>
+    <a href="hyena_pohadka.html">Hyena</a>
+    <a href="slon_pohadka.html">Slon</a>
+    <a href="jednorozec_pohadka.html">Jednorožec</a>
+    <a href="ryba_pohadka.html">Ryba</a>
+    <a href="analyzer.html">Analyzátor</a>
+  </div>
+</nav>
+
+<div class="wrap">
+
+<section class="hero">
+  <p class="hero-tag">Kreativní miniatura · Karta Čáp</p>
+  <h1>Čáp</h1>
+  <p class="hero-sub">„1, 2 čáp letí. 3, 4 nemá děti. 5, 6 my je máme. 7, 8 NEprodáme.“</p>
+  <div class="fenomen">
+    <div class="fenomen-tag">Fenomén — prázdnota, která nese všechno</div>
+    <p class="fenomen-text">Čáp, který nenosí děti, ale nápady. Čáp, který je plný toho, co se nestalo. Pohádka o tom, že některé věci nejdou koupit, některé věci přicházejí samy a ten, kdo nic nemá, může mít nejvíc.</p>
+  </div>
+</section>
+
+<!-- POHÁDKA -->
+<section class="sec">
+  <p class="sec-tag">Pohádka · čtěte pomalu</p>
+  <h2>O ČÁPOVI <em>(1,2 čáp letí. 3,4 nemá děti. 5,6 my je máme. 7,8 NEprodáme.)</em></h2>
+
+  <div class="pohadka">
+    <span class="d silna"><span class="j1" title="Deformovaná říkanka">1, 2 čáp letí. 3, 4 nemá děti. 5, 6 my je máme. 7, 8 NEprodáme.</span></span>
+    <span class="d br"></span>
+    <span class="d">—</span>
+    <span class="d br"></span>
+    <span class="d"><span class="j2" title="Rytmizace a opakování">Jedna dvě – čáp letí.</span></span>
+    <span class="d"><span class="j2">Tři čtyři – nemá děti.</span></span>
+    <span class="d"><span class="j2">Pět šest – my je máme.</span></span>
+    <span class="d"><span class="j2">Sedm osm – NEprodáme.</span></span>
+    <span class="d br"></span>
+    <span class="d">—–</span>
+    <span class="d br"></span>
+    <span class="d">Tak začíná říkanka, kterou si šeptají děti v trávě, když se dívají na nebe. A čáp tam opravdu je. Letí vysoko, klidně, bez nákladu. Bez uzlíku. Bez cíle. Jen tak.</span>
+    <span class="d br"></span>
+    <span class="d">Kdysi dávno se říkalo, že čáp nosí děti. Že když přistane na komíně, někdo se narodí. Ale tenhle čáp nikdy nepřistál. Jen kroužil. A začalo se o něm šeptat, že je prázdný. Že zapomněl. Že je bezradný možná i vadný.</span>
+    <span class="d br"></span>
+    <span class="d"><span class="j3" title="Paradox prázdnoty">Ale <a href="mys_pohadka.html" style="color:var(--a); text-decoration:underline dotted">myš</a> věděla, že to není pravda. Čáp nebyl prázdej. Plnej byl – jen ne toho, co by šlo vidět.</span></span>
+    <span class="d"><span class="j4" title="Materializace abstrakt">Nesl nápady. Nesl možnosti. Nesl to, co se nestalo, ale mohlo.</span></span>
+    <span class="d br"></span>
+    <span class="d">A pak se objevily děti. Nečekaně. Bez vysvětlení. Bez čápa. Jen tak. V trávě. V koutě. V náručí těch, kteří je nečekali. A lidi se ptali: „Kde se vzaly?“</span>
+    <span class="d br"></span>
+    <span class="d"><span class="j5" title="Myš jako hlas rozumu">myš odpověděla: „Pět šest – my je máme.</span></span>
+    <span class="d br"></span>
+    <span class="d">Začali přicházet kupci. S penězi, s smlouvami, s nabídkami. Chtěli si děti odnést. Chtěli je vlastnit. Ale myš jen zavrtěla hlavou.</span>
+    <span class="d br"></span>
+    <span class="d"><span class="j6" title="Refrén jako pevný bod">„Sedm osm – NEprodáme.“</span></span>
+    <span class="d br"></span>
+    <span class="d">Protože některé věci nejdou koupit. Některé věci přicházejí samy. A některé věci nejsou na prodej. Něco se nedá vlastnit.</span>
+    <span class="d br"></span>
+    <span class="d"><span class="j7" title="Anaforické řazení účinků">Čáp mezitím letěl dál. A v tom začal si zpívat. Ale ne jednohlasně, druhý hlas ten jeho stín zpíval s ním.</span></span>
+    <span class="d"><span class="j8" title="Gradace účinků">Když přeletěl nad polem, tráva se na chvíli načechrala. Když přeletěl nad vesnicí, děti se přestaly hádat. Když přeletěl nad řekou, ryby přestaly jen pokukovat a ploutvemi rovnaly vodní kruhy. protože voda se malem rozestoupila, jako by čekala, co nikdy nepřijde.</span></span>
+    <span class="d br"></span>
+    <span class="d"><span class="j9" title="Personifikace přírody">protože voda se malem rozestoupila, jako by čekala, co nikdy nepřijde.</span></span>
+    <span class="d br"></span>
+    <span class="d"><span class="j10" title="Intertextualita – odkaz na Zajíce">A pak jednoho dne přistál. Ne na komíně. Ale na prázdném poli. Tam, kde minule hořelo. Jak tam <a href="zajic_pohadka.html" style="color:var(--a); text-decoration:underline dotted">zaječice</a> proskočila plamenama.</span></span>
+    <span class="d">Tam, se vždy dějou různé věci. Které přesto nikdo nečeká.</span>
+    <span class="d br"></span>
+    <span class="d"><span class="j11" title="Katalog postav universa">A ostatní se tam sešli.</span></span>
+    <span class="d"><span class="j11"><a href="mys_pohadka.html" style="color:var(--a); text-decoration:underline dotted">Myš</a>, <a href="kocour_pohadka.html" style="color:var(--a); text-decoration:underline dotted">kocour</a>, <a href="zajic_pohadka.html" style="color:var(--a); text-decoration:underline dotted">zaječice</a>, <a href="lemur_pohadka.html" style="color:var(--a); text-decoration:underline dotted">lemur</a>, <a href="slon_pohadka.html" style="color:var(--a); text-decoration:underline dotted">slon</a>. Všichni, ti kdo věděli, že svět není jenom to, co se dá spočítat.</span></span>
+    <span class="d">A čáp se jich neptal. Jen rozprostřel křídla a z nich vypadly věty.</span>
+    <span class="d"><span class="j12" title="Nedokončené věty jako objekt">Nedokončené. Neprodané. Nepřijaté.</span></span>
+    <span class="d br"></span>
+    <span class="d">A děti si je začaly sbírat. Skládaly si z nich vlastní pohádky. vlastní jména. Vlastní smysly.</span>
+    <span class="d br"></span>
+    <span class="d"><span class="j13" title="Závěrečný paradox">A to znamena, že čáp, který nic nenosí, je ten, který nese všechno. Akorát ne to, co jsme čekali.</span></span>
+  </div>
+
+  <div class="legenda">
+    <span><span class="j1" style="cursor:default">tečkovaně</span> = deformovaná říkanka</span>
+    <span><span class="j2" style="cursor:default">přerušovaně</span> = rytmizace a opakování</span>
+    <span><span class="j3" style="cursor:default">podklad světlý</span> = paradox prázdnoty</span>
+    <span><span class="j4" style="cursor:default">dvojitě tečkovaně</span> = materializace abstrakt</span>
+    <span><span class="j5" style="cursor:default">plně</span> = myš jako hlas rozumu</span>
+    <span><span class="j6" style="cursor:default">podklad tmavší</span> = refrén jako pevný bod</span>
+    <span><span class="j7" style="cursor:default">dvojitě</span> = anaforické řazení</span>
+    <span><span class="j8" style="cursor:default">vlnovka</span> = gradace účinků</span>
+    <span><span class="j9" style="cursor:default">přerušovaně</span> = personifikace přírody</span>
+    <span><span class="j10" style="cursor:default">podklad + tečky</span> = intertextualita</span>
+    <span><span class="j11" style="cursor:default">přeškrtnuto</span> = katalog postav</span>
+    <span><span class="j12" style="cursor:default">levá linka</span> = věty jako objekty</span>
+    <span><span class="j13" style="cursor:default">podklad tmavý</span> = závěrečný paradox</span>
+  </div>
+</section>
+
+<!-- 13 ANOMÁLIÍ -->
+<section class="sec">
+  <p class="sec-tag">13 jazykových anomálií · kliknutím otevřete</p>
+  <h2>Co pohádka dělá s jazykem</h2>
+
+  <div id="anomalie-list"></div>
+
+  <div class="cta-box">
+    <p class="cta-text">Pokračujte diagnostikou — zjistěte svůj kognitivní úhel a dostanete workshop přizpůsobený vám. Čáp nese to, co se nestalo.</p>
+    <a href="cap_diagnostika.html" class="btn btn-p">Přejít na diagnostiku →</a>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-links">
+    <a href="mys_pohadka.html">Myš</a> · <a href="pav_pohadka.html">Páv</a> · <a href="tygr_pohadka.html">Tygr</a> · <a href="zelva_pohadka.html">Želva</a> · <a href="krokodyl_pohadka.html">Krokodýl</a> · <a href="hyena_pohadka.html">Hyena</a> · <a href="slon_pohadka.html">Slon</a> · <a href="jednorozec_pohadka.html">Jednorožec</a> · <a href="ryba_pohadka.html">Ryba</a> · <a href="analyzer.html">Analyzátor</a>
+  </div>
+  <p>Karta Čáp · Chceš myš? · © 2026 Michaela Nováková</p>
+  <p><a href="mailto:chcesmys@gmail.com">chcesmys@gmail.com</a></p>
+</footer>
+</div>
+
+<script>
+const ANOMALIE = [
+  {
+    nazev:'Deformovaná říkanka',
+    termin:'známý text v novém kontextu',
+    citace:['"1, 2 čáp letí. 3, 4 nemá děti. 5, 6 my je máme. 7, 8 NEprodáme."'],
+    popis:'Dětská říkanka je použita jako úvod pohádky, ale zároveň se stává jejím obsahem a pointou.'
+  },
+  {
+    nazev:'Rytmizace a opakování',
+    termin:'počítání jako struktura',
+    citace:['"Jedna dvě – čáp letí."','"Tři čtyři – nemá děti."','"Pět šest – my je máme."','"Sedm osm – NEprodáme."'],
+    popis:'Opakování stejné rytmické struktury vytváří beat a připomíná, že pohádka vyrůstá z říkanky.'
+  },
+  {
+    nazev:'Paradox prázdnoty',
+    termin:'být prázdný = být plný',
+    citace:['"Čáp nebyl prázdej. Plnej byl – jen ne toho, co by šlo vidět."'],
+    popis:'Paradoxní definice čápa – není prázdný, je plný neviditelného. Popření zdání.'
+  },
+  {
+    nazev:'Materializace abstrakt',
+    termin:'nápady jako náklad',
+    citace:['"Nesl nápady. Nesl možnosti. Nesl to, co se nestalo, ale mohlo."'],
+    popis:'Abstraktní věci (nápady, možnosti) jsou nošeny jako fyzický náklad. Zpřítomnění nehmotného.'
+  },
+  {
+    nazev:'Myš jako hlas rozumu',
+    termin:'odpověď v říkance',
+    citace:['"myš odpověděla: „Pět šest – my je máme."'],
+    popis:'Myš, kronikářka celého světa, odpovídá citací z říkanky. Tím říkanku potvrzuje jako pravdivou.'
+  },
+  {
+    nazev:'Refrén jako pevný bod',
+    termin:'NEprodáme',
+    citace:['"„Sedm osm – NEprodáme.“"'],
+    popis:'Opakování říkankového verše v novém kontextu (odmítnutí prodeje) dává slovům novou váhu.'
+  },
+  {
+    nazev:'Anaforické řazení',
+    termin:'opakování „Když přeletěl“',
+    citace:['"Když přeletěl nad polem, tráva se na chvíli načechrala."','"Když přeletěl nad vesnicí, děti se přestaly hádat."','"Když přeletěl nad řekou, ryby přestaly jen pokukovat…"'],
+    popis:'Trojí opakování stejné struktury ukazuje postupný, stupňující se vliv čápova letu.'
+  },
+  {
+    nazev:'Gradace účinků',
+    termin:'od trávy k vodě',
+    citace:['"tráva se na chvíli načechrala"','"děti se přestaly hádat"','"ryby… ploutvemi rovnaly vodní kruhy"','"voda se malem rozestoupila"'],
+    popis:'Účinky čápova letu se stupňují od nepatrných (tráva) až po téměř zázračné (voda se rozestupuje).'
+  },
+  {
+    nazev:'Personifikace přírody',
+    termin:'voda čeká',
+    citace:['"voda se malem rozestoupila, jako by čekala, co nikdy nepřijde."'],
+    popis:'Voda dostává lidskou vlastnost – očekávání. Příroda je živá a vnímavá.'
+  },
+  {
+    nazev:'Intertextualita – odkaz na Zajíce',
+    termin:'společné universum',
+    citace:['"Tam, kde minule hořelo. Jak tam zaječice proskočila plamenama."'],
+    popis:'Přímý odkaz na pohádku o Zaječici, která skočila do ohně. Svět je propojený.'
+  },
+  {
+    nazev:'Katalog postav universa',
+    termin:'výčet zvířat',
+    citace:['"Myš, kocour, zaječice, lemur, slon. Všichni, ti kdo věděli…"'],
+    popis:'Seznam postav z jiných karet, které se scházejí na jednom místě. Potvrzuje, že všechny příběhy se dějí v jednom světě.'
+  },
+  {
+    nazev:'Nedokončené věty jako objekt',
+    termin:'věty vypadly z křídel',
+    citace:['"z nich vypadly věty. Nedokončené. Neprodané. Nepřijaté."'],
+    popis:'Věty jsou hmotné, dají se sbírat a skládat. Materializace jazyka.'
+  },
+  {
+    nazev:'Závěrečný paradox',
+    termin:'nosit všechno tím, že nenosíš nic',
+    citace:['"čáp, který nic nenosí, je ten, který nese všechno. Akorát ne to, co jsme čekali."'],
+    popis:'Pointa celé pohádky – pravý obsah je tam, kde ho nehledáme.'
+  }
+];
+
+const list = document.getElementById('anomalie-list');
+ANOMALIE.forEach((a,i)=>{
+  const el = document.createElement('div');
+  el.className = 'anomalie';
+  el.innerHTML = `
+    <div class="anomalie-header" onclick="this.parentElement.classList.toggle('open')">
+      <div class="a-num">${String(i+1).padStart(2,'0')}</div>
+      <div class="a-meta">
+        <div class="a-nazev">${a.n}</div>
+        <div class="a-termin">${a.t}</div>
+      </div>
+      <div class="a-toggle">▾</div>
+    </div>
+    <div class="anomalie-body">
+      <div class="a-citace">${a.c.map(c=>`<span>${c}</span>`).join('')}</div>
+      <p class="a-popis">${a.popis}</p>
+    </div>`;
+  list.appendChild(el);
+});
+</script>
+</body>
+</html>
