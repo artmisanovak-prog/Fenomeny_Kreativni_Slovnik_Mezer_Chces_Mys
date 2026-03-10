@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Slon — pohádka · Chceš myš?</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#07090f;--s:#0d1018;--s2:#12161f;
+  --c:#cdd8e8;--dim:rgba(180,200,230,.35);--a:#8b3a3a;--a2:#5e2a2a;
+  --b:rgba(139,58,58,.12);--b2:rgba(139,58,58,.26);
+  --serif:'Cormorant Garamond',Georgia,serif;--mono:'DM Mono',monospace;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--c);font-family:var(--mono);font-size:13px;line-height:1.85;-webkit-font-smoothing:antialiased}
+.wrap{max-width:780px;margin:0 auto;padding:0 24px}
+
+nav{position:sticky;top:0;z-index:99;border-bottom:1px solid var(--b);background:rgba(7,9,15,.96);backdrop-filter:blur(14px);padding:11px 24px;display:flex;align-items:center;justify-content:space-between}
+.nav-l{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);text-decoration:none;transition:color .15s}
+.nav-l:hover{color:var(--c)}
+.nav-links{display:flex;gap:4px}
+.nav-links a{font-size:10px;letter-spacing:.11em;text-transform:uppercase;color:var(--dim);text-decoration:none;padding:5px 10px;border:1px solid transparent;border-radius:2px;transition:all .15s}
+.nav-links a:hover,.nav-links a.active{color:var(--a);border-color:var(--b2)}
+
+.hero{padding:52px 0 36px;border-bottom:1px solid var(--b)}
+.hero-tag{font-size:10px;letter-spacing:.26em;text-transform:uppercase;color:var(--a2);margin-bottom:14px}
+.hero h1{font-family:var(--serif);font-size:clamp(3rem,8vw,5.4rem);font-weight:300;line-height:.95;letter-spacing:-.02em;margin-bottom:6px}
+.hero h1 em{font-style:italic;color:var(--a)}
+.hero-sub{font-family:var(--serif);font-style:italic;font-size:.9rem;color:var(--dim);border-left:1px solid var(--a2);padding-left:16px;margin:18px 0 20px;line-height:2;max-width:500px}
+.fenomen{border:1px solid var(--b2);padding:14px 20px;background:rgba(139,58,58,.03)}
+.fenomen-tag{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--a);margin-bottom:7px}
+.fenomen-text{font-size:.8rem;color:rgba(180,200,230,.52);line-height:1.95}
+
+.sec{padding:38px 0;border-bottom:1px solid var(--b)}
+.sec-tag{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--a2);margin-bottom:12px}
+h2{font-family:var(--serif);font-size:clamp(1.1rem,3vw,1.6rem);font-weight:300;margin-bottom:18px}
+h2 em{font-style:italic;color:var(--a)}
+
+/* POHÁDKA */
+.pohadka{font-family:var(--serif);font-size:.94rem;color:rgba(200,218,238,.74);border:1px solid var(--b);background:var(--s);padding:28px 32px;line-height:1}
+.d{display:block;padding:.22em 0}
+.d.br{padding:.55em 0}
+.d.silna{color:var(--a);font-weight:400}
+.d.dim{color:rgba(180,200,230,.38);font-style:italic}
+.d.it{font-style:italic}
+.d.dl{padding-left:1.4em;font-style:italic}
+/* třídy pro 12 anomálií */
+.j1{border-bottom:1px dotted var(--a);cursor:help}
+.j2{border-bottom:1px dashed var(--a2);cursor:help}
+.j3{background:rgba(139,58,58,.1);padding:0 2px;cursor:help}
+.j4{border-bottom:2px dotted var(--a);cursor:help}
+.j5{border-bottom:1px solid var(--a2);cursor:help}
+.j6{background:rgba(139,58,58,.2);padding:0 2px;cursor:help}
+.j7{border-bottom:1px double var(--a);cursor:help}
+.j8{text-decoration:underline wavy var(--a2);cursor:help}
+.j9{border-bottom:1px dashed var(--a);cursor:help}
+.j10{background:rgba(139,58,58,.05);border-bottom:1px dotted var(--a2);cursor:help}
+.j11{text-decoration:line-through 1px solid var(--a);cursor:help}
+.j12{border-left:2px solid var(--a);padding-left:4px;cursor:help}
+.legenda{margin-top:10px;padding:10px 14px;background:var(--s);border:1px solid var(--b);font-size:.71rem;color:var(--dim);display:flex;flex-wrap:wrap;gap:4px 18px}
+
+/* ANOMÁLIE */
+.anomalie{border:1px solid var(--b);background:var(--s);margin-bottom:3px;overflow:hidden}
+.anomalie-header{display:flex;align-items:center;gap:14px;padding:14px 18px;cursor:pointer;user-select:none}
+.anomalie-header:hover{background:rgba(139,58,58,.04)}
+.a-num{font-family:var(--serif);font-size:1.5rem;font-weight:300;color:rgba(139,58,58,.2);min-width:28px;line-height:1}
+.a-meta{flex:1}
+.a-nazev{font-size:.83rem;color:var(--c);margin-bottom:2px}
+.a-termin{font-size:.69rem;color:var(--a2);letter-spacing:.06em;font-style:italic}
+.a-toggle{font-size:.68rem;color:var(--dim);letter-spacing:.1em;text-transform:uppercase;transition:transform .2s;white-space:nowrap}
+.anomalie.open .a-toggle{transform:rotate(180deg)}
+.anomalie-body{display:none;padding:4px 18px 20px;border-top:1px solid var(--b)}
+.anomalie.open .anomalie-body{display:block}
+.a-citace{font-family:var(--serif);font-style:italic;font-size:.83rem;color:rgba(139,58,58,.5);border-left:1px solid var(--b2);padding:7px 13px;margin:12px 0;line-height:1.85}
+.a-citace span{display:block}
+.a-popis{font-size:.78rem;color:rgba(180,200,230,.54);line-height:1.92;margin-bottom:0}
+
+.cta-box{margin-top:32px;padding:20px 22px;background:var(--s);border:1px solid var(--b2);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+.cta-text{font-size:.8rem;color:var(--dim);max-width:360px;line-height:1.85}
+.btn{padding:10px 22px;font-family:var(--mono);font-size:.75rem;letter-spacing:.1em;text-transform:uppercase;border:none;cursor:pointer;border-radius:2px;transition:all .15s;text-decoration:none;display:inline-block}
+.btn-p{background:var(--a);color:var(--bg)}
+.btn-p:hover{background:#a84a4a}
+.btn-g{background:transparent;color:var(--dim);border:1px solid var(--b)}
+.btn-g:hover{color:var(--c);border-color:var(--b2)}
+
+footer{padding:26px 0;border-top:1px solid var(--b);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+footer p{font-size:.7rem;color:var(--dim)}
+footer a{color:var(--a)}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-l" href="../../../index.html">← Všechna zvířata</a>
+  <div class="nav-links">
+    <a href="slon_pohadka.html" class="active">Pohádka</a>
+    <a href="slon_diagnostika.html">Diagnostika</a>
+    <a href="slon_workshop.html">Workshop</a>
+    <a href="analyzer.html">Analyzátor</a>
+  </div>
+</nav>
+
+<div class="wrap">
+
+<section class="hero">
+  <p class="hero-tag">Kreativní miniatura · Karta Slon</p>
+  <h1>Slon</h1>
+  <p class="hero-sub">„jednu třešni ti dám slone, když mě dohoníš“</p>
+  <div class="fenomen">
+    <div class="fenomen-tag">Fenomén — běh za nedosažitelným / třešeň jako důvod</div>
+    <p class="fenomen-text">Slon je velký, těžký, rozvážný. Nese v sobě paměť krajin, které už neexistují. A pak přijde ona – malá, rychlá, neuchopitelná – a slíbí mu třešeň, když ji dohoní. Slon běží. Ne proto, že by věřil, že ji dostihne, ale protože běh sám dává smysl. Pohádka o touze být lehký, o výzvě, která nikdy neskončí, a o tom, že někdy je důležitější běžet než doběhnout.</p>
+  </div>
+</section>
+
+<!-- POHÁDKA -->
+<section class="sec">
+  <p class="sec-tag">Pohádka · čtěte pomalu</p>
+  <h2>O SLONOVI <em>(který běžel za třešní)</em></h2>
+
+  <div class="pohadka">
+    <span class="d">—</span>
+    <span class="d br"></span>
+    <span class="d"><span class="j1" title="Krátká věta jako rytmus">Slon byl velký.</span></span>
+    <span class="d"><span class="j1">Těžký.</span></span>
+    <span class="d"><span class="j1">Rozvážný.</span></span>
+    <span class="d"><span class="j2" title="Paměť krajin, které už neexistují">Nosil v sobě paměť krajin, které už neexistují.</span></span>
+    <span class="d">Když šel, země se chvěla.</span>
+    <span class="d">Když stál, čas se zpomalil.</span>
+    <span class="d br"></span>
+    <span class="d">A pak přišla ona.</span>
+    <span class="d"><span class="j3" title="Tři adjektiva – malá, rychlá, neuchopitelná">Malá.</span></span>
+    <span class="d"><span class="j3">Rychlá.</span></span>
+    <span class="d"><span class="j3">Neuchopitelná.</span></span>
+    <span class="d"><span class="j4" title="Varianty identity – možná myš, možná vítr, možná jen hlas">Možná myš.</span></span>
+    <span class="d"><span class="j4">Možná vítr.</span></span>
+    <span class="d"><span class="j4">Možná jen hlas.</span></span>
+    <span class="d br"></span>
+    <span class="d silna"><span class="j5" title="Slib jako motor děje">„Jednu třešeň ti dám, slone,“ řekla,</span></span>
+    <span class="d silna"><span class="j5">„když mě dohoníš.“</span></span>
+    <span class="d br"></span>
+    <span class="d">Slon se podíval na své nohy.</span>
+    <span class="d">Na zem.</span>
+    <span class="d">Na horizont.</span>
+    <span class="d">A pak se rozběhl.</span>
+    <span class="d"><span class="j6" title="Paradox – ne rychle, ale srdcem">Ne rychle.</span></span>
+    <span class="d"><span class="j6">Ale srdcem.</span></span>
+    <span class="d br"></span>
+    <span class="d">Třešeň byla červená.</span>
+    <span class="d">Lesklá.</span>
+    <span class="d">Nedosažitelná.</span>
+    <span class="d">A slon běžel.</span>
+    <span class="d"><span class="j7" title="Gradace – za chutí, za slibem, za něčím, co možná ani neexistuje">Za chutí.</span></span>
+    <span class="d"><span class="j7">Za slibem.</span></span>
+    <span class="d"><span class="j7">Za něčím, co možná ani neexistuje.</span></span>
+    <span class="d br"></span>
+    <span class="d">Cestou míjel stromy, které si ho pamatovaly.</span>
+    <span class="d">Řeky, které ho kdysi chladily.</span>
+    <span class="d">Kamínky, které kdysi se mu smály.</span>
+    <span class="d">Ale on běžel dál.</span>
+    <span class="d"><span class="j8" title="Paradox – přestože třešeň byla jenom ovoce">Přestože třešeň byla jenom ovoce.</span></span>
+    <span class="d">Protože třešeň byla víc než ovoce.</span>
+    <span class="d"><span class="j9" title="Definice skrze opakování – byla výzva, byla hra, byla touha být lehký">Byla výzva.</span></span>
+    <span class="d"><span class="j9">Byla hra.</span></span>
+    <span class="d"><span class="j9">Byla touha být lehký.</span></span>
+    <span class="d">Byla touha být silnější.</span>
+    <span class="d br"></span>
+    <span class="d">„Jednu třešeň ti dám, slone,“ znělo pořád.</span>
+    <span class="d">Ale nikdy ji nedostal.</span>
+    <span class="d"><span class="j10" title="Paradox – a právě proto běžel. Aby nemohl zastavit.">A právě proto běžel.</span></span>
+    <span class="d"><span class="j10">Aby nemohl zastavit.</span></span>
+    <span class="d br"></span>
+    <span class="d">Protože kdyby ji dostal,</span>
+    <span class="d">co by zbylo?</span>
+    <span class="d br"></span>
+    <span class="d">A tak se začalo říkat, že někde v krajině běží slon.</span>
+    <span class="d">Za třešní, kterou nikdy nedohoní.</span>
+    <span class="d">A že dokud se za ní požene, nikdy se nehoní.</span>
+    <span class="d"><span class="j11" title="Roztržené slovo na konci">A že stač</span></span>
+    <span class="d"><span class="j11">í běžet za něčím malým.</span></span>
+    <span class="d"><span class="j12" title="Závěrečná pointa">A věřit, že to má velký smysl</span></span>
+  </div>
+
+  <div class="legenda">
+    <span><span class="j1" style="cursor:default">tečkovaně</span> = krátká věta jako rytmus</span>
+    <span><span class="j2" style="cursor:default">přerušovaně</span> = paměť krajin</span>
+    <span><span class="j3" style="cursor:default">podklad světlý</span> = tři adjektiva</span>
+    <span><span class="j4" style="cursor:default">dvojitě tečkovaně</span> = varianty identity</span>
+    <span><span class="j5" style="cursor:default">plně</span> = slib jako motor děje</span>
+    <span><span class="j6" style="cursor:default">podklad tmavší</span> = paradox (ne rychle, ale srdcem)</span>
+    <span><span class="j7" style="cursor:default">dvojitě</span> = gradace (za chutí, za slibem…)</span>
+    <span><span class="j8" style="cursor:default">vlnovka</span> = paradox (přestože jen ovoce)</span>
+    <span><span class="j9" style="cursor:default">přerušovaně</span> = definice skrze opakování</span>
+    <span><span class="j10" style="cursor:default">podklad + tečky</span> = paradox (právě proto běžel)</span>
+    <span><span class="j11" style="cursor:default">přeškrtnuto</span> = roztržené slovo</span>
+    <span><span class="j12" style="cursor:default">levá linka</span> = závěrečná pointa</span>
+  </div>
+</section>
+
+<!-- 12 ANOMÁLIÍ -->
+<section class="sec">
+  <p class="sec-tag">12 jazykových anomálií · kliknutím otevřete</p>
+  <h2>Co pohádka dělá s jazykem</h2>
+
+  <div id="anomalie-list"></div>
+
+  <div class="cta-box">
+    <p class="cta-text">Pokračujte diagnostikou — zjistěte svůj kognitivní úhel a dostanete workshop přizpůsobený vám.</p>
+    <a href="slon_diagnostika.html" class="btn btn-p">Přejít na diagnostiku →</a>
+  </div>
+</section>
+
+<footer>
+  <p>Karta Slon · Chceš myš? · © 2026 Michaela Nováková</p>
+  <p><a href="mailto:chcesmys@gmail.com">chcesmys@gmail.com</a></p>
+</footer>
+</div>
+
+<script>
+const ANOMALIE = [
+  {n:'Krátká věta jako rytmus',t:'izolovaná adjektiva',
+   c:['"Slon byl velký."','"Těžký."','"Rozvážný."'],
+   p:'Tři jednoslovné věty, které stojí samostatně. Vytvářejí rytmus a zdůrazňují základní vlastnosti slona – každá vlastnost má vlastní prostor.'},
+  {n:'Paměť krajin, které už neexistují',t:'nostalgická metafora',
+   c:['"Nosil v sobě paměť krajin, které už neexistují."'],
+   p:'Slon není jen zvíře, je to nositel paměti. Krajiny, které zmizely, v něm dál žijí. Personifikace paměti a ztráty.'},
+  {n:'Tři adjektiva – malá, rychlá, neuchopitelná',t:'trojice vlastností protihráče',
+   c:['"Malá."','"Rychlá."','"Neuchopitelná."'],
+   p:'Protějšek slona je definován třemi adjektivy, která kontrastují s jeho vlastnostmi. Každé stojí samostatně, jako by se nedala spojit.'},
+  {n:'Varianty identity',t:'možná X, možná Y, možná Z',
+   c:['"Možná myš."','"Možná vítr."','"Možná jen hlas."'],
+   p:'Tři možnosti, co ta bytost je. Žádná není jistá. Stupňuje se od konkrétní (myš) přes abstraktní (vítr) až po čistý fenomén (hlas).'},
+  {n:'Slib jako motor děje',t:'podmínková věta jako hybatel',
+   c:['"Jednu třešeň ti dám, slone,“ řekla, „když mě dohoníš.“'],
+   p:'Celý příběh se rozběhne kvůli jedné podmínkové větě. Slib je nedosažitelný, ale právě to žene děj.'},
+  {n:'Paradox – ne rychle, ale srdcem',t:'negace a upřesnění',
+   c:['"Ne rychle."','"Ale srdcem."'],
+   p:'Běh není definován rychlostí, ale kvalitou. Fyzikální veličina je nahrazena emocí.'},
+  {n:'Gradace – za chutí, za slibem, za něčím, co možná ani neexistuje',t:'stupňování abstrakce',
+   c:['"Za chutí."','"Za slibem."','"Za něčím, co možná ani neexistuje."'],
+   p:'Tři cíle běhu – od konkrétního (chuť) přes abstraktní (slib) až po pochybnost o existenci samotného cíle.'},
+  {n:'Paradox – přestože třešeň byla jenom ovoce',t:'kontrast',
+   c:['"Přestože třešeň byla jenom ovoce."'],
+   p:'Věta, která připomíná banálnost cíle, ale zároveň ukazuje, že pro slona je mnohem víc.'},
+  {n:'Definice skrze opakování',t:'byla X, byla Y, byla Z',
+   c:['"Byla výzva."','"Byla hra."','"Byla touha být lehký."'],
+   p:'Třešeň je definována třemi rolemi. Každá další vrstva odhaluje, proč má takovou moc.'},
+  {n:'Paradox – a právě proto běžel. Aby nemohl zastavit.',t:'obrácená logika',
+   c:['"A právě proto běžel."','"Aby nemohl zastavit."'],
+   p:'Běh není prostředek k dosažení cíle, ale cíl sám. Slon běží, aby nemusel přestat.'},
+  {n:'Roztržené slovo na konci',t:'stač / í',
+   c:['"A že stač"','"í běžet za něčím malým."'],
+   p:'Slovo „stačí“ je rozděleno na dva řádky. Mezera zdůrazňuje, že to malé (třešeň) je vlastně dostačující – ale musí se za ním běžet.'},
+  {n:'Závěrečná pointa',t:'víra ve smysl',
+   c:['"A věřit, že to má velký smysl"'],
+   p:'Poslední věta (bez tečky) otevřeně říká, že smysl není v cíli, ale ve víře, že to, co děláme, má význam.'}
+];
+
+const list = document.getElementById('anomalie-list');
+ANOMALIE.forEach((a,i)=>{
+  const el = document.createElement('div');
+  el.className = 'anomalie';
+  el.innerHTML = `
+    <div class="anomalie-header" onclick="this.parentElement.classList.toggle('open')">
+      <div class="a-num">${String(i+1).padStart(2,'0')}</div>
+      <div class="a-meta">
+        <div class="a-nazev">${a.n}</div>
+        <div class="a-termin">${a.t}</div>
+      </div>
+      <div class="a-toggle">▾</div>
+    </div>
+    <div class="anomalie-body">
+      <div class="a-citace">${a.c.map(c=>`<span>${c}</span>`).join('')}</div>
+      <p class="a-popis">${a.p}</p>
+    </div>`;
+  list.appendChild(el);
+});
+</script>
+</body>
+</html>
