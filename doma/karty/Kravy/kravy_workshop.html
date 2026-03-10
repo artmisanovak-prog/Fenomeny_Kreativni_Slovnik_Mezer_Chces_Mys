@@ -1,1 +1,537 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Krávy — workshop · Chceš myš?</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#07090f;--s:#0d1018;--s2:#12161f;--s3:#171c27;
+  --c:#cdd8e8;--dim:rgba(180,200,230,.35);--a:#a0522d;--a2:#6b3e1f;
+  --b:rgba(160,82,45,.12);--b2:rgba(160,82,45,.26);--b3:rgba(160,82,45,.42);
+  --serif:'Cormorant Garamond',Georgia,serif;--mono:'DM Mono',monospace;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--c);font-family:var(--mono);font-size:13px;line-height:1.85;-webkit-font-smoothing:antialiased}
+.wrap{max-width:780px;margin:0 auto;padding:0 24px}
 
+nav{position:sticky;top:0;z-index:99;border-bottom:1px solid var(--b);background:rgba(7,9,15,.96);backdrop-filter:blur(14px);padding:11px 24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
+.nav-l{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);text-decoration:none;transition:color .15s}
+.nav-l:hover{color:var(--c)}
+.nav-links{display:flex;flex-wrap:wrap;gap:4px}
+.nav-links a{font-size:9px;letter-spacing:.11em;text-transform:uppercase;color:var(--dim);text-decoration:none;padding:4px 8px;border:1px solid transparent;border-radius:2px;transition:all .15s;white-space:nowrap}
+.nav-links a:hover,.nav-links a.active{color:var(--a);border-color:var(--b2)}
+
+.hero{padding:44px 0 28px;border-bottom:1px solid var(--b)}
+.hero-tag{font-size:10px;letter-spacing:.26em;text-transform:uppercase;color:var(--a2);margin-bottom:12px}
+.hero h1{font-family:var(--serif);font-size:clamp(2rem,5vw,3.4rem);font-weight:300;line-height:1;letter-spacing:-.01em;margin-bottom:6px}
+.hero h1 em{font-style:italic;color:var(--a)}
+.hero-uhel{margin-top:14px;display:inline-flex;align-items:center;gap:10px;padding:9px 16px;background:rgba(160,82,45,.06);border:1px solid var(--b2);flex-wrap:wrap}
+.hero-uhel-tag{font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--a2)}
+.hero-uhel-val{font-family:var(--serif);font-size:.96rem;color:var(--a)}
+.hero-note{font-size:.76rem;color:var(--dim);margin-top:10px;line-height:1.9;max-width:520px}
+
+/* PŘEPÍNAČ ÚHLŮ */
+.uhel-switcher{padding:16px 0 0;display:flex;flex-wrap:wrap;gap:4px;border-bottom:1px solid var(--b);padding-bottom:16px}
+.uhel-btn{font-family:var(--mono);font-size:.65rem;letter-spacing:.09em;padding:4px 9px;background:transparent;border:1px solid var(--b);color:var(--dim);cursor:pointer;border-radius:2px;transition:all .15s}
+.uhel-btn:hover{color:var(--a);border-color:var(--b2)}
+.uhel-btn.active{background:rgba(160,82,45,.1);color:var(--a);border-color:var(--a2)}
+.uhel-protilehly{font-size:.65rem;color:var(--a2);margin-left:8px;font-style:italic}
+
+/* ANOMÁLIE */
+.anomalie-list{padding:8px 0}
+.anomalie{border:1px solid var(--b);background:var(--s);margin-bottom:3px;overflow:hidden;transition:border-color .15s}
+.anomalie:hover{border-color:var(--b2)}
+.anomalie-header{display:flex;align-items:center;gap:14px;padding:14px 18px;cursor:pointer;user-select:none}
+.a-num{font-family:var(--serif);font-size:1.5rem;font-weight:300;color:rgba(160,82,45,.2);min-width:28px;line-height:1}
+.a-meta{flex:1}
+.a-nazev{font-size:.83rem;color:var(--c);margin-bottom:2px}
+.a-termin{font-size:.68rem;color:var(--a2);letter-spacing:.06em;font-style:italic}
+.a-toggle{font-size:.68rem;color:var(--dim);letter-spacing:.1em;text-transform:uppercase;transition:transform .2s;white-space:nowrap}
+.anomalie.open .a-toggle{transform:rotate(180deg)}
+.anomalie-body{display:none;padding:4px 18px 20px;border-top:1px solid var(--b)}
+.anomalie.open .anomalie-body{display:block}
+
+.a-citace{font-family:var(--serif);font-style:italic;font-size:.82rem;color:rgba(160,82,45,.48);border-left:1px solid var(--b2);padding:7px 13px;margin:12px 0 10px;line-height:1.85}
+.a-citace span{display:block}
+.a-popis{font-size:.77rem;color:rgba(180,200,230,.5);line-height:1.9;margin-bottom:16px}
+
+/* CVIČENÍ */
+.ukol-wrap{background:var(--s2);border:1px solid var(--b)}
+.ukol-kalibrace{padding:9px 16px;border-bottom:1px solid var(--b);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--a);display:flex;align-items:center;gap:8px}
+.ukol-kalibrace span{color:var(--dim);font-size:.65rem}
+.ukol-text{padding:16px 16px;font-size:.82rem;color:rgba(200,218,238,.8);line-height:1.9}
+.ukol-jazyk{padding:8px 16px 12px;font-size:.71rem;color:var(--a2);font-style:italic;border-top:1px solid var(--b)}
+.pisarna{width:100%;background:var(--s3);border:none;border-top:1px solid var(--b);color:var(--c);padding:11px 14px;font-family:var(--mono);font-size:.78rem;line-height:1.75;resize:vertical;min-height:80px}
+.pisarna:focus{outline:1px solid var(--a2)}
+.pisarna::placeholder{color:rgba(180,200,230,.08)}
+
+.btn{padding:9px 20px;font-family:var(--mono);font-size:.73rem;letter-spacing:.1em;text-transform:uppercase;border:none;cursor:pointer;border-radius:2px;transition:all .15s;text-decoration:none;display:inline-block}
+.btn-g{background:transparent;color:var(--dim);border:1px solid var(--b)}
+.btn-g:hover{color:var(--c);border-color:var(--b2)}
+.a-btns{display:flex;gap:5px;padding:8px 14px 0}
+
+/* EXPORT BAR */
+.export-fixed{position:fixed;bottom:0;left:0;right:0;background:rgba(7,9,15,.97);border-top:1px solid var(--b);backdrop-filter:blur(12px);padding:9px 24px;display:flex;justify-content:space-between;align-items:center;z-index:90}
+.export-info{font-size:.72rem;color:var(--dim)}
+.export-info strong{color:var(--a)}
+.export-btns{display:flex;gap:5px}
+
+footer{padding:24px 0;border-top:1px solid var(--b);display:flex;flex-direction:column;gap:12px;margin-bottom:52px}
+.footer-links{display:flex;flex-wrap:wrap;gap:8px 16px;justify-content:center}
+.footer-links a{color:var(--a2);font-size:.7rem;text-decoration:none;border-bottom:1px dotted var(--b2)}
+.footer-links a:hover{color:var(--a)}
+footer p{font-size:.7rem;color:var(--dim);text-align:center}
+footer a{color:var(--a)}
+
+@media print{nav,.export-fixed,.uhel-switcher,.a-btns,.pisarna{display:none!important}.anomalie-body{display:block!important}.anomalie{border:1px solid #ccc;page-break-inside:avoid}body{background:white;color:black}}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-l" href="../../../index.html">← Všechna zvířata</a>
+  <div class="nav-links">
+    <a href="kravy_pohadka.html">Krávy</a>
+    <a href="mys_pohadka.html">Myš</a>
+    <a href="cap_pohadka.html">Čáp</a>
+    <a href="pav_pohadka.html">Páv</a>
+    <a href="tygr_pohadka.html">Tygr</a>
+    <a href="zelva_pohadka.html">Želva</a>
+    <a href="krokodyl_pohadka.html">Krokodýl</a>
+    <a href="hyena_pohadka.html">Hyena</a>
+    <a href="slon_pohadka.html">Slon</a>
+    <a href="jednorozec_pohadka.html">Jednorožec</a>
+    <a href="ryba_pohadka.html">Ryba</a>
+    <a href="parohy_pohadka.html">Parohy</a>
+    <a href="analyzer.html">Analyzátor</a>
+  </div>
+</nav>
+
+<div class="wrap">
+
+<section class="hero">
+  <p class="hero-tag">Karta Krávy · Kreativní workshop</p>
+  <h1>13 anomálií — <em>cvičení pro ty, kdo blbnou hlavy</em></h1>
+  <div class="hero-uhel">
+    <span class="hero-uhel-tag">Váš úhel:</span>
+    <span class="hero-uhel-val" id="uhel-display">— přejděte nejprve na diagnostiku —</span>
+    <span class="uhel-protilehly" id="protilehly-display"></span>
+  </div>
+  <p class="hero-note">Každá anomálie je rozvinuta do několika kroků. Pracujte s opakováním, s nesmyslem, s tím, co se děje, když jazyk ztrácí význam. A když budete chtít, můžete si půjčit motivy z jiných karet a psát o nich kraví perspektivou.</p>
+</section>
+
+<div class="uhel-switcher" id="uhel-switcher"></div>
+
+<div class="anomalie-list" id="anomalie-list"></div>
+
+<footer>
+  <div class="footer-links">
+    <a href="mys_pohadka.html">Myš</a> · <a href="cap_pohadka.html">Čáp</a> · <a href="pav_pohadka.html">Páv</a> · <a href="tygr_pohadka.html">Tygr</a> · <a href="zelva_pohadka.html">Želva</a> · <a href="krokodyl_pohadka.html">Krokodýl</a> · <a href="hyena_pohadka.html">Hyena</a> · <a href="slon_pohadka.html">Slon</a> · <a href="jednorozec_pohadka.html">Jednorožec</a> · <a href="ryba_pohadka.html">Ryba</a> · <a href="parohy_pohadka.html">Parohy</a> · <a href="analyzer.html">Analyzátor</a>
+  </div>
+  <p>Karta Krávy · Chceš myš? · © 2026 Michaela Nováková</p>
+  <p><a href="mailto:chcesmys@gmail.com">chcesmys@gmail.com</a></p>
+</footer>
+</div>
+
+<div class="export-fixed" id="export-fixed">
+  <div class="export-info">Workshop: <strong id="export-uhel-label">—</strong> · Karta Krávy</div>
+  <div class="export-btns">
+    <button class="btn btn-g" style="font-size:.68rem;padding:6px 12px" onclick="ulozitMapu()">Uložit mapu</button>
+    <button class="btn btn-g" style="font-size:.68rem;padding:6px 12px" onclick="exportJSON()">Export JSON</button>
+    <button class="btn btn-g" style="font-size:.68rem;padding:6px 12px" onclick="window.print()">Tisk</button>
+    <button class="btn btn-g" style="font-size:.68rem;padding:6px 12px" onclick="sdilej()">Sdílet</button>
+  </div>
+</div>
+
+<script>
+// =====================================================
+// DATA: 12 úhlů (stejné jako v diagnostice)
+// =====================================================
+const UHLY = {
+  0:{nazev:'0° Analytický', prot:180, popis:'Strukturujete logicky.', tip:'Zkuste se na chvíli vzdát logiky a nechat věci plynout.'},
+  180:{nazev:'180° Asociační', prot:0, popis:'Odpovědi skáčou.', tip:'Zkuste svůj proud myšlenek uspořádat do pevné struktury.'},
+  30:{nazev:'30° Kulturní', prot:210, popis:'Čtete jako sdílenou výpověď.', tip:'Zaměřte se na svůj vlastní, jedinečný prožitek.'},
+  210:{nazev:'210° Introspektivní', prot:30, popis:'Mluvíte o vlastním prožitku.', tip:'Podívejte se na věc očima společnosti, tradice, archetypu.'},
+  60:{nazev:'60° Filozofický', prot:240, popis:'Hledáte abstraktní pravdu.', tip:'Zkuste se na věc podívat s ironickým nadhledem.'},
+  240:{nazev:'240° Ironický', prot:60, popis:'Komentujete s odstupem.', tip:'Ptejte se po podstatě, ne po povrchním rozporu.'},
+  90:{nazev:'90° Naivní', prot:270, popis:'Přímočarost.', tip:'Zkuste vše přehnat, zdramatizovat, nadsadit.'},
+  270:{nazev:'270° Groteskní', prot:90, popis:'Dramatičnost.', tip:'Zkuste to říct co nejjednodušeji, bez příkras.'},
+  120:{nazev:'120° Jazykový', prot:300, popis:'Všímáte si formy.', tip:'Nechte logiku rozpadnout, hrajte si s absurditou.'},
+  300:{nazev:'300° Absurdní', prot:120, popis:'Logika se rozpadá.', tip:'Soustřeďte se na čistou formu, rytmus, zvuk slov.'},
+  150:{nazev:'150° Metaforický', prot:330, popis:'Myslíte v obrazech.', tip:'Zkuste snovou, nekauzální imaginaci.'},
+  330:{nazev:'330° Surrealistický', prot:150, popis:'Snová logika.', tip:'Hledejte vědomé, promyšlené metafory.'}
+};
+
+// =====================================================
+// DATA: 13 anomálií s propracovanými cvičeními
+// =====================================================
+const ANOMALIE = [
+  {
+    nazev:'Zdůraznění neobyčejnosti',
+    termin:'ale ne jen tak nějaké',
+    citace:['"Ale ne jen tak nějakých."'],
+    popis:'Hned na začátku je řečeno, že tyto krávy nejsou obyčejné. Text si vytváří očekávání.',
+    jazyk:'Rámcování, očekávání',
+    ukol:`
+      <strong>Forenzní porucha:</strong> Text hned na začátku říká, že jeho objekt není obyčejný.
+      <br><br>
+      <strong>Kreativní fenomen:</strong> Vytváření očekávání a jeho následné naplňování (nebo nenaplňování).
+      <br><br>
+      <strong>Cvičení (30–40 minut):</strong><br>
+      1. Napište první větu nějakého textu (pohádky, popisu, úvahy), která bude říkat, že daná věc není obyčejná. Např. "Měl hodinky. Ale ne obyčejné."<br>
+      2. Pokračujte alespoň 10 větami, ve kterých tuto neobyčejnost rozvinete. Můžete ji postupně odhalovat, nebo naopak stále naznačovat a nikdy plně neodhalit.<br>
+      3. Přečtěte si text a zhodnoťte, zda naplnil očekávání, která první věta vyvolala.<br>
+      4. Reflexe: Jak moc jsme ovlivněni tím, co se nám řekne na začátku? Kde v životě to zažíváme?
+    `
+  },
+  {
+    nazev:'Paradox (mluvily, nebučely)',
+    termin:'řeč bez bučení',
+    citace:['"Tyhle krávy mluvily."','"Ne bučely."','"Mluvily."'],
+    popis:'Krávy, které mají mluvit, ale nebučí. Porušení očekávání, co krávy dělají.',
+    jazyk:'Paradox, negace',
+    ukol:`
+      <strong>Forenzní porucha:</strong> Bytost dělá něco, co je v rozporu s její podstatou.
+      <br><br>
+      <strong>Kreativní fenomen:</strong> Objevování nových možností v danostech.
+      <br><br>
+      <strong>Cvičení (30–40 minut):</strong><br>
+      1. Vezměte nějakou typickou vlastnost něčeho (např. "ptáci létají", "psi štěkají", "voda teče") a napište krátký text (10–15 vět), ve kterém tuto vlastnost popřete, ale zároveň nahradíte něčím jiným. Např. "Ptáci nelétali. Plavali. Jako ryby, ale s křídly."<br>
+      2. Pokuste se, aby nová vlastnost dávala v textu smysl a byla konzistentní.<br>
+      3. Reflexe: Co takové přepisování "pravidel" dělá s naším vnímáním světa?
+    `
+  },
+  {
+    nazev:'Paradoxní přirovnání',
+    termin:'jako krávy, ne bubáci',
+    citace:['"Jako krávy."','"Ne Bubáci."'],
+    popis:'Přirovnání, které je zároveň negací. Co to znamená "mluvit jako krávy"?',
+    jazyk:'Přirovnání s negací',
+    ukol:`
+      <strong>Forenzní porucha:</strong> Vysvětlení, které vlastně nic nevysvětluje.
+      <br><br>
+      <strong>Kreativní fenomen:</strong> Hra s očekáváním a významem.
+      <br><br>
+      <strong>Cvičení (30–40 minut):</strong><br>
+      1. Vymyslete pět přirovnání, která budou zároveň negací, např. "chytrej jako liška, ale ne liška", "rychlej jako vítr, ale ne vítr".<br>
+      2. Ke každému napište krátký komentář, co to vlastně znamená.<br>
+      3. Vyberte jedno a rozveďte ho do krátkého příběhu (10–15 vět), ve kterém toto přirovnání hraje roli.<br>
+      4. Reflexe: Kdy používáme přirovnání, která vlastně nic neříkají? Je to problém, nebo hra?
+    `
+  },
+  {
+    nazev:'Ironie',
+    termin:'nic užitečného',
+    citace:['"Ale neříkaly nic užitečného."'],
+    popis:'Mluví, ale jejich řeč nemá žádný užitek. Ironie komunikace.',
+    jazyk:'Ironie, negativní vymezení',
+    ukol:`
+      <strong>Forenzní porucha:</strong> Někdo mluví, ale jeho řeč nemá žádný účel.
+      <br><br>
+      <strong>Kreativní fenomen:</strong> Hledání krásy v neužitečném.
+      <br><br>
+      <strong>Cvičení (30–40 minut):</strong><br>
+      1. Napište krátký monolog (10–15 vět) někoho, kdo mluví, ale neříká nic užitečného. Může to být básník, filozof, nebo třeba kráva. Text by měl být krásný, ale prakticky nepoužitelný.<br>
+      2. Zkuste totéž napsat jako dialog dvou postav, které si vyměňují "neužitečné" věty.<br>
+      3. Reflexe: Má právo na existenci i řeč, která nic neřeší? Co nám dává?
+    `
+  },
+  {
+    nazev:'Rytmické opakování',
+    termin:'bú bú bú',
+    citace:['"„Bu bu bu, blbnu ti hlavu, bu bu.“"'],
+    popis:'Opakování nesmyslného zvuku vytváří rytmus a hypnotický efekt.',
+    jazyk:'Rytmus, mantra',
+    ukol:`
+      <strong>Forenzní porucha:</strong> Opakování beze smyslu, které ale působí.
+      <br><br>
+      <strong>Kreativní fenomen:</strong> Vědomá práce s rytmem a zvukem.
+      <br><br>
+      <strong>Cvičení (30–40 minut):</strong><br>
+      1. Vymyslete vlastní nesmyslné slovo nebo frázi a opakujte ho/ji nahlas několik minut. Vnímejte, co to s vámi dělá.<br>
+      2. Napište krátkou báseň (10–15 řádků), která bude celá postavena na opakování tohoto slova, s občasnými obměnami. Sledujte rytmus.<br>
+      3. Zkuste stejnou báseň napsat podruhé, ale s jiným rytmem (např. zrychlit, zpomalit, přidat pauzy).<br>
+      4. Reflexe: Kde v životě zažíváme opakování, která nás uklidňují nebo naopak hypnotizují?
+    `
+  },
+  {
+    nazev:'Negace hrozby',
+    termin:'nebyla hrozba, byla metoda',
+    citace:['"A to nebyla hrozba."','"To byla metoda."'],
+    popis:'Co vypadá jako nesmyslné opakování, je ve skutečnosti promyšlený postup.',
+    jazyk:'Paradox, reinterpretace',
+    ukol:`
+      <strong>Forenzní porucha:</strong> Jev je označen za něco jiného, než se zdá.
+      <br><br>
+      <strong>Kreativní fenomen:</strong> Hledání skrytých významů.
+      <br><br>
+      <strong>Cvičení (30–40 minut):</strong><br>
+      1. Vezměte něco, co se na první pohled zdá negativní (např. rozbitý hrnek, zpoždění vlaku, ticho v hovoru) a napište o tom text, ve kterém to reinterpretujete jako něco pozitivního, jako metodu, záměr.<br>
+      2. Začněte větou "To nebyla X. To byla Y." a pak rozveďte.<br>
+      3. Reflexe: Jak často reinterpretujeme události ve svém životě? Je to sebeklam, nebo moudrost?
+    `
+  },
+  {
+    nazev:'Paradoxní tvrzení',
+    termin:'realita strašně pevná',
+    citace:['"je realita strašně pevná."','"Aihnhoooooonn ne jen pro ně - pro všechny"'],
+    popis:'Tvrzení, které je samo o sobě zvláštní – realita je pevná, a proto je třeba ji znejistit.',
+    jazyk:'Paradox, nadsázka',
+    ukol:`
+      <strong>Forenzní porucha:</strong> Důvod, který je vlastně protimluv.
+      <br><br>
+      <strong>Kreativní fenomen:</strong> Hledání logiky v nelogickém.
+      <br><br>
+      <strong>Cvičení (30–40 minut):</strong><br>
+      1. Vymyslete pět paradoxních důvodů pro nějaké jednání. Např. "Rozbil jsem okno, protože bylo moc celé."<br>
+      2. Vyberte jeden a napište o něm krátký příběh (10–15 vět), ve kterém tento důvod dává (aspoň v tom světě) smysl.<br>
+      3. Reflexe: Co nám paradoxy říkají o světě? Odhalují jeho absurditu, nebo hloubku?
+    `
+  },
+  {
+    nazev:'Personifikace jazyka',
+    termin:'věty jsou rovné, výrazy se tváří',
+    citace:['"Že věty jsou hrozně rovné."','"Že výrazy se tváří, jako by byly jediné."'],
+    popis:'Jazyk dostává lidské vlastnosti – věty jsou "rovné", výrazy se "tváří".',
+    jazyk:'Personifikace',
+    ukol:`
+      <strong>Forenzní porucha:</strong> Abstraktní jevy jednají jako lidé.
+      <br><br>
+      <strong>Kreativní fenomen:</strong> Oživení světa kolem nás.
+      <br><br>
+      <strong>Cvičení (30–40 minut):</strong><br>
+      1. Vyberte pět abstraktních pojmů (např. věta, slovo, význam, ticho, smích) a ke každému napište, jak by vypadal jako člověk – jak chodí, co říká, čeho se bojí.<br>
+      2. Napište krátkou scénku (10–15 vět), ve které tyto personifikované pojmy spolu mluví.<br>
+      3. Reflexe: Co nám personifikace umožňuje pochopit, co bychom jinak neviděli?
+    `
+  },
+  {
+    nazev:'Neologismy',
+    termin:'zamlžíme, zkomolíme, zblbneme',
+    citace:['"Zamlžíme jazyk."','"Zkomolíme smysl."','"Zblbneme hlavy."'],
+    popis:'Novotvary, které popisují akci proti jazyku a smyslu.',
+    jazyk:'Neologismy, akční slova',
+    ukol:`
+      <strong>Forenzní porucha:</strong> Nová slova pro nové činnosti.
+      <br><br>
+      <strong>Kreativní fenomen:</strong> Rozšiřování slovníku o nové významy.
+      <br><br>
+      <strong>Cvičení (30–40 minut):</strong><br>
+      1. Vymyslete pět nových sloves, která by popisovala činnosti související s jazykem a smyslem (např. "odsmyslit", "přejazykovat", "zamlžit").<br>
+      2. Ke každému napište definici a příklad použití.<br>
+      3. Napište krátký text (10–15 vět), ve kterém tato slova použijete v akci.<br>
+      4. Reflexe: Proč vznikají nová slova? Co nám chybí ve starých?
+    `
+  },
+  {
+    nazev:'Gradace účinku na lidi',
+    termin:'od smíchu k nejistotě',
+    citace:['"Lidé se nejdřív smáli."','"Pak se začali škrábat na hlavě."','"Pak začali pochybovat..."','"A nakonec si nebyli jistí ani tím, jestli jsou to oni, kdo myslí..."'],
+    popis:'Postupný dopad nesmyslné řeči na lidskou psychiku.',
+    jazyk:'Gradace, psychologický popis',
+    ukol:`
+      <strong>Forenzní porucha:</strong> Stejný podnět má čím dál silnější účinky.
+      <br><br>
+      <strong>Kreativní fenomen:</strong> Všímání si jemných proměn.
+      <br><br>
+      <strong>Cvičení (30–40 minut):</strong><br>
+      1. Popište nějaký děj nebo situaci pomocí několika fází, od nejslabšího účinku po nejsilnější. Začněte třeba "Nejdřív se ... Pak ... Pak ... A nakonec ..."<br>
+      2. Může to být o tom, jak na vás působí hudba, jak se vyvíjí hádka, jak se šíří zpráva.<br>
+      3. Pokuste se zachytit nejen vnější děje, ale i vnitřní pocity.<br>
+      4. Reflexe: Kdy v životě zažíváme takovou gradaci? Je to spíš vzrušující, nebo děsivé?
+    `
+  },
+  {
+    nazev:'Definice bu',
+    termin:'bu není slovo, bu je stav',
+    citace:['"„Bu není slovo."','"Bu je stav."','"Bu je jazyk beze smyslu."','"Bu je volnost.“"'],
+    popis:'Sémantická definice něčeho, co původně vypadalo jako nesmyslný zvuk.',
+    jazyk:'Definice, gradace',
+    ukol:`
+      <strong>Forenzní porucha:</strong> Nesmyslný zvuk má hlubokou definici.
+      <br><br>
+      <strong>Kreativní fenomen:</strong> Hledání smyslu v nesmyslu.
+      <br><br>
+      <strong>Cvičení (30–40 minut):</strong><br>
+      1. Vymyslete nějaký nesmyslný zvuk (např. "blb", "mrk", "pšššt") a napište jeho definici, která bude mít několik stupňů – od nejjednodušší po nejsložitější. Použijte strukturu "Není to X. Je to Y. Je to Z..."<br>
+      2. Napište krátkou báseň nebo úvahu, ve které tento zvuk hraje hlavní roli.<br>
+      3. Reflexe: Co se stane, když se začneme vážně zabývat něčím, co původně vypadalo jako nesmysl? Mění se to?
+    `
+  },
+  {
+    nazev:'Paradoxní výrok',
+    termin:'hlava si je moc jistá, palouk nesnáší jistotu',
+    citace:['"Blbnu ti hlavu, protože hlava je si moc jistá. A palouk nesnáší jistotu."'],
+    popis:'Věta, která spojuje nesouvisející a vytváří novou, podivnou logiku.',
+    jazyk:'Paradox, nonsens',
+    ukol:`
+      <strong>Forenzní porucha:</strong> Logika, která není logická.
+      <br><br>
+      <strong>Kreativní fenomen:</strong> Hledání souvislostí tam, kde nejsou.
+      <br><br>
+      <strong>Cvičení (30–40 minut):</strong><br>
+      1. Vymyslete pět vět, které spojují dvě zdánlivě nesouvisející věci do jednoho vysvětlení. Např. "Prší, protože stromy chtějí sprchu."<br>
+      2. Vyberte jednu a napište o ní krátký příběh (10–15 vět), ve kterém tato logika funguje.<br>
+      3. Reflexe: Co nám takové "nelogické" spojování dělá s myšlením? Je to dětské, nebo básnické?
+    `
+  },
+  {
+    nazev:'Závěrečná personifikace',
+    termin:'jazyk je postava, hlava je louka',
+    citace:['"A že jazyk je postava, A že i on má svou vlastní hlavu A že hlava je jen louka, kde se dá bloudit."'],
+    popis:'Jazyk a hlava jsou personifikovány a přirovnávány k přírodním jevům. Vše se propojuje.',
+    jazyk:'Personifikace, metafora, propojování',
+    ukol:`
+      <strong>Forenzní porucha:</strong> Všechno souvisí se vším na základě básnické logiky.
+      <br><br>
+      <strong>Kreativní fenomen:</strong> Vidění světa jako propojené sítě.
+      <br><br>
+      <strong>Cvičení (30–40 minut):</strong><br>
+      1. Napište krátký text (10–15 vět), ve kterém propojíte několik zdánlivě nesouvisejících věcí (např. jazyk, hlava, louka, vítr, kniha) do jednoho obrazu. Každá věc by měla mít lidské vlastnosti a měly by spolu nějak souviset.<br>
+      2. Pokuste se, aby výsledek působil jako přirozený, i když je podivný.<br>
+      3. Reflexe: Co se stane, když přestaneme věci oddělovat a začneme je propojovat? Získáme chaos, nebo nový řád?
+    `
+  }
+];
+
+// =====================================================
+// LOGIKA WORKSHOPU
+// =====================================================
+let aktivniUhel = localStorage.getItem('kravy_uhel') || '0';
+
+function uhel_label(id){
+  return UHLY[id] ? UHLY[id].nazev : '—';
+}
+
+function renderUhelSwitcher(){
+  const sw = document.getElementById('uhel-switcher');
+  sw.innerHTML = '';
+  const sorted = Object.entries(UHLY).sort((a,b) => parseInt(a[0]) - parseInt(b[0]));
+  
+  sorted.forEach(([id, u]) => {
+    const btn = document.createElement('button');
+    btn.className = 'uhel-btn' + (id===aktivniUhel?' active':'');
+    btn.textContent = u.nazev;
+    btn.onclick = ()=>{ 
+      aktivniUhel = id; 
+      renderUhelSwitcher(); 
+      updateLabels(); 
+    };
+    sw.appendChild(btn);
+  });
+}
+
+function updateLabels(){
+  const uhel_nazev = uhel_label(aktivniUhel);
+  document.getElementById('uhel-display').textContent = uhel_nazev;
+  document.getElementById('export-uhel-label').textContent = uhel_nazev;
+  
+  if (UHLY[aktivniUhel]) {
+    const protId = UHLY[aktivniUhel].prot;
+    const protNazev = UHLY[protId].nazev;
+    const protTip = UHLY[protId].tip;
+    document.getElementById('protilehly-display').innerHTML = `← protilehlý: <strong>${protNazev}</strong> · ${protTip}`;
+  }
+}
+
+function renderAnomaalie(){
+  const list = document.getElementById('anomalie-list');
+  const wasOpen = {};
+  list.querySelectorAll('.anomalie.open').forEach(el=>{wasOpen[el.dataset.idx]=true;});
+  list.innerHTML = '';
+
+  ANOMALIE.forEach((a,i)=>{
+    const el = document.createElement('div');
+    el.className = 'anomalie' + (wasOpen[i]?' open':'');
+    el.dataset.idx = i;
+    el.innerHTML = `
+      <div class="anomalie-header" onclick="this.parentElement.classList.toggle('open')">
+        <div class="a-num">${String(i+1).padStart(2,'0')}</div>
+        <div class="a-meta">
+          <div class="a-nazev">${a.nazev}</div>
+          <div class="a-termin">${a.termin}</div>
+        </div>
+        <div class="a-toggle">▾</div>
+      </div>
+      <div class="anomalie-body">
+        <div class="a-citace">${a.citace.map(c=>`<span>${c}</span>`).join('')}</div>
+        <p class="a-popis">${a.popis}</p>
+        <div class="ukol-wrap">
+          <div class="ukol-kalibrace">Kreativní cvičení <span>· 30–40 minut</span></div>
+          <div class="ukol-text">${a.ukol}</div>
+          <div class="ukol-jazyk">Jazykový fenomén: ${a.jazyk}</div>
+          <textarea class="pisarna" placeholder="Pište své poznámky, nápady, výsledky cvičení sem…" rows="4"></textarea>
+          <div class="a-btns">
+            <button class="btn btn-g" style="font-size:.68rem;padding:5px 12px;margin-bottom:8px" onclick="ulozitCviceni(${i},this)">Uložit rozpracované</button>
+            <button class="btn btn-g" style="font-size:.68rem;padding:5px 12px;margin-bottom:8px" onclick="window.open('analyzer.html','_blank')">📊 Analyzovat text</button>
+          </div>
+        </div>
+      </div>`;
+    list.appendChild(el);
+  });
+  updateLabels();
+}
+
+function ulozitCviceni(idx, btn){
+  const ta = btn.closest('.anomalie-body').querySelector('.pisarna');
+  const text = ta.value.trim();
+  if(!text){alert('Napište nejprve text cvičení.');return;}
+  const zaznam = {
+    datum: new Date().toLocaleDateString('cs-CZ'),
+    karta: 'Krávy',
+    uhel: uhel_label(aktivniUhel),
+    anomalie: ANOMALIE[idx].nazev,
+    text: text
+  };
+  const ex = JSON.parse(localStorage.getItem('chcesmys_cviceni')||'[]');
+  ex.push(zaznam);
+  localStorage.setItem('chcesmys_cviceni', JSON.stringify(ex));
+  btn.textContent = 'Uloženo ✓';
+  setTimeout(()=>{btn.textContent='Uložit rozpracované';},2000);
+}
+
+function ulozitMapu(){
+  const mapa = {datum:new Date().toLocaleDateString('cs-CZ'),karta:'Krávy',uhel:uhel_label(aktivniUhel)};
+  const ex = JSON.parse(localStorage.getItem('chcesmys_zapisnik_mapy')||'[]');
+  ex.push(mapa);
+  localStorage.setItem('chcesmys_zapisnik_mapy',JSON.stringify(ex));
+  alert('Kognitivní mapa uložena. ('+ex.length+' záznamů)');
+}
+
+function exportJSON(){
+  const data = {
+    karta:'Krávy',
+    uhel:uhel_label(aktivniUhel),
+    datum:new Date().toLocaleDateString('cs-CZ'),
+    cviceni:JSON.parse(localStorage.getItem('chcesmys_cviceni')||'[]').filter(c=>c.karta==='Krávy'),
+    mapa:JSON.parse(localStorage.getItem('chcesmys_zapisnik_mapy')||'[]').filter(m=>m.karta==='Krávy')
+  };
+  const blob = new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  const a = document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='kravy_workshop.json';
+  a.click();
+}
+
+function sdilej(){
+  const url = window.location.href.split('?')[0]+'?uhel='+aktivniUhel;
+  if(navigator.share){navigator.share({title:'Krávy workshop',url});}
+  else{navigator.clipboard.writeText(url).then(()=>alert('Odkaz zkopírován: '+url));}
+}
+
+const urlParams = new URLSearchParams(window.location.search);
+if(urlParams.get('uhel')) {
+  aktivniUhel = urlParams.get('uhel');
+} else {
+  const stored = localStorage.getItem('kravy_uhel');
+  if(stored) aktivniUhel = stored;
+}
+
+renderUhelSwitcher();
+renderAnomaalie();
+</script>
+</body>
+</html>
