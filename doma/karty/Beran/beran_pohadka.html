@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Beran — pohádka · Chceš myš?</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#07090f;--s:#0d1018;--s2:#12161f;
+  --c:#cdd8e8;--dim:rgba(180,200,230,.35);--a:#F9F6EE;--a2:#E2DFD2;
+  --b:rgba(111,140,159,.12);--b2:rgba(111,140,159,.26);
+  --serif:'Cormorant Garamond',Georgia,serif;--mono:'DM Mono',monospace;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--c);font-family:var(--mono);font-size:13px;line-height:1.85;-webkit-font-smoothing:antialiased}
+.wrap{max-width:780px;margin:0 auto;padding:0 24px}
+
+nav{position:sticky;top:0;z-index:99;border-bottom:1px solid var(--b);background:rgba(7,9,15,.96);backdrop-filter:blur(14px);padding:11px 24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
+.nav-l{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);text-decoration:none;transition:color .15s}
+.nav-l:hover{color:var(--c)}
+.nav-links{display:flex;flex-wrap:wrap;gap:4px}
+.nav-links a{font-size:9px;letter-spacing:.11em;text-transform:uppercase;color:var(--dim);text-decoration:none;padding:4px 8px;border:1px solid transparent;border-radius:2px;transition:all .15s;white-space:nowrap}
+.nav-links a:hover,.nav-links a.active{color:var(--a);border-color:var(--b2)}
+
+.hero{padding:52px 0 36px;border-bottom:1px solid var(--b)}
+.hero-tag{font-size:10px;letter-spacing:.26em;text-transform:uppercase;color:var(--a2);margin-bottom:14px}
+.hero h1{font-family:var(--serif);font-size:clamp(3rem,8vw,5.4rem);font-weight:300;line-height:.95;letter-spacing:-.02em;margin-bottom:6px}
+.hero h1 em{font-style:italic;color:var(--a)}
+.hero-sub{font-family:var(--serif);font-style:italic;font-size:.9rem;color:var(--dim);border-left:1px solid var(--a2);padding-left:16px;margin:18px 0 20px;line-height:2;max-width:500px}
+.fenomen{border:1px solid var(--b2);padding:14px 20px;background:rgba(111,140,159,.03)}
+.fenomen-tag{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--a);margin-bottom:7px}
+.fenomen-text{font-size:.8rem;color:rgba(180,200,230,.52);line-height:1.95}
+
+.sec{padding:38px 0;border-bottom:1px solid var(--b)}
+.sec-tag{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--a2);margin-bottom:12px}
+h2{font-family:var(--serif);font-size:clamp(1.1rem,3vw,1.6rem);font-weight:300;margin-bottom:18px}
+h2 em{font-style:italic;color:var(--a)}
+
+/* POHÁDKA */
+.pohadka{font-family:var(--serif);font-size:.94rem;color:rgba(200,218,238,.74);border:1px solid var(--b);background:var(--s);padding:28px 32px;line-height:1}
+.d{display:block;padding:.22em 0}
+.d.br{padding:.55em 0}
+.d.silna{color:var(--a);font-weight:400}
+.d.dim{color:rgba(180,200,230,.38);font-style:italic}
+.d.it{font-style:italic}
+.d.dl{padding-left:1.4em;font-style:italic}
+/* třídy pro 13 anomálií */
+.j1{border-bottom:1px dotted var(--a);cursor:help}
+.j2{border-bottom:1px dashed var(--a2);cursor:help}
+.j3{background:rgba(111,140,159,.1);padding:0 2px;cursor:help}
+.j4{border-bottom:2px dotted var(--a);cursor:help}
+.j5{border-bottom:1px solid var(--a2);cursor:help}
+.j6{background:rgba(111,140,159,.2);padding:0 2px;cursor:help}
+.j7{border-bottom:1px double var(--a);cursor:help}
+.j8{text-decoration:underline wavy var(--a2);cursor:help}
+.j9{border-bottom:1px dashed var(--a);cursor:help}
+.j10{background:rgba(111,140,159,.05);border-bottom:1px dotted var(--a2);cursor:help}
+.j11{text-decoration:line-through 1px solid var(--a);cursor:help}
+.j12{border-left:2px solid var(--a);padding-left:4px;cursor:help}
+.j13{background:rgba(111,140,159,.15);border-radius:2px;padding:0 2px;cursor:help}
+.legenda{margin-top:10px;padding:10px 14px;background:var(--s);border:1px solid var(--b);font-size:.71rem;color:var(--dim);display:flex;flex-wrap:wrap;gap:4px 18px}
+
+/* ANOMÁLIE */
+.anomalie{border:1px solid var(--b);background:var(--s);margin-bottom:3px;overflow:hidden}
+.anomalie-header{display:flex;align-items:center;gap:14px;padding:14px 18px;cursor:pointer;user-select:none}
+.anomalie-header:hover{background:rgba(111,140,159,.04)}
+.a-num{font-family:var(--serif);font-size:1.5rem;font-weight:300;color:rgba(111,140,159,.2);min-width:28px;line-height:1}
+.a-meta{flex:1}
+.a-nazev{font-size:.83rem;color:var(--c);margin-bottom:2px}
+.a-termin{font-size:.69rem;color:var(--a2);letter-spacing:.06em;font-style:italic}
+.a-toggle{font-size:.68rem;color:var(--dim);letter-spacing:.1em;text-transform:uppercase;transition:transform .2s;white-space:nowrap}
+.anomalie.open .a-toggle{transform:rotate(180deg)}
+.anomalie-body{display:none;padding:4px 18px 20px;border-top:1px solid var(--b)}
+.anomalie.open .anomalie-body{display:block}
+.a-citace{font-family:var(--serif);font-style:italic;font-size:.83rem;color:rgba(111,140,159,.5);border-left:1px solid var(--b2);padding:7px 13px;margin:12px 0;line-height:1.85}
+.a-citace span{display:block}
+.a-popis{font-size:.78rem;color:rgba(180,200,230,.54);line-height:1.92;margin-bottom:0}
+
+.cta-box{margin-top:32px;padding:20px 22px;background:var(--s);border:1px solid var(--b2);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+.cta-text{font-size:.8rem;color:var(--dim);max-width:360px;line-height:1.85}
+.btn{padding:10px 22px;font-family:var(--mono);font-size:.75rem;letter-spacing:.1em;text-transform:uppercase;border:none;cursor:pointer;border-radius:2px;transition:all .15s;text-decoration:none;display:inline-block}
+.btn-p{background:var(--a);color:var(--bg)}
+.btn-p:hover{background:#8aa6b8}
+.btn-g{background:transparent;color:var(--dim);border:1px solid var(--b)}
+.btn-g:hover{color:var(--c);border-color:var(--b2)}
+
+footer{padding:26px 0;border-top:1px solid var(--b);display:flex;flex-direction:column;gap:12px}
+.footer-links{display:flex;flex-wrap:wrap;gap:8px 16px;justify-content:center}
+.footer-links a{color:var(--a2);font-size:.7rem;text-decoration:none;border-bottom:1px dotted var(--b2)}
+.footer-links a:hover{color:var(--a)}
+footer p{font-size:.7rem;color:var(--dim);text-align:center}
+footer a{color:var(--a)}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-l" href="../../../index.html">← Všechna zvířata</a>
+  <div class="nav-links">
+    <a href="beran_pohadka.html" class="active">Beran</a>
+    <a href="mys_pohadka.html">Myš</a>
+    <a href="cap_pohadka.html">Čáp</a>
+    <a href="pav_pohadka.html">Páv</a>
+    <a href="tygr_pohadka.html">Tygr</a>
+    <a href="zelva_pohadka.html">Želva</a>
+    <a href="krokodyl_pohadka.html">Krokodýl</a>
+    <a href="hyena_pohadka.html">Hyena</a>
+    <a href="slon_pohadka.html">Slon</a>
+    <a href="jednorozec_pohadka.html">Jednorožec</a>
+    <a href="ryba_pohadka.html">Ryba</a>
+    <a href="parohy_pohadka.html">Parohy</a>
+    <a href="kravy_pohadka.html">Krávy</a>
+    <a href="analyzer.html">Analyzátor</a>
+  </div>
+</nav>
+
+<div class="wrap">
+
+<section class="hero">
+  <p class="hero-tag">Kreativní miniatura · Karta Beran</p>
+  <h1>Beran</h1>
+  <p class="hero-sub">„Tupá stáda bouracích beranů marně toužících po změně směru“</p>
+  <div class="fenomen">
+    <div class="fenomen-tag">Fenomén — síla bez směru / hybnost stáda</div>
+    <p class="fenomen-text">Stádo beranů běží. Od počátku světa. Jsou nejmocnější silou, ale nikdo neví, kam míří. Každý v sobě nosí tiché „co kdyby…“, ale nahlas to neřekne nikdo. Pohádka o tom, že největší silou není rychlost, ale schopnost zastavit se a zeptat se: „Kam vlastně běžíme?“</p>
+  </div>
+</section>
+
+<!-- POHÁDKA -->
+<section class="sec">
+  <p class="sec-tag">Pohádka · čtěte pomalu</p>
+  <h2>O BERANOVI <em>a stádu, které běželo, až zapomnělo proč</em></h2>
+
+  <div class="pohadka">
+    <span class="d">Bylo nebylo, v krajině, kde se cesty neklikatí, ale lámou, žilo stádo beranů.</span>
+    <span class="d"><span class="j1" title="Krátké, úsečné věty – rytmus stáda">Silných.</span></span>
+    <span class="d"><span class="j1">Rychlých.</span></span>
+    <span class="d"><span class="j1">Nezastavitelných.</span></span>
+    <span class="d"><span class="j2" title="Opakování, mantra">Běželi.</span></span>
+    <span class="d"><span class="j2">Vždycky vpřed.</span></span>
+    <span class="d"><span class="j2">Vždycky rovně.</span></span>
+    <span class="d"><span class="j2">Vždycky hlavou napřed.</span></span>
+    <span class="d br"></span>
+    <span class="d"><span class="j3" title="Neurčitost původu">Nikdo neví, kdy začali.</span></span>
+    <span class="d"><span class="j3">Možná běželi už od počátku světa.</span></span>
+    <span class="d"><span class="j3">Možná je někdo popohnal.</span></span>
+    <span class="d"><span class="j3">Možná jen zapomněli, jak se stojí.</span></span>
+    <span class="d">Ale běželi.</span>
+    <span class="d">A když narazili, běželi dál.</span>
+    <span class="d">A když spadli, vstali.</span>
+    <span class="d">A běželi dál.</span>
+    <span class="d br"></span>
+    <span class="d">Občas někdo z nich zvedl hlavu.</span>
+    <span class="d">„Co kdybychom zkusili jinam?“</span>
+    <span class="d"><span class="j4" title="Nezlá vůle, ale setrvačnost">Ale ostatní ho převálcovali.</span></span>
+    <span class="d"><span class="j4">Ne z nenávisti.</span></span>
+    <span class="d"><span class="j4">Z hybnosti.</span></span>
+    <span class="d"><span class="j4">Z logiky stáda.</span></span>
+    <span class="d br"></span>
+    <span class="d">A tak se běželo dál.</span>
+    <span class="d">Přes hory.</span>
+    <span class="d">Přes řeky.</span>
+    <span class="d">Přes města, která už dávno nebyla.</span>
+    <span class="d">A každý beran si v duchu říkal:</span>
+    <span class="d">„Možná bych chtěl jinam.“</span>
+    <span class="d"><span class="j5" title="Tabu, neexistující možnost">Ale nahlas to neřekl nikdo.</span></span>
+    <span class="d"><span class="j5">Protože změna směru byla tabu.</span></span>
+    <span class="d"><span class="j5">Zakázané slovo.</span></span>
+    <span class="d"><span class="j5">Neexistující možnost.</span></span>
+    <span class="d br"></span>
+    <span class="d">A přesto – v každém beranovi to bublalo.</span>
+    <span class="d"><span class="j6" title="Gradace vnitřního stavu">Ne jako myšlenka.</span></span>
+    <span class="d"><span class="j6">Jako touha.</span></span>
+    <span class="d"><span class="j6">Jako neklid.</span></span>
+    <span class="d"><span class="j6">Jako tiché „co kdyby…“</span></span>
+    <span class="d">Ale stádo běželo dál.</span>
+    <span class="d">A každý beran si myslel, že je sám, kdo by chtěl jinam.</span>
+    <span class="d br"></span>
+    <span class="d"><span class="j7" title="Paradox síly">A tak se začalo říkat, že stádo beranů je nejmocnější síla světa.</span></span>
+    <span class="d"><span class="j7">Ale nikdo neřekl, že je to síla bez směru.</span></span>
+    <span class="d"><span class="j7">Že je to síla, která neumí zatočit.</span></span>
+    <span class="d"><span class="j7">Že je to síla, která bourá, protože neumí jinak.</span></span>
+    <span class="d br"></span>
+    <span class="d">A někde na kraji stáda běžel jeden beran, co měl v oku jiskru.</span>
+    <span class="d"><span class="j8" title="Jemná metafora">Ne větší než smítko prachu.</span></span>
+    <span class="d"><span class="j8">Ale jiskru.</span></span>
+    <span class="d">A šeptal si:</span>
+    <span class="d">„Co když změna směru není slabost?</span>
+    <span class="d">Co když je to odvaha?“</span>
+    <span class="d br"></span>
+    <span class="d"><span class="j9" title="Roztržené slovo, nedokončenost">Ale než to stačil říct nahla</span></span>
+    <span class="d"><span class="j9">s, stádo ho vtáhlo zpět.</span></span>
+    <span class="d"><span class="j10" title="Nezlá vůle, jen setrvačnost">Ne ze zloby, ne z nenávisti.</span></span>
+    <span class="d"><span class="j10">Z hybnosti. Z logiky stáda.</span></span>
+    <span class="d">Kopyta duněla, prach stoupal, a jeho jiskra zhasla pod tisíci kopyty, která běžela dál.</span>
+    <span class="d br"></span>
+    <span class="d">A běželi dál. Do krajiny, kde se cesty neklikatí, ale lámou. Kde každá zatáčka je pád. Kde jediný způsob, jak změnit směr, je narazit hlavou do zdi. A tak naráželi. A běželi dál. Protože náraz není signál k zastavení, náraz je důkaz, že se nesnažili dost.</span>
+    <span class="d br"></span>
+    <span class="d">A ten jeden beran s uhašenou jiskrou? Běžel s nimi. Už si ani nepamatoval, že chtěl jinam. Možná zapomněli, jak se stojí. Možná zapomněli, proč začali. Možná běželi už od počátku světa.</span>
+    <span class="d br"></span>
+    <span class="d">A v dálce, za obzorem, někde tam, kam žádné stádo nikdy nedošlo, ležela země, kde se berani uměli zastavit a zeptat se: „Kam vlastně běžíme?“</span>
+    <span class="d br"></span>
+    <span class="d dim">Ale sem její ozvěna nikdy nedoletěla. Jen prach a dunění a tisíce kopyta, která běží dál.</span>
+    <span class="d br"></span>
+    <span class="d">A dál..</span>
+    <span class="d">A dál..</span>
+    <span class="d">KONEC</span>
+  </div>
+
+  <div class="legenda">
+    <span><span class="j1" style="cursor:default">tečkovaně</span> = rytmus stáda</span>
+    <span><span class="j2" style="cursor:default">přerušovaně</span> = mantra</span>
+    <span><span class="j3" style="cursor:default">podklad světlý</span> = neurčitost původu</span>
+    <span><span class="j4" style="cursor:default">dvojitě tečkovaně</span> = hybnost stáda</span>
+    <span><span class="j5" style="cursor:default">plně</span> = tabu</span>
+    <span><span class="j6" style="cursor:default">podklad tmavší</span> = gradace</span>
+    <span><span class="j7" style="cursor:default">dvojitě</span> = paradox síly</span>
+    <span><span class="j8" style="cursor:default">vlnovka</span> = jemná metafora</span>
+    <span><span class="j9" style="cursor:default">přerušovaně</span> = roztržené slovo</span>
+    <span><span class="j10" style="cursor:default">podklad + tečky</span> = neosobní síla</span>
+  </div>
+</section>
+
+<!-- 13 ANOMÁLIÍ -->
+<section class="sec">
+  <p class="sec-tag">13 jazykových anomálií · kliknutím otevřete</p>
+  <h2>Co pohádka dělá s jazykem</h2>
+
+  <div id="anomalie-list"></div>
+
+  <div class="cta-box">
+    <p class="cta-text">Pokračujte diagnostikou — zjistěte svůj kognitivní úhel a dostanete workshop přizpůsobený vám. Každý v sobě nosí tiché „co kdyby…“.</p>
+    <a href="beran_diagnostika.html" class="btn btn-p">Přejít na diagnostiku →</a>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-links">
+    <a href="mys_pohadka.html">Myš</a> · <a href="cap_pohadka.html">Čáp</a> · <a href="pav_pohadka.html">Páv</a> · <a href="tygr_pohadka.html">Tygr</a> · <a href="zelva_pohadka.html">Želva</a> · <a href="krokodyl_pohadka.html">Krokodýl</a> · <a href="hyena_pohadka.html">Hyena</a> · <a href="slon_pohadka.html">Slon</a> · <a href="jednorozec_pohadka.html">Jednorožec</a> · <a href="ryba_pohadka.html">Ryba</a> · <a href="parohy_pohadka.html">Parohy</a> · <a href="kravy_pohadka.html">Krávy</a> · <a href="analyzer.html">Analyzátor</a>
+  </div>
+  <p>Karta Beran · Chceš myš? · © 2026 Michaela Nováková</p>
+  <p><a href="mailto:chcesmys@gmail.com">chcesmys@gmail.com</a></p>
+</footer>
+</div>
+
+<script>
+const ANOMALIE = [
+  {
+    nazev:'Rytmus stáda',
+    termin:'krátké, úsečné věty',
+    citace:['"Silných."','"Rychlých."','"Nezastavitelných."'],
+    popis:'Tři jednoslovné věty, které vytvářejí rytmus a zdůrazňují základní vlastnosti stáda – každá vlastnost má vlastní prostor.'
+  },
+  {
+    nazev:'Mantra',
+    termin:'opakování „vždycky“',
+    citace:['"Běželi."','"Vždycky vpřed."','"Vždycky rovně."','"Vždycky hlavou napřed."'],
+    popis:'Opakování slova „vždycky“ vytváří dojem nekonečného, neměnného pohybu. Je to jako modlitba stáda.'
+  },
+  {
+    nazev:'Neurčitost původu',
+    termin:'možná, možná, možná',
+    citace:['"Nikdo neví, kdy začali."','"Možná běželi už od počátku světa."','"Možná je někdo popohnal."','"Možná jen zapomněli, jak se stojí."'],
+    popis:'Trojí „možná“ ukazuje, že původ je ztracen. Nevíme, proč se běží, jen že se běží.'
+  },
+  {
+    nazev:'Hybnost stáda',
+    termin:'ne z nenávisti, z hybnosti',
+    citace:['"Ale ostatní ho převálcovali."','"Ne z nenávisti."','"Z hybnosti."','"Z logiky stáda."'],
+    popis:'Negace zlé vůle a nahrazení fyzikálním principem – stádo není zlé, jen se řídí setrvačností.'
+  },
+  {
+    nazev:'Tabu',
+    termin:'zakázané slovo',
+    citace:['"Ale nahlas to neřekl nikdo."','"Protože změna směru byla tabu."','"Zakázané slovo."','"Neexistující možnost."'],
+    popis:'Gradace od konstatování přes pojmenování až po ontologický status – možnost neexistuje.'
+  },
+  {
+    nazev:'Gradace vnitřního stavu',
+    termin:'od myšlenky k touze',
+    citace:['"Ne jako myšlenka."','"Jako touha."','"Jako neklid."','"Jako tiché „co kdyby…“"'],
+    popis:'Postupné zesilování – od abstraktní myšlenky přes pocit až po šepot, který už skoro není slyšet.'
+  },
+  {
+    nazev:'Paradox síly',
+    termin:'nejmocnější, ale bez směru',
+    citace:['"A tak se začalo říkat, že stádo beranů je nejmocnější síla světa."','"Ale nikdo neřekl, že je to síla bez směru."','"Že je to síla, která neumí zatočit."','"Že je to síla, která bourá, protože neumí jinak."'],
+    popis:'Paradoxní definice síly – je mocná, ale slepá. Její síla je zároveň její slabostí.'
+  },
+  {
+    nazev:'Jemná metafora',
+    termin:'jiskra v oku',
+    citace:['"Ne větší než smítko prachu."','"Ale jiskru."'],
+    popis:'Kontrast mezi nepatrností a významem. Jiskra je malá, ale je to jediná naděje.'
+  },
+  {
+    nazev:'Roztržené slovo',
+    termin:'nahla / s',
+    citace:['"Ale než to stačil říct nahla"','"s, stádo ho vtáhlo zpět."'],
+    popis:'Slovo „nahlas“ je rozděleno na dva řádky. Mezera symbolizuje to, že hlas nebyl dokončen, byl umlčen.'
+  },
+  {
+    nazev:'Neosobní síla',
+    termin:'hybnost, logika stáda',
+    citace:['"Ne ze zloby, ne z nenávisti."','"Z hybnosti. Z logiky stáda."'],
+    popis:'Znovu zdůraznění, že nejde o individuální zlo, ale o anonymní, fyzikální princip.'
+  }
+];
+
+const list = document.getElementById('anomalie-list');
+ANOMALIE.forEach((a,i)=>{
+  const el = document.createElement('div');
+  el.className = 'anomalie';
+  el.innerHTML = `
+    <div class="anomalie-header" onclick="this.parentElement.classList.toggle('open')">
+      <div class="a-num">${String(i+1).padStart(2,'0')}</div>
+      <div class="a-meta">
+        <div class="a-nazev">${a.n}</div>
+        <div class="a-termin">${a.t}</div>
+      </div>
+      <div class="a-toggle">▾</div>
+    </div>
+    <div class="anomalie-body">
+      <div class="a-citace">${a.c.map(c=>`<span>${c}</span>`).join('')}</div>
+      <p class="a-popis">${a.popis}</p>
+    </div>`;
+  list.appendChild(el);
+});
+</script>
+</body>
+</html>
