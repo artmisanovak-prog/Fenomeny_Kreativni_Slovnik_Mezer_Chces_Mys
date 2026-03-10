@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Husy — pohádka · Chceš myš?</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#07090f;--s:#0d1018;--s2:#12161f;
+  --c:#cdd8e8;--dim:rgba(180,200,230,.35);--a:#8a9ba8;--a2:#5d6f7e;
+  --b:rgba(138,155,168,.12);--b2:rgba(138,155,168,.26);
+  --serif:'Cormorant Garamond',Georgia,serif;--mono:'DM Mono',monospace;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--c);font-family:var(--mono);font-size:13px;line-height:1.85;-webkit-font-smoothing:antialiased}
+.wrap{max-width:780px;margin:0 auto;padding:0 24px}
+
+nav{position:sticky;top:0;z-index:99;border-bottom:1px solid var(--b);background:rgba(7,9,15,.96);backdrop-filter:blur(14px);padding:11px 24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
+.nav-l{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);text-decoration:none;transition:color .15s}
+.nav-l:hover{color:var(--c)}
+.nav-links{display:flex;flex-wrap:wrap;gap:4px}
+.nav-links a{font-size:9px;letter-spacing:.11em;text-transform:uppercase;color:var(--dim);text-decoration:none;padding:4px 8px;border:1px solid transparent;border-radius:2px;transition:all .15s;white-space:nowrap}
+.nav-links a:hover,.nav-links a.active{color:var(--a);border-color:var(--b2)}
+
+.hero{padding:52px 0 36px;border-bottom:1px solid var(--b)}
+.hero-tag{font-size:10px;letter-spacing:.26em;text-transform:uppercase;color:var(--a2);margin-bottom:14px}
+.hero h1{font-family:var(--serif);font-size:clamp(3rem,8vw,5.4rem);font-weight:300;line-height:.95;letter-spacing:-.02em;margin-bottom:6px}
+.hero h1 em{font-style:italic;color:var(--a)}
+.hero-sub{font-family:var(--serif);font-style:italic;font-size:.9rem;color:var(--dim);border-left:1px solid var(--a2);padding-left:16px;margin:18px 0 20px;line-height:2;max-width:500px}
+.fenomen{border:1px solid var(--b2);padding:14px 20px;background:rgba(138,155,168,.03)}
+.fenomen-tag{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--a);margin-bottom:7px}
+.fenomen-text{font-size:.8rem;color:rgba(180,200,230,.52);line-height:1.95}
+
+.sec{padding:38px 0;border-bottom:1px solid var(--b)}
+.sec-tag{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--a2);margin-bottom:12px}
+h2{font-family:var(--serif);font-size:clamp(1.1rem,3vw,1.6rem);font-weight:300;margin-bottom:18px}
+h2 em{font-style:italic;color:var(--a)}
+
+/* POHÁDKA */
+.pohadka{font-family:var(--serif);font-size:.94rem;color:rgba(200,218,238,.74);border:1px solid var(--b);background:var(--s);padding:28px 32px;line-height:1}
+.d{display:block;padding:.22em 0}
+.d.br{padding:.55em 0}
+.d.silna{color:var(--a);font-weight:400}
+.d.dim{color:rgba(180,200,230,.38);font-style:italic}
+.d.it{font-style:italic}
+.d.dl{padding-left:1.4em;font-style:italic}
+/* třídy pro 13 anomálií */
+.j1{border-bottom:1px dotted var(--a);cursor:help}
+.j2{border-bottom:1px dashed var(--a2);cursor:help}
+.j3{background:rgba(138,155,168,.1);padding:0 2px;cursor:help}
+.j4{border-bottom:2px dotted var(--a);cursor:help}
+.j5{border-bottom:1px solid var(--a2);cursor:help}
+.j6{background:rgba(138,155,168,.2);padding:0 2px;cursor:help}
+.j7{border-bottom:1px double var(--a);cursor:help}
+.j8{text-decoration:underline wavy var(--a2);cursor:help}
+.j9{border-bottom:1px dashed var(--a);cursor:help}
+.j10{background:rgba(138,155,168,.05);border-bottom:1px dotted var(--a2);cursor:help}
+.j11{text-decoration:line-through 1px solid var(--a);cursor:help}
+.j12{border-left:2px solid var(--a);padding-left:4px;cursor:help}
+.j13{background:rgba(138,155,168,.15);border-radius:2px;padding:0 2px;cursor:help}
+.legenda{margin-top:10px;padding:10px 14px;background:var(--s);border:1px solid var(--b);font-size:.71rem;color:var(--dim);display:flex;flex-wrap:wrap;gap:4px 18px}
+
+/* ANOMÁLIE */
+.anomalie{border:1px solid var(--b);background:var(--s);margin-bottom:3px;overflow:hidden}
+.anomalie-header{display:flex;align-items:center;gap:14px;padding:14px 18px;cursor:pointer;user-select:none}
+.anomalie-header:hover{background:rgba(138,155,168,.04)}
+.a-num{font-family:var(--serif);font-size:1.5rem;font-weight:300;color:rgba(138,155,168,.2);min-width:28px;line-height:1}
+.a-meta{flex:1}
+.a-nazev{font-size:.83rem;color:var(--c);margin-bottom:2px}
+.a-termin{font-size:.69rem;color:var(--a2);letter-spacing:.06em;font-style:italic}
+.a-toggle{font-size:.68rem;color:var(--dim);letter-spacing:.1em;text-transform:uppercase;transition:transform .2s;white-space:nowrap}
+.anomalie.open .a-toggle{transform:rotate(180deg)}
+.anomalie-body{display:none;padding:4px 18px 20px;border-top:1px solid var(--b)}
+.anomalie.open .anomalie-body{display:block}
+.a-citace{font-family:var(--serif);font-style:italic;font-size:.83rem;color:rgba(138,155,168,.5);border-left:1px solid var(--b2);padding:7px 13px;margin:12px 0;line-height:1.85}
+.a-citace span{display:block}
+.a-popis{font-size:.78rem;color:rgba(180,200,230,.54);line-height:1.92;margin-bottom:0}
+
+.cta-box{margin-top:32px;padding:20px 22px;background:var(--s);border:1px solid var(--b2);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+.cta-text{font-size:.8rem;color:var(--dim);max-width:360px;line-height:1.85}
+.btn{padding:10px 22px;font-family:var(--mono);font-size:.75rem;letter-spacing:.1em;text-transform:uppercase;border:none;cursor:pointer;border-radius:2px;transition:all .15s;text-decoration:none;display:inline-block}
+.btn-p{background:var(--a);color:var(--bg)}
+.btn-p:hover{background:#a0b2c0}
+.btn-g{background:transparent;color:var(--dim);border:1px solid var(--b)}
+.btn-g:hover{color:var(--c);border-color:var(--b2)}
+
+footer{padding:26px 0;border-top:1px solid var(--b);display:flex;flex-direction:column;gap:12px}
+.footer-links{display:flex;flex-wrap:wrap;gap:8px 16px;justify-content:center}
+.footer-links a{color:var(--a2);font-size:.7rem;text-decoration:none;border-bottom:1px dotted var(--b2)}
+.footer-links a:hover{color:var(--a)}
+footer p{font-size:.7rem;color:var(--dim);text-align:center}
+footer a{color:var(--a)}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-l" href="../../../index.html">← Všechna zvířata</a>
+  <div class="nav-links">
+    <a href="husy_pohadka.html" class="active">Husy</a>
+    <a href="mys_pohadka.html">Myš</a>
+    <a href="cap_pohadka.html">Čáp</a>
+    <a href="pav_pohadka.html">Páv</a>
+    <a href="tygr_pohadka.html">Tygr</a>
+    <a href="zelva_pohadka.html">Želva</a>
+    <a href="krokodyl_pohadka.html">Krokodýl</a>
+    <a href="hyena_pohadka.html">Hyena</a>
+    <a href="slon_pohadka.html">Slon</a>
+    <a href="jednorozec_pohadka.html">Jednorožec</a>
+    <a href="ryba_pohadka.html">Ryba</a>
+    <a href="parohy_pohadka.html">Parohy</a>
+    <a href="kravy_pohadka.html">Krávy</a>
+    <a href="beran_pohadka.html">Beran</a>
+    <a href="veverka_pohadka.html">Veverka</a>
+    <a href="analyzer.html">Analyzátor</a>
+  </div>
+</nav>
+
+<div class="wrap">
+
+<section class="hero">
+  <p class="hero-tag">Kreativní miniatura · Karta Husy</p>
+  <h1>Husy</h1>
+  <p class="hero-sub">„já ja jajaja jaja ja“</p>
+  <div class="fenomen">
+    <div class="fenomen-tag">Fenomén — ozvěna identity / kolektivní singular</div>
+    <p class="fenomen-text">Husy na severu nosí každá své „já“. Ale žádné z nich si není jisté, jestli je opravdu „já“, nebo jen ozvěna jiného „já“. Létají v kruhu a křičí „já ja jajaja jaja ja“. Není to zpěv, není to porucha – je to manifest identity v rozkladu. Pohádka o tom, že někdy to, co zní jako sebevědomí, je ve skutečnosti křik o pomoc.</p>
+  </div>
+</section>
+
+<!-- POHÁDKA -->
+<section class="sec">
+  <p class="sec-tag">Pohádka · čtěte pomalu</p>
+  <h2>O HUSÁCH <em>které mluvily „já ja jajaja jaja ja“</em></h2>
+
+  <div class="pohadka">
+    <span class="d">Na severu, kde se slova lámou o vítr a příběhy se rodí z mlhy, žilo jedno hejno hus.</span>
+    <span class="d"><span class="j1" title="Rytmus, výčet">Velkých.</span></span>
+    <span class="d"><span class="j1">Bílých</span></span>
+    <span class="d"><span class="j1">Obyčejných.</span></span>
+    <span class="d"><span class="j1">Aspoň podle svého mínění.</span></span>
+    <span class="d"><span class="j2" title="Nadsázka, humor">A mínění, těch měly zásoby bez dna.</span></span>
+    <span class="d"><span class="j3" title="Neologismus, hra se slovy">A to si tyhlety konkrétní husy si to kompenzovaly tím, že dělaly slovní nosičky.</span></span>
+    <span class="d"><span class="j3">Jenže..</span></span>
+    <span class="d"><span class="j4" title="Metafora identity">Každá z nich nesla jedno „já“.</span></span>
+    <span class="d"><span class="j4">A žádny z tech všech „já“ si nebylo jisté, jestli je opravdu „já“, nebo jen ozvěna jiného „já“.</span></span>
+    <span class="d"><span class="j5" title="Paradox pohybu">A tak husy nelétaly v klínu.</span></span>
+    <span class="d"><span class="j5">Létaly v kruhu.</span></span>
+    <span class="d"><span class="j6" title="Rytmické opakování, mantra">A křičely:</span></span>
+    <span class="d"><span class="j6">„Já ja jajaja jaja ja!“</span></span>
+    <span class="d br"></span>
+    <span class="d"><span class="j7" title="Nejednoznačnost interpretace">Ti, kdo je slyšely z nich byly polopopletení.</span></span>
+    <span class="d"><span class="j7">Jedni si mysleli, že je to zpěv.</span></span>
+    <span class="d"><span class="j7">druzí, že je to porucha.</span></span>
+    <span class="d"><span class="j7">Ale ve skutečnosti to byl - manifest identity v rozkladu.</span></span>
+    <span class="d br"></span>
+    <span class="d"><span class="j8" title="Definice proměnlivé identity">Jedna husa, jmenovala se asi Já, možná JáJá, se jednou zastavila a řekla:</span></span>
+    <span class="d"><span class="j8">„Já jsem já, ale jen když ja slyšíš. Když ja neslyšíš, jsem jen jaja. A když mě slyšíš moc, jsem jajaja. A když mě slyšíš pořád, jsem jaja ja. A pak už nevím, kdo jsem.“</span></span>
+    <span class="d"><span class="j9" title="Absurdní obraz">Ostatní husy přikyvovaly krky jako v opravdové panice.</span></span>
+    <span class="d"><span class="j9">„Já ja jajaja jaja ja!“</span></span>
+    <span class="d"><span class="j9">To nebyl výkřik.</span></span>
+    <span class="d"><span class="j9">To byla gramatická krize.</span></span>
+    <span class="d br"></span>
+    <span class="d"><span class="j10" title="Příchod outsidera">Jednou přiletěl houser.</span></span>
+    <span class="d"><span class="j10">Unavený, potrhaný, s kufrem plným zájmu.</span></span>
+    <span class="d"><span class="j10">Zeptal se:</span></span>
+    <span class="d"><span class="j10">„Kdo jste?“</span></span>
+    <span class="d"><span class="j11" title="Opakování, ozvěna">A husy odpověděly:</span></span>
+    <span class="d"><span class="j11">„Já.“</span></span>
+    <span class="d"><span class="j11">„Já.“</span></span>
+    <span class="d"><span class="j11">„Já.“</span></span>
+    <span class="d"><span class="j11">„Já.“</span></span>
+    <span class="d"><span class="j11">„Já.“</span></span>
+    <span class="d"><span class="j11">„Já.“</span></span>
+    <span class="d"><span class="j11">„Já ja jajaja jaja ja.“</span></span>
+    <span class="d br"></span>
+    <span class="d"><span class="j12" title="Ironická diagnóza">Houser se zasmál.</span></span>
+    <span class="d"><span class="j12">„Aha. Kolektivní singular. To znám.“</span></span>
+    <span class="d"><span class="j12">Víc nic nedodal.</span></span>
+    <span class="d"><span class="j12">A odletěl.</span></span>
+    <span class="d"><span class="j12">A neřekl kam.</span></span>
+    <span class="d br"></span>
+    <span class="d"><span class="j13" title="Závěrečná pointa, mýtus">Od té doby se říká, že když někdo opakuje „já“ tak dlouho, až to zní jako „jajaja“,</span></span>
+    <span class="d"><span class="j13">možná nehledá pozornost.</span></span>
+    <span class="d"><span class="j13">Možná hledá bílé husy.</span></span>
+    <span class="d"><span class="j13">Možná jejich já neslyšel.</span></span>
+    <span class="d br"></span>
+    <span class="d"><span class="j13">Husty totiž nejs</span></span>
+    <span class="d"><span class="j13">ou hloupé.</span></span>
+    <span class="d"><span class="j13">Jsou jen hlasité pokusy o sebe-klam.</span></span>
+  </div>
+
+  <div class="legenda">
+    <span><span class="j1" style="cursor:default">tečkovaně</span> = rytmus, výčet</span>
+    <span><span class="j2" style="cursor:default">přerušovaně</span> = nadsázka, humor</span>
+    <span><span class="j3" style="cursor:default">podklad světlý</span> = neologismus</span>
+    <span><span class="j4" style="cursor:default">dvojitě tečkovaně</span> = metafora identity</span>
+    <span><span class="j5" style="cursor:default">plně</span> = paradox pohybu</span>
+    <span><span class="j6" style="cursor:default">podklad tmavší</span> = rytmické opakování</span>
+    <span><span class="j7" style="cursor:default">dvojitě</span> = nejednoznačnost interpretace</span>
+    <span><span class="j8" style="cursor:default">vlnovka</span> = definice proměnlivé identity</span>
+    <span><span class="j9" style="cursor:default">přerušovaně</span> = absurdní obraz</span>
+    <span><span class="j10" style="cursor:default">podklad + tečky</span> = příchod outsidera</span>
+    <span><span class="j11" style="cursor:default">přeškrtnuto</span> = opakování, ozvěna</span>
+    <span><span class="j12" style="cursor:default">levá linka</span> = ironická diagnóza</span>
+    <span><span class="j13" style="cursor:default">podklad tmavý</span> = závěrečná pointa, mýtus</span>
+  </div>
+</section>
+
+<!-- 13 ANOMÁLIÍ -->
+<section class="sec">
+  <p class="sec-tag">13 jazykových anomálií · kliknutím otevřete</p>
+  <h2>Co pohádka dělá s jazykem</h2>
+
+  <div id="anomalie-list"></div>
+
+  <div class="cta-box">
+    <p class="cta-text">Pokračujte diagnostikou — zjistěte svůj kognitivní úhel a dostanete workshop přizpůsobený vám. Každé „já“ může být ozvěna.</p>
+    <a href="husy_diagnostika.html" class="btn btn-p">Přejít na diagnostiku →</a>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-links">
+    <a href="mys_pohadka.html">Myš</a> · <a href="cap_pohadka.html">Čáp</a> · <a href="pav_pohadka.html">Páv</a> · <a href="tygr_pohadka.html">Tygr</a> · <a href="zelva_pohadka.html">Želva</a> · <a href="krokodyl_pohadka.html">Krokodýl</a> · <a href="hyena_pohadka.html">Hyena</a> · <a href="slon_pohadka.html">Slon</a> · <a href="jednorozec_pohadka.html">Jednorožec</a> · <a href="ryba_pohadka.html">Ryba</a> · <a href="parohy_pohadka.html">Parohy</a> · <a href="kravy_pohadka.html">Krávy</a> · <a href="beran_pohadka.html">Beran</a> · <a href="veverka_pohadka.html">Veverka</a> · <a href="analyzer.html">Analyzátor</a>
+  </div>
+  <p>Karta Husy · Chceš myš? · © 2026 Michaela Nováková</p>
+  <p><a href="mailto:chcesmys@gmail.com">chcesmys@gmail.com</a></p>
+</footer>
+</div>
+
+<script>
+const ANOMALIE = [
+  {
+    nazev:'Rytmus, výčet',
+    termin:'Velkých, Bílých, Obyčejných',
+    citace:['"Velkých."','"Bílých"','"Obyčejných."','"Aspoň podle svého mínění."'],
+    popis:'Krátké, úsečné věty vytvářejí rytmus a zároveň ironický kontrast – jsou obyčejné, ale přesto jsou vyjmenovány.'
+  },
+  {
+    nazev:'Nadsázka, humor',
+    termin:'zásoby mínění bez dna',
+    citace:['"A mínění, těch měly zásoby bez dna."'],
+    popis:'Hravé přehnání – mít „zásoby mínění“ je samo o sobě absurdní, natož „bez dna“.'
+  },
+  {
+    nazev:'Neologismus',
+    termin:'slovní nosičky',
+    citace:['"A to si tyhlety konkrétní husy si to kompenzovaly tím, že dělaly slovní nosičky."'],
+    popis:'Výraz „slovní nosičky“ neexistuje – je to novotvar pro něco, co husy dělají se slovy.'
+  },
+  {
+    nazev:'Metafora identity',
+    termin:'nesly „já“',
+    citace:['"Každá z nich nesla jedno „já“."','"A žádny z tech všech „já“ si nebylo jisté, jestli je opravdu „já“, nebo jen ozvěna jiného „já“."'],
+    popis:'Identita je zpředmětněna – „já“ je něco, co se dá nést, a může to být ozvěna.'
+  },
+  {
+    nazev:'Paradox pohybu',
+    termin:'nelétaly v klínu, ale v kruhu',
+    citace:['"A tak husy nelétaly v klínu."','"Létaly v kruhu."'],
+    popis:'Klín je obvyklý tvar letu hus – tady ho negují a letí v kruhu, což je symbolické (bludný kruh).'
+  },
+  {
+    nazev:'Rytmické opakování, mantra',
+    termin:'Já ja jajaja jaja ja',
+    citace:['"A křičely: / „Já ja jajaja jaja ja!“"'],
+    popis:'Opakování slabik vytváří rytmický, téměř hudební efekt – je to mantra identity.'
+  },
+  {
+    nazev:'Nejednoznačnost interpretace',
+    termin:'zpěv nebo porucha',
+    citace:['"Ti, kdo je slyšely z nich byly polopopletení."','"Jedni si mysleli, že je to zpěv."','"druzí, že je to porucha."','"Ale ve skutečnosti to byl - manifest identity v rozkladu."'],
+    popis:'Tentýž jev je interpretován různě – pointa přichází až na konci.'
+  },
+  {
+    nazev:'Definice proměnlivé identity',
+    termin:'Já jsem já, ale jen když...',
+    citace:['"Jedna husa, jmenovala se asi Já, možná JáJá, se jednou zastavila a řekla:"','"„Já jsem já, ale jen když ja slyšíš. Když ja neslyšíš, jsem jen jaja. A když mě slyšíš moc, jsem jajaja. A když mě slyšíš pořád, jsem jaja ja. A pak už nevím, kdo jsem.“"'],
+    popis:'Identita závisí na posluchači – čím víc je slyšena, tím víc se rozmělňuje.'
+  },
+  {
+    nazev:'Absurdní obraz',
+    termin:'přikyvovaly krky jako v opravdové panice',
+    citace:['"Ostatní husy přikyvovaly krky jako v opravdové panice."','"„Já ja jajaja jaja ja!“"','"To nebyl výkřik."','"To byla gramatická krize."'],
+    popis:'Husy přikyvují krky (což je normální), ale „jako v opravdové panice“ – absurdní spojení.'
+  },
+  {
+    nazev:'Příchod outsidera',
+    termin:'houser s kufrem plným zájmu',
+    citace:['"Jednou přiletěl houser."','"Unavený, potrhaný, s kufrem plným zájmu."','"Zeptal se: / „Kdo jste?“"'],
+    popis:'Houser je zvenčí, má kufr (což je lidský atribut) a ptá se na základní otázku.'
+  },
+  {
+    nazev:'Opakování, ozvěna',
+    termin:'Já. Já. Já...',
+    citace:['"A husy odpověděly:"','"„Já.“"','"„Já.“"','"„Já.“"','"„Já.“"','"„Já.“"','"„Já.“"','"„Já ja jajaja jaja ja.“"'],
+    popis:'Série stejných odpovědí vytváří dojem ozvěny nebo zaseknuté gramofonové desky.'
+  },
+  {
+    nazev:'Ironická diagnóza',
+    termin:'kolektivní singular',
+    citace:['"Houser se zasmál."','"„Aha. Kolektivní singular. To znám.“"','"Víc nic nedodal."','"A odletěl."','"A neřekl kam."'],
+    popis:'Houser stručně a výstižně pojmenuje problém a beze slova odletí – jako by to bylo jasné.'
+  },
+  {
+    nazev:'Závěrečná pointa, mýtus',
+    termin:'hlasité pokusy o sebeklam',
+    citace:['"Od té doby se říká, že když někdo opakuje „já“ tak dlouho, až to zní jako „jajaja“, možná nehledá pozornost. Možná hledá bílé husy. Možná jejich já neslyšel."','"Husty totiž nejs / ou hloupé. / Jsou jen hlasité pokusy o sebe-klam."'],
+    popis:'Závěr vytváří nový mýtus a pointu – husy nejsou hloupé, jen se hlasitě pokoušejí oklamat samy sebe.'
+  }
+];
+
+const list = document.getElementById('anomalie-list');
+ANOMALIE.forEach((a,i)=>{
+  const el = document.createElement('div');
+  el.className = 'anomalie';
+  el.innerHTML = `
+    <div class="anomalie-header" onclick="this.parentElement.classList.toggle('open')">
+      <div class="a-num">${String(i+1).padStart(2,'0')}</div>
+      <div class="a-meta">
+        <div class="a-nazev">${a.n}</div>
+        <div class="a-termin">${a.t}</div>
+      </div>
+      <div class="a-toggle">▾</div>
+    </div>
+    <div class="anomalie-body">
+      <div class="a-citace">${a.c.map(c=>`<span>${c}</span>`).join('')}</div>
+      <p class="a-popis">${a.popis}</p>
+    </div>`;
+  list.appendChild(el);
+});
+</script>
+</body>
+</html>
