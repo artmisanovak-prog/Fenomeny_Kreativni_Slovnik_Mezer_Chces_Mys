@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jednorožec — pohádka · Chceš myš?</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#07090f;--s:#0d1018;--s2:#12161f;
+  --c:#cdd8e8;--dim:rgba(180,200,230,.35);--a:#b38cb8;--a2:#7a5d7e;
+  --b:rgba(179,140,184,.12);--b2:rgba(179,140,184,.26);
+  --serif:'Cormorant Garamond',Georgia,serif;--mono:'DM Mono',monospace;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--c);font-family:var(--mono);font-size:13px;line-height:1.85;-webkit-font-smoothing:antialiased}
+.wrap{max-width:780px;margin:0 auto;padding:0 24px}
+
+nav{position:sticky;top:0;z-index:99;border-bottom:1px solid var(--b);background:rgba(7,9,15,.96);backdrop-filter:blur(14px);padding:11px 24px;display:flex;align-items:center;justify-content:space-between}
+.nav-l{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);text-decoration:none;transition:color .15s}
+.nav-l:hover{color:var(--c)}
+.nav-links{display:flex;gap:4px}
+.nav-links a{font-size:10px;letter-spacing:.11em;text-transform:uppercase;color:var(--dim);text-decoration:none;padding:5px 10px;border:1px solid transparent;border-radius:2px;transition:all .15s}
+.nav-links a:hover,.nav-links a.active{color:var(--a);border-color:var(--b2)}
+
+.hero{padding:52px 0 36px;border-bottom:1px solid var(--b)}
+.hero-tag{font-size:10px;letter-spacing:.26em;text-transform:uppercase;color:var(--a2);margin-bottom:14px}
+.hero h1{font-family:var(--serif);font-size:clamp(3rem,8vw,5.4rem);font-weight:300;line-height:.95;letter-spacing:-.02em;margin-bottom:6px}
+.hero h1 em{font-style:italic;color:var(--a)}
+.hero-sub{font-family:var(--serif);font-style:italic;font-size:.9rem;color:var(--dim);border-left:1px solid var(--a2);padding-left:16px;margin:18px 0 20px;line-height:2;max-width:500px}
+.fenomen{border:1px solid var(--b2);padding:14px 20px;background:rgba(179,140,184,.03)}
+.fenomen-tag{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--a);margin-bottom:7px}
+.fenomen-text{font-size:.8rem;color:rgba(180,200,230,.52);line-height:1.95}
+
+.sec{padding:38px 0;border-bottom:1px solid var(--b)}
+.sec-tag{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--a2);margin-bottom:12px}
+h2{font-family:var(--serif);font-size:clamp(1.1rem,3vw,1.6rem);font-weight:300;margin-bottom:18px}
+h2 em{font-style:italic;color:var(--a)}
+
+/* POHÁDKA */
+.pohadka{font-family:var(--serif);font-size:.94rem;color:rgba(200,218,238,.74);border:1px solid var(--b);background:var(--s);padding:28px 32px;line-height:1}
+.d{display:block;padding:.22em 0}
+.d.br{padding:.55em 0}
+.d.silna{color:var(--a);font-weight:400}
+.d.dim{color:rgba(180,200,230,.38);font-style:italic}
+.d.it{font-style:italic}
+.d.dl{padding-left:1.4em;font-style:italic}
+/* třídy pro 12 anomálií */
+.j1{border-bottom:1px dotted var(--a);cursor:help}
+.j2{border-bottom:1px dashed var(--a2);cursor:help}
+.j3{background:rgba(179,140,184,.1);padding:0 2px;cursor:help}
+.j4{border-bottom:2px dotted var(--a);cursor:help}
+.j5{border-bottom:1px solid var(--a2);cursor:help}
+.j6{background:rgba(179,140,184,.2);padding:0 2px;cursor:help}
+.j7{border-bottom:1px double var(--a);cursor:help}
+.j8{text-decoration:underline wavy var(--a2);cursor:help}
+.j9{border-bottom:1px dashed var(--a);cursor:help}
+.j10{background:rgba(179,140,184,.05);border-bottom:1px dotted var(--a2);cursor:help}
+.j11{text-decoration:line-through 1px solid var(--a);cursor:help}
+.j12{border-left:2px solid var(--a);padding-left:4px;cursor:help}
+.legenda{margin-top:10px;padding:10px 14px;background:var(--s);border:1px solid var(--b);font-size:.71rem;color:var(--dim);display:flex;flex-wrap:wrap;gap:4px 18px}
+
+/* ANOMÁLIE */
+.anomalie{border:1px solid var(--b);background:var(--s);margin-bottom:3px;overflow:hidden}
+.anomalie-header{display:flex;align-items:center;gap:14px;padding:14px 18px;cursor:pointer;user-select:none}
+.anomalie-header:hover{background:rgba(179,140,184,.04)}
+.a-num{font-family:var(--serif);font-size:1.5rem;font-weight:300;color:rgba(179,140,184,.2);min-width:28px;line-height:1}
+.a-meta{flex:1}
+.a-nazev{font-size:.83rem;color:var(--c);margin-bottom:2px}
+.a-termin{font-size:.69rem;color:var(--a2);letter-spacing:.06em;font-style:italic}
+.a-toggle{font-size:.68rem;color:var(--dim);letter-spacing:.1em;text-transform:uppercase;transition:transform .2s;white-space:nowrap}
+.anomalie.open .a-toggle{transform:rotate(180deg)}
+.anomalie-body{display:none;padding:4px 18px 20px;border-top:1px solid var(--b)}
+.anomalie.open .anomalie-body{display:block}
+.a-citace{font-family:var(--serif);font-style:italic;font-size:.83rem;color:rgba(179,140,184,.5);border-left:1px solid var(--b2);padding:7px 13px;margin:12px 0;line-height:1.85}
+.a-citace span{display:block}
+.a-popis{font-size:.78rem;color:rgba(180,200,230,.54);line-height:1.92;margin-bottom:0}
+
+.cta-box{margin-top:32px;padding:20px 22px;background:var(--s);border:1px solid var(--b2);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+.cta-text{font-size:.8rem;color:var(--dim);max-width:360px;line-height:1.85}
+.btn{padding:10px 22px;font-family:var(--mono);font-size:.75rem;letter-spacing:.1em;text-transform:uppercase;border:none;cursor:pointer;border-radius:2px;transition:all .15s;text-decoration:none;display:inline-block}
+.btn-p{background:var(--a);color:var(--bg)}
+.btn-p:hover{background:#caa8d0}
+.btn-g{background:transparent;color:var(--dim);border:1px solid var(--b)}
+.btn-g:hover{color:var(--c);border-color:var(--b2)}
+
+footer{padding:26px 0;border-top:1px solid var(--b);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+footer p{font-size:.7rem;color:var(--dim)}
+footer a{color:var(--a)}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-l" href="../../../index.html">← Všechna zvířata</a>
+  <div class="nav-links">
+    <a href="jednorozec_pohadka.html" class="active">Pohádka</a>
+    <a href="jednorozec_diagnostika.html">Diagnostika</a>
+    <a href="jednorozec_workshop.html">Workshop</a>
+    <a href="analyzer.html">Analyzátor</a>
+  </div>
+</nav>
+
+<div class="wrap">
+
+<section class="hero">
+  <p class="hero-tag">Kreativní miniatura · Karta Jednorožec</p>
+  <h1>Jednorožec</h1>
+  <p class="hero-sub">„nevěřím na delfíny ani na lední medvědy“</p>
+  <div class="fenomen">
+    <div class="fenomen-tag">Fenomén — existence skrze popření / mýtus jako obrana</div>
+    <p class="fenomen-text">Jednorožec byl. To je první lež. Pohádka o bytosti, která vznikla z nemožného setkání, a která musí popřít své vlastní rodiče, aby mohla existovat jako mýtus. O tom, že někdy je snazší uvěřit v neskutečné, než přijmout, že jsme skuteční.</p>
+  </div>
+</section>
+
+<!-- POHÁDKA -->
+<section class="sec">
+  <p class="sec-tag">Pohádka · čtěte pomalu</p>
+  <h2>O JEDNOROŽCOVI <em>(který nevěřil na delfíny ani na lední medvědy)</em></h2>
+
+  <div class="pohadka">
+    <span class="d">—</span>
+    <span class="d br"></span>
+    <span class="d"><span class="j1" title="Paradox existence: Jednorožec byl. To je první lež.">Jednorožec byl.</span></span>
+    <span class="d"><span class="j1">To je první lež.</span></span>
+    <span class="d">Ale když se řekne „jednorožec“, každý ví, co si představit.</span>
+    <span class="d"><span class="j2" title="Paradoxní definice: Neskutečný, ale definovaný neskutečně přesně.">Bílý. Roh. Lesk.</span></span>
+    <span class="d"><span class="j2">Neskutečný, ale přesto definovaný neskutečně přesně..</span></span>
+    <span class="d br"></span>
+    <span class="d">Jednorožec žil v krajině, kde se věřilo na všechno.</span>
+    <span class="d">Na víly, na mluvící stromy, na svítící houby.</span>
+    <span class="d"><span class="j3" title="Surrealistický obraz: delfíni zpívající songy, medvědi tancující kankán">Na delfíny, zpívající podvodní songy, které nikdo neslyší.</span></span>
+    <span class="d"><span class="j3">Na lední medvědy, tancující kankán, který naopak slyší každej. i ti delfíni v těch svých hlubinách.</span></span>
+    <span class="d br"></span>
+    <span class="d">Ale akorát ten ne. jednorožec nevěřil.</span>
+    <span class="d">Ne v delfíny.</span>
+    <span class="d">Ne v lední medvědy.</span>
+    <span class="d">„Jsou jen vymyšlení,“ říkal. „Jako Polednice, dědek Potíž nebo třeba hadi.“</span>
+    <span class="d br"></span>
+    <span class="d"><span class="j4" title="Paradox poznání: popírá je, ale jmenuje je a ví o nich.">A přitom je jmenoval.</span></span>
+    <span class="d"><span class="j4">A přitom o nich věděl.</span></span>
+    <span class="d"><span class="j4">A přitom měl v očích jejich stopy.</span></span>
+    <span class="d br"></span>
+    <span class="d">Protože kdysi — ne tak docela dávno, ale rozhodně ne dnes —</span>
+    <span class="d"><span class="j5" title="Rytmus a gradace: krátké věty, stupňování.">se utrhla kra.</span></span>
+    <span class="d"><span class="j5">Velká.</span></span>
+    <span class="d"><span class="j5">Ledová.</span></span>
+    <span class="d">A na ní lední medvěd.</span>
+    <span class="d">Led a voda. Silný vítr a vlny moře.</span>
+    <span class="d">A delfíni.</span>
+    <span class="d br"></span>
+    <span class="d">A jeden z nich byl zvědavý.</span>
+    <span class="d">A medvěd byl sám.</span>
+    <span class="d">A kra byla dost velká.</span>
+    <span class="d">A příroda nemá moc rozumu.</span>
+    <span class="d br"></span>
+    <span class="d">A tak se stalo, co se stát nemělo.</span>
+    <span class="d">Spojili se.</span>
+    <span class="d">Ne z lásky.</span>
+    <span class="d"><span class="j6" title="Personifikace abstrakta: logika, která se tvářila jako nehoda.">Z logiky, která se tvářila jako nehoda.</span></span>
+    <span class="d br"></span>
+    <span class="d">Ledová kra se houpala, jak ji moře nadnášelo na vlnách.</span>
+    <span class="d">Medvědovy tlapy klouzali po ledu, delfín se nadechoval v bublinách.</span>
+    <span class="d br"></span>
+    <span class="d"><span class="j7" title="Poetická evokace: smyslové obrazy.">Vzduch byl plný soli a páry, zvuk zpěvu se mísil s praskáním ledu.</span></span>
+    <span class="d br"></span>
+    <span class="d">Dva světy, které se nikdy neměly potkat, se navzájem poznaly.</span>
+    <span class="d">A mráz, místo aby je oddělil, spoji jel.</span>
+    <span class="d">A když si toho příroda všimla, bylo pozdě.</span>
+    <span class="d">Rozum to odmítl, jenže hmota už to věděla.</span>
+    <span class="d br"></span>
+    <span class="d"><span class="j8" title="Prolínání identit: medvěd rybou, delfín šelmou.">Medvěd se stal v té chvíli rybou a delfin šelmou.</span></span>
+    <span class="d">Dva životy stvořené z protikladů.</span>
+    <span class="d"><span class="j9" title="Neologismus / záměrná chyba: kříženeheho.">Z původní nesmyslnosti střetu, nemohlo vzejít nic kříženeheho.</span></span>
+    <span class="d br"></span>
+    <span class="d">A tak - vznikl tvor zcela vymyšlený.</span>
+    <span class="d br"></span>
+    <span class="d">A z toho se stal jednorožec.</span>
+    <span class="d">Ne hned.</span>
+    <span class="d">Ne přímo.</span>
+    <span class="d">Ale postupně.</span>
+    <span class="d">Z ploutve a tlapy. Z bělosti a lesku. Ze šupin a z kožichu. Z úsměvu a zubů a z dechu, co se mění v mlhu.</span>
+    <span class="d br"></span>
+    <span class="d">A když se jednorožec narodil, byl krásný.</span>
+    <span class="d">Ale nejistý.</span>
+    <span class="d">Jenže když zjistil:</span>
+    <span class="d">z čeho je vyrobený,</span>
+    <span class="d">z čeho je vysněný, z čeho je – zpanikařil.</span>
+    <span class="d br"></span>
+    <span class="d">Protože pokud je z reálných věcí,</span>
+    <span class="d">může být reálný.</span>
+    <span class="d">A pokud je reálný,</span>
+    <span class="d">přestává být jednorožec.</span>
+    <span class="d br"></span>
+    <span class="d">Takže se rozhodl:</span>
+    <span class="d"><span class="j10" title="Gradace synonym: Zapřít. Zrušit. Zneplatnit. Zpochybnit. Znejistit. Zamluvit.">Zapřít.</span></span>
+    <span class="d"><span class="j10">Zrušit.</span></span>
+    <span class="d"><span class="j10">Zneplatnit.</span></span>
+    <span class="d"><span class="j10">Zpochybnit.</span></span>
+    <span class="d"><span class="j10">Znejistit.</span></span>
+    <span class="d"><span class="j10">Zamluvit.</span></span>
+    <span class="d br"></span>
+    <span class="d">„Delfíni neexistují,“ řekl.</span>
+    <span class="d">„Lední medvěd pff jenom mýtus.“</span>
+    <span class="d">„Nikdy nebyli. Žádná realita. Jsou jen neskutečnost. To, co není možné. Tak jako já.</span>
+    <span class="d br"></span>
+    <span class="d">Ale jednou, když se díval do vody,</span>
+    <span class="d">uviděl odraz. a ten měl stín.</span>
+    <span class="d">A ten stín měl ploutev.</span>
+    <span class="d">ta ploutev mela srst.</span>
+    <span class="d">A roh.</span>
+    <span class="d br"></span>
+    <span class="d">A jednorožec zavřel oči.</span>
+    <span class="d">A řekl:</span>
+    <span class="d">„To není já.</span>
+    <span class="d">To není pravda. To není možné. Tak jako já.“</span>
+    <span class="d br"></span>
+    <span class="d">A voda se zavlnila,</span>
+    <span class="d">když vítr zavál.</span>
+    <span class="d">A medvěd někde na severu se usmál na vločku sněhu.</span>
+    <span class="d">A delfín někde v hlubinách poslal polibek po vodnim kruhu.</span>
+    <span class="d br"></span>
+    <span class="d"><span class="j11" title="Paradoxní pointa.">takže zůstaň v klidu, když ti někdo řekne, že něco není možné: Nejspíš právě zachraňuje jednorožce.</span></span>
+  </div>
+
+  <div class="legenda">
+    <span><span class="j1" style="cursor:default">tečkovaně</span> = paradox existence</span>
+    <span><span class="j2" style="cursor:default">přerušovaně</span> = paradoxní definice</span>
+    <span><span class="j3" style="cursor:default">podklad světlý</span> = surrealistický obraz</span>
+    <span><span class="j4" style="cursor:default">dvojitě tečkovaně</span> = paradox poznání</span>
+    <span><span class="j5" style="cursor:default">plně</span> = rytmus a gradace</span>
+    <span><span class="j6" style="cursor:default">podklad tmavší</span> = personifikace abstrakta</span>
+    <span><span class="j7" style="cursor:default">dvojitě</span> = poetická evokace</span>
+    <span><span class="j8" style="cursor:default">vlnovka</span> = prolínání identit</span>
+    <span><span class="j9" style="cursor:default">přerušovaně</span> = neologismus / chyba</span>
+    <span><span class="j10" style="cursor:default">podklad + tečky</span> = gradace synonym</span>
+    <span><span class="j11" style="cursor:default">přeškrtnuto</span> = paradoxní pointa</span>
+  </div>
+</section>
+
+<!-- 12 ANOMÁLIÍ -->
+<section class="sec">
+  <p class="sec-tag">12 jazykových anomálií · kliknutím otevřete</p>
+  <h2>Co pohádka dělá s jazykem</h2>
+
+  <div id="anomalie-list"></div>
+
+  <div class="cta-box">
+    <p class="cta-text">Pokračujte diagnostikou — zjistěte svůj kognitivní úhel a dostanete workshop přizpůsobený vám.</p>
+    <a href="jednorozec_diagnostika.html" class="btn btn-p">Přejít na diagnostiku →</a>
+  </div>
+</section>
+
+<footer>
+  <p>Karta Jednorožec · Chceš myš? · © 2026 Michaela Nováková</p>
+  <p><a href="mailto:chcesmys@gmail.com">chcesmys@gmail.com</a></p>
+</footer>
+</div>
+
+<script>
+const ANOMALIE = [
+  {n:'Paradox existence',t:'věta, která se popírá',
+   c:['"Jednorožec byl."','"To je první lež."'],
+   p:'První věta tvrdí existenci, druhá ji označuje za lež. Text od začátku staví na tom, že nic není, jak se zdá.'},
+  {n:'Paradoxní definice',t:'neskutečné definované přesně',
+   c:['"Bílý. Roh. Lesk."','"Neskutečný, ale přesto definovaný neskutečně přesně.."'],
+   p:'Mýtus je popsán konkrétními rysy, ale zároveň je označen za neskutečný. Přesnost popisu kontrastuje s neexistencí.'},
+  {n:'Surrealistický obraz',t:'absurdní, poetické představy',
+   c:['"Na delfíny, zpívající podvodní songy, které nikdo neslyší."','"Na lední medvědy, tancující kankán, který naopak slyší každej."'],
+   p:'Obrazy, které spojují nespojitelné – zpěv pod vodou, tanec na ledě – a vytvářejí snovou logiku.'},
+  {n:'Paradox poznání',t:'popírá, ale zná',
+   c:['"A přitom je jmenoval."','"A přitom o nich věděl."','"A přitom měl v očích jejich stopy."'],
+   p:'Jednorožec tvrdí, že delfíni a medvědi neexistují, ale zároveň o nich mluví a nese jejich stopy.'},
+  {n:'Rytmus a gradace',t:'krátké, úsečné věty',
+   c:['"se utrhla kra."','"Velká."','"Ledová."'],
+   p:'Stupňování pomocí krátkých vět, které postupně přidávají detaily a vytvářejí napětí.'},
+  {n:'Personifikace abstrakta',t:'logika jako nehoda',
+   c:['"Z logiky, která se tvářila jako nehoda."'],
+   p:'Abstraktní pojem (logika) dostává lidskou vlastnost – může se „tvářit“. Oživení neživého.'},
+  {n:'Poetická evokace',t:'smyslové obrazy',
+   c:['"Vzduch byl plný soli a páry, zvuk zpěvu se mísil s praskáním ledu."'],
+   p:'Bohatý, smyslově nabitý popis, který čtenáře vtahuje do scény.'},
+  {n:'Prolínání identit',t:'záměna rolí',
+   c:['"Medvěd se stal v té chvíli rybou a delfin šelmou."'],
+   p:'Hranice mezi zvířaty se stírají, každé přebírá roli toho druhého. Předzvěst vzniku jednorožce.'},
+  {n:'Neologismus / záměrná chyba',t:'kříženeheho',
+   c:['"Z původní nesmyslnosti střetu, nemohlo vzejít nic kříženeheho."'],
+   p:'Zkomolenina slova „kříženého“ zdůrazňuje, že z nemožného setkání nemohlo vzniknout nic normálního.'},
+  {n:'Gradace synonym',t:'řetězec významově blízkých slov',
+   c:['"Zapřít. Zrušit. Zneplatnit. Zpochybnit. Znejistit. Zamluvit."'],
+   p:'Šestice synonym stupňuje intenzitu popření. Každé další slovo je silnější.'},
+  {n:'Paradoxní pointa',t:'zachraňuje jednorožce',
+   c:['"takže zůstaň v klidu, když ti někdo řekne, že něco není možné: Nejspíš právě zachraňuje jednorožce."'],
+   p:'Závěrečná věta obrací význam – popření možného je ve skutečnosti aktem záchrany mýtu.'}
+];
+
+const list = document.getElementById('anomalie-list');
+ANOMALIE.forEach((a,i)=>{
+  const el = document.createElement('div');
+  el.className = 'anomalie';
+  el.innerHTML = `
+    <div class="anomalie-header" onclick="this.parentElement.classList.toggle('open')">
+      <div class="a-num">${String(i+1).padStart(2,'0')}</div>
+      <div class="a-meta">
+        <div class="a-nazev">${a.n}</div>
+        <div class="a-termin">${a.t}</div>
+      </div>
+      <div class="a-toggle">▾</div>
+    </div>
+    <div class="anomalie-body">
+      <div class="a-citace">${a.c.map(c=>`<span>${c}</span>`).join('')}</div>
+      <p class="a-popis">${a.p}</p>
+    </div>`;
+  list.appendChild(el);
+});
+</script>
+</body>
+</html>
