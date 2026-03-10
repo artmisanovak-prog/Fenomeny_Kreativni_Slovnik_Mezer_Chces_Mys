@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tygr — pohádka · Chceš myš?</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#07090f;--s:#0d1018;--s2:#12161f;
+  --c:#cdd8e8;--dim:rgba(180,200,230,.35);--a:#2a7a6e;--a2:#1d5a4f;
+  --b:rgba(42,122,110,.12);--b2:rgba(42,122,110,.26);
+  --serif:'Cormorant Garamond',Georgia,serif;--mono:'DM Mono',monospace;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--c);font-family:var(--mono);font-size:13px;line-height:1.85;-webkit-font-smoothing:antialiased}
+.wrap{max-width:780px;margin:0 auto;padding:0 24px}
+
+nav{position:sticky;top:0;z-index:99;border-bottom:1px solid var(--b);background:rgba(7,9,15,.96);backdrop-filter:blur(14px);padding:11px 24px;display:flex;align-items:center;justify-content:space-between}
+.nav-l{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);text-decoration:none;transition:color .15s}
+.nav-l:hover{color:var(--c)}
+.nav-links{display:flex;gap:4px}
+.nav-links a{font-size:10px;letter-spacing:.11em;text-transform:uppercase;color:var(--dim);text-decoration:none;padding:5px 10px;border:1px solid transparent;border-radius:2px;transition:all .15s}
+.nav-links a:hover,.nav-links a.active{color:var(--a);border-color:var(--b2)}
+
+.hero{padding:52px 0 36px;border-bottom:1px solid var(--b)}
+.hero-tag{font-size:10px;letter-spacing:.26em;text-transform:uppercase;color:var(--a2);margin-bottom:14px}
+.hero h1{font-family:var(--serif);font-size:clamp(3rem,8vw,5.4rem);font-weight:300;line-height:.95;letter-spacing:-.02em;margin-bottom:6px}
+.hero h1 em{font-style:italic;color:var(--a)}
+.hero-sub{font-family:var(--serif);font-style:italic;font-size:.9rem;color:var(--dim);border-left:1px solid var(--a2);padding-left:16px;margin:18px 0 20px;line-height:2;max-width:500px}
+.fenomen{border:1px solid var(--b2);padding:14px 20px;background:rgba(42,122,110,.03)}
+.fenomen-tag{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--a);margin-bottom:7px}
+.fenomen-text{font-size:.8rem;color:rgba(180,200,230,.52);line-height:1.95}
+
+.sec{padding:38px 0;border-bottom:1px solid var(--b)}
+.sec-tag{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--a2);margin-bottom:12px}
+h2{font-family:var(--serif);font-size:clamp(1.1rem,3vw,1.6rem);font-weight:300;margin-bottom:18px}
+h2 em{font-style:italic;color:var(--a)}
+
+/* POHÁDKA */
+.pohadka{font-family:var(--serif);font-size:.94rem;color:rgba(200,218,238,.74);border:1px solid var(--b);background:var(--s);padding:28px 32px;line-height:1}
+.d{display:block;padding:.22em 0}
+.d.br{padding:.55em 0}
+.d.silna{color:var(--a);font-weight:400}
+.d.dim{color:rgba(180,200,230,.38);font-style:italic}
+.d.it{font-style:italic}
+.d.dl{padding-left:1.4em;font-style:italic}
+/* třídy pro 13 anomálií */
+.j1{border-bottom:1px dotted var(--a);cursor:help}
+.j2{border-bottom:1px dashed var(--a2);cursor:help}
+.j3{background:rgba(42,122,110,.1);padding:0 2px;cursor:help}
+.j4{border-bottom:2px dotted var(--a);cursor:help}
+.j5{border-bottom:1px solid var(--a2);cursor:help}
+.j6{background:rgba(42,122,110,.2);padding:0 2px;cursor:help}
+.j7{border-bottom:1px double var(--a);cursor:help}
+.j8{text-decoration:underline wavy var(--a2);cursor:help}
+.j9{border-bottom:1px dashed var(--a);cursor:help}
+.j10{background:rgba(42,122,110,.05);border-bottom:1px dotted var(--a2);cursor:help}
+.j11{text-decoration:line-through 1px solid var(--a);cursor:help}
+.j12{border-left:2px solid var(--a);padding-left:4px;cursor:help}
+.j13{background:rgba(42,122,110,.15);border-radius:2px;padding:0 2px;cursor:help}
+.legenda{margin-top:10px;padding:10px 14px;background:var(--s);border:1px solid var(--b);font-size:.71rem;color:var(--dim);display:flex;flex-wrap:wrap;gap:4px 18px}
+
+/* ANOMÁLIE */
+.anomalie{border:1px solid var(--b);background:var(--s);margin-bottom:3px;overflow:hidden}
+.anomalie-header{display:flex;align-items:center;gap:14px;padding:14px 18px;cursor:pointer;user-select:none}
+.anomalie-header:hover{background:rgba(42,122,110,.04)}
+.a-num{font-family:var(--serif);font-size:1.5rem;font-weight:300;color:rgba(42,122,110,.2);min-width:28px;line-height:1}
+.a-meta{flex:1}
+.a-nazev{font-size:.83rem;color:var(--c);margin-bottom:2px}
+.a-termin{font-size:.69rem;color:var(--a2);letter-spacing:.06em;font-style:italic}
+.a-toggle{font-size:.68rem;color:var(--dim);letter-spacing:.1em;text-transform:uppercase;transition:transform .2s;white-space:nowrap}
+.anomalie.open .a-toggle{transform:rotate(180deg)}
+.anomalie-body{display:none;padding:4px 18px 20px;border-top:1px solid var(--b)}
+.anomalie.open .anomalie-body{display:block}
+.a-citace{font-family:var(--serif);font-style:italic;font-size:.83rem;color:rgba(42,122,110,.5);border-left:1px solid var(--b2);padding:7px 13px;margin:12px 0;line-height:1.85}
+.a-citace span{display:block}
+.a-popis{font-size:.78rem;color:rgba(180,200,230,.54);line-height:1.92;margin-bottom:0}
+
+.cta-box{margin-top:32px;padding:20px 22px;background:var(--s);border:1px solid var(--b2);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+.cta-text{font-size:.8rem;color:var(--dim);max-width:360px;line-height:1.85}
+.btn{padding:10px 22px;font-family:var(--mono);font-size:.75rem;letter-spacing:.1em;text-transform:uppercase;border:none;cursor:pointer;border-radius:2px;transition:all .15s;text-decoration:none;display:inline-block}
+.btn-p{background:var(--a);color:var(--bg)}
+.btn-p:hover{background:#3e9e8e}
+.btn-g{background:transparent;color:var(--dim);border:1px solid var(--b)}
+.btn-g:hover{color:var(--c);border-color:var(--b2)}
+
+footer{padding:26px 0;border-top:1px solid var(--b);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+footer p{font-size:.7rem;color:var(--dim)}
+footer a{color:var(--a)}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-l" href="../../../index.html">← Všechna zvířata</a>
+  <div class="nav-links">
+    <a href="tygr_pohadka.html" class="active">Pohádka</a>
+    <a href="tygr_diagnostika.html">Diagnostika</a>
+    <a href="tygr_workshop.html">Workshop</a>
+    <a href="analyzer.html">Analyzátor</a>
+  </div>
+</nav>
+
+<div class="wrap">
+
+<section class="hero">
+  <p class="hero-tag">Kreativní miniatura · Karta Tygr</p>
+  <h1>Tygr</h1>
+  <p class="hero-sub">„až vyrostu budu princeznou + až vyrostu budu TYGR = ❤️“</p>
+  <div class="fenomen">
+    <div class="fenomen-tag">Fenomén — přání jako překlad / tradice jako chyba</div>
+    <p class="fenomen-text">Pohádka, která začíná tím, že sama sebe definuje. Matematický zápis přání, žába s vlastním scénářem, polibek jako souhlas – vše se vymyká tradičním rolím. Tygr není princ, láska není tradice, ale jazyk, který se mění s tím, kdo mluví.</p>
+  </div>
+</section>
+
+<!-- POHÁDKA -->
+<section class="sec">
+  <p class="sec-tag">Pohádka · čtěte pomalu</p>
+  <h2>O TYGROVI <em>(až vyrostu budu princeznou + až vyrostu budu TYGR = ❤️)</em></h2>
+
+  <div class="pohadka">
+    <span class="d"><span class="j1" title="Metatext v úvodu: text definuje sám sebe">Tohle je nejen pohádka, ale jazyková alchymie.</span></span>
+    <span class="d"><span class="j1">Nejen proměna, ale překlad přání.</span></span>
+    <span class="d"><span class="j1">Nejen kouzlo, ale chyba v systému tradice, která se ukáže být pravdou.</span></span>
+    <span class="d dim">Kde žabí logika narazí na tygří touhu.</span>
+    <span class="d dim">Kde princezna nepolíbí budoucnost, ale možnost.</span>
+    <span class="d br"></span>
+    <span class="d silna"><span class="j2" title="Rovnice v názvu jako nový typ formule">až vyrostu budu princeznou + až vyrostu budu TYGR = ❤️</span></span>
+    <span class="d br"></span>
+    <span class="d">Malá holka si přála být princeznou.</span>
+    <span class="d">Nic zvláštního.</span>
+    <span class="d">Ale ne kvůli koruně.</span>
+    <span class="d"><span class="j3" title="Motivace princezny: ne koruna, ale příběh">Jen kvůli příběhu.</span></span>
+    <span class="d"><span class="j3">Kvůli tomu, že princezny líbaj žábu.</span></span>
+    <span class="d"><span class="j3">A žába se změní na prince.</span></span>
+    <span class="d">Tak to má být.</span>
+    <span class="d">Tak se to říká v knížkách.</span>
+    <span class="d">Takhle to říkají dospělí.</span>
+    <span class="d br"></span>
+    <span class="d">Jenže v rybníčku</span>
+    <span class="d">sice seděla žába – to jo.</span>
+    <span class="d">Akorát že ta si přála něco jiného.</span>
+    <span class="d silna"><span class="j4" title="Žába s vlastním přáním (mimo scénář)">„Až vyrostu, budu tygr,“</span></span>
+    <span class="d">tvrdila od pulečka.</span>
+    <span class="d"><span class="j5" title="Vsuvka o pulečkovi (biologická anomálie)">(tenkrat myslela, že přeskočí i tu část žáby a stane se tygrem rovnou z pulce – leč – se nestalo tak – až pak)</span></span>
+    <span class="d br"></span>
+    <span class="d"><span class="j6" title="Otázky žáby o princi (cizí koncept)">Princ? cože – to jí ani nenapadlo.</span></span>
+    <span class="d"><span class="j6">“Co to je zač?” ptala se.</span></span>
+    <span class="d"><span class="j6">Člověk?</span></span>
+    <span class="d"><span class="j6">Výsledek polibku?</span></span>
+    <span class="d"><span class="j6">Čím? Kouzlením?</span></span>
+    <span class="d br"></span>
+    <span class="d"><span class="j7" title="Přání jako biologická determinace">Chci být</span></span>
+    <span class="d"><span class="j7">Ale zvíře, co se nedá přeložit.</span></span>
+    <span class="d br"></span>
+    <span class="d">Princezna se přiblížila.</span>
+    <span class="d">S pohledem, co věří v kouzla.</span>
+    <span class="d">S rty, co chtějí změnu.</span>
+    <span class="d">S očekáváním, co nepočítá s výjimkou.</span>
+    <span class="d br"></span>
+    <span class="d">A žába se zachvěla.</span>
+    <span class="d">Ne strachem.</span>
+    <span class="d">Ale rozhodnutím.</span>
+    <span class="d">„Když mě políbíš, nezměním se v prince.</span>
+    <span class="d">Změním se v to, co chci být.</span>
+    <span class="d">A to je tygr.“</span>
+    <span class="d br"></span>
+    <span class="d">„Ale to se neříká,“ řekla princezna.</span>
+    <span class="d">„Takhle se to neděje.“</span>
+    <span class="d">„To se teprve začne dít,“ řekla žába.</span>
+    <span class="d br"></span>
+    <span class="d">A tak se to stalo.</span>
+    <span class="d">Dívka a žabák a polibek.</span>
+    <span class="d"><span class="j8" title="Polibek jako souhlas, ne kouzlo">Ne jako kouzlo.</span></span>
+    <span class="d"><span class="j8">Ale jako souhlas.</span></span>
+    <span class="d"><span class="j8">Ne jako proměna.</span></span>
+    <span class="d"><span class="j8">Ale jako překlad přání.</span></span>
+    <span class="d br"></span>
+    <span class="d">A před princeznou nestál princ.</span>
+    <span class="d">Stál tam tygr.</span>
+    <span class="d">Živej.</span>
+    <span class="d">Divokej.</span>
+    <span class="d">Obrovskej.</span>
+    <span class="d silna"><span class="j13" title="Bonus: ‚opravdickej‘ – dětský neologismus">Opravdickej.</span></span>
+    <span class="d br"></span>
+    <span class="d">„Tohle není můj princ,“ řekla.</span>
+    <span class="d">„Ne. Ale je to tvůj sen,“ <span class="j9" title="Myš jako kronikářka (opět vstupuje do děje)">řekla myš, co zapisovala dějiny.</span></span>
+    <span class="d br"></span>
+    <span class="d">A člověčice se rozmyslela.</span>
+    <span class="d"><span class="j10" title="Nová identita dívky">„Možná nebudu princeznou.</span></span>
+    <span class="d"><span class="j10">Možná budu tou, co líbá tygry.“</span></span>
+    <span class="d br"></span>
+    <span class="d">A žába – už ne žába –</span>
+    <span class="d">už tygr –</span>
+    <span class="d">se usmál.</span>
+    <span class="d br"></span>
+    <span class="d dim">---</span>
+    <span class="d br"></span>
+    <span class="d">Tahle pohádka nemá konec.</span>
+    <span class="d"><span class="j11" title="Roztržené slovo na konci: rovnice vs. přání">Protože přání nejsou ro</span></span>
+    <span class="d"><span class="j11">vnice.</span></span>
+    <span class="d"><span class="j12" title="Láska jako jazyk (poslední věta)">A láska není tradice.</span></span>
+    <span class="d"><span class="j12">Je to jazyk, co se mění podle toho, kdo mluví.</span></span>
+  </div>
+
+  <div class="legenda">
+    <span><span class="j1" style="cursor:default">tečkovaně</span> = metatext v úvodu</span>
+    <span><span class="j2" style="cursor:default">přerušovaně</span> = rovnice v názvu</span>
+    <span><span class="j3" style="cursor:default">podklad světlý</span> = motivace princezny</span>
+    <span><span class="j4" style="cursor:default">dvojitě tečkovaně</span> = žába s vlastním přáním</span>
+    <span><span class="j5" style="cursor:default">plně</span> = vsuvka o pulečkovi</span>
+    <span><span class="j6" style="cursor:default">podklad tmavší</span> = otázky žáby o princi</span>
+    <span><span class="j7" style="cursor:default">dvojitě</span> = přání jako biologická determinace</span>
+    <span><span class="j8" style="cursor:default">vlnovka</span> = polibek jako souhlas</span>
+    <span><span class="j9" style="cursor:default">přerušovaně</span> = myš jako kronikářka</span>
+    <span><span class="j10" style="cursor:default">podklad + tečky</span> = nová identita dívky</span>
+    <span><span class="j11" style="cursor:default">přeškrtnuto</span> = roztržené slovo</span>
+    <span><span class="j12" style="cursor:default">levá linka</span> = láska jako jazyk</span>
+    <span><span class="j13" style="cursor:default">podklad tmavý</span> = opravdickej (bonus)</span>
+  </div>
+</section>
+
+<!-- 13 ANOMÁLIÍ -->
+<section class="sec">
+  <p class="sec-tag">13 jazykových anomálií · kliknutím otevřete</p>
+  <h2>Co pohádka dělá s jazykem</h2>
+
+  <div id="anomalie-list"></div>
+
+  <div class="cta-box">
+    <p class="cta-text">Pokračujte diagnostikou — zjistěte svůj kognitivní úhel a dostanete workshop přizpůsobený vám.</p>
+    <a href="tygr_diagnostika.html" class="btn btn-p">Přejít na diagnostiku →</a>
+  </div>
+</section>
+
+<footer>
+  <p>Karta Tygr · Chceš myš? · © 2026 Michaela Nováková</p>
+  <p><a href="mailto:chcesmys@gmail.com">chcesmys@gmail.com</a></p>
+</footer>
+</div>
+
+<script>
+const ANOMALIE = [
+  {n:'Metatext v úvodu',t:'text definuje sám sebe',
+   c:['"Tohle je nejen pohádka, ale jazyková alchymie."','"Nejen proměna, ale překlad přání."','"Nejen kouzlo, ale chyba v systému tradice, která se ukáže být pravdou."'],
+   p:'Text začíná tím, že sám sebe definuje. Vytváří si vlastní žánr, vlastní pravidla čtení.'},
+  {n:'Rovnice v názvu',t:'matematický zápis v pohádce',
+   c:['"až vyrostu budu princeznou + až vyrostu budu TYGR = ❤️"'],
+   p:'Sčítání přání dává lásku. Srdce jako výsledek rovnice. Nový typ pohádkové formule.'},
+  {n:'Motivace princezny',t:'ne koruna, ale příběh',
+   c:['"Ale ne kvůli koruně."','"Jen kvůli příběhu."','"Kvůli tomu, že princezny líbaj žábu."'],
+   p:'Princezna chce být princeznou, protože princezny líbají žábu. Cirkulární motivace – chce být součástí vyprávění, které zná.'},
+  {n:'Žába s vlastním přáním',t:'mimo scénář',
+   c:['"Až vyrostu, budu tygr,"','"tvrdila od pulečka."'],
+   p:'Žába ignoruje svůj předepsaný osud (proměna v prince). Má vlastní narrative, který ignoruje biologii i pohádková pravidla.'},
+  {n:'Vsuvka o pulečkovi',t:'biologická anomálie',
+   c:['"(tenkrat myslela, že přeskočí i tu část žáby a stane se tygrem rovnou z pulce – leč – se nestalo tak – až pak)"'],
+   p:'Závorka, která vysvětluje vývojovou biologii snu. Vědecký tón o nemožném.'},
+  {n:'Otázky žáby o princi',t:'cizí koncept',
+   c:['"Princ? cože – to jí ani nenapadlo."','"Co to je zač?" ptala se.','"Člověk?"','"Výsledek polibku?"','"Čím? Kouzlením?"'],
+   p:'Princ je pro žábu neznámý pojem. Musí ho definovat skrze otázky. Je to mimozemský koncept.'},
+  {n:'Přání jako biologická determinace',t:'nepřeložitelné zvíře',
+   c:['"Chci být"','"Ale zvíře, co se nedá přeložit."'],
+   p:'Přání není stát se něčím, ale být něčím. A to něco je nepřeložitelné – jako by tygr byl jazyk, kterému rozumí jen ona.'},
+  {n:'Polibek jako souhlas',t:'ne kouzlo',
+   c:['"Ne jako kouzlo."','"Ale jako souhlas."','"Ne jako proměna."','"Ale jako překlad přání."'],
+   p:'Redefinice klíčového pohádkového aktu. Polibek ztrácí magii, získává význam dohody a translace.'},
+  {n:'Myš jako kronikářka',t:'opět vstupuje do děje',
+   c:['"Ne. Ale je to tvůj sen," řekla myš, co zapisovala dějiny.'],
+   p:'Myš se objevuje jako vypravěčka, která zná celý kontext. Je to archivářka, která dává věcem smysl.'},
+  {n:'Nová identita dívky',t:'nepsaná profese',
+   c:['"Možná nebudu princeznou."','"Možná budu tou, co líbá tygry."'],
+   p:'Dívka si vytváří novou roli, která v pohádkách neexistuje. Je to nepsaná profese, nový archetyp.'},
+  {n:'Roztržené slovo na konci',t:'rovnice vs. přání',
+   c:['"Protože přání nejsou ro"','"vnice."'],
+   p:'Slovo „rovnice“ je rozděleno na dva řádky. Vzniká tím mezera, do které se vejde celý příběh o tom, že přání nelze spočítat.'},
+  {n:'Láska jako jazyk',t:'performativní akt',
+   c:['"A láska není tradice."','"Je to jazyk, co se mění podle toho, kdo mluví."'],
+   p:'Definice lásky skrze lingvistiku. Láska nemá pevný tvar, je to performativní akt – mění se s mluvčím.'},
+  {n:'Opravdickej',t:'dětský neologismus',
+   c:['"Opravdickej."'],
+   p:'Slovo s příponou, která neexistuje („-ickej“). Je to dětské, hravé, ale zároveň zdůrazňuje, že tygr je skutečný – víc než skutečný.'}
+];
+
+const list = document.getElementById('anomalie-list');
+ANOMALIE.forEach((a,i)=>{
+  const el = document.createElement('div');
+  el.className = 'anomalie';
+  el.innerHTML = `
+    <div class="anomalie-header" onclick="this.parentElement.classList.toggle('open')">
+      <div class="a-num">${String(i+1).padStart(2,'0')}</div>
+      <div class="a-meta">
+        <div class="a-nazev">${a.n}</div>
+        <div class="a-termin">${a.t}</div>
+      </div>
+      <div class="a-toggle">▾</div>
+    </div>
+    <div class="anomalie-body">
+      <div class="a-citace">${a.c.map(c=>`<span>${c}</span>`).join('')}</div>
+      <p class="a-popis">${a.p}</p>
+    </div>`;
+  list.appendChild(el);
+});
+</script>
+</body>
+</html>
