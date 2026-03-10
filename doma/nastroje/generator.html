@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Generativní mód · Chceš myš?</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#07090f;--s:#0d1018;--s2:#12161f;--s3:#171c27;
+  --c:#cdd8e8;--dim:rgba(180,200,230,.35);--a:#7a5f3e;--a2:#5a452e;
+  --b:rgba(122,95,62,.12);--b2:rgba(122,95,62,.26);
+  --serif:'Cormorant Garamond',Georgia,serif;--mono:'DM Mono',monospace;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--c);font-family:var(--mono);font-size:13px;line-height:1.85;-webkit-font-smoothing:antialiased;padding:24px}
+.wrap{max-width:880px;margin:0 auto}
+
+h1{font-family:var(--serif);font-size:2.4rem;font-weight:300;margin-bottom:0.2rem}
+h1 em{font-style:italic;color:var(--a)}
+.subhead{font-size:.85rem;color:var(--dim);margin-bottom:2rem;border-left:2px solid var(--a2);padding-left:1rem}
+
+.generator-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:24px}
+@media(max-width:700px){.generator-grid{grid-template-columns:1fr}}
+
+.panel{background:var(--s);border:1px solid var(--b);padding:24px}
+.panel h2{font-family:var(--serif);font-size:1.3rem;font-weight:300;margin-bottom:16px}
+.panel h2 em{color:var(--a)}
+
+select, button{width:100%;background:var(--s2);border:1px solid var(--b);color:var(--c);padding:10px 12px;font-family:var(--mono);font-size:.8rem;margin-bottom:16px;cursor:pointer}
+select:focus, button:focus{outline:none;border-color:var(--a2)}
+button{background:var(--a);color:var(--bg);font-weight:400;letter-spacing:.1em;text-transform:uppercase;border:none;transition:.1s}
+button:hover{background:#9a7c5a}
+button:disabled{background:var(--s2);color:var(--dim);border:1px solid var(--b);cursor:not-allowed}
+
+.q3-box{background:var(--s3);border-left:3px solid var(--a);padding:16px;margin-bottom:16px;font-size:.85rem;line-height:1.9;color:rgba(200,218,238,.85)}
+.q3-label{font-size:.65rem;letter-spacing:.16em;text-transform:uppercase;color:var(--a2);margin-bottom:6px}
+
+.result{background:var(--s);border:1px solid var(--b2);padding:32px;margin-top:24px}
+.result h3{font-family:var(--serif);font-size:1.6rem;font-weight:300;margin-bottom:8px}
+.result-meta{font-size:.7rem;color:var(--dim);margin-bottom:16px}
+.result-content{font-size:.9rem;line-height:1.95;color:rgba(200,218,238,.9);white-space:pre-wrap}
+.result-content strong{color:var(--a);font-weight:400}
+
+.footer-note{font-size:.7rem;color:var(--dim);margin-top:24px;text-align:center}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+<h1>Generativní <em>mód</em></h1>
+<div class="subhead">Spoj dva různé úhly z libovolných karet – vznikne nové cvičení.</div>
+
+<div class="generator-grid">
+  <!-- Levý panel: karta a úhel A -->
+  <div class="panel">
+    <h2>První <em>úhel</em></h2>
+    <select id="cardA" onchange="loadAngles('A')">
+      <option value="">-- vyber kartu --</option>
+    </select>
+    <select id="angleA" disabled onchange="displayQ3('A')">
+      <option value="">-- nejdřív vyber kartu --</option>
+    </select>
+    <div id="q3A" class="q3-box">Vyber úhel, zobrazí se Q3.</div>
+  </div>
+
+  <!-- Pravý panel: karta a úhel B -->
+  <div class="panel">
+    <h2>Druhý <em>úhel</em></h2>
+    <select id="cardB" onchange="loadAngles('B')">
+      <option value="">-- vyber kartu --</option>
+    </select>
+    <select id="angleB" disabled onchange="displayQ3('B')">
+      <option value="">-- nejdřív vyber kartu --</option>
+    </select>
+    <div id="q3B" class="q3-box">Vyber úhel, zobrazí se Q3.</div>
+  </div>
+</div>
+
+<!-- Tlačítko generovat -->
+<button id="generateBtn" onclick="generateExercise()" disabled>🔮 Vygenerovat nové cvičení</button>
+
+<!-- Výsledek -->
+<div class="result" id="result" style="display:none">
+  <h3 id="resultTitle"></h3>
+  <div class="result-meta" id="resultMeta"></div>
+  <div class="result-content" id="resultContent"></div>
+</div>
+
+<div class="footer-note">
+  ⚡ Každá kombinace vytvoří unikátní cvičení. Placené karty jsou po zakoupení odemčené.
+</div>
+
+</div>
+
+<script>
+// =====================================================
+// DATABÁZE KARET (všechny vaše karty + jejich Q3)
+// =====================================================
+const KARTY = [
+  // ----------------------------------------------------
+  // HYENA
+  // ----------------------------------------------------
+  {
+    id: "hyena",
+    name: "🐆 Hyena",
+    unlocked: true, // pro testování všechny true, později změníte
+    angles: [
+      { id: "0", name: "0° Analytický", q3: "Napište tři krátké věty (max 3 slova), každá na samostatný řádek, které vyjadřují plynutí času nebo opakování. Každá věta musí být úplná a stát sama o sobě." },
+      { id: "180", name: "180° Asociační", q3: "Popište nějakou činnost nebo vlastnost pomocí dvojice „Ne X, jen Y“. Udělejte to pro tři různé věci (např. běh, psaní, čekání)." },
+      { id: "30", name: "30° Kulturní", q3: "Vymyslete vlastní metaforu pro čas (např. „každá hodina jako…“). Napište tři různé metafory a ke každé krátké vysvětlení, proč ji používáte." },
+      { id: "210", name: "210° Introspektivní", q3: "Vytvořte tři vlastní „pohlednice“ – ke každému místu (reálnému nebo vymyšlenému) napište jednu větu, která ho poeticky definuje. Použijte stejnou strukturu jako v pohádce." },
+      { id: "60", name: "60° Filozofický", q3: "Vezměte něco nehmotného (vzpomínku, sen, myšlenku) a popište to jako fyzický předmět – co to má za váhu, barvu, tvar, kde to leží nebo jak se to nosí." },
+      { id: "240", name: "240° Ironický", q3: "Vezměte nějaké běžné slovní spojení (např. „potichu“, „najednou“, „přesto“) a rozdělte ho na dva řádky tak, aby to první slovo dávalo smysl samo o sobě. Napište větu, kde to použijete." },
+      { id: "90", name: "90° Naivní", q3: "Vymyslete, do čeho všeho by se dalo zapisovat místo papíru (kámen, kůra, voda, vlastní dlaň). Napište tři věty o tom, co byste do čeho zapsali a proč." },
+      { id: "270", name: "270° Groteskní", q3: "Definujte něco zdánlivě prázdného nebo negativního (ticho, prázdno, zapomnění) jako místo plné možností. Napište alespoň tři věty, které to rozvíjejí." },
+      { id: "120", name: "120° Jazykový", q3: "Vytvořte vlastní záměrnou chybu – slovo, které napíšete špatně, ale ta chyba něco zdůrazní nebo přidá nový význam. Napište větu, kde ho použijete, a vysvětlete, proč je ta chyba důležitá." },
+      { id: "300", name: "300° Absurdní", q3: "Vezměte nějaké delší slovo (např. „pohádka“, „krunýř“, „pohlednice“) a rozdělte ho na dva řádky tak, aby obě části dávaly smysl samy o sobě nebo v kontextu. Napište větu, kde to použijete." },
+      { id: "150", name: "150° Metaforický", q3: "Vezměte nějakou běžnou činnost (např. vaření, učení se, cestování) a napište větu, která popře její obvyklý smysl – například „A že vaření není o jídle“. Pak přidejte jednu větu, která vysvětlí, o čem tedy je." },
+      { id: "330", name: "330° Surrealistický", q3: "Napište závěrečnou větu pro nějaký svůj vlastní text nebo pro situaci ze života, která by shrnovala, o co v ní doopravdy šlo – ne o výsledek, ale o původní důvod." }
+    ]
+  },
+  // ----------------------------------------------------
+  // KROKODÝL
+  // ----------------------------------------------------
+  {
+    id: "krokodyl",
+    name: "🐊 Krokodýl",
+    unlocked: true,
+    angles: [
+      { id: "0", name: "0° Analytický", q3: "Vezměte nějakou bytost nebo věc a pomocí gradované negace jí odeberte všechny vrstvy identity, až zbyde jen čistá podstata (nebo naopak prázdnota). Napište alespoň 5 kroků." },
+      { id: "180", name: "180° Asociační", q3: "Popište nějaké zvíře nebo člověka tak, že na různých částech těla má napsané (nebo připevněné) informace, které tam normálně nepatří – cenu, slevu, návod, varování. Vytvořte 3–4 věty." },
+      { id: "30", name: "30° Kulturní", q3: "Vymyslete, čím vším by se dala nahradit běžná emoce nebo projev (např. smích místo pláče, reklama místo pozdravu). Napište tři příklady a ke každému krátkou situaci." },
+      { id: "210", name: "210° Introspektivní", q3: "Napište krátký monolog nějaké bytosti (zvířete, věci), který zní jako reklamní slogan, ale zároveň je to její vlastní hlas. Použijte uvozovky a nechte čtenáře na pochybách, kdo mluví." },
+      { id: "60", name: "60° Filozofický", q3: "Definujte nějaký cit (lásku, vztek, naději) jazykem obchodu – s cenou, expirací, slevou, zárukou. Napište 3–4 věty jako by to byl popis zboží." },
+      { id: "240", name: "240° Ironický", q3: "Vytvořte vlastní paradoxní rozlišení – dvojici, která v běžném jazyce nestojí proti sobě (např. „není to smutné, je to jen zlevněné“). Napište tři takové dvojice a ke každé krátký příklad." },
+      { id: "90", name: "90° Naivní", q3: "Napište o někom, kdo pláče ne ze smutku, ale protože ztratil schopnost něco pojmenovat nebo vyjádřit. Co přesně ztratil a jak to souvisí s pláčem?" },
+      { id: "270", name: "270° Groteskní", q3: "Vymyslete, z jakých materiálů by mohly být vyrobeny různé emoce (např. skleněná naděje, železný vztek, gumová lítost). Ke každé napište větu, kde se objevuje jako předmět na poličce." },
+      { id: "120", name: "120° Jazykový", q3: "Vymyslete zařízení nebo hračku, která na zmáčknutí vydává předem nahranou emocionální frázi. Napište, co říká a v jakých situacích ji lidé používají." },
+      { id: "300", name: "300° Absurdní", q3: "Vymyslete, jak by vypadal Jazyk a Smysl jako osoby. Popište je (vzhled, chování, oblečení) a napište krátkou scénu, kde přicházejí na kontrolu do nějakého místa." },
+      { id: "150", name: "150° Metaforický", q3: "Napište větu, která komentuje sama sebe – co je, co není, v jakém je stavu. Např. „Tato věta je příliš dlouhá a sama to ví.“ Zkuste tři různé varianty." },
+      { id: "330", name: "330° Surrealistický", q3: "Rozdělte nějaké delší slovo (např. „výprodej“, „dostupné“, „reklama“) na dva řádky tak, aby ta mezera něco znamenala. Napište větu, kde to použijete, a vysvětlete, co se do té mezery vejde." }
+    ]
+  },
+  // ----------------------------------------------------
+  // PÁV
+  // ----------------------------------------------------
+  {
+    id: "pav",
+    name: "🦚 Páv",
+    unlocked: true,
+    angles: [
+      { id: "0", name: "0° Analytický", q3: "Vytvořte vlastní deformovanou fraseologii: vezměte známé rčení nebo přísloví a nahraďte jeho druhý člen něčím, co vytváří rytmus, ale nedává smysl. Napište větu, která ho uvádí do kontextu." },
+      { id: "180", name: "180° Asociační", q3: "Najděte slovo, které má alespoň dva zcela odlišné významy. Napište krátký text (3–5 vět), ve kterém se oba významy postupně odhalí a nakonec propojí." },
+      { id: "30", name: "30° Kulturní", q3: "Popište běžnou situaci (např. člověk sedí u stolu) tak, že převrátíte perspektivu: svět se dívá na něj, ne on na svět. Použijte co nejméně sloves." },
+      { id: "210", name: "210° Introspektivní", q3: "Napište tři věty začínající stejným slovem (např. „Že…“, „Kdyby…“, „Všechno…“). Každá věta musí mít stejnou strukturu, ale zcela jiný obsah." },
+      { id: "60", name: "60° Filozofický", q3: "Vymyslete tři vlastnosti, které nelze kvantifikovat (např. „méně než jedna myšlenka“, „víc než celá pravda“) a ke každé napište větu, která je používá jako samozřejmou." },
+      { id: "240", name: "240° Ironický", q3: "Vyberte tři různá zvířata (nebo předměty) a definujte je jako „pávy, kteří…“ (např. „Žirafa je páv, co se zapomněl zastavit.“). Ke každé definici přidejte krátké vysvětlení." },
+      { id: "90", name: "90° Naivní", q3: "Vytvořte nové slovo (neologismus) a použijte ho ve větě tak, aby fungovalo zároveň doslovně i metaforicky. Vysvětlete, co znamená." },
+      { id: "270", name: "270° Groteskní", q3: "Napište krátký fantazijní text (3–5 vět), který začíná vědeckým termínem (např. „hypotéza“, „paradigma“, „experiment“) a pak popisuje něco naprosto nemožného nebo absurdního." },
+      { id: "120", name: "120° Jazykový", q3: "Vyberte jeden neživý předmět (např. zrcadlo, stůl, ulice) a napište o něm jako o bytosti, která má paměť, emoce a touhy. Co si pamatuje? Na co se snaží zapomenout?" },
+      { id: "300", name: "300° Absurdní", q3: "Napište tři věty, ve kterých kvantifikujete podstatné jméno (např. „být méně člověk“, „příliš strom“, „málo ticho“). Ke každé přidejte vysvětlení, co to znamená." },
+      { id: "150", name: "150° Metaforický", q3: "Napište krátký text, ve kterém rozdělíte jednu spojku (např. „a že“, „protože“, „ale“) na samostatný řádek. Sledujte, jak se změní rytmus a význam." },
+      { id: "330", name: "330° Surrealistický", q3: "Vytvořte tři přirovnání, která sama sebe popírají (např. „… se nedá srovnat jako…“, „… není jako…, i když to tak vypadá“). Použijte je v krátkých větách." }
+    ]
+  },
+  // ----------------------------------------------------
+  // SLON
+  // ----------------------------------------------------
+  {
+    id: "slon",
+    name: "🐘 Slon",
+    unlocked: true,
+    angles: [
+      { id: "0", name: "0° Analytický", q3: "Popište nějakou bytost nebo věc pomocí tří jednoslovných vět, každá na samostatný řádek. Každá věta musí vyjadřovat jednu základní vlastnost." },
+      { id: "180", name: "180° Asociační", q3: "Napište o někom nebo něčem, kdo v sobě nosí paměť něčeho, co už neexistuje. Co to je a jak se to projevuje?" },
+      { id: "30", name: "30° Kulturní", q3: "Vytvořte protějšek k nějaké postavě nebo jevu pomocí tří adjektiv, která jsou v kontrastu s jeho vlastnostmi. Každé uveďte jako samostatnou větu." },
+      { id: "210", name: "210° Introspektivní", q3: "Popište nějakou neurčitou bytost nebo jev pomocí tří vět začínajících „Možná…“, které postupují od konkrétního k abstraktnímu." },
+      { id: "60", name: "60° Filozofický", q3: "Vymyslete příběh, který se rozběhne kvůli jedné podmínkové větě („Když…, tak…“). Napište tuto větu a pak jednu nebo dvě věty, co se stane potom." },
+      { id: "240", name: "240° Ironický", q3: "Popište nějakou činnost pomocí dvojice „Ne X, ale Y“, kde X je očekávaná vlastnost a Y je něco nečekaného, emocionálního." },
+      { id: "90", name: "90° Naivní", q3: "Vytvořte tři cíle nějakého putování nebo hledání, které postupně přecházejí od konkrétního k abstraktnímu a nakonec k pochybnosti o existenci." },
+      { id: "270", name: "270° Groteskní", q3: "Napište větu začínající „Přestože…“, která ukazuje na banálnost něčeho, co je pro někoho zásadní." },
+      { id: "120", name: "120° Jazykový", q3: "Vezměte nějaký jev (např. cíl, sen, překážku) a definujte ho třemi různými způsoby – jako tři různé věci, které zároveň je." },
+      { id: "300", name: "300° Absurdní", q3: "Napište o někom, kdo něco dělá ne proto, aby to dokončil, ale aby nemusel přestat. Použijte strukturu „A právě proto… Aby…“" },
+      { id: "150", name: "150° Metaforický", q3: "Rozdělte nějaké slovo (např. „důležité“, „nekonečné“, „dostačující“) na dva řádky tak, aby ta mezera něco znamenala – třeba že to, co je malé, stačí." },
+      { id: "330", name: "330° Surrealistický", q3: "Napište závěrečnou větu k nějakému textu nebo situaci, která říká, že důležité je věřit ve smysl toho, co děláme, i když není vidět." }
+    ]
+  },
+  // ----------------------------------------------------
+  // ŽELVA
+  // ----------------------------------------------------
+  {
+    id: "zelva",
+    name: "🐢 Želva",
+    unlocked: true,
+    angles: [
+      { id: "0", name: "0° Analytický", q3: "Napište tři krátké věty (max 3 slova), každá na samostatný řádek, které vyjadřují plynutí času nebo opakování. Každá věta musí být úplná a stát sama o sobě." },
+      { id: "180", name: "180° Asociační", q3: "Popište nějakou činnost nebo vlastnost pomocí dvojice „Ne X, jen Y“. Udělejte to pro tři různé věci (např. běh, psaní, čekání)." },
+      { id: "30", name: "30° Kulturní", q3: "Vymyslete vlastní metaforu pro čas (např. „každá hodina jako…“). Napište tři různé metafory a ke každé krátké vysvětlení, proč ji používáte." },
+      { id: "210", name: "210° Introspektivní", q3: "Vytvořte tři vlastní „pohlednice“ – ke každému místu (reálnému nebo vymyšlenému) napište jednu větu, která ho poeticky definuje. Použijte stejnou strukturu jako v pohádce." },
+      { id: "60", name: "60° Filozofický", q3: "Vezměte něco nehmotného (vzpomínku, sen, myšlenku) a popište to jako fyzický předmět – co to má za váhu, barvu, tvar, kde to leží nebo jak se to nosí." },
+      { id: "240", name: "240° Ironický", q3: "Vezměte nějaké běžné slovní spojení (např. „potichu“, „najednou“, „přesto“) a rozdělte ho na dva řádky tak, aby to první slovo dávalo smysl samo o sobě. Napište větu, kde to použijete." },
+      { id: "90", name: "90° Naivní", q3: "Vymyslete, do čeho všeho by se dalo zapisovat místo papíru (kámen, kůra, voda, vlastní dlaň). Napište tři věty o tom, co byste do čeho zapsali a proč." },
+      { id: "270", name: "270° Groteskní", q3: "Definujte něco zdánlivě prázdného nebo negativního (ticho, prázdno, zapomnění) jako místo plné možností. Napište alespoň tři věty, které to rozvíjejí." },
+      { id: "120", name: "120° Jazykový", q3: "Vytvořte vlastní záměrnou chybu – slovo, které napíšete špatně, ale ta chyba něco zdůrazní nebo přidá nový význam. Napište větu, kde ho použijete, a vysvětlete, proč je ta chyba důležitá." },
+      { id: "300", name: "300° Absurdní", q3: "Vezměte nějaké delší slovo (např. „pohádka“, „krunýř“, „pohlednice“) a rozdělte ho na dva řádky tak, aby obě části dávaly smysl samy o sobě nebo v kontextu. Napište větu, kde to použijete." },
+      { id: "150", name: "150° Metaforický", q3: "Vezměte nějakou běžnou činnost (např. vaření, učení se, cestování) a napište větu, která popře její obvyklý smysl – například „A že vaření není o jídle“. Pak přidejte jednu větu, která vysvětlí, o čem tedy je." },
+      { id: "330", name: "330° Surrealistický", q3: "Napište závěrečnou větu pro nějaký svůj vlastní text nebo pro situaci ze života, která by shrnovala, o co v ní doopravdy šlo – ne o výsledek, ale o původní důvod." }
+    ]
+  },
+  // ----------------------------------------------------
+  // ŽRALOK (přidán jako bonus)
+  // ----------------------------------------------------
+  {
+    id: "zralok",
+    name: "🦈 Žralok",
+    unlocked: true,
+    angles: [
+      { id: "0", name: "0° Analytický", q3: "Napište tři věty, které popisují pohyb ve vodě, každá s jinou rychlostí a rytmem." },
+      { id: "180", name: "180° Asociační", q3: "Napište volné asociace na slovo ‚hloubka‘ – co vás napadá, bez cenzury." },
+      { id: "30", name: "30° Kulturní", q3: "Napište, jak by vypadala mořská pohádka podle vaší kultury – co by v ní bylo jinak?" },
+      { id: "210", name: "210° Introspektivní", q3: "Popište svůj vlastní pocit, když jste v neznámém prostředí – jako žralok v oceánu." },
+      { id: "60", name: "60° Filozofický", q3: "Co znamená ‚být predátor‘ v dnešním světě? Napište úvahu." },
+      { id: "240", name: "240° Ironický", q3: "Napište ironický návod, jak se stát králem oceánu." },
+      { id: "90", name: "90° Naivní", q3: "Popište žraloka tak, jako byste ho viděli poprvé v životě – jen fakta, žádné emoce." },
+      { id: "270", name: "270° Groteskní", q3: "Popište podvodní honičku v přehnaně dramatických obrazech." },
+      { id: "120", name: "120° Jazykový", q3: "Vymyslete pět slov, která by mohla být žraločí řečí – a ke každému napište, co znamená." },
+      { id: "300", name: "300° Absurdní", q3: "Napište větu, která popisuje žraloka, který se bojí vlastního stínu." },
+      { id: "150", name: "150° Metaforický", q3: "Přirovnejte žraloka k něčemu, co s mořem vůbec nesouvisí (např. k myšlence, k větru, k zapomnění)." },
+      { id: "330", name: "330° Surrealistický", q3: "Napište krátký sen, ve kterém žralok mluví lidským hlasem a radí vám, jak žít." }
+    ]
+  }
+];
+
+// =====================================================
+// LOGIKA GENERÁTORU
+// =====================================================
+let selectedCardA = null, selectedCardB = null;
+let selectedAngleA = null, selectedAngleB = null;
+
+function init() {
+  const cardASelect = document.getElementById('cardA');
+  const cardBSelect = document.getElementById('cardB');
+  
+  KARTY.forEach(karta => {
+    const optionA = document.createElement('option');
+    optionA.value = karta.id;
+    optionA.textContent = karta.name;
+    cardASelect.appendChild(optionA);
+    
+    const optionB = document.createElement('option');
+    optionB.value = karta.id;
+    optionB.textContent = karta.name;
+    cardBSelect.appendChild(optionB);
+  });
+}
+
+function loadAngles(side) {
+  const cardId = document.getElementById(`card${side}`).value;
+  if (!cardId) {
+    document.getElementById(`angle${side}`).innerHTML = '<option value="">-- nejdřív vyber kartu --</option>';
+    document.getElementById(`angle${side}`).disabled = true;
+    document.getElementById(`q3${side}`).innerHTML = 'Vyber úhel, zobrazí se Q3.';
+    if (side === 'A') selectedCardA = null;
+    else selectedCardB = null;
+    checkGenerateBtn();
+    return;
+  }
+  
+  const karta = KARTY.find(k => k.id === cardId);
+  if (!karta) return;
+  
+  if (side === 'A') selectedCardA = karta;
+  else selectedCardB = karta;
+  
+  const angleSelect = document.getElementById(`angle${side}`);
+  angleSelect.innerHTML = '';
+  angleSelect.disabled = false;
+  
+  // Seřadit úhly podle ID (0,30,60,90,120,150,180,210,240,270,300,330)
+  const sortedAngles = [...karta.angles].sort((a,b) => parseInt(a.id) - parseInt(b.id));
+  
+  sortedAngles.forEach(angle => {
+    const option = document.createElement('option');
+    option.value = angle.id;
+    option.textContent = angle.name;
+    angleSelect.appendChild(option);
+  });
+  
+  // Pokud byl už vybrán úhel, zobrazíme ho
+  if (angleSelect.value) {
+    displayQ3(side);
+  } else {
+    document.getElementById(`q3${side}`).innerHTML = 'Vyber úhel, zobrazí se Q3.';
+  }
+  checkGenerateBtn();
+}
+
+function displayQ3(side) {
+  const card = side === 'A' ? selectedCardA : selectedCardB;
+  const angleId = document.getElementById(`angle${side}`).value;
+  if (!card || !angleId) return;
+  
+  const angle = card.angles.find(a => a.id === angleId);
+  if (!angle) return;
+  
+  if (side === 'A') selectedAngleA = angle;
+  else selectedAngleB = angle;
+  
+  document.getElementById(`q3${side}`).innerHTML = `<span class="q3-label">Q3 · ${angle.name}</span>${angle.q3}`;
+  checkGenerateBtn();
+}
+
+function checkGenerateBtn() {
+  const btn = document.getElementById('generateBtn');
+  if (selectedAngleA && selectedAngleB && selectedAngleA !== selectedAngleB) {
+    btn.disabled = false;
+  } else {
+    btn.disabled = true;
+  }
+}
+
+function generateExercise() {
+  if (!selectedAngleA || !selectedAngleB || selectedAngleA === selectedAngleB) {
+    alert('Vyberte dva RŮZNÉ úhly.');
+    return;
+  }
+  
+  const cardA = selectedCardA;
+  const cardB = selectedCardB;
+  const angleA = selectedAngleA;
+  const angleB = selectedAngleB;
+  
+  // Název cvičení
+  const title = `${cardA.name} · ${angleA.name} × ${cardB.name} · ${angleB.name}`;
+  
+  // Meta informace
+  const meta = `Kombinace úhlů · ${new Date().toLocaleDateString('cs-CZ')}`;
+  
+  // Samotné cvičení – spojení dvou Q3
+  const content = `**Cvičení (20–30 minut)**\n\n1. Nejprve pracuj z pohledu prvního úhlu:\n${angleA.q3}\n\n2. Poté se přepni do druhého úhlu:\n${angleB.q3}\n\n3. Na závěr obě verze porovnej. Co ti která perspektiva dala? Kde se lišily? Kde se naopak překvapivě potkaly?`;
+  
+  document.getElementById('resultTitle').innerHTML = title;
+  document.getElementById('resultMeta').textContent = meta;
+  document.getElementById('resultContent').innerHTML = content.replace(/\n/g, '<br>');
+  document.getElementById('result').style.display = 'block';
+  document.getElementById('result').scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+// Spustit při načtení
+window.onload = init;
+</script>
+</body>
+</html>
