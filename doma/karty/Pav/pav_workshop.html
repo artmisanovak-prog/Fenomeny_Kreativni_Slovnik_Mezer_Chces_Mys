@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Páv — workshop · Chceš myš?</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#07090f;--s:#0d1018;--s2:#12161f;--s3:#171c27;
+  --c:#cdd8e8;--dim:rgba(180,200,230,.35);--a:#2a7a6e;--a2:#1d5a4f;
+  --b:rgba(42,122,110,.12);--b2:rgba(42,122,110,.26);--b3:rgba(42,122,110,.42);
+  --serif:'Cormorant Garamond',Georgia,serif;--mono:'DM Mono',monospace;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--c);font-family:var(--mono);font-size:13px;line-height:1.85;-webkit-font-smoothing:antialiased}
+.wrap{max-width:780px;margin:0 auto;padding:0 24px}
+
+nav{position:sticky;top:0;z-index:99;border-bottom:1px solid var(--b);background:rgba(7,9,15,.96);backdrop-filter:blur(14px);padding:11px 24px;display:flex;align-items:center;justify-content:space-between}
+.nav-l{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);text-decoration:none;transition:color .15s}
+.nav-l:hover{color:var(--c)}
+.nav-links{display:flex;gap:4px}
+.nav-links a{font-size:10px;letter-spacing:.11em;text-transform:uppercase;color:var(--dim);text-decoration:none;padding:5px 10px;border:1px solid transparent;border-radius:2px;transition:all .15s}
+.nav-links a:hover,.nav-links a.active{color:var(--a);border-color:var(--b2)}
+
+.hero{padding:44px 0 28px;border-bottom:1px solid var(--b)}
+.hero-tag{font-size:10px;letter-spacing:.26em;text-transform:uppercase;color:var(--a2);margin-bottom:12px}
+.hero h1{font-family:var(--serif);font-size:clamp(2rem,5vw,3.4rem);font-weight:300;line-height:1;letter-spacing:-.01em;margin-bottom:6px}
+.hero h1 em{font-style:italic;color:var(--a)}
+.hero-uhel{margin-top:14px;display:inline-flex;align-items:center;gap:10px;padding:9px 16px;background:rgba(42,122,110,.06);border:1px solid var(--b2)}
+.hero-uhel-tag{font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--a2)}
+.hero-uhel-val{font-family:var(--serif);font-size:.96rem;color:var(--a)}
+.hero-note{font-size:.76rem;color:var(--dim);margin-top:10px;line-height:1.9;max-width:520px}
+
+/* PŘEPÍNAČ ÚHLŮ */
+.uhel-switcher{padding:16px 0 0;display:flex;flex-wrap:wrap;gap:4px;border-bottom:1px solid var(--b);padding-bottom:16px}
+.uhel-btn{font-family:var(--mono);font-size:.65rem;letter-spacing:.09em;padding:4px 9px;background:transparent;border:1px solid var(--b);color:var(--dim);cursor:pointer;border-radius:2px;transition:all .15s}
+.uhel-btn:hover{color:var(--a);border-color:var(--b2)}
+.uhel-btn.active{background:rgba(42,122,110,.1);color:var(--a);border-color:var(--a2)}
+
+/* ANOMÁLIE */
+.anomalie-list{padding:8px 0}
+.anomalie{border:1px solid var(--b);background:var(--s);margin-bottom:3px;overflow:hidden;transition:border-color .15s}
+.anomalie:hover{border-color:var(--b2)}
+.anomalie-header{display:flex;align-items:center;gap:14px;padding:14px 18px;cursor:pointer;user-select:none}
+.a-num{font-family:var(--serif);font-size:1.5rem;font-weight:300;color:rgba(42,122,110,.2);min-width:28px;line-height:1}
+.a-meta{flex:1}
+.a-nazev{font-size:.83rem;color:var(--c);margin-bottom:2px}
+.a-termin{font-size:.68rem;color:var(--a2);letter-spacing:.06em;font-style:italic}
+.a-toggle{font-size:.68rem;color:var(--dim);letter-spacing:.1em;text-transform:uppercase;transition:transform .2s;white-space:nowrap}
+.anomalie.open .a-toggle{transform:rotate(180deg)}
+.anomalie-body{display:none;padding:4px 18px 20px;border-top:1px solid var(--b)}
+.anomalie.open .anomalie-body{display:block}
+
+.a-citace{font-family:var(--serif);font-style:italic;font-size:.82rem;color:rgba(42,122,110,.48);border-left:1px solid var(--b2);padding:7px 13px;margin:12px 0 10px;line-height:1.85}
+.a-citace span{display:block}
+.a-popis{font-size:.77rem;color:rgba(180,200,230,.5);line-height:1.9;margin-bottom:16px}
+
+/* CVIČENÍ */
+.ukol-wrap{background:var(--s2);border:1px solid var(--b)}
+.ukol-kalibrace{padding:9px 16px;border-bottom:1px solid var(--b);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--a);display:flex;align-items:center;gap:8px}
+.ukol-kalibrace span{color:var(--dim);font-size:.65rem}
+.ukol-text{padding:14px 16px;font-size:.82rem;color:rgba(200,218,238,.75);line-height:1.95}
+.ukol-jazyk{padding:8px 16px 12px;font-size:.71rem;color:var(--a2);font-style:italic;border-top:1px solid var(--b)}
+.pisarna{width:100%;background:var(--s3);border:none;border-top:1px solid var(--b);color:var(--c);padding:11px 14px;font-family:var(--mono);font-size:.78rem;line-height:1.75;resize:vertical;min-height:72px}
+.pisarna:focus{outline:1px solid var(--a2)}
+.pisarna::placeholder{color:rgba(180,200,230,.08)}
+
+.btn{padding:9px 20px;font-family:var(--mono);font-size:.73rem;letter-spacing:.1em;text-transform:uppercase;border:none;cursor:pointer;border-radius:2px;transition:all .15s;text-decoration:none;display:inline-block}
+.btn-g{background:transparent;color:var(--dim);border:1px solid var(--b)}
+.btn-g:hover{color:var(--c);border-color:var(--b2)}
+.a-btns{display:flex;gap:5px;padding:8px 14px 0}
+
+/* EXPORT BAR */
+.export-fixed{position:fixed;bottom:0;left:0;right:0;background:rgba(7,9,15,.97);border-top:1px solid var(--b);backdrop-filter:blur(12px);padding:9px 24px;display:flex;justify-content:space-between;align-items:center;z-index:90}
+.export-info{font-size:.72rem;color:var(--dim)}
+.export-info strong{color:var(--a)}
+.export-btns{display:flex;gap:5px}
+
+footer{padding:24px 0;border-top:1px solid var(--b);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:52px}
+footer p{font-size:.7rem;color:var(--dim)}
+footer a{color:var(--a)}
+
+@media print{nav,.export-fixed,.uhel-switcher,.a-btns,.pisarna{display:none!important}.anomalie-body{display:block!important}.anomalie{border:1px solid #ccc;page-break-inside:avoid}body{background:white;color:black}}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-l" href="../../../index.html">← Všechna zvířata</a>
+  <div class="nav-links">
+    <a href="pav_pohadka.html">Pohádka</a>
+    <a href="pav_diagnostika.html">Diagnostika</a>
+    <a href="pav_workshop.html" class="active">Workshop</a>
+    <a href="analyzer.html">Analyzátor</a>
+  </div>
+</nav>
+
+<div class="wrap">
+
+<section class="hero">
+  <p class="hero-tag">Karta Páv · Workshop</p>
+  <h1>12 anomálií — <em>cvičení</em></h1>
+  <div class="hero-uhel">
+    <span class="hero-uhel-tag">Váš úhel:</span>
+    <span class="hero-uhel-val" id="uhel-display">— přejděte nejprve na diagnostiku —</span>
+  </div>
+  <p class="hero-note">Každá anomálie obsahuje cvičení, které pracuje s jazykem pohádky. Nahoře vidíte svůj dominantní úhel a protilehlý – zkuste cvičení psát ze své perspektivy, nebo se naladit na tu protilehlou.</p>
+</section>
+
+<div class="uhel-switcher" id="uhel-switcher"></div>
+
+<div class="anomalie-list" id="anomalie-list"></div>
+
+<footer>
+  <p>Karta Páv · Chceš myš? · © 2026 Michaela Nováková</p>
+  <p><a href="mailto:chcesmys@gmail.com">chcesmys@gmail.com</a></p>
+</footer>
+</div>
+
+<div class="export-fixed" id="export-fixed">
+  <div class="export-info">Workshop: <strong id="export-uhel-label">—</strong> · Karta Páv</div>
+  <div class="export-btns">
+    <button class="btn btn-g" style="font-size:.68rem;padding:6px 12px" onclick="ulozitMapu()">Uložit mapu</button>
+    <button class="btn btn-g" style="font-size:.68rem;padding:6px 12px" onclick="exportJSON()">Export JSON</button>
+    <button class="btn btn-g" style="font-size:.68rem;padding:6px 12px" onclick="window.print()">Tisk</button>
+    <button class="btn btn-g" style="font-size:.68rem;padding:6px 12px" onclick="sdilej()">Sdílet</button>
+  </div>
+</div>
+
+<script>
+// ÚHLY pro přepínač a protilehlé
+const UHLY_LIST = [
+  {id:'0',  label:'0° Analytický'},
+  {id:'180',label:'180° Asociační'},
+  {id:'30', label:'30° Kulturní'},
+  {id:'210',label:'210° Introspektivní'},
+  {id:'60', label:'60° Filozofický'},
+  {id:'240',label:'240° Ironický'},
+  {id:'90', label:'90° Naivní'},
+  {id:'270',label:'270° Groteskní'},
+  {id:'120',label:'120° Jazykový'},
+  {id:'300',label:'300° Absurdní'},
+  {id:'150',label:'150° Metaforický'},
+  {id:'330',label:'330° Surrealistický'}
+];
+
+// 12 ANOMÁLIÍ s jedním cvičením pro každou
+const ANOMALIE = [
+  {
+    nazev:'Deformovaná fraseologie',
+    termin:'parafráze s významovým posunem',
+    citace:['"Oko za okem, páv za pávem"'],
+    popis:'Parafráze biblického „oko za oko“. Druhý člen je sémanticky prázdný – vytváří rytmus, ne význam.',
+    jazyk:'Rytmus, deformace známé fráze',
+    ukol:'Vytvořte vlastní deformovanou fraseologii: vezměte známé rčení nebo přísloví a nahraďte jeho druhý člen něčím, co vytváří rytmus, ale nedává smysl. Napište větu, která ho uvádí do kontextu.'
+  },
+  {
+    nazev:'Homonymní hra',
+    termin:'jedno slovo, dva významy',
+    citace:['"měl tolik ok na ocase"'],
+    popis:'„Oka“ jsou zároveň oči i kresba na peří. Jedno slovo, dva významy, které se v textu propojují.',
+    jazyk:'Polysémie, vizuální a významová hra',
+    ukol:'Najděte slovo, které má alespoň dva zcela odlišné významy. Napište krátký text (3–5 vět), ve kterém se oba významy postupně odhalí a nakonec propojí.'
+  },
+  {
+    nazev:'Inverze subjektu a objektu',
+    termin:'převrácení perspektivy bez slovesa',
+    citace:['"Ne on na svět, ale svět na něj – skrz jeho vlastní pera."'],
+    popis:'Věta bez slovesa, obrácený slovosled. Kdo se dívá na koho?',
+    jazyk:'Elipsa slovesa, obrat perspektivy',
+    ukol:'Popište běžnou situaci (např. člověk sedí u stolu) tak, že převrátíte perspektivu: svět se dívá na něj, ne on na svět. Použijte co nejméně sloves.'
+  },
+  {
+    nazev:'Anaforické řazení',
+    termin:'trojité opakování „že“',
+    citace:['"Že stromy jsou pávové…"','"Že mraky jsou pávové…"','"A že myš je jen páv…"'],
+    popis:'Stejná syntaktická struktura, různý obsah. Rytmus vytváří dojem systematičnosti.',
+    jazyk:'Anafora, paralelní konstrukce',
+    ukol:'Napište tři věty začínající stejným slovem (např. „Že…“, „Kdyby…“, „Všechno…“). Každá věta musí mít stejnou strukturu, ale zcela jiný obsah.'
+  },
+  {
+    nazev:'Kvantifikace očí',
+    termin:'logika selhává, syntax zůstává',
+    citace:['"Kdo měl víc než jedno oko, byl podezřelý."','"Kdo měl méně než jedno, byl prorok."'],
+    popis:'„Méně než jedno oko“ je matematicky nemožné, ale jazykově existuje.',
+    jazyk:'Kvantifikace nemožného, logický paradox',
+    ukol:'Vymyslete tři vlastnosti, které nelze kvantifikovat (např. „méně než jedna myšlenka“, „víc než celá pravda“) a ke každé napište větu, která je používá jako samozřejmou.'
+  },
+  {
+    nazev:'Apoziční definice',
+    termin:'„to je X, co Y“ jako definiční vzorec',
+    citace:['"To je páv, co se otočil dovnitř."','"To je páv, co spolkl interpunkci."','"To je páv, co se přepálil."'],
+    popis:'Každé zvíře je definováno jako poddruh páva. Větná konstrukce vytváří novou taxonomii.',
+    jazyk:'Apozice, definiční vzorec',
+    ukol:'Vyberte tři různá zvířata (nebo předměty) a definujte je jako „pávy, kteří…“ (např. „Žirafa je páv, co se zapomněl zastavit.“). Ke každé definici přidejte krátké vysvětlení.'
+  },
+  {
+    nazev:'Neologismus',
+    termin:'doslovné i metaforické užití',
+    citace:['"To je páv, co se přepálil."'],
+    popis:'„Přepálit“ obvykle znamená zničit teplem. Tady přeneseno na zaječici, která prošla ohněm – slovo funguje obojím způsobem.',
+    jazyk:'Tvorba nových slov, doslovnost a metafora',
+    ukol:'Vytvořte nové slovo (neologismus) a použijte ho ve větě tak, aby fungovalo zároveň doslovně i metaforicky. Vysvětlete, co znamená.'
+  },
+  {
+    nazev:'Stupňování abstrakce',
+    termin:'vědecký termín v pohádce',
+    citace:['"A tak vznikla nová teorie:"'],
+    popis:'Dvojtečka uvozuje výčet, který je čistě fantazijní. „Teorie“ v pohádce vytváří kontrast.',
+    jazyk:'Abstraktní termíny v konkrétním světě',
+    ukol:'Napište krátký fantazijní text (3–5 vět), který začíná vědeckým termínem (např. „hypotéza“, „paradigma“, „experiment“) a pak popisuje něco naprosto nemožného nebo absurdního.'
+  },
+  {
+    nazev:'Materializace zrcadla',
+    termin:'personifikace a paměť',
+    citace:['"každé oko je jen zrcadlo, co se snaží zapomenout, co vidělo."'],
+    popis:'Zrcadlo má paměť a snahu. Oko přestává být orgánem, stává se objektem.',
+    jazyk:'Personifikace abstrakt, paměť předmětů',
+    ukol:'Vyberte jeden neživý předmět (např. zrcadlo, stůl, ulice) a napište o něm jako o bytosti, která má paměť, emoce a touhy. Co si pamatuje? Na co se snaží zapomenout?'
+  },
+  {
+    nazev:'Kvantifikace identity',
+    termin:'gramaticky deviantní',
+    citace:['"chtěl být méně páv"'],
+    popis:'Obvykle se kvantifikují adjektiva (méně krásný), ne substantiva. „Méně páv“ je gramaticky nemožné, ale dává smysl.',
+    jazyk:'Kvantifikace podstatných jmen',
+    ukol:'Napište tři věty, ve kterých kvantifikujete podstatné jméno (např. „být méně člověk“, „příliš strom“, „málo ticho“). Ke každé přidejte vysvětlení, co to znamená.'
+  },
+  {
+    nazev:'Rozdělení spojky na konci',
+    termin:'grafické členění',
+    citace:['"A že / pohádka se nedá rozvinout jako ocas."'],
+    popis:'Spojka „že“ je oddělena na samostatný řádek. Pauza mezi „že“ a obsahem věty.',
+    jazyk:'Grafická úprava, pauza, rytmus',
+    ukol:'Napište krátký text, ve kterém rozdělíte jednu spojku (např. „a že“, „protože“, „ale“) na samostatný řádek. Sledujte, jak se změní rytmus a význam.'
+  },
+  {
+    nazev:'Přirovnání s negací',
+    termin:'paralelní struktura s opačným významem',
+    citace:['"pohádka se nedá rozvinout jako ocas."'],
+    popis:'Přirovnání, které popírá samo sebe – ocas se rozvinout dá, pohádka ne.',
+    jazyk:'Negované přirovnání, paralelismus',
+    ukol:'Vytvořte tři přirovnání, která sama sebe popírají (např. „… se nedá srovnat jako…“, „… není jako…, i když to tak vypadá“). Použijte je v krátkých větách.'
+  }
+];
+
+let aktivniUhel = localStorage.getItem('pav_uhel') || '0';
+
+function uhel_label(id){
+  const u = UHLY_LIST.find(u=>u.id===String(id));
+  return u ? u.label : '—';
+}
+
+function renderUhelSwitcher(){
+  const sw = document.getElementById('uhel-switcher');
+  sw.innerHTML = '';
+  UHLY_LIST.forEach(u=>{
+    const btn = document.createElement('button');
+    btn.className = 'uhel-btn' + (u.id===aktivniUhel?' active':'');
+    btn.textContent = u.label;
+    btn.onclick = ()=>{ aktivniUhel=u.id; renderUhelSwitcher(); updateLabels(); };
+    sw.appendChild(btn);
+  });
+}
+
+function updateLabels(){
+  const uhel_nazev = uhel_label(aktivniUhel);
+  document.getElementById('uhel-display').textContent = uhel_nazev;
+  document.getElementById('export-uhel-label').textContent = uhel_nazev;
+}
+
+function renderAnomaalie(){
+  const list = document.getElementById('anomalie-list');
+  const wasOpen = {};
+  list.querySelectorAll('.anomalie.open').forEach(el=>{wasOpen[el.dataset.idx]=true;});
+  list.innerHTML = '';
+
+  ANOMALIE.forEach((a,i)=>{
+    const el = document.createElement('div');
+    el.className = 'anomalie' + (wasOpen[i]?' open':'');
+    el.dataset.idx = i;
+    el.innerHTML = `
+      <div class="anomalie-header" onclick="this.parentElement.classList.toggle('open')">
+        <div class="a-num">${String(i+1).padStart(2,'0')}</div>
+        <div class="a-meta">
+          <div class="a-nazev">${a.nazev}</div>
+          <div class="a-termin">${a.termin}</div>
+        </div>
+        <div class="a-toggle">▾</div>
+      </div>
+      <div class="anomalie-body">
+        <div class="a-citace">${a.citace.map(c=>`<span>${c}</span>`).join('')}</div>
+        <p class="a-popis">${a.popis}</p>
+        <div class="ukol-wrap">
+          <div class="ukol-kalibrace">Cvičení <span>· pro všechny úhly</span></div>
+          <div class="ukol-text">${a.ukol}</div>
+          <div class="ukol-jazyk">Jazykové zaměření: ${a.jazyk}</div>
+          <textarea class="pisarna" placeholder="Pište sem…" rows="3"></textarea>
+          <div class="a-btns">
+            <button class="btn btn-g" style="font-size:.68rem;padding:5px 12px;margin-bottom:8px" onclick="ulozitCviceni(${i},this)">Uložit cvičení</button>
+          </div>
+        </div>
+      </div>`;
+    list.appendChild(el);
+  });
+  updateLabels();
+}
+
+function ulozitCviceni(idx, btn){
+  const ta = btn.closest('.anomalie-body').querySelector('.pisarna');
+  const text = ta.value.trim();
+  if(!text){alert('Napište nejprve text cvičení.');return;}
+  const zaznam = {
+    datum: new Date().toLocaleDateString('cs-CZ'),
+    karta: 'Páv',
+    uhel: uhel_label(aktivniUhel),
+    anomalie: ANOMALIE[idx].nazev,
+    text: text
+  };
+  const ex = JSON.parse(localStorage.getItem('chcesmys_cviceni')||'[]');
+  ex.push(zaznam);
+  localStorage.setItem('chcesmys_cviceni', JSON.stringify(ex));
+  btn.textContent = 'Uloženo ✓';
+  setTimeout(()=>{btn.textContent='Uložit cvičení';},2000);
+}
+
+function ulozitMapu(){
+  const mapa = {datum:new Date().toLocaleDateString('cs-CZ'),karta:'Páv',uhel:uhel_label(aktivniUhel)};
+  const ex = JSON.parse(localStorage.getItem('chcesmys_zapisnik_mapy')||'[]');
+  ex.push(mapa);
+  localStorage.setItem('chcesmys_zapisnik_mapy',JSON.stringify(ex));
+  alert('Kognitivní mapa uložena. ('+ex.length+' záznamů)');
+}
+
+function exportJSON(){
+  const data = {
+    karta:'Páv',
+    uhel:uhel_label(aktivniUhel),
+    datum:new Date().toLocaleDateString('cs-CZ'),
+    cviceni:JSON.parse(localStorage.getItem('chcesmys_cviceni')||'[]').filter(c=>c.karta==='Páv'),
+    mapa:JSON.parse(localStorage.getItem('chcesmys_zapisnik_mapy')||'[]').filter(m=>m.karta==='Páv')
+  };
+  const blob = new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  const a = document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='pav_workshop.json';
+  a.click();
+}
+
+function sdilej(){
+  const url = window.location.href.split('?')[0]+'?uhel='+aktivniUhel;
+  if(navigator.share){navigator.share({title:'Páv workshop',url});}
+  else{navigator.clipboard.writeText(url).then(()=>alert('Odkaz zkopírován: '+url));}
+}
+
+// načíst úhel z URL
+const urlParams = new URLSearchParams(window.location.search);
+if(urlParams.get('uhel')) aktivniUhel = urlParams.get('uhel');
+
+renderUhelSwitcher();
+renderAnomaalie();
+</script>
+</body>
+</html>
