@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Žralok — workshop · Chceš myš?</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#060b10;--s:#0b1218;--s2:#101820;--s3:#141e28;
+  --c:#c8dce8;--dim:rgba(160,200,230,.35);--a:#4a9ec8;--a2:#2a6e98;
+  --b:rgba(60,140,200,.12);--b2:rgba(60,140,200,.26);
+  --serif:'Cormorant Garamond',Georgia,serif;--mono:'DM Mono',monospace;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--c);font-family:var(--mono);font-size:13px;line-height:1.85;-webkit-font-smoothing:antialiased}
+.wrap{max-width:780px;margin:0 auto;padding:0 24px}
+nav{position:sticky;top:0;z-index:99;border-bottom:1px solid var(--b);background:rgba(6,11,16,.96);backdrop-filter:blur(14px);padding:11px 24px;display:flex;align-items:center;justify-content:space-between}
+.nav-l{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);text-decoration:none;transition:color .15s}
+.nav-l:hover{color:var(--c)}
+.nav-links{display:flex;gap:4px}
+.nav-links a{font-size:10px;letter-spacing:.11em;text-transform:uppercase;color:var(--dim);text-decoration:none;padding:5px 10px;border:1px solid transparent;border-radius:2px;transition:all .15s}
+.nav-links a:hover,.nav-links a.active{color:var(--a);border-color:var(--b2)}
+.hero{padding:44px 0 28px;border-bottom:1px solid var(--b)}
+.hero-tag{font-size:10px;letter-spacing:.26em;text-transform:uppercase;color:var(--a2);margin-bottom:12px}
+.hero h1{font-family:var(--serif);font-size:clamp(2rem,5vw,3.4rem);font-weight:300;line-height:1;margin-bottom:6px}
+.hero h1 em{font-style:italic;color:var(--a)}
+.hero-uhel{margin-top:14px;display:inline-flex;align-items:center;gap:10px;padding:9px 16px;background:rgba(60,140,200,.06);border:1px solid var(--b2)}
+.hero-uhel-tag{font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--a2)}
+.hero-uhel-val{font-family:var(--serif);font-size:.96rem;color:var(--a)}
+.hero-note{font-size:.76rem;color:var(--dim);margin-top:10px;line-height:1.9;max-width:520px}
+.uhel-switcher{padding:16px 0;display:flex;flex-wrap:wrap;gap:4px;border-bottom:1px solid var(--b)}
+.uhel-btn{font-family:var(--mono);font-size:.65rem;letter-spacing:.09em;padding:4px 9px;background:transparent;border:1px solid var(--b);color:var(--dim);cursor:pointer;border-radius:2px;transition:all .15s}
+.uhel-btn:hover{color:var(--a);border-color:var(--b2)}
+.uhel-btn.active{background:rgba(60,140,200,.1);color:var(--a);border-color:var(--a2)}
+.anomalie{border:1px solid var(--b);background:var(--s);margin-bottom:3px;overflow:hidden;transition:border-color .15s}
+.anomalie:hover{border-color:var(--b2)}
+.anomalie-header{display:flex;align-items:center;gap:14px;padding:14px 18px;cursor:pointer;user-select:none}
+.a-num{font-family:var(--serif);font-size:1.5rem;font-weight:300;color:rgba(60,140,200,.14);min-width:28px;line-height:1}
+.a-meta{flex:1}
+.a-nazev{font-size:.83rem;color:var(--c);margin-bottom:2px}
+.a-termin{font-size:.68rem;color:var(--a2);letter-spacing:.06em;font-style:italic}
+.a-toggle{font-size:.68rem;color:var(--dim);letter-spacing:.1em;text-transform:uppercase;transition:transform .2s;white-space:nowrap}
+.anomalie.open .a-toggle{transform:rotate(180deg)}
+.anomalie-body{display:none;padding:4px 18px 20px;border-top:1px solid var(--b)}
+.anomalie.open .anomalie-body{display:block}
+.a-citace{font-family:var(--serif);font-style:italic;font-size:.82rem;color:rgba(60,140,200,.48);border-left:1px solid var(--b2);padding:7px 13px;margin:12px 0 10px;line-height:1.85}
+.a-citace span{display:block}
+.a-popis{font-size:.77rem;color:rgba(160,200,230,.5);line-height:1.9;margin-bottom:16px}
+.ukol-wrap{background:var(--s2);border:1px solid var(--b)}
+.ukol-kalibrace{padding:9px 16px;border-bottom:1px solid var(--b);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--a);display:flex;align-items:center;gap:8px}
+.ukol-kalibrace span{color:var(--dim);font-size:.65rem}
+.ukol-text{padding:14px 16px;font-size:.82rem;color:rgba(190,220,240,.75);line-height:1.95}
+.ukol-jazyk{padding:8px 16px 12px;font-size:.71rem;color:var(--a2);font-style:italic;border-top:1px solid var(--b)}
+.pisarna{width:100%;background:var(--s3);border:none;border-top:1px solid var(--b);color:var(--c);padding:11px 14px;font-family:var(--mono);font-size:.78rem;line-height:1.75;resize:vertical;min-height:72px}
+.pisarna:focus{outline:1px solid var(--a2)}
+.pisarna::placeholder{color:rgba(160,200,230,.08)}
+.btn{padding:9px 20px;font-family:var(--mono);font-size:.73rem;letter-spacing:.1em;text-transform:uppercase;border:none;cursor:pointer;border-radius:2px;transition:all .15s;text-decoration:none;display:inline-block}
+.btn-g{background:transparent;color:var(--dim);border:1px solid var(--b)}
+.btn-g:hover{color:var(--c);border-color:var(--b2)}
+.a-btns{display:flex;gap:5px;padding:8px 14px 0}
+.export-fixed{position:fixed;bottom:0;left:0;right:0;background:rgba(6,11,16,.97);border-top:1px solid var(--b);backdrop-filter:blur(12px);padding:9px 24px;display:flex;justify-content:space-between;align-items:center;z-index:90}
+.export-info{font-size:.72rem;color:var(--dim)}
+.export-info strong{color:var(--a)}
+.export-btns{display:flex;gap:5px}
+footer{padding:24px 0;border-top:1px solid var(--b);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:52px}
+footer p{font-size:.7rem;color:var(--dim)}
+footer a{color:var(--a)}
+@media print{nav,.export-fixed,.uhel-switcher,.a-btns,.pisarna{display:none!important}.anomalie-body{display:block!important}body{background:white;color:black}}
+</style>
+</head>
+<body>
+<nav>
+  <a class="nav-l" href="../../../index.html">← Všechna zvířata</a>
+  <div class="nav-links">
+    <a href="zralok_pohadka.html">Pohádka</a>
+    <a href="zralok_diagnostika.html">Diagnostika</a>
+    <a href="zralok_workshop.html" class="active">Workshop</a>
+  </div>
+</nav>
+<div class="wrap">
+<section class="hero">
+  <p class="hero-tag">Karta Žralok · Workshop</p>
+  <h1>13 anomálií — <em>cvičení</em></h1>
+  <div class="hero-uhel">
+    <span class="hero-uhel-tag">Váš úhel:</span>
+    <span class="hero-uhel-val" id="uhel-display">— přejděte nejprve na diagnostiku —</span>
+  </div>
+  <p class="hero-note">Každá anomálie má cvičení přizpůsobené vašemu úhlu. Přepínačem nahoře si můžete zobrazit cvičení pro libovolný úhel.</p>
+</section>
+<div class="uhel-switcher" id="uhel-switcher"></div>
+<div class="anomalie-list" id="anomalie-list"></div>
+<footer>
+  <p>Karta Žralok · Chceš myš? · © 2026 Michaela Nováková</p>
+  <p><a href="mailto:chcesmys@gmail.com">chcesmys@gmail.com</a></p>
+</footer>
+</div>
+<div class="export-fixed">
+  <div class="export-info">Workshop: <strong id="export-uhel-label">—</strong> · Karta Žralok</div>
+  <div class="export-btns">
+    <button class="btn btn-g" style="font-size:.68rem;padding:6px 12px" onclick="ulozitMapu()">Uložit mapu</button>
+    <button class="btn btn-g" style="font-size:.68rem;padding:6px 12px" onclick="exportJSON()">Export JSON</button>
+    <button class="btn btn-g" style="font-size:.68rem;padding:6px 12px" onclick="window.print()">Tisk</button>
+    <button class="btn btn-g" style="font-size:.68rem;padding:6px 12px" onclick="sdilej()">Sdílet</button>
+  </div>
+</div>
+<script>
+const UHLY_LIST=[
+  {id:'0',label:'0° Analytický'},{id:'180',label:'180° Asociační'},
+  {id:'30',label:'30° Kulturní'},{id:'210',label:'210° Introspektivní'},
+  {id:'60',label:'60° Filozofický'},{id:'240',label:'240° Ironický'},
+  {id:'90',label:'90° Naivní'},{id:'270',label:'270° Groteskní'},
+  {id:'120',label:'120° Jazykový'},{id:'300',label:'300° Absurdní'},
+  {id:'150',label:'150° Metaforický'},{id:'330',label:'330° Surrealistický'}
+];
+
+const ANOMALIE=[
+{
+  nazev:'Rovnice v názvu jako existenční vzorec',
+  termin:'matematický zápis — algebra bytí',
+  citace:['"NAD : POD = 1 : 1"'],
+  popis:'Žralokova existence je definována poměrem, ne příběhem. Matematický zápis v pohádce není dekorace — je to nejpřesnější definice postavy.',
+  jazyk:'Matematický zápis, čísla místo slovních hodnotících pojmů, absence emotivních slov',
+  ukoly:{
+    '0':  'Napiš textový portrét člověka nebo situace výhradně poměry a čísly — žádná přídavná jména, žádné hodnocení. Kolik procent času v jaké roli, kolik energie na co, jaký poměr mluvení a mlčení. Na konci napiš jednu rovnici, která je vystihuje.',
+    '180':'Napiš sérii poměrů, které tě napadají, když přemýšlíš o sobě nebo o dni, který jsi zažil. 3:7, 1:1, 9:1 — co tím myslíš? Nech je přicházet volně, bez vysvětlení.',
+    '30': 'Napiš poměry, které charakterizují skupinu, kulturu nebo generaci — ne jako hodnocení, ale jako matematický popis. Kolik ticha : řeči. Kolik práce : odpočinku. Kolik říkaného : neříkaného.',
+    '210':'Napiš svůj vlastní existenční vzorec: jaký je tvůj poměr mezi dvěma stavy, které tě definují? Nad hladinou : pod hladinou. Veřejné já : soukromé já. Zapiš to jako rovnici a pak jednou větou, co tato rovnice říká.',
+    '60': 'Napiš filozofický text o tom, zda číslo může zachytit identitu. Je poměr 1:1 přesnější definice než příběh? Co se ztratí a co se získá, když existenci zapíšeme jako rovnici?',
+    '240':'Napiš seznam rovnic, které obvykle slouží jako životní motta nebo hodnoty — ironicky. „Produktivita : odpočinek = 10 : 1." „Empatie : efektivita = 0 : 1." Co nám tyto rovnice říkají o společnosti?',
+    '90': 'Napiš tři věty o třech různých věcech. Každá věta: jen poměr. Žádná slova navíc.',
+    '270':'Napiš rovnici pro situaci, která je absolutně nerovnovážná — kde jeden poměr drtí druhý. 100:0. 1000:1. Co se děje se žralokem, když rovnice přestane být 1:1?',
+    '120':'Prozkoumej, co matematický zápis dělá s jazykem. Napiš tři různé věty popisující totéž — jednu s přídavnými jmény, jednu s příběhem, jednu jako rovnici. Která je nejpřesnější? Která nese nejvíc?',
+    '300':'Napiš rovnice, které nedávají smysl — ale chovají se, jako by dávaly. „Mlčení : hluk = středa." „Modrá : strach = 7." Tři takové rovnice s pseudovysvětlením.',
+    '150':'Ke každé rovnici najdi přírodní obraz: 1:1 je jako příliv a odliv, jako nádech a výdech. Napiš tři různé poměry a ke každému obraz z přírody.',
+    '330':'Napiš rovnice pro věci, které existují jen v určitých snových nebo nemožných podmínkách. „Viditelné : neviditelné = 1:1 pouze ve tmě." Tři takové podmíněné rovnice.'
+  }
+},
+{
+  nazev:'Nadpis jako komentář',
+  termin:'metatext — text sám sebe komentuje',
+  citace:['"Zní to jako rovnice, ale zároveň jako hádanka."'],
+  popis:'Text sám sebe komentuje hned v úvodu. Vysvětluje, co právě čteme. Je to návod k použití vložený do pohádky.',
+  jazyk:'Explicitní metatext, komentování textu, instrukce čtenáři',
+  ukoly:{
+    '0':  'Napiš úvod textu, který systematicky popisuje, co bude následovat: formu, záměr, strukturu. Čtenář musí vědět přesně, co čte, ještě než začne. Žádná tajemství, žádné obraty.',
+    '180':'Napiš úvod, který sám sebe přerušuje a komentuje. „Tohle je text o… ale vlastně ne. Spíš o… nebo možná." Metatext jako proud vědomí.',
+    '30': 'Napiš úvod, který čtenáři říká, co tato pohádka nebo příběh dělá ve sdíleném prostoru — proč existuje, komu patří, co se s ním má dít.',
+    '210':'Napiš úvod, který upřímně říká, proč jsi tento text napsal/a. Ne záměr textu — tvůj záměr. Co jsi chtěl/a, aby se stalo, když ho někdo přečte?',
+    '60': 'Napiš metatextový úvod jako filozofickou tezi: co text je, co není, a co nemůže být. Pak napiš, proč metatext není totéž jako obsah.',
+    '240':'Napiš ironický úvod, který slibuje jednu věc a pak ji nesplní. Metatext jako manipulace: čtenáři říkáš, co čekat — a pak dáš něco jiného.',
+    '90': 'Napiš úvod v jedné větě, která přesně říká, co bude v textu. Bez dramatizace.',
+    '270':'Napiš úvod, který je dramatičtější než text samotný. Metatext jako přehnaný prolog — slib extrémního zážitku pro něco klidného.',
+    '120':'Napiš tři různé úvody ke stejnému textu — každý v jiném jazykovém registru (vědecký, pohádkový, novinový). Jak se mění text samotný v závislosti na metatextu?',
+    '300':'Napiš úvod, který komentuje sám sebe donekonečna — metatext o metatextu o metatextu. Kde se zastavit?',
+    '150':'Napiš úvod jako metaforu pro to, co bude následovat. „Tento text je jako vstup do budovy, kde…" Metatext jako obraz, ne instrukce.',
+    '330':'Napiš úvod z perspektivy textu samotného — text mluví o sobě v první osobě. Co chce? Kam směřuje? Čeho se bojí?'
+  }
+},
+{
+  nazev:'Žralok s dvojí doménou',
+  termin:'kontrast dvou světů — dvě identity v jedné postavě',
+  citace:['"Nad hladinou byl jen na chvíli."','"Pod ní byl doma."'],
+  popis:'Dva světy, dvě identity. Nad: viděn, křičeno, nebezpečí. Pod: klid, tma, ticho. Matematika drží tuto dvojnost pohromadě.',
+  jazyk:'Kontrast dvou domén, dvojí perspektiva, přecházení mezi světy',
+  ukoly:{
+    '0':  'Napiš systematickou analýzu postavy se dvěma doménami: co platí nahoře, co platí dole. Vytvoř tabulku nebo seznam protikladů. Na konci napiš, co je v obou doménách stejné.',
+    '180':'Napiš volně o přechodu mezi dvěma světy — o momentu, kdy se přechází z jednoho do druhého. Co se cítí v tomto přechodu? Co zmizí, co se objeví?',
+    '30': 'Napiš o postavě, která žije ve dvou sociálních světech — doma a veřejně, v práci a v rodině, v subkultuře a v mainstreamu. Co tato dvojnost říká o identitě v kolektivu?',
+    '210':'Napiš o svých vlastních dvou doménách. Kde jsi jiný/jiná? Co z jednoho světa nesmí přejít do druhého? Kde je hranice?',
+    '60': 'Napiš o filozofickém problému dvojí identity: existuje autentické já, nebo jsme vždy poměr mezi dvěma rolemi? Může být pravda v obou doménách zároveň?',
+    '240':'Napiš ironicky o člověku, jehož dvě domény jsou v absurdním kontrastu. „V práci byl ředitelem. Doma byl někdo, kdo zapomínal vynést odpadky." Kontrast jako satira.',
+    '90': 'Napiš čtyři věty: dvě o tom, co platí nahoře, dvě o tom, co platí dole. Žádné komentáře.',
+    '270':'Napiš o postavě, jejíž dvě domény jsou v dramatickém napětí — kde přechod mezi nimi je fyzicky nebo emocionálně extrémní. Co se stane při každém přechodu?',
+    '120':'Napiš text, kde jazyk sám přechází mezi dvěma registry — formální/neformální, vědecký/pohádkový, nahlas/tiše. Forma textu napodobuje dvojí doménu obsahu.',
+    '300':'Napiš o postavě, jejíž dvě domény jsou obě absurdní — žádná z nich není „normální svět". Dvě nereálné domény v poměru 1:1.',
+    '150':'Hladina jako metafora hranice — co je tvá hladina? Kde je tvůj povrch, pod nímž jsi jiný/jiná? Napiš obraz pro tuto hranici.',
+    '330':'Napiš o postavě, jejíž dvě domény existují v různých časových rovinách — jedna ve snu, jedna v bdělém stavu, nebo jedna v minulosti a druhá v přítomnosti.'
+  }
+},
+{
+  nazev:'Repetitivní definice domova',
+  termin:'trojitá mantra — rytmizace bezpečí',
+  citace:['"Tam byl klid. / Tam byl tma. / Tam se neptal nikdo na nic."'],
+  popis:'Trojité opakování „tam" vytváří rytmus bezpečí, mantra podvodního ticha. Každé „tam" přidává vrstvu: fyzický stav → smyslový stav → sociální stav.',
+  jazyk:'Opakování, trojitá konstrukce, mantra, rytmizace, jednoduché věty',
+  ukoly:{
+    '0':  'Napiš definici místa nebo stavu přes tři systematické vrstvy: fyzická → smyslová → sociální. Každá vrstva jedna věta, stejná struktura. Pak napiš, proč právě toto pořadí.',
+    '180':'Napiš mantrické opakování pro místo, do kterého se rád/ráda vracíš — bez plánování, volně. Nechej slova přicházet. Kde se trojice zastaví?',
+    '30': 'Napiš mantru pro sdílené místo bezpečí — místo, kde se skupina cítí doma. Co tam platí? Tři věty, každá začínající „Tam…"',
+    '210':'Napiš trojitou mantru pro své vlastní místo klidu — reálné nebo imaginární. Co tam platí? Nech věty být jednoduché a pravdivé.',
+    '60': 'Napiš o tom, co dělá opakování z popisu mantru. Proč tři? Proč ne dvě nebo čtyři? Jaký filozofický efekt má rytmizace definice?',
+    '240':'Napiš ironickou mantru pro místo, které klid neposkytuje — kancelář, dopravní zácpa, rodinná večeře. „Tam bylo ticho. Tam byl řád. Tam se neptali na nic." Mantra jako satira.',
+    '90': 'Napiš tři věty o jednom místě. Každá začíná stejně. Žádné přídavné jméno.',
+    '270':'Napiš mantru, která se stupňuje — každá věta intenzivnější než předchozí. Třetí věta musí být maximální.',
+    '120':'Napiš tři mantry pro tři různá místa — každou v jiném rytmickém vzoru. Pak přečti všechny nahlas a napiš, co rytmus dělá s pocitem místa.',
+    '300':'Napiš mantru pro místo, které neexistuje — ale chovej se, jako by existovalo. „Tam byl fialový klid. Tam se mluvilo o věcech bez tvaru."',
+    '150':'Napiš trojitou mantru jako obraz z přírody — tři věty, každá jeden smysl: co je vidět, co je slyšet, co je cítit.',
+    '330':'Napiš mantru, která se po třetí větě vrátí na začátek — jako smyčka. Kde se mantra zastaví? Zastaví se vůbec?'
+  }
+},
+{
+  nazev:'Vynoření jako gradovaná redukce',
+  termin:'komprese času — od chvíle k pohledu',
+  citace:['"Jen na chvíli. / Jen na nádech. / Jen na pohled."'],
+  popis:'Gradovaná redukce: čas → dech → pohled. Čím dál menší jednotky, až zbývá jen „být viděn". Minimalismus existence vyjádřen kompresí jazyka.',
+  jazyk:'Gradace, redukce, časová komprese, pozornost na malé jednotky',
+  ukoly:{
+    '0':  'Napiš popis události v postupně se zmenšujících časových jednotkách: rok → měsíc → den → hodina → minuta → vteřina → okamžik. Každá úroveň jedna věta. Co zůstane v té nejmenší jednotce?',
+    '180':'Napiš volně o okamžiku, který se zmenšoval — o situaci, která se zredukovala na jeden pohled, jeden dech, jedno slovo. Jak to vypadalo při každém zmenšení?',
+    '30': 'Napiš o kolektivním okamžiku redukce — o momentu, kdy celá skupina nebo událost zhuštěla na jeden obraz, jeden zvuk, jeden pohyb. Co zbylo?',
+    '210':'Vzpomeň na okamžik, který si pamatuješ jen jako zlomek — pohled, vůni, zvuk. Napiš ho v postupném zmenšování: od kontextu k té jedné malé věci. Co přežilo redukci?',
+    '60': 'Napiš o tom, co se stane s pravdou při redukci. Je nejmenší jednotka nejpravdivější? Nebo redukce odstraní kontext a tím i smysl?',
+    '240':'Napiš ironicky o „optimální redukci" komunikace nebo vztahu. „Stačí jen chvíle. Vlastně jen nádech. Vlastně jen pohled. Vlastně nic." Gradace jako absurdní minimalizace.',
+    '90': 'Napiš pět vět, každá kratší než předchozí. Poslední věta: jedno slovo.',
+    '270':'Napiš o redukci jako o ztrátě — kde každé zmenšení bolí. Co zmizelo z chvíle? Co zmizelo z nádechu? Co zbývá v pouhém pohledu?',
+    '120':'Napiš text, kde věty se postupně zkracují — nejdřív dlouhé, pak střední, pak krátké, pak útržkovité, pak jedno slovo. Forma napodobuje obsah redukce.',
+    '300':'Napiš gradaci, která jde opačným směrem — od nejmenšího k největšímu. Od pohledu k věčnosti. Tři kroky.',
+    '150':'Napiš obraz redukce z přírody: řeka, která se zúží na potok, na pramínek, na kapku. Který přírodní obraz sedí na „jen na chvíli / jen na nádech / jen na pohled"?',
+    '330':'Napiš o redukci, která nepřestane na pohledu — pokračuje dál. Co je menší než pohled? Co je menší než to?'
+  }
+},
+{
+  nazev:'Křik jako definice identity',
+  termin:'exteriérová definice — identita redukována na reakci světa',
+  citace:['"Žralok! Pozor!" / "Nebezpečí!" / "Zuby!"'],
+  popis:'Lidé definují žraloka skrze strach. Jeho identita je redukována na hrozbu. Žralok sám o sobě nic neříká — svět ho pojmenovává jeho zuby.',
+  jazyk:'Exteriérová definice, strach jako jazyk, popis přes reakci, ne přes vlastnost',
+  ukoly:{
+    '0':  'Napiš systematický popis postavy výhradně přes reakce ostatních — jak na ni reagují, co říkají, co dělají v její přítomnosti. Žádný přímý popis. Na konci napiš: co tato externě definovaná identita říká o postavě?',
+    '180':'Napiš volně o tom, jak tě někdo definoval skrze svou reakci na tebe. Co řekli nebo udělali — a jak se to stalo součástí toho, kdo jsi?',
+    '30': 'Napiš o stereotypech jako o kolektivních „křicích" — jak skupina definuje outsidery přes strach nebo překvapení. Co se o skupině samotné dozvíme z toho, jak křičí?',
+    '210':'Napiš o okamžiku, kdy tě někdo definoval přes svou reakci — ne přes to, kdo jsi. Jak to bylo? Přijal/a jsi tuto definici nebo ne?',
+    '60': 'Napiš o filozofickém problému exteriérové identity: existujeme tak, jak nás vidí ostatní, nebo tak, jak se vidíme sami? Může být křik přesnější definice než sebepopis?',
+    '240':'Napiš křičené definice pro věci, které křik nezaslouží — každodenní situace popsané jazykem paniky. „Kolo! Pozor! Pedály! Řídítka!" Přehnaná reakce na banální věc.',
+    '90': 'Napiš tři věty: jak tě vidí svět. Žádný komentář, žádná obhajoba.',
+    '270':'Napiš scénu, kde reakce světa je maximálně dramatická a nadsazená. Křik, panika, útěk — na co přesně reagují? Je to adekvátní?',
+    '120':'Napiš tři různé způsoby, jak pojmenovat tutéž věc — přes strach, přes obdiv, přes lhostejnost. Jak se mění „žralok" v závislosti na jazyce pozorovatele?',
+    '300':'Napiš křičené definice pro věci, které se kříčet nedají — ticho, nepřítomnost, čekání. „Ticho! Pozor! Nic!"',
+    '150':'Napiš obraz: jak vypadá žralok z perspektivy ryby, která ho definuje křikem? A jak vypadá z perspektivy žraloka samotného? Dva obrazy.',
+    '330':'Napiš o postavě, jejíž identita je tvořena výhradně ozvěnami reakcí — jako by sama neexistovala, jen odraz v chování druhých.'
+  }
+},
+{
+  nazev:'Počítání jako sebeuvědomění',
+  termin:'numerická sebereflexe — statistika vlastního života',
+  citace:['"Kolikrát byl nad. / Kolikrát byl pod. / A zjistil: / 1 : 1"'],
+  popis:'Žralok se stává statistikem vlastního života. Existence převedená na čísla. Sebeuvědomění skrze měření — ne přes pocit nebo vzpomínku, ale přes počet.',
+  jazyk:'Numerická sebeanalýza, sledování frekvence, strukturovaný zápis',
+  ukoly:{
+    '0':  'Napiš statistiku vlastního dne nebo týdne: kolikrát jsi řekl/a ano a ne, kolik hodin v jaké roli, kolik slov vyslovil/a a kolik promlčel/a. Pak napiš, co tato čísla říkají o tobě.',
+    '180':'Napiš volně čísla, která tě napadají, když přemýšlíš o sobě — bez vysvětlení. 3. 17. 0,5. 100. Co jsou to za čísla?',
+    '30': 'Napiš statistiku skupiny nebo instituce: kolik procent času se mluví vs. jedná, kolik rozhodnutí je skutečných vs. formálních. Čísla jako kritika nebo pochvala.',
+    '210':'Napiš deník jednoho dne formou čísel. Bez slov, jen čísla a to, co označují. Co se ukáže, co by se v textu skrylo?',
+    '60': 'Napiš o tom, co se stane se zkušeností, když ji převedeme na čísla. Ztratí se subjektivita? Nebo číslo odhalí to, co příběh zakryje?',
+    '240':'Napiš ironické hodnocení vlastního výkonu pomocí čísel. „Produktivita: 12%. Smysluplnost: 3%. Přestávky na kávu: 67%." Čísla jako sebeironická zpráva.',
+    '90': 'Napiš tři čísla o sobě. Ke každému jedno slovo vysvětlení.',
+    '270':'Napiš o okamžiku, kdy číslo odhalilo šokující pravdu. Kdy statistika překvapila víc než pocit?',
+    '120':'Napiš text, kde každá věta obsahuje číslo — a toto číslo nese smysl věty. Číslo jako klíčové slovo.',
+    '300':'Napiš statistiku věcí, které se nedají počítat. „Kolikrát jsem byl sám: nedefinovatelné." Tři takové položky.',
+    '150':'Napiš obraz počítání z přírody: stromy, kroky, vlny, hvězdy. Jak příroda počítá? Pak větu: co by žralok počítal, kdyby byl stromem?',
+    '330':'Napiš o počítání, které se nikdy nezastaví — kde číslo roste samo od sebe, bez žraloka, bez pozorovatele. Co se počítá, když nikdo nepočítá?'
+  }
+},
+{
+  nazev:'Rytmus rovnováhy',
+  termin:'anafora — pulzující struktura jako tep',
+  citace:['"Jednou nahoře. / Jednou dole. / Jednou viděn. / Jednou skryt."'],
+  popis:'Opakování „jednou" vytváří tep, puls žralokova života. Je to jako tlukot srdce v poměru. Anafora tu není rétorická figura — je to záznam rytmu existence.',
+  jazyk:'Anafora, rytmus, pulzující struktura, opakující se slova na začátku vět',
+  ukoly:{
+    '0':  'Napiš text s anaforickou strukturou, kde každé opakování přidává novou kategorii — fyzická → emocionální → sociální → existenční. Slovo na začátku každé věty stejné, obsah systematicky jiný.',
+    '180':'Napiš volně s anaforou — nech jedno slovo opakovat na začátku vět, dokud само neřekne dost. Kdy se rytmus zastaví?',
+    '30': 'Napiš anaforický text o kolektivním rytmu — o tom, co se jednou dělá, jednou neřekne, jednou zapomene, jednou připomene. Tep komunity.',
+    '210':'Napiš svůj vlastní rytmus existence — co se střídá pravidelně, co pulzuje. Použij anaforu jako strukturu, která tento rytmus vizualizuje.',
+    '60': 'Napiš o tom, co dělá opakování s významem. Kdy se slovo opakováním vyprázdní? Kdy naopak nabyde? Jak anafora mění ontologický status výroku?',
+    '240':'Napiš anaforický text o něčem, co rytmus nemá — o chaosu, o nepravidelnosti, o nerovnováze. Forma v protikladu s obsahem.',
+    '90': 'Napiš čtyři věty. Každá začíná stejným slovem. Různé obsahy.',
+    '270':'Napiš anaforický text, který graduje — každá věta intenzivnější, dramatičtější, větší. Tep zrychluje.',
+    '120':'Napiš tři anaforické texty — každý s jiným opakujícím se slovem (jednou / vždy / nikdy). Jak se mění charakter rytmu?',
+    '300':'Napiš anaforický text, kde opakující se slovo pokaždé nedává smysl v kontextu věty — ale rytmus funguje dál. Co pak anafora říká?',
+    '150':'Napiš anaforický text jako přírodní rytmus: příliv a odliv, nádech a výdech, den a noc. Která anafora zachycuje tento rytmus nejlépe?',
+    '330':'Napiš anaforický text, kde rytmus přeskočí — jedna věta vynecháná, pak pokračuje. Co se stane v té mezeře?'
+  }
+},
+{
+  nazev:'Ryba jako tazatel',
+  termin:'sókratovský dialog — malý hlas klade velkou otázku',
+  citace:['"Proč se vůbec vynořuješ?"'],
+  popis:'Malá ryba klade zásadní otázku filozofického dialogu v hlubině. Outsider s naivní otázkou odhalí celou logiku existence. Mikro-hlas zpochybní makro-systém.',
+  jazyk:'Otázky, filozofické vsuvky, mikro vs. makro perspektiva, naivní hlas',
+  ukoly:{
+    '0':  'Napiš dialog, kde malá postava systematicky zpochybňuje velký systém skrze logické otázky. Každá otázka odkrývá jeden předpoklad systému. Na konci: co zbylo z velkého systému?',
+    '180':'Napiš sérii otázek, které tě napadají, když přemýšlíš o něčem, co se zdá samozřejmé. Volně, bez odpovědí. Co se najednou jeví jako otázka, když se zeptáš?',
+    '30': 'Napiš dialog, kde outsider klade otázky, které insider nemůže nebo nechce slyšet. Co vidí ten, kdo je mimo systém? Jaká otázka to odhalí?',
+    '210':'Napiš o okamžiku, kdy ti někdo položil malou otázku, která rozbila velkou jistotu. Jaká to byla otázka? Co se stalo po ní?',
+    '60': 'Napiš o sókratovské metodě jako filosofickém nástroji: co dělá otázka, co tvrzení nedokáže? Proč je někdy malá ryba moudřejší než velký žralok?',
+    '240':'Napiš dialog, kde malá postava klade zdvořilé, nevinné otázky — a každá z nich odhalí absurditu systému, do kterého vstoupila. Ironie přes naivitu.',
+    '90': 'Napiš tři otázky. Jednoduché, přímé. Na každou odpověz jednou větou.',
+    '270':'Napiš dialog, kde malá otázka způsobí velkou katastrofu. Jedna otázka zbortí celý systém. Přehnaně.',
+    '120':'Napiš tři verze téže otázky — v různých jazykových rejstřících: naivní, vědecký, poetický. Co se mění s rejstříkem? Co zůstává?',
+    '300':'Napiš otázky, které nedávají smysl — ale na které přesto chceš odpovědět. „Proč se vynořuješ, když nejsi žralok?" Tři takové otázky.',
+    '150':'Napiš obraz malého hlasu a velkého světa z přírody: kapka a oceán, vlaštovka a hora. Pak otázku, kterou by kapka položila oceánu.',
+    '330':'Napiš dialog, kde obě postavy mluví z různých realit — a přesto si rozumí. Malá ryba z jednoho snu, žralok z druhého. Jaká otázka mezi nimi funguje?'
+  }
+},
+{
+  nazev:'Identita vázaná na poměr',
+  termin:'kvantitativní identita — změna čísla mění bytí',
+  citace:['"A to už nejsem já."'],
+  popis:'Identita je vázána na poměr. Změna kvantity = změna bytí. Žralok není tvor s vlastnostmi — je vztahem. Pokud se poměr změní, není to jiný žralok — je to jiná entita.',
+  jazyk:'Kvantitativní definice identity, sledování proporcí, absence přídavných jmen',
+  ukoly:{
+    '0':  'Napiš analýzu identity jako funkce poměru: za jakých číselných podmínek je postava stále sebou? Kde je hranice? Napiš matematický popis identity s konkrétní proměnnou.',
+    '180':'Napiš volně o okamžiku, kdy ses přestal/a cítit sebou. Co se změnilo — ne co se stalo, ale v jakém poměru? Víc čeho, méně čeho?',
+    '30': 'Napiš o kolektivní identitě vázané na poměr: kdy přestane být komunita sebou? Kolik cizích prvků je příliš? Kolik změn je zlomem?',
+    '210':'Napiš svou vlastní definici identity přes poměry. Co musí být v jakém poměru, abys byl/a stále sebou? Kde je tvůj 1:1?',
+    '60': 'Napiš o filozofickém problému identity a změny. Je žralok, který se vynoří dvakrát, stále žralok? Jak se liší kvantitativní a kvalitativní změna identity?',
+    '240':'Napiš ironicky o „identity managementu" — o tom, jak lidé vědomě udržují poměry, aby zůstali konzistentní. „Přesně 30% humor, 70% vážnost. Jinak se přestávám poznávat."',
+    '90': 'Napiš tři věty: kdy jsi stále ty. Tři věty: kdy přestáváš být ty.',
+    '270':'Napiš o momentu, kdy se poměr zlomil — dramaticky, nevratně. Co se stalo? Kdo jsi byl/a po té změně?',
+    '120':'Napiš text, kde identita postavy se mění s každou větou — ne v obsahu, ale ve struktuře: délka vět, slovní druh na začátku. Forma jako identita.',
+    '300':'Napiš o identitách, které jsou definovány nesmyslnými poměry. „Jsem sebou, když jím přesně 7 hroznů." Tři takové absurdní definice.',
+    '150':'Napiš obraz identity jako rovnováhy v přírodě: ekosystém, kde jeden prvek přibude a vše se změní. Který obraz sedí na žralokův 1:1?',
+    '330':'Napiš o postavě, jejíž identita se mění v závislosti na tom, kdo ji pozoruje — jako kvantový objekt. Jsem jiný poměr pro každého pozorovatele.'
+  }
+},
+{
+  nazev:'Zápis do tří médií',
+  termin:'hierarchie záznamu — prchavé, pomíjivé, trvalé',
+  citace:['"Do bubliny. / Do kruhu na vodě. / Do paměti."'],
+  popis:'Tři média záznamu, tři úrovně trvání. Bublina (prchavá), kruh na vodě (pomíjivý), paměť (trvalá?). Pohádka se ptá: je paměť skutečně trvalejší než kruh na vodě?',
+  jazyk:'Tři úrovně zápisu, délka trvání záznamu, médium jako obsah',
+  ukoly:{
+    '0':  'Napiš tutéž informaci třikrát — pro tři různá média s různou délkou trvání: dech (okamžik), papír (roky), kámen (staletí). Co se musí změnit? Co zůstane stejné?',
+    '180':'Napiš volně o třech způsobech, jak sis něco zapamatoval/a — nebo zapomněl/a. Bublina, kruh, paměť jako osobní zkušenost.',
+    '30': 'Napiš o kolektivní paměti jako médiu — co se zapíše do bubliny (sociální sítě), co do kruhu (novinový článek), co do paměti (ústní tradice, monument). Jak se mění zpráva s médiem?',
+    '210':'Napiš o informaci, která žila v každém ze tří médií. Nejprve jako bublina — prchavá, pak jako kruh — chvíli viditelná, pak jako paměť — jak ji neseš dnes?',
+    '60': 'Napiš o vztahu média a trvalosti. Je paměť skutečně trvalejší? Může bublina přetrvat paměť? Co dělá médium s pravdou záznamu?',
+    '240':'Napiš ironicky o „archivaci" v digitálním věku — o bublinách, které se tváří jako kameny, a kamenech, které se rozpadají jako bubliny.',
+    '90': 'Napiš tři věty — každá pro jedno médium. Bublina. Kruh. Paměť. Jedna věta každé.',
+    '270':'Napiš o zprávě, která přežila v médiu, pro které nebyla určena. Bublina, která se nerozpustila. Kruh, který trvá. Co se stalo s touto zprávou?',
+    '120':'Napiš text o třech různých délkách věty: krátká (bublina), střední (kruh), dlouhá (paměť). Forma jako záznam trvalosti.',
+    '300':'Napiš o zápisu do nemožných médií: do ticha, do stínu, do vůně. Tři záznamy v neexistujících médiích.',
+    '150':'Napiš obraz tří médií z přírody: která přírodní jevy odpovídají bublinám, kruhům a paměti? Pak větu: do čeho by ryba zapsala setkání se žralokem?',
+    '330':'Napiš o médiu, které existuje mimo čas — kde bublina a paměť jsou jedno. Kde se zápis stane věčným ne trváním, ale absencí trvání.'
+  }
+},
+{
+  nazev:'Roztržené slovo na konci',
+  termin:'vizuální rozpolcení — slovo jako poměr 1:1',
+  citace:['"A když ho někdo zahl / édne"'],
+  popis:'Slovo „zahlédne" je rozděleno na dva řádky. Mezera — jako by se pohled zadrhl, jako by vynoření bylo toto rozpolcení. Vizuální znázornění poměru 1:1: slovo rozlomené napůl.',
+  jazyk:'Vizuální struktura textu, rozdělení slov, mezery, symbolické zastavení',
+  ukoly:{
+    '0':  'Napiš text, kde jedno klíčové slovo je záměrně rozděleno na dva řádky přesně uprostřed. Pak analyzuj: co toto rozdělení říká o obsahu slova? Kde je osa symetrie?',
+    '180':'Napiš sérii slov, která by chtěla být rozdělena — kde cítíš, že existuje zlom uvnitř slova. Kde je hranice?',
+    '30': 'Napiš o slovech, která jsou v kultuře rozdělena — výrazy s dvojím čtením, překlady, které ztratí část. Kde se slovo láme při přechodu?',
+    '210':'Napiš o slově, které se v tobě jednou zlomilo — které přestalo znamenat to, co znamenalo. Kde přesně se zlomilo?',
+    '60': 'Napiš o vizuálním rozpolcení jako filozofickém gestu: kdy je přerušení smysluplnější než celek? Co se ukáže v trhlině?',
+    '240':'Napiš text, kde jsou záměrně rozdělena slova, která se dělit nemají — slova, jejichž rozdělení je absurdní nebo humorné. Vizu/ální kome/die.',
+    '90': 'Vezmi jedno slovo. Rozděl ho na dva řádky. Přečti obě části zvlášť. Co říkají?',
+    '270':'Napiš text, kde roztržení slova způsobí dramatický efekt — kde mezera uvnitř slova je nejintenzivnější moment textu.',
+    '120':'Napiš pět slov a každé rozděl na jiném místě. Ke každému rozdělení napiš: co tato konkrétní trhlina říká o slově gramaticky, foneticky, sémanticky?',
+    '300':'Napiš text, kde jsou rozdělena slova, která fyzicky nelze rozdělit — jednohlásková slova, zkratky, vlastní jména. Co se stane?',
+    '150':'Napiš obraz trhliny ve slově jako přirozený jev: puklina ve skále, trhlina v ledu, předěl mezi přílivem a odlivem. Který obraz sedí na „zahl / édne"?',
+    '330':'Napiš text, kde každé slovo je rozděleno — kde celý text existuje ve stavu rozpolcení. Co říká text, který se nikde nespojí?'
+  }
+},
+{
+  nazev:'Sebedefinice jako poměr',
+  termin:'abstraktní identita — nejminimalističtější sebepopis',
+  citace:['"Já jsem jen poměr."'],
+  popis:'Není to pokora, ale matematická přesnost. Žralok je jen vztahem mezi nad a pod, viděním a skrytím. Nejabstraktnější identita ze všech zvířat v systému.',
+  jazyk:'Minimální sebepopis, vztah jako identita, absence vlastností',
+  ukoly:{
+    '0':  'Napiš vlastní sebedefinici jako poměr — strukturovaně, přesně. Jaký poměr tě definuje? Pak napiš, co se stane, když se tento poměr změní.',
+    '180':'Napiš sérii sebedefinic, které tě napadají spontánně — každá jiná forma: věta, rovnice, obraz, slovo, ticho. Která je nejpravdivější?',
+    '30': 'Napiš o kolektivní sebedefinici — jak se skupina nebo národ nebo profese definuje poměrem. „Jsme jen poměr práce a odpočinku." Je to přesné?',
+    '210':'Napiš vlastní sebedefinici v jedné větě — co nejpřesnější, co nejmenší. Pak ji zkrať na jedno slovo. Pak na poměr.',
+    '60': 'Napiš o minimalistické identitě: co se ztratí, když sebepopis zkrátíme na poměr? A co se získá? Je „já jsem jen poměr" osvobozující nebo omezující?',
+    '240':'Napiš ironický katalog minimalistických sebedefinic — jak by různé typy lidí definovaly sebe jako poměr. „Jsem 3:7 kávy ku spánku."',
+    '90': 'Napiš tři sebedefinice. Každá kratší než předchozí. Třetí: poměr.',
+    '270':'Napiš o sebedefinici jako o pádu — o momentu, kdy „já jsem jen poměr" přestane být přesnost a stane se ztrátou. Co se ztratilo?',
+    '120':'Napiš sebedefinice v různých jazykových formách: přídavné jméno, podstatné jméno, sloveso, vztah, rovnice. Která forma nejlépe zachycuje identitu?',
+    '300':'Napiš sebedefinice, které nedávají smysl — ale chovají se, jako by dávaly. „Jsem jen poměr středy k čtvrtku." Tři absurdní sebedefinice.',
+    '150':'Napiš sebedefinici jako přírodní obraz: jsem jako… Pak: jsem poměr… a… Oba způsoby, pak věta: co mají společného?',
+    '330':'Napiš sebedefinici z pohledu entity, která neví, že existuje — poměr, který se stane vědomým. Co říká poměr, když začne mluvit?'
+  }
+}
+];
+
+let aktivniUhel = localStorage.getItem('zralok_uhel') || '0';
+function uhel_label(id){const u=UHLY_LIST.find(u=>u.id===String(id));return u?u.label:'—';}
+function renderUhelSwitcher(){
+  const sw=document.getElementById('uhel-switcher');sw.innerHTML='';
+  UHLY_LIST.forEach(u=>{
+    const btn=document.createElement('button');
+    btn.className='uhel-btn'+(u.id===aktivniUhel?' active':'');
+    btn.textContent=u.label;
+    btn.onclick=()=>{aktivniUhel=u.id;renderUhelSwitcher();renderAnomaalie();};
+    sw.appendChild(btn);
+  });
+}
+function renderAnomaalie(){
+  const list=document.getElementById('anomalie-list');
+  const wasOpen={};
+  list.querySelectorAll('.anomalie.open').forEach(el=>{wasOpen[el.dataset.idx]=true;});
+  list.innerHTML='';
+  const uhel_nazev=uhel_label(aktivniUhel);
+  document.getElementById('uhel-display').textContent=uhel_nazev;
+  document.getElementById('export-uhel-label').textContent=uhel_nazev;
+  ANOMALIE.forEach((a,i)=>{
+    const ukol=a.ukoly[aktivniUhel]||a.ukoly['0'];
+    const el=document.createElement('div');
+    el.className='anomalie'+(wasOpen[i]?' open':'');
+    el.dataset.idx=i;
+    el.innerHTML=`
+      <div class="anomalie-header" onclick="this.parentElement.classList.toggle('open')">
+        <div class="a-num">${String(i+1).padStart(2,'0')}</div>
+        <div class="a-meta"><div class="a-nazev">${a.nazev}</div><div class="a-termin">${a.termin}</div></div>
+        <div class="a-toggle">▾</div>
+      </div>
+      <div class="anomalie-body">
+        <div class="a-citace">${a.citace.map(c=>`<span>${c}</span>`).join('')}</div>
+        <p class="a-popis">${a.popis}</p>
+        <div class="ukol-wrap">
+          <div class="ukol-kalibrace">Cvičení <span>· ${uhel_nazev}</span></div>
+          <div class="ukol-text">${ukol}</div>
+          <div class="ukol-jazyk">Jazykové zaměření: ${a.jazyk}</div>
+          <textarea class="pisarna" placeholder="Pište sem…" rows="3"></textarea>
+          <div class="a-btns">
+            <button class="btn btn-g" style="font-size:.68rem;padding:5px 12px;margin-bottom:8px" onclick="ulozitCviceni(${i},this)">Uložit cvičení</button>
+          </div>
+        </div>
+      </div>`;
+    list.appendChild(el);
+  });
+}
+function ulozitCviceni(idx,btn){
+  const ta=btn.closest('.anomalie-body').querySelector('.pisarna');
+  const text=ta.value.trim();
+  if(!text){alert('Napište nejprve text cvičení.');return;}
+  const zaznam={datum:new Date().toLocaleDateString('cs-CZ'),karta:'Žralok',uhel:uhel_label(aktivniUhel),anomalie:ANOMALIE[idx].nazev,text};
+  const ex=JSON.parse(localStorage.getItem('chcesmys_cviceni')||'[]');
+  ex.push(zaznam);localStorage.setItem('chcesmys_cviceni',JSON.stringify(ex));
+  btn.textContent='Uloženo ✓';setTimeout(()=>{btn.textContent='Uložit cvičení';},2000);
+}
+function ulozitMapu(){
+  const mapa={datum:new Date().toLocaleDateString('cs-CZ'),karta:'Žralok',uhel:uhel_label(aktivniUhel)};
+  const ex=JSON.parse(localStorage.getItem('chcesmys_zapisnik_mapy')||'[]');
+  ex.push(mapa);localStorage.setItem('chcesmys_zapisnik_mapy',JSON.stringify(ex));
+  alert('Kognitivní mapa uložena. ('+ex.length+' záznamů)');
+}
+function exportJSON(){
+  const data={karta:'Žralok',uhel:uhel_label(aktivniUhel),datum:new Date().toLocaleDateString('cs-CZ'),
+    cviceni:JSON.parse(localStorage.getItem('chcesmys_cviceni')||'[]').filter(c=>c.karta==='Žralok'),
+    mapa:JSON.parse(localStorage.getItem('chcesmys_zapisnik_mapy')||'[]').filter(m=>m.karta==='Žralok')};
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='zralok_workshop.json';a.click();
+}
+function sdilej(){
+  const url=window.location.href.split('?')[0]+'?uhel='+aktivniUhel;
+  if(navigator.share){navigator.share({title:'Žralok workshop',url});}
+  else{navigator.clipboard.writeText(url).then(()=>alert('Odkaz zkopírován: '+url));}
+}
+const urlParams=new URLSearchParams(window.location.search);
+if(urlParams.get('uhel'))aktivniUhel=urlParams.get('uhel');
+renderUhelSwitcher();
+renderAnomaalie();
+</script>
+</body>
+</html>
