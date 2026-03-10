@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jednorožec — workshop · Chceš myš?</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#07090f;--s:#0d1018;--s2:#12161f;--s3:#171c27;
+  --c:#cdd8e8;--dim:rgba(180,200,230,.35);--a:#b38cb8;--a2:#7a5d7e;
+  --b:rgba(179,140,184,.12);--b2:rgba(179,140,184,.26);--b3:rgba(179,140,184,.42);
+  --serif:'Cormorant Garamond',Georgia,serif;--mono:'DM Mono',monospace;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--c);font-family:var(--mono);font-size:13px;line-height:1.85;-webkit-font-smoothing:antialiased}
+.wrap{max-width:780px;margin:0 auto;padding:0 24px}
+
+nav{position:sticky;top:0;z-index:99;border-bottom:1px solid var(--b);background:rgba(7,9,15,.96);backdrop-filter:blur(14px);padding:11px 24px;display:flex;align-items:center;justify-content:space-between}
+.nav-l{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);text-decoration:none;transition:color .15s}
+.nav-l:hover{color:var(--c)}
+.nav-links{display:flex;gap:4px}
+.nav-links a{font-size:10px;letter-spacing:.11em;text-transform:uppercase;color:var(--dim);text-decoration:none;padding:5px 10px;border:1px solid transparent;border-radius:2px;transition:all .15s}
+.nav-links a:hover,.nav-links a.active{color:var(--a);border-color:var(--b2)}
+
+.hero{padding:44px 0 28px;border-bottom:1px solid var(--b)}
+.hero-tag{font-size:10px;letter-spacing:.26em;text-transform:uppercase;color:var(--a2);margin-bottom:12px}
+.hero h1{font-family:var(--serif);font-size:clamp(2rem,5vw,3.4rem);font-weight:300;line-height:1;letter-spacing:-.01em;margin-bottom:6px}
+.hero h1 em{font-style:italic;color:var(--a)}
+.hero-uhel{margin-top:14px;display:inline-flex;align-items:center;gap:10px;padding:9px 16px;background:rgba(179,140,184,.06);border:1px solid var(--b2)}
+.hero-uhel-tag{font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--a2)}
+.hero-uhel-val{font-family:var(--serif);font-size:.96rem;color:var(--a)}
+.hero-note{font-size:.76rem;color:var(--dim);margin-top:10px;line-height:1.9;max-width:520px}
+
+/* PŘEPÍNAČ ÚHLŮ */
+.uhel-switcher{padding:16px 0 0;display:flex;flex-wrap:wrap;gap:4px;border-bottom:1px solid var(--b);padding-bottom:16px}
+.uhel-btn{font-family:var(--mono);font-size:.65rem;letter-spacing:.09em;padding:4px 9px;background:transparent;border:1px solid var(--b);color:var(--dim);cursor:pointer;border-radius:2px;transition:all .15s}
+.uhel-btn:hover{color:var(--a);border-color:var(--b2)}
+.uhel-btn.active{background:rgba(179,140,184,.1);color:var(--a);border-color:var(--a2)}
+.uhel-protilehly{font-size:.65rem;color:var(--a2);margin-left:8px;font-style:italic}
+
+/* ANOMÁLIE */
+.anomalie-list{padding:8px 0}
+.anomalie{border:1px solid var(--b);background:var(--s);margin-bottom:3px;overflow:hidden;transition:border-color .15s}
+.anomalie:hover{border-color:var(--b2)}
+.anomalie-header{display:flex;align-items:center;gap:14px;padding:14px 18px;cursor:pointer;user-select:none}
+.a-num{font-family:var(--serif);font-size:1.5rem;font-weight:300;color:rgba(179,140,184,.2);min-width:28px;line-height:1}
+.a-meta{flex:1}
+.a-nazev{font-size:.83rem;color:var(--c);margin-bottom:2px}
+.a-termin{font-size:.68rem;color:var(--a2);letter-spacing:.06em;font-style:italic}
+.a-toggle{font-size:.68rem;color:var(--dim);letter-spacing:.1em;text-transform:uppercase;transition:transform .2s;white-space:nowrap}
+.anomalie.open .a-toggle{transform:rotate(180deg)}
+.anomalie-body{display:none;padding:4px 18px 20px;border-top:1px solid var(--b)}
+.anomalie.open .anomalie-body{display:block}
+
+.a-citace{font-family:var(--serif);font-style:italic;font-size:.82rem;color:rgba(179,140,184,.48);border-left:1px solid var(--b2);padding:7px 13px;margin:12px 0 10px;line-height:1.85}
+.a-citace span{display:block}
+.a-popis{font-size:.77rem;color:rgba(180,200,230,.5);line-height:1.9;margin-bottom:16px}
+
+/* CVIČENÍ - propracovaná, delší */
+.ukol-wrap{background:var(--s2);border:1px solid var(--b)}
+.ukol-kalibrace{padding:9px 16px;border-bottom:1px solid var(--b);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--a);display:flex;align-items:center;gap:8px}
+.ukol-kalibrace span{color:var(--dim);font-size:.65rem}
+.ukol-text{padding:16px 16px;font-size:.82rem;color:rgba(200,218,238,.8);line-height:1.9}
+.ukol-jazyk{padding:8px 16px 12px;font-size:.71rem;color:var(--a2);font-style:italic;border-top:1px solid var(--b)}
+.ukol-kroky{margin:12px 0 0 16px;padding-left:16px;border-left:1px solid var(--a2);font-size:.78rem;color:var(--dim)}
+.pisarna{width:100%;background:var(--s3);border:none;border-top:1px solid var(--b);color:var(--c);padding:11px 14px;font-family:var(--mono);font-size:.78rem;line-height:1.75;resize:vertical;min-height:80px}
+.pisarna:focus{outline:1px solid var(--a2)}
+.pisarna::placeholder{color:rgba(180,200,230,.08)}
+
+.btn{padding:9px 20px;font-family:var(--mono);font-size:.73rem;letter-spacing:.1em;text-transform:uppercase;border:none;cursor:pointer;border-radius:2px;transition:all .15s;text-decoration:none;display:inline-block}
+.btn-g{background:transparent;color:var(--dim);border:1px solid var(--b)}
+.btn-g:hover{color:var(--c);border-color:var(--b2)}
+.a-btns{display:flex;gap:5px;padding:8px 14px 0}
+
+/* EXPORT BAR */
+.export-fixed{position:fixed;bottom:0;left:0;right:0;background:rgba(7,9,15,.97);border-top:1px solid var(--b);backdrop-filter:blur(12px);padding:9px 24px;display:flex;justify-content:space-between;align-items:center;z-index:90}
+.export-info{font-size:.72rem;color:var(--dim)}
+.export-info strong{color:var(--a)}
+.export-btns{display:flex;gap:5px}
+
+footer{padding:24px 0;border-top:1px solid var(--b);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:52px}
+footer p{font-size:.7rem;color:var(--dim)}
+footer a{color:var(--a)}
+
+@media print{nav,.export-fixed,.uhel-switcher,.a-btns,.pisarna{display:none!important}.anomalie-body{display:block!important}.anomalie{border:1px solid #ccc;page-break-inside:avoid}body{background:white;color:black}}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-l" href="../../../index.html">← Všechna zvířata</a>
+  <div class="nav-links">
+    <a href="jednorozec_pohadka.html">Pohádka</a>
+    <a href="jednorozec_diagnostika.html">Diagnostika</a>
+    <a href="jednorozec_workshop.html" class="active">Workshop</a>
+    <a href="analyzer.html">Analyzátor</a>
+  </div>
+</nav>
+
+<div class="wrap">
+
+<section class="hero">
+  <p class="hero-tag">Karta Jednorožec · Kreativní workshop</p>
+  <h1>12 anomálií — <em>propracovaná cvičení</em></h1>
+  <div class="hero-uhel">
+    <span class="hero-uhel-tag">Váš úhel:</span>
+    <span class="hero-uhel-val" id="uhel-display">— přejděte nejprve na diagnostiku —</span>
+    <span class="uhel-protilehly" id="protilehly-display"></span>
+  </div>
+  <p class="hero-note">Každá anomálie je rozvinuta do několika kroků. Pracujte s jazykem pohádky a nechte se vést. Nahoře vidíte svůj dominantní úhel a protilehlý – zkuste cvičení psát ze své perspektivy, nebo se naladit na tu protilehlou. Analyzátor vám pomůže prozkoumat váš vlastní text.</p>
+</div>
+
+<div class="uhel-switcher" id="uhel-switcher"></div>
+
+<div class="anomalie-list" id="anomalie-list"></div>
+
+<footer>
+  <p>Karta Jednorožec · Chceš myš? · © 2026 Michaela Nováková</p>
+  <p><a href="mailto:chcesmys@gmail.com">chcesmys@gmail.com</a> · <a href="analyzer.html">Jazykový analyzátor</a></p>
+</footer>
+</div>
+
+<div class="export-fixed" id="export-fixed">
+  <div class="export-info">Workshop: <strong id="export-uhel-label">—</strong> · Karta Jednorožec</div>
+  <div class="export-btns">
+    <button class="btn btn-g" style="font-size:.68rem;padding:6px 12px" onclick="ulozitMapu()">Uložit mapu</button>
+    <button class="btn btn-g" style="font-size:.68rem;padding:6px 12px" onclick="exportJSON()">Export JSON</button>
+    <button class="btn btn-g" style="font-size:.68rem;padding:6px 12px" onclick="window.print()">Tisk</button>
+    <button class="btn btn-g" style="font-size:.68rem;padding:6px 12px" onclick="sdilej()">Sdílet</button>
+  </div>
+</div>
+
+<script>
+// =====================================================
+// DATA: 12 úhlů (stejné jako v diagnostice)
+// =====================================================
+const UHLY = {
+  0:{nazev:'0° Analytický', prot:180, popis:'Strukturujete logicky. Věty na sebe navazují jako argument.', tip:'Zkuste se na chvíli vzdát logiky a nechat věci plynout.'},
+  180:{nazev:'180° Asociační', prot:0, popis:'Odpovědi skáčou. Jeden obraz přivede jiný bez logického mostu.', tip:'Zkuste svůj proud myšlenek uspořádat do pevné struktury.'},
+  30:{nazev:'30° Kulturní', prot:210, popis:'Pohádku čtete jako sdílenou výpověď. Kolektivní vzorce.', tip:'Zaměřte se na svůj vlastní, jedinečný prožitek.'},
+  210:{nazev:'210° Introspektivní', prot:30, popis:'Mluvíte o vlastním prožitku. Pohádku vztahujete k sobě.', tip:'Podívejte se na věc očima společnosti, tradice, archetypu.'},
+  60:{nazev:'60° Filozofický', prot:240, popis:'Hledáte abstraktní pravdu, podstatu.', tip:'Zkuste se na věc podívat s ironickým nadhledem.'},
+  240:{nazev:'240° Ironický', prot:60, popis:'Komentujete s odstupem. Vidíte paradoxy.', tip:'Ptejte se po podstatě, ne po povrchním rozporu.'},
+  90:{nazev:'90° Naivní', prot:270, popis:'Přímočarost, krátké věty, žádné elaborace.', tip:'Zkuste vše přehnat, zdramatizovat, nadsadit.'},
+  270:{nazev:'270° Groteskní', prot:90, popis:'Dramatičnost, přehánění, extrémní kontrast.', tip:'Zkuste to říct co nejjednodušeji, bez příkras.'},
+  120:{nazev:'120° Jazykový', prot:300, popis:'Všímáte si formy. Komentujete, jak je text napsaný.', tip:'Nechte logiku rozpadnout, hrajte si s absurditou.'},
+  300:{nazev:'300° Absurdní', prot:120, popis:'Logika se rozpadá. Záměrná nelogičnost.', tip:'Soustřeďte se na čistou formu, rytmus, zvuk slov.'},
+  150:{nazev:'150° Metaforický', prot:330, popis:'Myslíte v obrazech. Přirovnání, symboly.', tip:'Zkuste snovou, nekauzální imaginaci.'},
+  330:{nazev:'330° Surrealistický', prot:150, popis:'Snová logika, nereálné přechody.', tip:'Hledejte vědomé, promyšlené metafory.'}
+};
+
+// =====================================================
+// DATA: 12 anomálií s propracovanými cvičeními
+// =====================================================
+const ANOMALIE = [
+  {
+    nazev:'Paradox existence',
+    termin:'věta, která se popírá',
+    citace:['"Jednorožec byl."','"To je první lež."'],
+    popis:'První věta tvrdí existenci, druhá ji označuje za lež. Text od začátku staví na tom, že nic není, jak se zdá.',
+    jazyk:'Paradox, sebereflexe',
+    ukol:`
+      <strong>Forenzní porucha:</strong> Věta, která sama sebe popírá.
+      <br><br>
+      <strong>Kreativní fenomen:</strong> Vytvořte text, který existuje skrze své vlastní popření.
+      <br><br>
+      <strong>Cvičení (30–40 minut):</strong><br>
+      1. Napište tři verze první věty nějakého příběhu. Každá verze musí obsahovat tvrzení a jeho okamžité popření (např. „Byl jednou jeden král. To není pravda, byli vlastně dva.“).<br>
+      2. Vyberte jednu verzi a rozveďte ji do krátkého odstavce (5–7 vět). Každá další věta by měla dále popírat nebo znejisťovat to, co bylo řečeno před chvílí.<br>
+      3. Přečtěte si text a zapište, jaký pocit ve vás vyvolává. Je to hra, nejistota, osvobození?<br>
+      4. (Volitelně) Pošlete text do analyzátoru a sledujte, jaké jazykové vzorce se v něm objevují.
+    `
+  },
+  {
+    nazev:'Paradoxní definice',
+    termin:'neskutečné definované přesně',
+    citace:['"Bílý. Roh. Lesk."','"Neskutečný, ale přesto definovaný neskutečně přesně.."'],
+    popis:'Mýtus je popsán konkrétními rysy, ale zároveň je označen za neskutečný.',
+    jazyk:'Paradox, přesnost vs. existence',
+    ukol:`
+      <strong>Forenzní porucha:</strong> Přesný popis něčeho, co neexistuje.
+      <br><br>
+      <strong>Kreativní fenomen:</strong> Vytváření „dokumentace“ k fiktivním entitám.
+      <br><br>
+      <strong>Cvičení (30–40 minut):</strong><br>
+      1. Vymyslete bytost, předmět nebo jev, který zcela jistě neexistuje. Dejte mu jméno.<br>
+      2. Napište jeho „oficiální definici“ do encyklopedie. Buďte co nejpřesnější – hmotnost, barva, výskyt, chování, zajímavosti.<br>
+      3. Napište krátký vědecký článek, který by mohl vyjít v časopise, o tom, proč tato entita nemůže existovat, ale přesto je definovaná.<br>
+      4. Reflexe: Co je na přesném popisu neskutečného tak přitažlivé? Kde ve vašem životě děláte něco podobného?
+    `
+  },
+  {
+    nazev:'Surrealistický obraz',
+    termin:'absurdní, poetické představy',
+    citace:['"Na delfíny, zpívající podvodní songy, které nikdo neslyší."','"Na lední medvědy, tancující kankán, který naopak slyší každej."'],
+    popis:'Obrazy, které spojují nespojitelné a vytvářejí snovou logiku.',
+    jazyk:'Surrealismus, synestezie',
+    ukol:`
+      <strong>Forenzní porucha:</strong> Spojení nespojitelného do jednoho obrazu.
+      <br><br>
+      <strong>Kreativní fenomen:</strong> Trénink surrealistické imaginace.
+      <br><br>
+      <strong>Cvičení (30–40 minut):</strong><br>
+      1. Napište 10 krátkých, absurdních obrazů ve stylu „[podstatné jméno] [sloveso] [příslovce], které/co [neočekávaná vlastnost]“ (např. „hory tančí potichu, které slyší jen kameny“).<br>
+      2. Vyberte tři obrazy, které vás nejvíce oslovily, a ke každému napište krátký odstavec (3–4 věty), který ho rozvine do malého příběhu.<br>
+      3. Přečtěte si všechny tři a všimněte si, zda v nich není nějaká skrytá logika nebo téma, které se opakuje.<br>
+      4. Sdílejte (sami sobě nebo někomu) a zkuste pojmenovat, jakou emoci ve vás tyto obrazy vyvolávají.
+    `
+  },
+  {
+    nazev:'Paradox poznání',
+    termin:'popírá, ale zná',
+    citace:['"A přitom je jmenoval."','"A přitom o nich věděl."','"A přitom měl v očích jejich stopy."'],
+    popis:'Jednorožec tvrdí, že delfíni a medvědi neexistují, ale zároveň o nich mluví a nese jejich stopy.',
+    jazyk:'Paradox, nevědomé vědění',
+    ukol:`
+      <strong>Forenzní porucha:</strong> Znalost něčeho, co popíráme.
+      <br><br>
+      <strong>Kreativní fenomen:</strong> Zviditelnění toho, co nechceme vidět.
+      <br><br>
+      <strong>Cvičení (30–40 minut):</strong><br>
+      1. Vzpomeňte si na něco, o čem jste dlouho tvrdili, že vás to netrápí, nezajímá, neexistuje to pro vás. Napište to na papír.<br>
+      2. Teď napište tři věty začínající „A přitom…“, které dokazují, že to ve vás přesto žije – ve vzpomínkách, chování, snech, těle.<br>
+      3. Napište krátký monolog (5–7 vět) z pohledu té popírané věci. Co by vám řekla, kdyby mohla promluvit?<br>
+      4. Reflexe: Co by se stalo, kdybyste tu věc přestali popírat? Co by to změnilo?
+    `
+  },
+  {
+    nazev:'Rytmus a gradace',
+    termin:'krátké, úsečné věty',
+    citace:['"se utrhla kra."','"Velká."','"Ledová."'],
+    popis:'Stupňování pomocí krátkých vět, které postupně přidávají detaily a vytvářejí napětí.',
+    jazyk:'Rytmus, gradace, elipsa',
+    ukol:`
+      <strong>Forenzní porucha:</strong> Stupňování napětí skrze strohost.
+      <br><br>
+      <strong>Kreativní fenomen:</strong> Síla minima slov.
+      <br><br>
+      <strong>Cvičení (30–40 minut):</strong><br>
+      1. Vezměte nějakou událost (reálnou nebo smyšlenou). Popište ji nejdřív v 5 dlouhých, souvětích.<br>
+      2. Teď ji popište pouze pomocí krátkých, postupně se stupňujících vět (každá max 3 slova). Každá věta by měla přidat jeden detail a zvýšit napětí.<br>
+      3. Srovnejte obě verze. Co dělá ta druhá s vaším vnímáním času a důležitosti?<br>
+      4. Napište, kde ve svém životě byste mohli použít tuto techniku – v mailu, v prezentaci, v deníku.
+    `
+  },
+  {
+    nazev:'Personifikace abstrakta',
+    termin:'logika jako nehoda',
+    citace:['"Z logiky, která se tvářila jako nehoda."'],
+    popis:'Abstraktní pojem (logika) dostává lidskou vlastnost – může se „tvářit“.',
+    jazyk:'Personifikace, oživení',
+    ukol:`
+      <strong>Forenzní porucha:</strong> Abstrakce jedná jako člověk.
+      <br><br>
+      <strong>Kreativní fenomen:</strong> Hledání postav v pojmech.
+      <br><br>
+      <strong>Cvičení (30–40 minut):</strong><br>
+      1. Vyberte pět abstraktních pojmů (např. pravda, čas, náhoda, strach, ticho).<br>
+      2. Ke každému napište krátký portrét: jak vypadá, jak chodí, co říká, co má v kapse, čeho se bojí.<br>
+      3. Vyberte jeden z nich a napište krátkou scénu (5–10 vět), ve které vystupuje jako hlavní postava a interaguje s lidmi.<br>
+      4. Reflexe: Který abstraktní pojem byste chtěli potkat a proč?
+    `
+  },
+  {
+    nazev:'Poetická evokace',
+    termin:'smyslové obrazy',
+    citace:['"Vzduch byl plný soli a páry, zvuk zpěvu se mísil s praskáním ledu."'],
+    popis:'Bohatý, smyslově nabitý popis, který čtenáře vtahuje do scény.',
+    jazyk:'Smyslovost, evokace',
+    ukol:`
+      <strong>Forenzní porucha:</strong> Přemíra smyslů v jedné větě.
+      <br><br>
+      <strong>Kreativní fenomen:</strong> Trénink pozornosti k detailu.
+      <br><br>
+      <strong>Cvičení (30–40 minut):</strong><br>
+      1. Vzpomeňte si na nějaké místo, které dobře znáte (vaše bydliště, oblíbená kavárna, les). Zavřete oči a na minutu se soustřeďte na všechny smysly.<br>
+      2. Napište jednu dlouhou větu (nebo sled krátkých), která zachytí co nejvíce smyslových vjemů – co vidíte, slyšíte, cítíte, cítíte v ústech, na kůži.<br>
+      3. Teď stejné místo popište z pohledu někoho, kdo ho vidí poprvé a je jím fascinován. Opět použijte bohatý smyslový jazyk.<br>
+      4. Přečtěte si obě verze. Která je vám bližší? Která vás víc vtáhla?
+    `
+  },
+  {
+    nazev:'Prolínání identit',
+    termin:'záměna rolí',
+    citace:['"Medvěd se stal v té chvíli rybou a delfin šelmou."'],
+    popis:'Hranice mezi zvířaty se stírají, každé přebírá roli toho druhého.',
+    jazyk:'Metamorfóza, hybrid',
+    ukol:`
+      <strong>Forenzní porucha:</strong> Bytost, která není ani jedno, ani druhé.
+      <br><br>
+      <strong>Kreativní fenomen:</strong> Hledání nových identit v protikladech.
+      <br><br>
+      <strong>Cvičení (30–40 minut):</strong><br>
+      1. Vezměte dvě bytosti, věci nebo role, které se zdají být protikladné (např. učitel a žák, strom a vítr, voda a oheň).<br>
+      2. Napište krátký příběh (10–15 vět), ve kterém si tyto dvě entity postupně vymění své vlastnosti a role. Ne vysvětlujte proč, jen popisujte, co se děje.<br>
+      3. Pojmenujte novou bytost, která z tohoto prolínání vznikne. Co umí? Kde žije?<br>
+      4. Reflexe: Kde ve vašem životě dochází k podobnému prolínání rolí? Co z toho vzniká?
+    `
+  },
+  {
+    nazev:'Neologismus / záměrná chyba',
+    termin:'kříženeheho',
+    citace:['"Z původní nesmyslnosti střetu, nemohlo vzejít nic kříženeheho."'],
+    popis:'Zkomolenina zdůrazňuje, že z nemožného setkání nemohlo vzniknout nic normálního.',
+    jazyk:'Hra s jazykem, chyba jako význam',
+    ukol:`
+      <strong>Forenzní porucha:</strong> Slovo, které neexistuje, ale mělo by.
+      <br><br>
+      <strong>Kreativní fenomen:</strong> Rozšiřování slovníku o nové významy.
+      <br><br>
+      <strong>Cvičení (30–40 minut):</strong><br>
+      1. Vymyslete pět nových slov, která by se měla stát součástí češtiny. Ke každému napište definici a příklad použití.<br>
+      2. Vyberte jedno slovo a napište krátkou báseň nebo prózu (5–7 řádků), která ho používá jako klíčové.<br>
+      3. Vytvořte „mluvu“ nějaké fiktivní komunity (např. jednorožců, kamenů, zapomenutých snů) – vymyslete 5–10 slov a jejich významů.<br>
+      4. Reflexe: Proč jazyk potřebuje nová slova? Co stará slova nedokážou vyjádřit?
+    `
+  },
+  {
+    nazev:'Gradace synonym',
+    termin:'řetězec významově blízkých slov',
+    citace:['"Zapřít. Zrušit. Zneplatnit. Zpochybnit. Znejistit. Zamluvit."'],
+    popis:'Šestice synonym stupňuje intenzitu popření. Každé další slovo je silnější.',
+    jazyk:'Gradace, nuance',
+    ukol:`
+      <strong>Forenzní porucha:</strong> Řada téměř stejných slov, která se liší intenzitou.
+      <br><br>
+      <strong>Kreativní fenomen:</strong> Hledání jemných odstínů významu.
+      <br><br>
+      <strong>Cvičení (30–40 minut):</strong><br>
+      1. Vezměte nějaký děj nebo stav (např. běžet, smát se, myslet, chtít). Napište co nejdelší řadu synonym nebo příbuzných slov, která vyjadřují odstíny tohoto děje.<br>
+      2. Seřaďte je od nejslabšího po nejsilnější.<br>
+      3. Napište krátký text (5–7 vět), ve kterém použijete alespoň pět slov z této řady tak, aby gradace dávala smysl.<br>
+      4. Reflexe: Kde ve svém životě používáte silnější slova, než je nutné? A kde naopak slabší?
+    `
+  },
+  {
+    nazev:'Paradoxní pointa',
+    termin:'zachraňuje jednorožce',
+    citace:['"takže zůstaň v klidu, když ti někdo řekne, že něco není možné: Nejspíš právě zachraňuje jednorožce."'],
+    popis:'Závěrečná věta obrací význam – popření možného je ve skutečnosti aktem záchrany mýtu.',
+    jazyk:'Pointa, obrat',
+    ukol:`
+      <strong>Forenzní porucha:</strong> Věta, která převrací celý příběh.
+      <br><br>
+      <strong>Kreativní fenomen:</strong> Hledání neočekávaných vysvětlení.
+      <br><br>
+      <strong>Cvičení (30–40 minut):</strong><br>
+      1. Vezměte nějaký svůj starší text (deníkový záznam, esej, báseň). Přečtěte si ho a napište k němu novou poslední větu, která by jeho smysl úplně převrátila nebo posunula do nové roviny.<br>
+      2. Napište krátký příběh (10–15 vět), který bude celou dobu směřovat k jednomu závěru, ale poslední věta ho vyvrátí a nabídne nový, paradoxní smysl.<br>
+      3. Reflexe: Co taková pointa dělá s vaším vnímáním celého textu? Je to hra, nebo může odhalit hlubší pravdu?
+    `
+  }
+];
+
+// =====================================================
+// LOGIKA WORKSHOPU
+// =====================================================
+let aktivniUhel = localStorage.getItem('jednorozec_uhel') || '0';
+
+function uhel_label(id){
+  return UHLY[id] ? UHLY[id].nazev : '—';
+}
+
+function renderUhelSwitcher(){
+  const sw = document.getElementById('uhel-switcher');
+  sw.innerHTML = '';
+  const sorted = Object.entries(UHLY).sort((a,b) => parseInt(a[0]) - parseInt(b[0]));
+  
+  sorted.forEach(([id, u]) => {
+    const btn = document.createElement('button');
+    btn.className = 'uhel-btn' + (id===aktivniUhel?' active':'');
+    btn.textContent = u.nazev;
+    btn.onclick = ()=>{ 
+      aktivniUhel = id; 
+      renderUhelSwitcher(); 
+      updateLabels(); 
+    };
+    sw.appendChild(btn);
+  });
+}
+
+function updateLabels(){
+  const uhel_nazev = uhel_label(aktivniUhel);
+  document.getElementById('uhel-display').textContent = uhel_nazev;
+  document.getElementById('export-uhel-label').textContent = uhel_nazev;
+  
+  // Zobrazení protilehlého úhlu
+  if (UHLY[aktivniUhel]) {
+    const protId = UHLY[aktivniUhel].prot;
+    const protNazev = UHLY[protId].nazev;
+    const protTip = UHLY[protId].tip;
+    document.getElementById('protilehly-display').innerHTML = `← protilehlý: <strong>${protNazev}</strong> · ${protTip}`;
+  }
+}
+
+function renderAnomaalie(){
+  const list = document.getElementById('anomalie-list');
+  const wasOpen = {};
+  list.querySelectorAll('.anomalie.open').forEach(el=>{wasOpen[el.dataset.idx]=true;});
+  list.innerHTML = '';
+
+  ANOMALIE.forEach((a,i)=>{
+    const el = document.createElement('div');
+    el.className = 'anomalie' + (wasOpen[i]?' open':'');
+    el.dataset.idx = i;
+    el.innerHTML = `
+      <div class="anomalie-header" onclick="this.parentElement.classList.toggle('open')">
+        <div class="a-num">${String(i+1).padStart(2,'0')}</div>
+        <div class="a-meta">
+          <div class="a-nazev">${a.nazev}</div>
+          <div class="a-termin">${a.termin}</div>
+        </div>
+        <div class="a-toggle">▾</div>
+      </div>
+      <div class="anomalie-body">
+        <div class="a-citace">${a.citace.map(c=>`<span>${c}</span>`).join('')}</div>
+        <p class="a-popis">${a.popis}</p>
+        <div class="ukol-wrap">
+          <div class="ukol-kalibrace">Kreativní cvičení <span>· 30–40 minut</span></div>
+          <div class="ukol-text">${a.ukol}</div>
+          <div class="ukol-jazyk">Jazykový fenomén: ${a.jazyk}</div>
+          <textarea class="pisarna" placeholder="Pište své poznámky, nápady, výsledky cvičení sem…" rows="4"></textarea>
+          <div class="a-btns">
+            <button class="btn btn-g" style="font-size:.68rem;padding:5px 12px;margin-bottom:8px" onclick="ulozitCviceni(${i},this)">Uložit rozpracované</button>
+            <button class="btn btn-g" style="font-size:.68rem;padding:5px 12px;margin-bottom:8px" onclick="window.open('analyzer.html','_blank')">📊 Analyzovat text</button>
+          </div>
+        </div>
+      </div>`;
+    list.appendChild(el);
+  });
+  updateLabels();
+}
+
+// Funkce pro ukládání (stejné jako dříve)
+function ulozitCviceni(idx, btn){
+  const ta = btn.closest('.anomalie-body').querySelector('.pisarna');
+  const text = ta.value.trim();
+  if(!text){alert('Napište nejprve text cvičení.');return;}
+  const zaznam = {
+    datum: new Date().toLocaleDateString('cs-CZ'),
+    karta: 'Jednorožec',
+    uhel: uhel_label(aktivniUhel),
+    anomalie: ANOMALIE[idx].nazev,
+    text: text
+  };
+  const ex = JSON.parse(localStorage.getItem('chcesmys_cviceni')||'[]');
+  ex.push(zaznam);
+  localStorage.setItem('chcesmys_cviceni', JSON.stringify(ex));
+  btn.textContent = 'Uloženo ✓';
+  setTimeout(()=>{btn.textContent='Uložit rozpracované';},2000);
+}
+
+function ulozitMapu(){
+  const mapa = {datum:new Date().toLocaleDateString('cs-CZ'),karta:'Jednorožec',uhel:uhel_label(aktivniUhel)};
+  const ex = JSON.parse(localStorage.getItem('chcesmys_zapisnik_mapy')||'[]');
+  ex.push(mapa);
+  localStorage.setItem('chcesmys_zapisnik_mapy',JSON.stringify(ex));
+  alert('Kognitivní mapa uložena. ('+ex.length+' záznamů)');
+}
+
+function exportJSON(){
+  const data = {
+    karta:'Jednorožec',
+    uhel:uhel_label(aktivniUhel),
+    datum:new Date().toLocaleDateString('cs-CZ'),
+    cviceni:JSON.parse(localStorage.getItem('chcesmys_cviceni')||'[]').filter(c=>c.karta==='Jednorožec'),
+    mapa:JSON.parse(localStorage.getItem('chcesmys_zapisnik_mapy')||'[]').filter(m=>m.karta==='Jednorožec')
+  };
+  const blob = new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  const a = document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='jednorozec_workshop.json';
+  a.click();
+}
+
+function sdilej(){
+  const url = window.location.href.split('?')[0]+'?uhel='+aktivniUhel;
+  if(navigator.share){navigator.share({title:'Jednorožec workshop',url});}
+  else{navigator.clipboard.writeText(url).then(()=>alert('Odkaz zkopírován: '+url));}
+}
+
+// Načíst úhel z URL nebo z localStorage
+const urlParams = new URLSearchParams(window.location.search);
+if(urlParams.get('uhel')) {
+  aktivniUhel = urlParams.get('uhel');
+} else {
+  const stored = localStorage.getItem('jednorozec_uhel');
+  if(stored) aktivniUhel = stored;
+}
+
+renderUhelSwitcher();
+renderAnomaalie();
+</script>
+</body>
+</html>
