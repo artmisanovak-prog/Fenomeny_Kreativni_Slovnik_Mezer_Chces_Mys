@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Žralok — pohádka · Chceš myš?</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#060b10;--s:#0b1218;--s2:#101820;
+  --c:#c8dce8;--dim:rgba(160,200,230,.35);--a:#4a9ec8;--a2:#2a6e98;
+  --b:rgba(60,140,200,.12);--b2:rgba(60,140,200,.26);
+  --serif:'Cormorant Garamond',Georgia,serif;--mono:'DM Mono',monospace;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--c);font-family:var(--mono);font-size:13px;line-height:1.85;-webkit-font-smoothing:antialiased}
+.wrap{max-width:780px;margin:0 auto;padding:0 24px}
+
+nav{position:sticky;top:0;z-index:99;border-bottom:1px solid var(--b);background:rgba(6,11,16,.96);backdrop-filter:blur(14px);padding:11px 24px;display:flex;align-items:center;justify-content:space-between}
+.nav-l{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);text-decoration:none;transition:color .15s}
+.nav-l:hover{color:var(--c)}
+.nav-links{display:flex;gap:4px}
+.nav-links a{font-size:10px;letter-spacing:.11em;text-transform:uppercase;color:var(--dim);text-decoration:none;padding:5px 10px;border:1px solid transparent;border-radius:2px;transition:all .15s}
+.nav-links a:hover,.nav-links a.active{color:var(--a);border-color:var(--b2)}
+
+.hero{padding:52px 0 36px;border-bottom:1px solid var(--b)}
+.hero-tag{font-size:10px;letter-spacing:.26em;text-transform:uppercase;color:var(--a2);margin-bottom:14px}
+.hero h1{font-family:var(--serif);font-size:clamp(3rem,8vw,5.4rem);font-weight:300;line-height:.95;letter-spacing:-.02em;margin-bottom:6px}
+.hero h1 em{font-style:italic;color:var(--a)}
+.hero-rovnice{font-family:var(--mono);font-size:1.4rem;color:var(--a);letter-spacing:.2em;margin:16px 0;padding:12px 18px;border:1px solid var(--b2);background:rgba(60,140,200,.04);display:inline-block}
+.hero-sub{font-family:var(--serif);font-style:italic;font-size:.9rem;color:var(--dim);border-left:1px solid var(--a2);padding-left:16px;margin:16px 0 20px;line-height:2;max-width:500px}
+.fenomen{border:1px solid var(--b2);padding:14px 20px;background:rgba(60,140,200,.03)}
+.fenomen-tag{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--a);margin-bottom:7px}
+.fenomen-text{font-size:.8rem;color:rgba(160,200,230,.52);line-height:1.95}
+
+.sec{padding:38px 0;border-bottom:1px solid var(--b)}
+.sec-tag{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--a2);margin-bottom:12px}
+h2{font-family:var(--serif);font-size:clamp(1.1rem,3vw,1.6rem);font-weight:300;margin-bottom:18px}
+h2 em{font-style:italic;color:var(--a)}
+
+.pohadka{font-family:var(--serif);font-size:.94rem;color:rgba(190,220,240,.74);border:1px solid var(--b);background:var(--s);padding:28px 32px;line-height:1}
+.d{display:block;padding:.22em 0}
+.d.br{padding:.55em 0}
+.d.silna{color:var(--a);font-weight:400}
+.d.dim{color:rgba(160,200,230,.38);font-style:italic}
+.d.it{font-style:italic}
+.d.dl{padding-left:1.4em;font-style:italic}
+.d.center{text-align:center;letter-spacing:.2em}
+.j1{border-bottom:1px dotted rgba(60,140,200,.42);cursor:help}
+.j2{border-bottom:1px dashed rgba(60,140,200,.38);cursor:help}
+.j3{border-bottom:1px solid rgba(60,140,200,.26);cursor:help}
+.j4{background:rgba(60,140,200,.07);padding:0 2px;cursor:help}
+.legenda{margin-top:10px;padding:10px 14px;background:var(--s);border:1px solid var(--b);font-size:.71rem;color:var(--dim);display:flex;flex-wrap:wrap;gap:4px 18px}
+
+.anomalie{border:1px solid var(--b);background:var(--s);margin-bottom:3px;overflow:hidden}
+.anomalie-header{display:flex;align-items:center;gap:14px;padding:14px 18px;cursor:pointer;user-select:none}
+.anomalie-header:hover{background:rgba(60,140,200,.04)}
+.a-num{font-family:var(--serif);font-size:1.5rem;font-weight:300;color:rgba(60,140,200,.14);min-width:28px;line-height:1}
+.a-meta{flex:1}
+.a-nazev{font-size:.83rem;color:var(--c);margin-bottom:2px}
+.a-termin{font-size:.69rem;color:var(--a2);letter-spacing:.06em;font-style:italic}
+.a-toggle{font-size:.68rem;color:var(--dim);letter-spacing:.1em;text-transform:uppercase;transition:transform .2s;white-space:nowrap}
+.anomalie.open .a-toggle{transform:rotate(180deg)}
+.anomalie-body{display:none;padding:4px 18px 20px;border-top:1px solid var(--b)}
+.anomalie.open .anomalie-body{display:block}
+.a-citace{font-family:var(--serif);font-style:italic;font-size:.83rem;color:rgba(60,140,200,.5);border-left:1px solid var(--b2);padding:7px 13px;margin:12px 0;line-height:1.85}
+.a-citace span{display:block}
+.a-popis{font-size:.78rem;color:rgba(160,200,230,.54);line-height:1.92}
+
+.cta-box{margin-top:32px;padding:20px 22px;background:var(--s);border:1px solid var(--b2);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+.cta-text{font-size:.8rem;color:var(--dim);max-width:360px;line-height:1.85}
+.btn{padding:10px 22px;font-family:var(--mono);font-size:.75rem;letter-spacing:.1em;text-transform:uppercase;border:none;cursor:pointer;border-radius:2px;transition:all .15s;text-decoration:none;display:inline-block}
+.btn-p{background:var(--a);color:var(--bg)}
+.btn-p:hover{background:#6ab8e0}
+
+footer{padding:26px 0;border-top:1px solid var(--b);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+footer p{font-size:.7rem;color:var(--dim)}
+footer a{color:var(--a)}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-l" href="../../../index.html">← Všechna zvířata</a>
+  <div class="nav-links">
+    <a href="zralok_pohadka.html" class="active">Pohádka</a>
+    <a href="zralok_diagnostika.html">Diagnostika</a>
+    <a href="zralok_workshop.html">Workshop</a>
+  </div>
+</nav>
+
+<div class="wrap">
+
+<section class="hero">
+  <p class="hero-tag">Kreativní miniatura · Karta Žralok</p>
+  <h1>Žra<em>lok</em></h1>
+  <div class="hero-rovnice">NAD : POD = 1 : 1</div>
+  <p class="hero-sub">„Já jsem jen poměr." — Není to pokora. Je to matematická přesnost.</p>
+  <div class="fenomen">
+    <div class="fenomen-tag">Fenomén — existence jako rovnice / identita jako poměr</div>
+    <p class="fenomen-text">Žralok není tvor — je poměr. Nad hladinou jednou, pod ní jednou. Pokud se poměr změní, přestává být sebou. Pohádka zkoumá, co se stane, když identita není vlastností ani příběhem, ale matematickým vztahem mezi dvěma stavy. A malá ryba se zeptá: proč se vůbec vynořuješ?</p>
+  </div>
+</section>
+
+<section class="sec">
+  <p class="sec-tag">Pohádka · rovnice čtená jako příběh</p>
+  <h2>O žralokovi, <em>který měl poměr</em></h2>
+
+  <div class="pohadka">
+    <span class="d center silna"><span class="j1" title="Matematický zápis jako existenční vzorec: algebra bytí">NAD : POD</span></span>
+    <span class="d center silna"><span class="j1">1 : 1</span></span>
+    <span class="d br"></span>
+    <span class="d dim it"><span class="j2" title="Metatext: text sám sebe komentuje, vysvětluje co čteme">Zní to jako rovnice, ale zároveň jako hádanka.</span></span>
+    <span class="d br"></span>
+    <span class="d">Žralok žil.</span>
+    <span class="d"><span class="j3" title="Dvojí doména: dva světy, dvě identity, matematika je drží pohromadě">Nad hladinou byl jen na chvíli.</span></span>
+    <span class="d"><span class="j3">Pod ní byl doma.</span></span>
+    <span class="d br"></span>
+    <span class="d"><span class="j4" title="Repetitivní definice: trojitá mantra bezpečí">Tam byl klid.</span></span>
+    <span class="d"><span class="j4">Tam byl tma.</span></span>
+    <span class="d"><span class="j4">Tam se neptal nikdo na nic.</span></span>
+    <span class="d br"></span>
+    <span class="d">Ale vynořil se.</span>
+    <span class="d silna"><span class="j3" title="Gradovaná redukce: čas → dech → pohled, čím dál menší jednotky">Jen na chvíli.</span></span>
+    <span class="d silna"><span class="j3">Jen na nádech.</span></span>
+    <span class="d silna"><span class="j3">Jen na pohled.</span></span>
+    <span class="d br"></span>
+    <span class="d">A svět reagoval:</span>
+    <span class="d dl silna"><span class="j2" title="Křik jako definice: identita redukována na hrozbu">"Žralok! Pozor!"</span></span>
+    <span class="d dl silna"><span class="j2">"Nebezpečí!"</span></span>
+    <span class="d dl silna"><span class="j2">"Zuby!"</span></span>
+    <span class="d br"></span>
+    <span class="d">Žralok se ponořil zpátky.</span>
+    <span class="d dim">Tam byl klid. Tam byl tma. Tam se neptal nikdo na nic.</span>
+    <span class="d br"></span>
+    <span class="d">A začal počítat.</span>
+    <span class="d"><span class="j4" title="Počítání jako sebeuvědomění: existence převedená na statistiku">Kolikrát byl nad.</span></span>
+    <span class="d"><span class="j4">Kolikrát byl pod.</span></span>
+    <span class="d">A zjistil:</span>
+    <span class="d silna center"><span class="j1">1 : 1</span></span>
+    <span class="d br"></span>
+    <span class="d it">Jednou nahoře.</span>
+    <span class="d it"><span class="j4" title="Anafora rytmu rovnováhy: tep, puls žralokova života">Jednou dole.</span></span>
+    <span class="d it">Jednou viděn.</span>
+    <span class="d it">Jednou skryt.</span>
+    <span class="d br"></span>
+    <span class="d">Připlula malá ryba.</span>
+    <span class="d dl"><span class="j2" title="Sókratovská otázka: malý hlas klade zásadní otázku">"Proč se vůbec vynořuješ?"</span></span>
+    <span class="d br"></span>
+    <span class="d">Žralok chvíli mlčel.</span>
+    <span class="d dl">"Protože kdybych se nevynořoval, poměr by nebyl 1 : 1."</span>
+    <span class="d dl">"A co kdyby ses vynořil dvakrát?"</span>
+    <span class="d dl">"Pak bych byl víc nad než pod," řekl žralok.</span>
+    <span class="d dl silna"><span class="j1" title="Identita vázaná na poměr: změna kvantity = změna bytí">"A to už nejsem já."</span></span>
+    <span class="d br"></span>
+    <span class="d">Ryba si to zapsala.</span>
+    <span class="d"><span class="j3" title="Tři média záznamu: bublina (prchavá), kruh (pomíjivý), paměť (trvalá)">Do bubliny.</span></span>
+    <span class="d"><span class="j3">Do kruhu na vodě.</span></span>
+    <span class="d"><span class="j3">Do paměti.</span></span>
+    <span class="d br"></span>
+    <span class="d dim">"Já jsem jen poměr," řekl ještě žralok.</span>
+    <span class="d dim">A ponořil se.</span>
+    <span class="d br"></span>
+    <span class="d">A když ho někdo zahl</span>
+    <span class="d silna"><span class="j1" title="Roztržené slovo: pohled zadrhl na hranici nad/pod, vizuální 1:1">édne,</span></span>
+    <span class="d dim it">je to přesně ten okamžik, co má být.</span>
+  </div>
+
+  <div class="legenda">
+    <span><span class="j1" style="cursor:default">tečkovaně</span> = rovnice / identita / roztržení</span>
+    <span><span class="j2" style="cursor:default">přerušované</span> = metatext / křik / dialog</span>
+    <span><span class="j3" style="cursor:default">plné</span> = dvojí doména / média záznamu</span>
+    <span><span class="j4" style="cursor:default;padding:0 3px">podklad</span> = repetice / počítání / anafora</span>
+  </div>
+</section>
+
+<section class="sec">
+  <p class="sec-tag">13 jazykových anomálií · kliknutím otevřete</p>
+  <h2>Co pohádka dělá s jazykem</h2>
+  <div id="anomalie-list"></div>
+  <div class="cta-box">
+    <p class="cta-text">Pokračujte diagnostikou — zjistěte svůj kognitivní úhel a dostanete workshop přizpůsobený vám.</p>
+    <a href="zralok_diagnostika.html" class="btn btn-p">Přejít na diagnostiku →</a>
+  </div>
+</section>
+
+<footer>
+  <p>Karta Žralok · Chceš myš? · © 2026 Michaela Nováková</p>
+  <p><a href="mailto:chcesmys@gmail.com">chcesmys@gmail.com</a></p>
+</footer>
+</div>
+
+<script>
+const ANOMALIE = [
+  {n:'Rovnice v názvu jako existenční vzorec',t:'matematický zápis — algebra bytí',
+   c:['"NAD : POD = 1 : 1"'],
+   p:'Žralokova existence je definována poměrem, ne příběhem. Matematický zápis v pohádce není dekorace — je to nejpřesnější definice postavy. Je to algebra bytí: existuji jako vztah, ne jako vlastnost.'},
+  {n:'Nadpis jako komentář',t:'metatext — text sám sebe komentuje',
+   c:['"Zní to jako rovnice, ale zároveň jako hádanka."'],
+   p:'Text sám sebe komentuje hned v úvodu. Vysvětluje, co právě čteme. Je to návod k použití vložený do pohádky — čtenář dostane instrukci, než začne.'},
+  {n:'Žralok s dvojí doménou',t:'kontrast dvou světů — dvě identity v jedné postavě',
+   c:['"Nad hladinou byl jen na chvíli."','"Pod ní byl doma."'],
+   p:'Dva světy, dvě identity. Nad hladinou: viděn, křičeno, nebezpečí. Pod ní: klid, tma, ticho. Matematika (1:1) drží tuto dvojnost pohromadě jako rovnice.'},
+  {n:'Repetitivní definice domova',t:'trojitá mantra — rytmizace bezpečí',
+   c:['"Tam byl klid."','"Tam byl tma."','"Tam se neptal nikdo na nic."'],
+   p:'Trojité opakování „tam" vytváří rytmus bezpečí, mantra podvodního ticha. Každé „tam" přidává vrstvu: fyzický stav → smyslový stav → sociální stav.'},
+  {n:'Vynoření jako gradovaná redukce',t:'komprese času — od chvíle k pohledu',
+   c:['"Jen na chvíli. / Jen na nádech. / Jen na pohled."'],
+   p:'Gradovaná redukce: čas → dech → pohled. Čím dál menší jednotky, až zbývá jen „být viděn". Minimalismus existence nad hladinou je vyjádřen kompresí jazyka.'},
+  {n:'Křik jako definice identity',t:'exteriérová definice — identita skrze reakci světa',
+   c:['"Žralok! Pozor!" / "Nebezpečí!" / "Zuby!"'],
+   p:'Lidé definují žraloka skrze strach. Jeho identita je redukována na hrozbu. Žralok sám o sobě nic neříká — svět ho pojmenovává jeho zuby.'},
+  {n:'Počítání jako sebeuvědomění',t:'numerická sebereflexe — statistika vlastního života',
+   c:['"Kolikrát byl nad. / Kolikrát byl pod. / A zjistil: / 1 : 1"'],
+   p:'Žralok se stává statistikem vlastního života. Existence převedená na čísla. Sebeuvědomění skrze měření — ne přes pocit nebo vzpomínku, ale přes počet.'},
+  {n:'Rytmus rovnováhy',t:'anafora — pulzující struktura jako tep',
+   c:['"Jednou nahoře. / Jednou dole. / Jednou viděn. / Jednou skryt."'],
+   p:'Opakování „jednou" vytváří tep, puls žralokova života. Je to jako tlukot srdce v poměru. Anafora tu není rétorická figura — je to záznam rytmu existence.'},
+  {n:'Ryba jako tazatel',t:'sókratovský dialog — malý hlas, velká otázka',
+   c:['"Proč se vůbec vynořuješ?"'],
+   p:'Malá ryba klade zásadní otázku. Je to filozofický dialog v hlubině — outsider s naivní otázkou odhalí celou logiku existence. Mikro-hlas zpochybní makro-systém.'},
+  {n:'Identita vázaná na poměr',t:'kvantitativní identita — změna čísla = změna bytí',
+   c:['"A co kdyby ses vynořil dvakrát?"','"A to už nejsem já."'],
+   p:'Identita je vázána na poměr. Změna kvantity = změna bytí. Žralok není tvor s vlastnostmi — je vztahem. Pokud se poměr změní, není to „jiný žralok" — je to jiná entita.'},
+  {n:'Zápis do tří médií',t:'hierarchie záznamu — prchavé, pomíjivé, trvalé',
+   c:['"Do bubliny. / Do kruhu na vodě. / Do paměti."'],
+   p:'Tři média záznamu, tři úrovně trvání. Bublina (prchavá), kruh na vodě (pomíjivý), paměť (trvalá?). Ale všechna tři jsou stejně nestálá — otázka je, zda paměť je víc než kruh na vodě.'},
+  {n:'Roztržené slovo na konci',t:'vizuální rozpolcení — slovo jako poměr 1:1',
+   c:['"A když ho někdo zahl / édne"'],
+   p:'Slovo „zahlédne" je rozděleno na dva řádky. Vzniká mezera — jako by se pohled zadrhl, jako by vynoření bylo právě to rozpolcení. Vizuální znázornění poměru 1:1: slovo je rozlomené napůl.'},
+  {n:'Sebedefinice jako poměr',t:'abstraktní identita — nejminimalističtější sebepopis',
+   c:['"Já jsem jen poměr."'],
+   p:'Žralokova sebedefinice. Není to pokora, ale matematická přesnost. Je jen vztahem mezi nad a pod, viděním a skrytím. Nejabstraktnější identita ze všech zvířat v systému.'}
+];
+
+const list = document.getElementById('anomalie-list');
+ANOMALIE.forEach((a,i)=>{
+  const el = document.createElement('div');
+  el.className = 'anomalie';
+  el.innerHTML = `
+    <div class="anomalie-header" onclick="this.parentElement.classList.toggle('open')">
+      <div class="a-num">${String(i+1).padStart(2,'0')}</div>
+      <div class="a-meta"><div class="a-nazev">${a.n}</div><div class="a-termin">${a.t}</div></div>
+      <div class="a-toggle">▾</div>
+    </div>
+    <div class="anomalie-body">
+      <div class="a-citace">${a.c.map(c=>`<span>${c}</span>`).join('')}</div>
+      <p class="a-popis">${a.p}</p>
+    </div>`;
+  list.appendChild(el);
+});
+</script>
+</body>
+</html>
