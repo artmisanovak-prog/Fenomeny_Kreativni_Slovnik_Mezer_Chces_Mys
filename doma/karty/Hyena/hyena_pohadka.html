@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hyena — pohádka · Chceš myš?</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#07090f;--s:#0d1018;--s2:#12161f;
+  --c:#cdd8e8;--dim:rgba(180,200,230,.35);--a:#b08a5c;--a2:#7a5f3e;
+  --b:rgba(176,138,92,.12);--b2:rgba(176,138,92,.26);
+  --serif:'Cormorant Garamond',Georgia,serif;--mono:'DM Mono',monospace;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--c);font-family:var(--mono);font-size:13px;line-height:1.85;-webkit-font-smoothing:antialiased}
+.wrap{max-width:780px;margin:0 auto;padding:0 24px}
+
+nav{position:sticky;top:0;z-index:99;border-bottom:1px solid var(--b);background:rgba(7,9,15,.96);backdrop-filter:blur(14px);padding:11px 24px;display:flex;align-items:center;justify-content:space-between}
+.nav-l{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);text-decoration:none;transition:color .15s}
+.nav-l:hover{color:var(--c)}
+.nav-links{display:flex;gap:4px}
+.nav-links a{font-size:10px;letter-spacing:.11em;text-transform:uppercase;color:var(--dim);text-decoration:none;padding:5px 10px;border:1px solid transparent;border-radius:2px;transition:all .15s}
+.nav-links a:hover,.nav-links a.active{color:var(--a);border-color:var(--b2)}
+
+.hero{padding:52px 0 36px;border-bottom:1px solid var(--b)}
+.hero-tag{font-size:10px;letter-spacing:.26em;text-transform:uppercase;color:var(--a2);margin-bottom:14px}
+.hero h1{font-family:var(--serif);font-size:clamp(3rem,8vw,5.4rem);font-weight:300;line-height:.95;letter-spacing:-.02em;margin-bottom:6px}
+.hero h1 em{font-style:italic;color:var(--a)}
+.hero-sub{font-family:var(--serif);font-style:italic;font-size:.9rem;color:var(--dim);border-left:1px solid var(--a2);padding-left:16px;margin:18px 0 20px;line-height:2;max-width:500px}
+.fenomen{border:1px solid var(--b2);padding:14px 20px;background:rgba(176,138,92,.03)}
+.fenomen-tag{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--a);margin-bottom:7px}
+.fenomen-text{font-size:.8rem;color:rgba(180,200,230,.52);line-height:1.95}
+
+.sec{padding:38px 0;border-bottom:1px solid var(--b)}
+.sec-tag{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--a2);margin-bottom:12px}
+h2{font-family:var(--serif);font-size:clamp(1.1rem,3vw,1.6rem);font-weight:300;margin-bottom:18px}
+h2 em{font-style:italic;color:var(--a)}
+
+/* POHÁDKA */
+.pohadka{font-family:var(--serif);font-size:.94rem;color:rgba(200,218,238,.74);border:1px solid var(--b);background:var(--s);padding:28px 32px;line-height:1}
+.d{display:block;padding:.22em 0}
+.d.br{padding:.55em 0}
+.d.silna{color:var(--a);font-weight:400}
+.d.dim{color:rgba(180,200,230,.38);font-style:italic}
+.d.it{font-style:italic}
+.d.dl{padding-left:1.4em;font-style:italic}
+/* třídy pro 12 anomálií */
+.j1{border-bottom:1px dotted var(--a);cursor:help}
+.j2{border-bottom:1px dashed var(--a2);cursor:help}
+.j3{background:rgba(176,138,92,.1);padding:0 2px;cursor:help}
+.j4{border-bottom:2px dotted var(--a);cursor:help}
+.j5{border-bottom:1px solid var(--a2);cursor:help}
+.j6{background:rgba(176,138,92,.2);padding:0 2px;cursor:help}
+.j7{border-bottom:1px double var(--a);cursor:help}
+.j8{text-decoration:underline wavy var(--a2);cursor:help}
+.j9{border-bottom:1px dashed var(--a);cursor:help}
+.j10{background:rgba(176,138,92,.05);border-bottom:1px dotted var(--a2);cursor:help}
+.j11{text-decoration:line-through 1px solid var(--a);cursor:help}
+.j12{border-left:2px solid var(--a);padding-left:4px;cursor:help}
+.legenda{margin-top:10px;padding:10px 14px;background:var(--s);border:1px solid var(--b);font-size:.71rem;color:var(--dim);display:flex;flex-wrap:wrap;gap:4px 18px}
+
+/* ANOMÁLIE */
+.anomalie{border:1px solid var(--b);background:var(--s);margin-bottom:3px;overflow:hidden}
+.anomalie-header{display:flex;align-items:center;gap:14px;padding:14px 18px;cursor:pointer;user-select:none}
+.anomalie-header:hover{background:rgba(176,138,92,.04)}
+.a-num{font-family:var(--serif);font-size:1.5rem;font-weight:300;color:rgba(176,138,92,.2);min-width:28px;line-height:1}
+.a-meta{flex:1}
+.a-nazev{font-size:.83rem;color:var(--c);margin-bottom:2px}
+.a-termin{font-size:.69rem;color:var(--a2);letter-spacing:.06em;font-style:italic}
+.a-toggle{font-size:.68rem;color:var(--dim);letter-spacing:.1em;text-transform:uppercase;transition:transform .2s;white-space:nowrap}
+.anomalie.open .a-toggle{transform:rotate(180deg)}
+.anomalie-body{display:none;padding:4px 18px 20px;border-top:1px solid var(--b)}
+.anomalie.open .anomalie-body{display:block}
+.a-citace{font-family:var(--serif);font-style:italic;font-size:.83rem;color:rgba(176,138,92,.5);border-left:1px solid var(--b2);padding:7px 13px;margin:12px 0;line-height:1.85}
+.a-citace span{display:block}
+.a-popis{font-size:.78rem;color:rgba(180,200,230,.54);line-height:1.92;margin-bottom:0}
+
+.cta-box{margin-top:32px;padding:20px 22px;background:var(--s);border:1px solid var(--b2);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+.cta-text{font-size:.8rem;color:var(--dim);max-width:360px;line-height:1.85}
+.btn{padding:10px 22px;font-family:var(--mono);font-size:.75rem;letter-spacing:.1em;text-transform:uppercase;border:none;cursor:pointer;border-radius:2px;transition:all .15s;text-decoration:none;display:inline-block}
+.btn-p{background:var(--a);color:var(--bg)}
+.btn-p:hover{background:#c8a67c}
+.btn-g{background:transparent;color:var(--dim);border:1px solid var(--b)}
+.btn-g:hover{color:var(--c);border-color:var(--b2)}
+
+footer{padding:26px 0;border-top:1px solid var(--b);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+footer p{font-size:.7rem;color:var(--dim)}
+footer a{color:var(--a)}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-l" href="../../../index.html">← Všechna zvířata</a>
+  <div class="nav-links">
+    <a href="hyena_pohadka.html" class="active">Pohádka</a>
+    <a href="hyena_diagnostika.html">Diagnostika</a>
+    <a href="hyena_workshop.html">Workshop</a>
+    <a href="analyzer.html">Analyzátor</a>
+  </div>
+</nav>
+
+<div class="wrap">
+
+<section class="hero">
+  <p class="hero-tag">Kreativní miniatura · Karta Hyena</p>
+  <h1>Hyena</h1>
+  <p class="hero-sub">„Hyeny se nikdy nepřestanou smát. Ale to neznamená, že se smějí rády.“</p>
+  <div class="fenomen">
+    <div class="fenomen-tag">Fenomén — smích jako obrana / ticho jako nebezpečí</div>
+    <p class="fenomen-text">Hyeny se smějí. Vždycky. Ne proto, že by chtěly, ale protože musí. Smích je jejich jazyk, zbraň, výmluva – a zeď, za kterou se nesmí nikdo podívat. Pohádka o tom, co se stane, když jedna hyena zkusí ztichnout, a o tom, že ticho je otázka, na kterou se bojíme odpovědět.</p>
+  </div>
+</section>
+
+<!-- POHÁDKA -->
+<section class="sec">
+  <p class="sec-tag">Pohádka · čtěte pomalu</p>
+  <h2>O HYENÁCH <em>(a o tom, proč se nikdy nepřestanou smát)</em></h2>
+
+  <div class="pohadka">
+    <span class="d silna">Hyeny se nikdy nepřestanou smát.</span>
+    <span class="d br"></span>
+    <span class="d">Hyeny se smějí.</span>
+    <span class="d"><span class="j1" title="Krátká věta jako rytmus">Vždycky.</span></span>
+    <span class="d"><span class="j2" title="Negace a upřesnění: ne proto, že by chtěly, ale protože musí">Ne proto, že by chtěly.</span></span>
+    <span class="d"><span class="j2">Ale protože musí.</span></span>
+    <span class="d"><span class="j3" title="Definice skrze opakování: smích je jazyk, zbraň, výmluva">Smích je jejich jazyk.</span></span>
+    <span class="d"><span class="j3">Jejich zbraň.</span></span>
+    <span class="d"><span class="j3">Jejich výmluva.</span></span>
+    <span class="d br"></span>
+    <span class="d"><span class="j4" title="Anaforické řazení: Smějí se, když…">Smějí se, když přijdou.</span></span>
+    <span class="d"><span class="j4">Smějí se, když odejdou.</span></span>
+    <span class="d"><span class="j4">Smějí se, když mlčí.</span></span>
+    <span class="d"><span class="j4">Smějí se, když se bojíš.</span></span>
+    <span class="d br"></span>
+    <span class="d">A každý si myslí, že je to veselí.</span>
+    <span class="d">Ale není.</span>
+    <span class="d"><span class="j5" title="Definice negací: není to veselí, je to ozvěna, obrana…">Je to ozvěna.</span></span>
+    <span class="d"><span class="j5">Je to obrana.</span></span>
+    <span class="d"><span class="j5">Je to způsob, jak neříct, co se opravdu děje.</span></span>
+    <span class="d br"></span>
+    <span class="d"><span class="j6" title="Pokus o změnu – jedna hyena zkusila přestat">Jedna hyena se jednou pokusila přestat.</span></span>
+    <span class="d"><span class="j6">Zavřela tlamu.</span></span>
+    <span class="d"><span class="j6">Zadržela dech.</span></span>
+    <span class="d"><span class="j6">Ztichla.</span></span>
+    <span class="d br"></span>
+    <span class="d">A svět se zarazil.</span>
+    <span class="d">Ostatní hyeny se na ni podívaly.</span>
+    <span class="d">A začaly se smát ještě víc.</span>
+    <span class="d"><span class="j7" title="Paradox: smějí se, protože ticho je nebezpečné">Ne proto, že by to bylo vtipné.</span></span>
+    <span class="d"><span class="j7">Ale protože ticho je nebezpečné.</span></span>
+    <span class="d"><span class="j7">Ticho je otázka.</span></span>
+    <span class="d"><span class="j7">Ticho je zrcadlo.</span></span>
+    <span class="d br"></span>
+    <span class="d">A tak se ta hyena znovu rozesmála.</span>
+    <span class="d"><span class="j8" title="Kvalifikace smíchu: nahlas, falešně, ale bezpečně">Nahlas.</span></span>
+    <span class="d"><span class="j8">Falešně.</span></span>
+    <span class="d"><span class="j8">Ale bezpečně.</span></span>
+    <span class="d br"></span>
+    <span class="d">Od té doby se ví:</span>
+    <span class="d">Hyeny se nikdy nepřestanou smát.</span>
+    <span class="d"><span class="j9" title="Smích jako stěna">Protože smích je stěna.</span></span>
+    <span class="d"><span class="j9">A za tou stěnou je něco, co se nesmí pustit ven.</span></span>
+    <span class="d br"></span>
+    <span class="d">A když se smějí,</span>
+    <span class="d">vypadá to jako výsměch.</span>
+    <span class="d">Ale je to prosba.</span>
+    <span class="d dl">„Nedívej se moc blízko.“</span>
+    <span class="d dl">„Nezastavuj se.“</span>
+    <span class="d dl">„Nezvedej otázku.“</span>
+    <span class="d br"></span>
+    <span class="d">A tak běží.</span>
+    <span class="d">A tak se smějí.</span>
+    <span class="d">A tak se svět tváří, že je to normální.</span>
+    <span class="d br"></span>
+    <span class="d">Ale někdy, když je noc dlouhá</span>
+    <span class="d">a vítr se neodváží dýchat,</span>
+    <span class="d">hyena se zastaví.</span>
+    <span class="d">A smích se změní.</span>
+    <span class="d"><span class="j10" title="Proměna smíchu: zní jako pláč, ale není">Na něco, co zní jako pláč.</span></span>
+    <span class="d"><span class="j10">Ale není.</span></span>
+    <span class="d"><span class="j10">Je to jen jiný druh smíchu.</span></span>
+    <span class="d br"></span>
+    <span class="d">A od té doby se říká:</span>
+    <span class="d"><span class="j11" title="Roztržené slovo na konci">„Hyeny s</span></span>
+    <span class="d"><span class="j11">e nikdy nepřestanou smát.</span></span>
+    <span class="d"><span class="j12" title="Závěrečná pointa">Ale to neznamená, že se smějí rády.“</span></span>
+  </div>
+
+  <div class="legenda">
+    <span><span class="j1" style="cursor:default">tečkovaně</span> = krátká věta jako rytmus</span>
+    <span><span class="j2" style="cursor:default">přerušovaně</span> = negace a upřesnění</span>
+    <span><span class="j3" style="cursor:default">podklad světlý</span> = definice skrze opakování</span>
+    <span><span class="j4" style="cursor:default">dvojitě tečkovaně</span> = anaforické řazení</span>
+    <span><span class="j5" style="cursor:default">plně</span> = definice negací</span>
+    <span><span class="j6" style="cursor:default">podklad tmavší</span> = pokus o změnu</span>
+    <span><span class="j7" style="cursor:default">dvojitě</span> = paradox (ticho je nebezpečné)</span>
+    <span><span class="j8" style="cursor:default">vlnovka</span> = kvalifikace smíchu</span>
+    <span><span class="j9" style="cursor:default">přerušovaně</span> = smích jako stěna</span>
+    <span><span class="j10" style="cursor:default">podklad + tečky</span> = proměna smíchu</span>
+    <span><span class="j11" style="cursor:default">přeškrtnuto</span> = roztržené slovo</span>
+    <span><span class="j12" style="cursor:default">levá linka</span> = závěrečná pointa</span>
+  </div>
+</section>
+
+<!-- 12 ANOMÁLIÍ -->
+<section class="sec">
+  <p class="sec-tag">12 jazykových anomálií · kliknutím otevřete</p>
+  <h2>Co pohádka dělá s jazykem</h2>
+
+  <div id="anomalie-list"></div>
+
+  <div class="cta-box">
+    <p class="cta-text">Pokračujte diagnostikou — zjistěte svůj kognitivní úhel a dostanete workshop přizpůsobený vám.</p>
+    <a href="hyena_diagnostika.html" class="btn btn-p">Přejít na diagnostiku →</a>
+  </div>
+</section>
+
+<footer>
+  <p>Karta Hyena · Chceš myš? · © 2026 Michaela Nováková</p>
+  <p><a href="mailto:chcesmys@gmail.com">chcesmys@gmail.com</a></p>
+</footer>
+</div>
+
+<script>
+const ANOMALIE = [
+  {n:'Krátká věta jako rytmus',t:'izolovaný časový údaj',
+   c:['"Vždycky."'],
+   p:'Jednoslovná věta, která stojí samostatně. Vytváří rytmus a zdůrazňuje nekonečnost a neměnnost.'},
+  {n:'Negace a upřesnění',t:'antitetická dvojice',
+   c:['"Ne proto, že by chtěly."','"Ale protože musí."'],
+   p:'Popis nejdřív neguje očekávání (chtěly), pak přináší vlastní definici (musí). Odhaluje nutnost skrytou za zdánlivou dobrovolností.'},
+  {n:'Definice skrze opakování',t:'trojice synonymních funkcí',
+   c:['"Smích je jejich jazyk."','"Jejich zbraň."','"Jejich výmluva."'],
+   p:'Stejný subjekt (smích) je definován třemi různými rolemi. Každá další vrstva prohlubuje význam a odhaluje komplexnost.'},
+  {n:'Anaforické řazení',t:'opakování „smějí se, když“',
+   c:['"Smějí se, když přijdou."','"Smějí se, když odejdou."','"Smějí se, když mlčí."','"Smějí se, když se bojíš."'],
+   p:'Čtyřnásobné opakování stejné struktury vytváří rytmus a zároveň ukazuje, že smích provází všechny situace – bez rozdílu.'},
+  {n:'Definice negací',t:'není X, je Y',
+   c:['"Ale není."','"Je to ozvěna."','"Je to obrana."','"Je to způsob, jak neříct, co se opravdu děje."'],
+   p:'Po negaci (není veselí) následuje série pozitivních definic. Negace otevírá prostor pro pravé významy.'},
+  {n:'Pokus o změnu',t:'gradace směrem k tichu',
+   c:['"Jedna hyena se jednou pokusila přestat."','"Zavřela tlamu."','"Zadržela dech."','"Ztichla."'],
+   p:'Tři kroky, které vedou k tichu. Každý je konkrétnější a intenzivnější. Gradace směrem k nemožnému.'},
+  {n:'Paradox (ticho je nebezpečné)',t:'převrácení hodnot',
+   c:['"Ne proto, že by to bylo vtipné."','"Ale protože ticho je nebezpečné."','"Ticho je otázka."','"Ticho je zrcadlo."'],
+   p:'Smích není reakce na vtip, ale obrana před tichem. Ticho je personifikováno jako něco aktivního a ohrožujícího.'},
+  {n:'Kvalifikace smíchu',t:'tři příslovce',
+   c:['"Nahlas."','"Falešně."','"Ale bezpečně."'],
+   p:'Tři kvality smíchu – první dvě jsou popisné, třetí přináší paradoxní hodnocení (bezpečně i přes faleš).'},
+  {n:'Smích jako stěna',t:'prostorová metafora',
+   c:['"Protože smích je stěna."','"A za tou stěnou je něco, co se nesmí pustit ven."'],
+   p:'Smích je materializován jako zeď, která odděluje vnitřní pravdu od vnějšího světa. Prostorová metafora pro obranu.'},
+  {n:'Proměna smíchu',t:'zní jako pláč, ale není',
+   c:['"Na něco, co zní jako pláč."','"Ale není."','"Je to jen jiný druh smíchu."'],
+   p:'Hranice mezi smíchem a pláčem se stírá. Jeden přechází v druhý, aniž by ztratil svou podstatu.'},
+  {n:'Roztržené slovo na konci',t:'Hyeny s / e',
+   c:['"Hyeny s"','"e nikdy nepřestanou smát."'],
+   p:'Slovo „se“ je rozděleno na dva řádky. Vzniká tím mezera – jako by se hyeny na chvíli zastavily, než se znovu rozběhnou do smíchu.'},
+  {n:'Závěrečná pointa',t:'negace očekávání',
+   c:['"Ale to neznamená, že se smějí rády.“'],
+   p:'Poslední věta popírá to, co celá pohádka nastavovala – že smích je dobrovolný. Odhaluje nutnost a ne radost.'}
+];
+
+const list = document.getElementById('anomalie-list');
+ANOMALIE.forEach((a,i)=>{
+  const el = document.createElement('div');
+  el.className = 'anomalie';
+  el.innerHTML = `
+    <div class="anomalie-header" onclick="this.parentElement.classList.toggle('open')">
+      <div class="a-num">${String(i+1).padStart(2,'0')}</div>
+      <div class="a-meta">
+        <div class="a-nazev">${a.n}</div>
+        <div class="a-termin">${a.t}</div>
+      </div>
+      <div class="a-toggle">▾</div>
+    </div>
+    <div class="anomalie-body">
+      <div class="a-citace">${a.c.map(c=>`<span>${c}</span>`).join('')}</div>
+      <p class="a-popis">${a.p}</p>
+    </div>`;
+  list.appendChild(el);
+});
+</script>
+</body>
+</html>
