@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pavouk — pohádka · Chceš myš?</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#07090f;--s:#0d1018;--s2:#12161f;
+  --c:#cdd8e8;--dim:rgba(180,200,230,.35);--a:#7a9ec0;--a2:#4a6e8e;
+  --b:rgba(120,160,200,.12);--b2:rgba(120,160,200,.26);
+  --serif:'Cormorant Garamond',Georgia,serif;--mono:'DM Mono',monospace;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--c);font-family:var(--mono);font-size:13px;line-height:1.85;-webkit-font-smoothing:antialiased}
+.wrap{max-width:780px;margin:0 auto;padding:0 24px}
+
+nav{position:sticky;top:0;z-index:99;border-bottom:1px solid var(--b);background:rgba(7,9,15,.96);backdrop-filter:blur(14px);padding:11px 24px;display:flex;align-items:center;justify-content:space-between}
+.nav-l{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);text-decoration:none;transition:color .15s}
+.nav-l:hover{color:var(--c)}
+.nav-links{display:flex;gap:4px}
+.nav-links a{font-size:10px;letter-spacing:.11em;text-transform:uppercase;color:var(--dim);text-decoration:none;padding:5px 10px;border:1px solid transparent;border-radius:2px;transition:all .15s}
+.nav-links a:hover,.nav-links a.active{color:var(--a);border-color:var(--b2)}
+
+.hero{padding:52px 0 36px;border-bottom:1px solid var(--b)}
+.hero-tag{font-size:10px;letter-spacing:.26em;text-transform:uppercase;color:var(--a2);margin-bottom:14px}
+.hero h1{font-family:var(--serif);font-size:clamp(3rem,8vw,5.4rem);font-weight:300;line-height:.95;letter-spacing:-.02em;margin-bottom:6px}
+.hero h1 em{font-style:italic;color:var(--a)}
+.hero-sub{font-family:var(--serif);font-style:italic;font-size:.9rem;color:var(--dim);border-left:1px solid var(--a2);padding-left:16px;margin:18px 0 20px;line-height:2;max-width:500px}
+.fenomen{border:1px solid var(--b2);padding:14px 20px;background:rgba(120,160,200,.03)}
+.fenomen-tag{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--a);margin-bottom:7px}
+.fenomen-text{font-size:.8rem;color:rgba(180,200,230,.52);line-height:1.95}
+
+.sec{padding:38px 0;border-bottom:1px solid var(--b)}
+.sec-tag{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--a2);margin-bottom:12px}
+h2{font-family:var(--serif);font-size:clamp(1.1rem,3vw,1.6rem);font-weight:300;margin-bottom:18px}
+h2 em{font-style:italic;color:var(--a)}
+
+/* POHÁDKA */
+.pohadka{font-family:var(--serif);font-size:.94rem;color:rgba(200,218,238,.74);border:1px solid var(--b);background:var(--s);padding:28px 32px;line-height:1}
+.d{display:block;padding:.22em 0}
+.d.br{padding:.55em 0}
+.d.silna{color:var(--a);font-weight:400}
+.d.dim{color:rgba(180,200,230,.38);font-style:italic}
+.d.it{font-style:italic}
+.d.dl{padding-left:1.4em;font-style:italic}
+.j1{border-bottom:1px dotted rgba(120,160,200,.42);cursor:help}
+.j2{border-bottom:1px dashed rgba(120,160,200,.38);cursor:help}
+.j3{border-bottom:1px solid rgba(120,160,200,.26);cursor:help}
+.j4{background:rgba(120,160,200,.07);padding:0 2px;cursor:help}
+.legenda{margin-top:10px;padding:10px 14px;background:var(--s);border:1px solid var(--b);font-size:.71rem;color:var(--dim);display:flex;flex-wrap:wrap;gap:4px 18px}
+
+/* ANOMÁLIE */
+.anomalie{border:1px solid var(--b);background:var(--s);margin-bottom:3px;overflow:hidden}
+.anomalie-header{display:flex;align-items:center;gap:14px;padding:14px 18px;cursor:pointer;user-select:none}
+.anomalie-header:hover{background:rgba(120,160,200,.04)}
+.a-num{font-family:var(--serif);font-size:1.5rem;font-weight:300;color:rgba(120,160,200,.14);min-width:28px;line-height:1}
+.a-meta{flex:1}
+.a-nazev{font-size:.83rem;color:var(--c);margin-bottom:2px}
+.a-termin{font-size:.69rem;color:var(--a2);letter-spacing:.06em;font-style:italic}
+.a-toggle{font-size:.68rem;color:var(--dim);letter-spacing:.1em;text-transform:uppercase;transition:transform .2s;white-space:nowrap}
+.anomalie.open .a-toggle{transform:rotate(180deg)}
+.anomalie-body{display:none;padding:4px 18px 20px;border-top:1px solid var(--b)}
+.anomalie.open .anomalie-body{display:block}
+.a-citace{font-family:var(--serif);font-style:italic;font-size:.83rem;color:rgba(120,160,200,.5);border-left:1px solid var(--b2);padding:7px 13px;margin:12px 0;line-height:1.85}
+.a-citace span{display:block}
+.a-popis{font-size:.78rem;color:rgba(180,200,230,.54);line-height:1.92;margin-bottom:0}
+
+.cta-box{margin-top:32px;padding:20px 22px;background:var(--s);border:1px solid var(--b2);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+.cta-text{font-size:.8rem;color:var(--dim);max-width:360px;line-height:1.85}
+.btn{padding:10px 22px;font-family:var(--mono);font-size:.75rem;letter-spacing:.1em;text-transform:uppercase;border:none;cursor:pointer;border-radius:2px;transition:all .15s;text-decoration:none;display:inline-block}
+.btn-p{background:var(--a);color:var(--bg)}
+.btn-p:hover{background:#9ab8d8}
+.btn-g{background:transparent;color:var(--dim);border:1px solid var(--b)}
+.btn-g:hover{color:var(--c);border-color:var(--b2)}
+
+footer{padding:26px 0;border-top:1px solid var(--b);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+footer p{font-size:.7rem;color:var(--dim)}
+footer a{color:var(--a)}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-l" href="../../../index.html">← Všechna zvířata</a>
+  <div class="nav-links">
+    <a href="pavouk_pohadka.html" class="active">Pohádka</a>
+    <a href="pavouk_diagnostika.html">Diagnostika</a>
+    <a href="pavouk_workshop.html">Workshop</a>
+  </div>
+</nav>
+
+<div class="wrap">
+
+<section class="hero">
+  <p class="hero-tag">Kreativní miniatura · Karta Pavouk</p>
+  <h1>Pa<em>vouk</em></h1>
+  <p class="hero-sub">„Možná je tohle ten největší pád. Když se nic nezmění."</p>
+  <div class="fenomen">
+    <div class="fenomen-tag">Fenomén — visení jako strategie / síť jako paměť</div>
+    <p class="fenomen-text">Pavouk věší na nitě věci, co se nedají držet — slova, pocity, omluvy, nedokončené věty. Dokud věci visí, mohou ještě být. Když spadnou, jsou minulostí. Pohádka zkoumá rovnováhu klidu: pohyb věci shodí. Nehybnost je aktivní volba, ne pasivita. A myš, která vstoupí z jiné pohádky, se zeptá na věci, na které se pavouk zeptat nemůže.</p>
+  </div>
+</section>
+
+<!-- POHÁDKA -->
+<section class="sec">
+  <p class="sec-tag">Pohádka · čtěte pomalu</p>
+  <h2>Pavouk, <em>který byl jen Jen Tak. Tak.</em></h2>
+
+  <div class="pohadka">
+    <span class="d silna"><span class="j1" title="Anafora s přerušením: opakování slova, tečka mění jeho smysl">který byl jen Jen Tak. Tak.</span></span>
+    <span class="d br"></span>
+    <span class="d">Pavouk měl nitě.</span>
+    <span class="d">Tenké, pevné, neviditelné.</span>
+    <span class="d">Věšel na ně věci.</span>
+    <span class="d"><span class="j2" title="Materializace nehmotného: definice negací, pak abstrakta jako fyzické předměty">Ne věci jako ponožky nebo klíče.</span></span>
+    <span class="d"><span class="j2">Ale věci, co se nedají držet.</span></span>
+    <span class="d"><span class="j2">Slova, co se neřekla.</span></span>
+    <span class="d"><span class="j2">Pocity, co se nehodily.</span></span>
+    <span class="d"><span class="j2">Otázky, co neměly odpověď.</span></span>
+    <span class="d br"></span>
+    <span class="d dim">Všechno zůstalo viset.</span>
+    <span class="d dim">Jen tak.</span>
+    <span class="d dim silna">Tak.</span>
+    <span class="d br"></span>
+    <span class="d">Jedna věta visela mezi dvěma větvemi.</span>
+    <span class="d dl"><span class="j3" title="Aposiopeze: věta záměrně přerušena, nedokončenost je forma">„Promiň, že jsem…"</span></span>
+    <span class="d">A dál už nic.</span>
+    <span class="d dim">Jen nit. Jen ticho.</span>
+    <span class="d br"></span>
+    <span class="d"><span class="j4" title="Prostorová metafora času: vzpomínka má polohu, tvar, afektivní stav">Jedna vzpomínka visela nad dveřmi.</span></span>
+    <span class="d"><span class="j4">Na den, kdy se mělo něco stát, ale nestalo.</span></span>
+    <span class="d"><span class="j4">A pořád tam byla.</span></span>
+    <span class="d"><span class="j4">Jako ozdoba, co nikdo nechtěl.</span></span>
+    <span class="d br"></span>
+    <span class="d">Jedna omluva visela těsně nad hlavou.</span>
+    <span class="d">Tak nízko, že se jí dalo dotknout.</span>
+    <span class="d">Ale nikdo to neudělal.</span>
+    <span class="d it">Protože co kdyby spadla?</span>
+    <span class="d br"></span>
+    <span class="d">Pavouk seděl uprostřed. V srdci sítě.</span>
+    <span class="d">A nehybal se.</span>
+    <span class="d"><span class="j1" title="Fyzikální zákon jako existenciální princip: pohyb = ztráta">Protože když se hýbeš, věci padají.</span></span>
+    <span class="d"><span class="j1">A když padají, už je nikdo nezvedne.</span></span>
+    <span class="d br"></span>
+    <span class="d dl silna">„Proč to nenecháš spadnout?" zeptala se myš.</span>
+    <span class="d dim it">Ta, co si zapisuje ticho.</span>
+    <span class="d dl">„Protože když to visí, ještě to může být," řekl pavouk.</span>
+    <span class="d dl">„A když to spadne?"</span>
+    <span class="d dl">„Pak už je to jen minulost."</span>
+    <span class="d br"></span>
+    <span class="d">Myš si to poznamenala.</span>
+    <span class="d"><span class="j3" title="Médium jako absence: zápis do mezery v jazyce samotném">Do mezery mezi slovy „jen" a „tak".</span></span>
+    <span class="d">A pak se zeptala:</span>
+    <span class="d dl">„A co když to visí moc dlouho?"</span>
+    <span class="d dl">„Pak to ztvrdne," řekl pavouk.</span>
+    <span class="d dl silna">„A už to nejde rozmotat."</span>
+    <span class="d br"></span>
+    <span class="d">Pavouk dál věšel.</span>
+    <span class="d"><span class="j4" title="Negovaný čas jako objekt: den, který se nestal, visí jako skutečná věc">Jednu lásku, co se neřekla.</span></span>
+    <span class="d"><span class="j4">Jednu hádku, co se nevyřešila.</span></span>
+    <span class="d"><span class="j4">Jednu neděli, co se nikdy nestala.</span></span>
+    <span class="d">A jednu větu, co zněla: „To je v pohodě."</span>
+    <span class="d dim">Ale nebyla.</span>
+    <span class="d br"></span>
+    <span class="d">Vítr přišel. Nenápadný. Ale přesný.</span>
+    <span class="d">Zavál. A všechno se rozhoupalo.</span>
+    <span class="d silna">Ale nic nespadlo.</span>
+    <span class="d br"></span>
+    <span class="d dim">„Všechno zůstalo viset," řekl pavouk.</span>
+    <span class="d dim">„Jen tak." „Tak."</span>
+    <span class="d br"></span>
+    <span class="d">Myš se podívala nahoru. Na síť. Na věci, co visely.</span>
+    <span class="d">A řekla:</span>
+    <span class="d dl silna"><span class="j1" title="Paradox: pád není pohyb dolů — pád je setrvání na místě">„Možná je tohle ten největší pád. Když se nic nezmění."</span></span>
+    <span class="d br"></span>
+    <span class="d">Pavouk se usmál. Ale jen trochu.</span>
+    <span class="d">A zavěsil další věc.</span>
+    <span class="d silna"><span class="j3" title="Sebereference: ticho bylo médiem, teď je posledním objektem">Tentokrát ticho.</span></span>
+  </div>
+
+  <div class="legenda">
+    <span><span class="j1" style="cursor:default">tečkovaně</span> = anafora / paradox</span>
+    <span><span class="j2" style="cursor:default">přerušované</span> = materializace nehmotného</span>
+    <span><span class="j3" style="cursor:default">plné</span> = aposiopeze / sebereference</span>
+    <span><span class="j4" style="cursor:default;padding:0 3px">podklad</span> = prostorová metafora / negovaný čas</span>
+  </div>
+</section>
+
+<!-- 13 ANOMÁLIÍ -->
+<section class="sec">
+  <p class="sec-tag">13 jazykových anomálií · kliknutím otevřete</p>
+  <h2>Co pohádka dělá s jazykem</h2>
+
+  <div id="anomalie-list"></div>
+
+  <div class="cta-box">
+    <p class="cta-text">Pokračujte diagnostikou — zjistěte svůj kognitivní úhel a dostanete workshop přizpůsobený vám.</p>
+    <a href="pavouk_diagnostika.html" class="btn btn-p">Přejít na diagnostiku →</a>
+  </div>
+</section>
+
+<footer>
+  <p>Karta Pavouk · Chceš myš? · © 2026 Michaela Nováková</p>
+  <p><a href="mailto:chcesmys@gmail.com">chcesmys@gmail.com</a></p>
+</footer>
+</div>
+
+<script>
+const ANOMALIE = [
+  {n:'Zadrhnutí v názvu',t:'anafora s přerušením',
+   c:['"který byl jen Jen Tak. Tak."'],
+   p:'Název pohádky se zadrhl: slovo „jen" se opakuje, pak „Tak" dostane tečku a zůstane stát samo. Opakování tu není rytmus — je to zastavení. Jako když hledáš slovo a znovu najdeš to samé. Pohádka se představí tak, jak se i bude chovat: bez úplného dokončení.'},
+  {n:'Nitě jako nosiče abstrakt',t:'materializace nehmotného — definice negací',
+   c:['"Ne věci jako ponožky nebo klíče."','"Ale věci, co se nedají držet."'],
+   p:'Pohádka nejdřív řekne co věci NEJSOU, pak teprve co jsou. Abstrakta — slova, pocity, otázky — dostanou fyzické vlastnosti: lze je věšet, mohou viset, mohou spadnout. Abstraktní se stane hmatatelné.'},
+  {n:'Nedokončená věta jako exponát',t:'aposiopeze — záměrné přerušení věty',
+   c:['"Promiň, že jsem…"','"A dál už nic."'],
+   p:'Věta se zastaví. Za ní není výpustka — je tam prázdno a nit. Pohádka tuto větu nevysvětlí ani nedoplní. Vystaví ji jako objekt. Nedokončenost přestane být chybou a stane se formou.'},
+  {n:'Vzpomínka jako nechtěná ozdoba',t:'prostorová metafora — čas dostane polohu a tvar',
+   c:['"Jedna vzpomínka visela nad dveřmi."','"Jako ozdoba, co nikdo nechtěl."'],
+   p:'Vzpomínka visí nad dveřmi jako dekorace. Čas se stane prostorem — vzpomínka má místo, tvar a afektivní stav (nechtěná). Popis se nestará o to, co se stalo — jen kde to teď je.'},
+  {n:'Omluva v dosahu',t:'fyzikalizace rozhodnutí — morální volba jako fyzická vzdálenost',
+   c:['"Tak nízko, že se jí dalo dotknout."','"Ale nikdo to neudělal. Protože co kdyby spadla?"'],
+   p:'Omluva visí tak nízko, že se jí dá dotknout — ale nikdo to neudělal. Rozhodnutí se stane fyzickou vzdáleností. Strach z pádu omluvy je horší než její existence ve visu.'},
+  {n:'Nehybnost jako strategie',t:'fyzikální zákon jako existenciální princip',
+   c:['"Protože když se hýbeš, věci padají."','"A když padají, už je nikdo nezvedne."'],
+   p:'Pavouk se nehýbe, protože pohyb věci shodí a spadlé věci nikdo nezvedne. Fyzikální zákon se stane životní strategií. Zachování skrze nehybnost — ne pasivita, ale aktivní volba.'},
+  {n:'Myš jako partner z jiného příběhu',t:'meta-postava — postava s pamětí přesahující tento text',
+   c:['"Proč to nenecháš spadnout?" zeptala se myš."','"Ta, co si zapisuje ticho."'],
+   p:'Myš vstoupí do pohádky a jednou větou přinese celou svoji historii z jiného příběhu: „ta, co si zapisuje ticho." Je to postava se svou vlastní kartou — a tady se ptá na věci, na které se pavouk zeptat nemůže.'},
+  {n:'Zápis do mezery mezi slovy',t:'médium jako absence — záznam do jazyka samotného',
+   c:['"Myš si to poznamenala."','"Do mezery mezi slovy „jen" a „tak"."'],
+   p:'Myš nezapisuje na papír, ale do mezery v jazyce. Zápis se stane aktem lingvistickým — mezera mezi slovy jako médium. Toto gesto propojuje pohádku o Pavukovi s pohádkou o Myši.'},
+  {n:'Časová degradace visících věcí',t:'fyzikální změna abstrakta — nehmotné věci stárnou',
+   c:['"A co když to visí moc dlouho?"','"Pak to ztvrdne. A už to nejde rozmotat."'],
+   p:'Abstrakta podléhají fyzikálním změnám v čase. Nerozřešená věc není statická — aktivně stárne a mění skupenství. Ztvrdnutí jako metafora neřešitelnosti.'},
+  {n:'Den, který se nestal',t:'negovaný čas jako objekt — neexistující událost má svou hmotnost',
+   c:['"Jednu neděli, co se nikdy nestala."'],
+   p:'Den v týdnu, který neexistoval, visí v síti jako skutečná věc. Nestal se — a přesto tam je. Negovaná událost má svou hmotnost stejně jako proběhlá.'},
+  {n:'Vítr, který nic neshodil',t:'napětí bez rozuzlení — klimax bez katarze',
+   c:['"Vítr přišel. Nenápadný. Ale přesný."','"A všechno se rozhoupalo. Ale nic nespadlo."'],
+   p:'Pohádka zbuduje očekávání změny (vítr), rozhoupá všechno — a pak nenechá nic spadnout. Napětí zůstane viset. Čtenář dostane klimax bez katarze.'},
+  {n:'Největší pád jako nezměna',t:'paradox — fyzika slova obrácena',
+   c:['"Možná je tohle ten největší pád. Když se nic nezmění."'],
+   p:'Myš obrátí fyziku slova: pád není pohyb dolů, pád je setrvání na místě. Největší pád je stagnace. Vítr přišel — a nic neshodil — a tohle je pád.'},
+  {n:'Ticho jako zavěšený objekt',t:'sebereference — médium příběhu se stane jeho posledním předmětem',
+   c:['"A zavěsil další věc."','"Tentokrát ticho."'],
+   p:'Na konci pohádky pavouk zavěsí ticho. Ticho bylo dosud všude jako médium — teď se stane věcí. Co bylo neviditelné se stane viditelným předmětem. A tím příběh skončí — novým přírůstkem do sítě.'}
+];
+
+const list = document.getElementById('anomalie-list');
+ANOMALIE.forEach((a,i)=>{
+  const el = document.createElement('div');
+  el.className = 'anomalie';
+  el.innerHTML = `
+    <div class="anomalie-header" onclick="this.parentElement.classList.toggle('open')">
+      <div class="a-num">${String(i+1).padStart(2,'0')}</div>
+      <div class="a-meta">
+        <div class="a-nazev">${a.n}</div>
+        <div class="a-termin">${a.t}</div>
+      </div>
+      <div class="a-toggle">▾</div>
+    </div>
+    <div class="anomalie-body">
+      <div class="a-citace">${a.c.map(c=>`<span>${c}</span>`).join('')}</div>
+      <p class="a-popis">${a.p}</p>
+    </div>`;
+  list.appendChild(el);
+});
+</script>
+</body>
+</html>
