@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Veverka — pohádka · Chceš myš?</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#07090f;--s:#0d1018;--s2:#12161f;
+  --c:#cdd8e8;--dim:rgba(180,200,230,.35);--a:#b98c5f;--a2:#8b5e3c;
+  --b:rgba(185,140,95,.12);--b2:rgba(185,140,95,.26);
+  --serif:'Cormorant Garamond',Georgia,serif;--mono:'DM Mono',monospace;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--c);font-family:var(--mono);font-size:13px;line-height:1.85;-webkit-font-smoothing:antialiased}
+.wrap{max-width:780px;margin:0 auto;padding:0 24px}
+
+nav{position:sticky;top:0;z-index:99;border-bottom:1px solid var(--b);background:rgba(7,9,15,.96);backdrop-filter:blur(14px);padding:11px 24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
+.nav-l{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);text-decoration:none;transition:color .15s}
+.nav-l:hover{color:var(--c)}
+.nav-links{display:flex;flex-wrap:wrap;gap:4px}
+.nav-links a{font-size:9px;letter-spacing:.11em;text-transform:uppercase;color:var(--dim);text-decoration:none;padding:4px 8px;border:1px solid transparent;border-radius:2px;transition:all .15s;white-space:nowrap}
+.nav-links a:hover,.nav-links a.active{color:var(--a);border-color:var(--b2)}
+
+.hero{padding:52px 0 36px;border-bottom:1px solid var(--b)}
+.hero-tag{font-size:10px;letter-spacing:.26em;text-transform:uppercase;color:var(--a2);margin-bottom:14px}
+.hero h1{font-family:var(--serif);font-size:clamp(3rem,8vw,5.4rem);font-weight:300;line-height:.95;letter-spacing:-.02em;margin-bottom:6px}
+.hero h1 em{font-style:italic;color:var(--a)}
+.hero-sub{font-family:var(--serif);font-style:italic;font-size:.9rem;color:var(--dim);border-left:1px solid var(--a2);padding-left:16px;margin:18px 0 20px;line-height:2;max-width:500px}
+.fenomen{border:1px solid var(--b2);padding:14px 20px;background:rgba(185,140,95,.03)}
+.fenomen-tag{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--a);margin-bottom:7px}
+.fenomen-text{font-size:.8rem;color:rgba(180,200,230,.52);line-height:1.95}
+
+.sec{padding:38px 0;border-bottom:1px solid var(--b)}
+.sec-tag{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--a2);margin-bottom:12px}
+h2{font-family:var(--serif);font-size:clamp(1.1rem,3vw,1.6rem);font-weight:300;margin-bottom:18px}
+h2 em{font-style:italic;color:var(--a)}
+
+/* POHÁDKA */
+.pohadka{font-family:var(--serif);font-size:.94rem;color:rgba(200,218,238,.74);border:1px solid var(--b);background:var(--s);padding:28px 32px;line-height:1}
+.d{display:block;padding:.22em 0}
+.d.br{padding:.55em 0}
+.d.silna{color:var(--a);font-weight:400}
+.d.dim{color:rgba(180,200,230,.38);font-style:italic}
+.d.it{font-style:italic}
+.d.dl{padding-left:1.4em;font-style:italic}
+/* třídy pro 13 anomálií */
+.j1{border-bottom:1px dotted var(--a);cursor:help}
+.j2{border-bottom:1px dashed var(--a2);cursor:help}
+.j3{background:rgba(185,140,95,.1);padding:0 2px;cursor:help}
+.j4{border-bottom:2px dotted var(--a);cursor:help}
+.j5{border-bottom:1px solid var(--a2);cursor:help}
+.j6{background:rgba(185,140,95,.2);padding:0 2px;cursor:help}
+.j7{border-bottom:1px double var(--a);cursor:help}
+.j8{text-decoration:underline wavy var(--a2);cursor:help}
+.j9{border-bottom:1px dashed var(--a);cursor:help}
+.j10{background:rgba(185,140,95,.05);border-bottom:1px dotted var(--a2);cursor:help}
+.j11{text-decoration:line-through 1px solid var(--a);cursor:help}
+.j12{border-left:2px solid var(--a);padding-left:4px;cursor:help}
+.j13{background:rgba(185,140,95,.15);border-radius:2px;padding:0 2px;cursor:help}
+.legenda{margin-top:10px;padding:10px 14px;background:var(--s);border:1px solid var(--b);font-size:.71rem;color:var(--dim);display:flex;flex-wrap:wrap;gap:4px 18px}
+
+/* ANOMÁLIE */
+.anomalie{border:1px solid var(--b);background:var(--s);margin-bottom:3px;overflow:hidden}
+.anomalie-header{display:flex;align-items:center;gap:14px;padding:14px 18px;cursor:pointer;user-select:none}
+.anomalie-header:hover{background:rgba(185,140,95,.04)}
+.a-num{font-family:var(--serif);font-size:1.5rem;font-weight:300;color:rgba(185,140,95,.2);min-width:28px;line-height:1}
+.a-meta{flex:1}
+.a-nazev{font-size:.83rem;color:var(--c);margin-bottom:2px}
+.a-termin{font-size:.69rem;color:var(--a2);letter-spacing:.06em;font-style:italic}
+.a-toggle{font-size:.68rem;color:var(--dim);letter-spacing:.1em;text-transform:uppercase;transition:transform .2s;white-space:nowrap}
+.anomalie.open .a-toggle{transform:rotate(180deg)}
+.anomalie-body{display:none;padding:4px 18px 20px;border-top:1px solid var(--b)}
+.anomalie.open .anomalie-body{display:block}
+.a-citace{font-family:var(--serif);font-style:italic;font-size:.83rem;color:rgba(185,140,95,.5);border-left:1px solid var(--b2);padding:7px 13px;margin:12px 0;line-height:1.85}
+.a-citace span{display:block}
+.a-popis{font-size:.78rem;color:rgba(180,200,230,.54);line-height:1.92;margin-bottom:0}
+
+.cta-box{margin-top:32px;padding:20px 22px;background:var(--s);border:1px solid var(--b2);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+.cta-text{font-size:.8rem;color:var(--dim);max-width:360px;line-height:1.85}
+.btn{padding:10px 22px;font-family:var(--mono);font-size:.75rem;letter-spacing:.1em;text-transform:uppercase;border:none;cursor:pointer;border-radius:2px;transition:all .15s;text-decoration:none;display:inline-block}
+.btn-p{background:var(--a);color:var(--bg)}
+.btn-p:hover{background:#c9a87a}
+.btn-g{background:transparent;color:var(--dim);border:1px solid var(--b)}
+.btn-g:hover{color:var(--c);border-color:var(--b2)}
+
+footer{padding:26px 0;border-top:1px solid var(--b);display:flex;flex-direction:column;gap:12px}
+.footer-links{display:flex;flex-wrap:wrap;gap:8px 16px;justify-content:center}
+.footer-links a{color:var(--a2);font-size:.7rem;text-decoration:none;border-bottom:1px dotted var(--b2)}
+.footer-links a:hover{color:var(--a)}
+footer p{font-size:.7rem;color:var(--dim);text-align:center}
+footer a{color:var(--a)}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-l" href="../../../index.html">← Všechna zvířata</a>
+  <div class="nav-links">
+    <a href="veverka_pohadka.html" class="active">Veverka</a>
+    <a href="mys_pohadka.html">Myš</a>
+    <a href="cap_pohadka.html">Čáp</a>
+    <a href="pav_pohadka.html">Páv</a>
+    <a href="tygr_pohadka.html">Tygr</a>
+    <a href="zelva_pohadka.html">Želva</a>
+    <a href="krokodyl_pohadka.html">Krokodýl</a>
+    <a href="hyena_pohadka.html">Hyena</a>
+    <a href="slon_pohadka.html">Slon</a>
+    <a href="jednorozec_pohadka.html">Jednorožec</a>
+    <a href="ryba_pohadka.html">Ryba</a>
+    <a href="parohy_pohadka.html">Parohy</a>
+    <a href="kravy_pohadka.html">Krávy</a>
+    <a href="beran_pohadka.html">Beran</a>
+    <a href="analyzer.html">Analyzátor</a>
+  </div>
+</nav>
+
+<div class="wrap">
+
+<section class="hero">
+  <p class="hero-tag">Kreativní miniatura · Karta Veverka</p>
+  <h1>Veverka</h1>
+  <p class="hero-sub">„Modli se činy“</p>
+  <div class="fenomen">
+    <div class="fenomen-tag">Fenomén — bytost, která nemluví, ale promlouvá</div>
+    <p class="fenomen-text">Veverka běží. Ne kvůli něčemu, ne od něčeho. Prostě proto, že to je potřeba, možné, nebo aspoň směr. Nikdy nemluví, ale když se na ni někdo podívá, má pocit, že mu právě něco řekla. Pohádka o tom, že některé bytosti nemají čas na významy – jen na činy. A že to stačí.</p>
+  </div>
+</section>
+
+<!-- POHÁDKA -->
+<section class="sec">
+  <p class="sec-tag">Pohádka · čtěte pomalu</p>
+  <h2>O VEVERCE <em>která se modlí činy</em></h2>
+
+  <div class="pohadka">
+    <span class="d">Veverka běžela.</span>
+    <span class="d"><span class="j1" title="Negace očekávání">Ne kvůli něčemu.</span></span>
+    <span class="d"><span class="j1">Ne od něčeho.</span></span>
+    <span class="d"><span class="j2" title="Gradace důvodů">Běžela, protože to bylo potřeba.</span></span>
+    <span class="d"><span class="j2">A když to nebylo potřeba, tak to bylo možné.</span></span>
+    <span class="d"><span class="j2">A když to nebylo možné, tak to bylo aspoň směrem.</span></span>
+    <span class="d br"></span>
+    <span class="d"><span class="j3" title="Rytmus, opakování">Oříšek.</span></span>
+    <span class="d"><span class="j3">Díra.</span></span>
+    <span class="d"><span class="j3">Zahrabat.</span></span>
+    <span class="d"><span class="j3">Zamaskovat.</span></span>
+    <span class="d"><span class="j3">Zamrkat.</span></span>
+    <span class="d"><span class="j3">Znovu.</span></span>
+    <span class="d br"></span>
+    <span class="d"><span class="j4" title="Paradox beze slov">Nikdy nemluvila.</span></span>
+    <span class="d"><span class="j4">Ale když se na ni někdo podíval, měl pocit, že mu právě něco řekla.</span></span>
+    <span class="d"><span class="j4">A že to bylo důležité.</span></span>
+    <span class="d"><span class="j4">A že to bylo na něj.</span></span>
+    <span class="d br"></span>
+    <span class="d">Jednou ji pozoroval jezevec.</span>
+    <span class="d">Dlouho.</span>
+    <span class="d">A pak si napsal na kůru stromu:</span>
+    <span class="d">„Modli se činy.“</span>
+    <span class="d"><span class="j5" title="Kontrast mezi akcí a řečí">A pak se tvářil, že to vymyslel.</span></span>
+    <span class="d"><span class="j5">A pak se snažil běhat jako ona.</span></span>
+    <span class="d"><span class="j5">A po třetím oříšku si sedl.</span></span>
+    <span class="d"><span class="j5">A po čtvrtém si začal stěžovat, že ho bolí tlapky.</span></span>
+    <span class="d"><span class="j5">A po pátém napsal báseň o smyslu života.</span></span>
+    <span class="d"><span class="j5">A pak se šel vyspat.</span></span>
+    <span class="d br"></span>
+    <span class="d">Veverka mezitím doběhla na druhý konec lesa.</span>
+    <span class="d">Zahrabala.</span>
+    <span class="d">Zamaskovala.</span>
+    <span class="d">Zamrkala.</span>
+    <span class="d">Znovu.</span>
+    <span class="d br"></span>
+    <span class="d">Někdo se zeptal:</span>
+    <span class="d">„To je prorok?“</span>
+    <span class="d"><span class="j6" title="Myš jako hlas rozumu">„Ne. To je jen veverka.“ upřesnila myš.</span></span>
+    <span class="d">„Aha.“</span>
+    <span class="d br"></span>
+    <span class="d"><span class="j7" title="Nedokončená myšlenka">A pak někdo řekl:</span></span>
+    <span class="d"><span class="j7">„Ale co když to není o tom, co dělá?“</span></span>
+    <span class="d"><span class="j7">„Ale o tom, že to dělá?“</span></span>
+    <span class="d"><span class="j7">A nikdo neodpověděl.</span></span>
+    <span class="d"><span class="j7">Protože veverka právě běžela kolem.</span></span>
+    <span class="d"><span class="j7">A nesla další oříšek.</span></span>
+    <span class="d"><span class="j7">A nikdo se neodvážil ji zastavit.</span></span>
+    <span class="d br"></span>
+    <span class="d"><span class="j8" title="Absurdní pokus o hledání smyslu">Jednou se stalo, že někdo zahrabal oříšek tam, kde už byl.</span></span>
+    <span class="d"><span class="j8">A pak ho znovu vykopal.</span></span>
+    <span class="d"><span class="j8">A pak ho znovu zahrabal.</span></span>
+    <span class="d"><span class="j8">A pak řekl:</span></span>
+    <span class="d"><span class="j8">„Tohle je hluboký smysl.“</span></span>
+    <span class="d"><span class="j9" title="Řeč těla, pohled jako sdělení">A veverka se na něj podívala.</span></span>
+    <span class="d"><span class="j9">A pak se podívala jinam.</span></span>
+    <span class="d"><span class="j9">A tím mu řekla všechno.</span></span>
+    <span class="d br"></span>
+    <span class="d"><span class="j10" title="Definice negací">Veverka neměla čas na významy.</span></span>
+    <span class="d"><span class="j10">Neměla čas na otázky.</span></span>
+    <span class="d"><span class="j10">Neměla čas na „proč“.</span></span>
+    <span class="d"><span class="j11" title="Paradox">Měla jen čas.</span></span>
+    <span class="d"><span class="j11">A ten běžel.</span></span>
+    <span class="d"><span class="j11">A ona s ním.</span></span>
+    <span class="d br"></span>
+    <span class="d"><span class="j12" title="Marné napodobování">Jednou se někdo pokusil veverku napodobit.</span></span>
+    <span class="d"><span class="j12">Přesně.</span></span>
+    <span class="d"><span class="j12">Krok za krokem.</span></span>
+    <span class="d"><span class="j12">Skok za skokem.</span></span>
+    <span class="d"><span class="j12">Zahrabal.</span></span>
+    <span class="d"><span class="j12">Zamaskoval.</span></span>
+    <span class="d"><span class="j12">Zamrkal.</span></span>
+    <span class="d"><span class="j12">A pak se zastavil.</span></span>
+    <span class="d"><span class="j12">A řekl:</span></span>
+    <span class="d"><span class="j12">„A co teď?“</span></span>
+    <span class="d"><span class="j12">A nikdo mu neodpověděl.</span></span>
+    <span class="d"><span class="j12">Protože veverka už byla pryč.</span></span>
+    <span class="d"><span class="j12">A odpovědi si nenosí.</span></span>
+    <span class="d"><span class="j12">Jen oříšky.</span></span>
+    <span class="d br"></span>
+    <span class="d"><span class="j13" title="Komercializace moudrosti">A tak se začalo říkat: „Modli se činy.“</span></span>
+    <span class="d"><span class="j13">Ale nikdo nevěděl, co to znamená.</span></span>
+    <span class="d"><span class="j13">A tak to začali tisknout na hrníčky.</span></span>
+    <span class="d"><span class="j13">A na trička.</span></span>
+    <span class="d"><span class="j13">A na plakáty.</span></span>
+    <span class="d"><span class="j13">A pak to přestali dělat.</span></span>
+    <span class="d"><span class="j13">Protože to nikdo nekupoval.</span></span>
+    <span class="d"><span class="j13">A protože veverka mezitím zahrabala všechny propisky.</span></span>
+    <span class="d br"></span>
+    <span class="d">A pak přišla zima.</span>
+    <span class="d">A veverka měla zásoby.</span>
+    <span class="d">A ti, co si psali citáty na kůru, měli hlad.</span>
+    <span class="d">A ti, co si psali básně, měli omrzliny.</span>
+    <span class="d">A ti, co si nic nepsali, ale běhali,</span>
+    <span class="d">měli taky zásoby.</span>
+    <span class="d">A nikdo nevěděl proč.</span>
+    <span class="d br"></span>
+    <span class="d">Ale všichni si pamatovali, že to začalo,</span>
+    <span class="d">když se jednou objevila veverka.</span>
+    <span class="d">A nikomu nic neřekla.</span>
+  </div>
+
+  <div class="legenda">
+    <span><span class="j1" style="cursor:default">tečkovaně</span> = negace očekávání</span>
+    <span><span class="j2" style="cursor:default">přerušovaně</span> = gradace důvodů</span>
+    <span><span class="j3" style="cursor:default">podklad světlý</span> = rytmus, opakování</span>
+    <span><span class="j4" style="cursor:default">dvojitě tečkovaně</span> = paradox beze slov</span>
+    <span><span class="j5" style="cursor:default">plně</span> = kontrast akce/řeči</span>
+    <span><span class="j6" style="cursor:default">podklad tmavší</span> = myš jako hlas rozumu</span>
+    <span><span class="j7" style="cursor:default">dvojitě</span> = nedokončená myšlenka</span>
+    <span><span class="j8" style="cursor:default">vlnovka</span> = absurdní hledání smyslu</span>
+    <span><span class="j9" style="cursor:default">přerušovaně</span> = řeč těla</span>
+    <span><span class="j10" style="cursor:default">podklad + tečky</span> = definice negací</span>
+    <span><span class="j11" style="cursor:default">přeškrtnuto</span> = paradox</span>
+    <span><span class="j12" style="cursor:default">levá linka</span> = marné napodobování</span>
+    <span><span class="j13" style="cursor:default">podklad tmavý</span> = komercializace moudrosti</span>
+  </div>
+</section>
+
+<!-- 13 ANOMÁLIÍ -->
+<section class="sec">
+  <p class="sec-tag">13 jazykových anomálií · kliknutím otevřete</p>
+  <h2>Co pohádka dělá s jazykem</h2>
+
+  <div id="anomalie-list"></div>
+
+  <div class="cta-box">
+    <p class="cta-text">Pokračujte diagnostikou — zjistěte svůj kognitivní úhel a dostanete workshop přizpůsobený vám. Veverka nemá čas na významy.</p>
+    <a href="veverka_diagnostika.html" class="btn btn-p">Přejít na diagnostiku →</a>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-links">
+    <a href="mys_pohadka.html">Myš</a> · <a href="cap_pohadka.html">Čáp</a> · <a href="pav_pohadka.html">Páv</a> · <a href="tygr_pohadka.html">Tygr</a> · <a href="zelva_pohadka.html">Želva</a> · <a href="krokodyl_pohadka.html">Krokodýl</a> · <a href="hyena_pohadka.html">Hyena</a> · <a href="slon_pohadka.html">Slon</a> · <a href="jednorozec_pohadka.html">Jednorožec</a> · <a href="ryba_pohadka.html">Ryba</a> · <a href="parohy_pohadka.html">Parohy</a> · <a href="kravy_pohadka.html">Krávy</a> · <a href="beran_pohadka.html">Beran</a> · <a href="analyzer.html">Analyzátor</a>
+  </div>
+  <p>Karta Veverka · Chceš myš? · © 2026 Michaela Nováková</p>
+  <p><a href="mailto:chcesmys@gmail.com">chcesmys@gmail.com</a></p>
+</footer>
+</div>
+
+<script>
+const ANOMALIE = [
+  {
+    nazev:'Negace očekávání',
+    termin:'ne kvůli něčemu, ne od něčeho',
+    citace:['"Ne kvůli něčemu."','"Ne od něčeho."'],
+    popis:'Hned na začátku jsou negovány obvyklé důvody pohybu – není to útěk ani honba. Běh je prostě bytí.'
+  },
+  {
+    nazev:'Gradace důvodů',
+    termin:'potřeba → možnost → směr',
+    citace:['"Běžela, protože to bylo potřeba."','"A když to nebylo potřeba, tak to bylo možné."','"A když to nebylo možné, tak to bylo aspoň směrem."'],
+    popis:'Postupné slábnutí důvodů – od nutnosti přes možnost až po pouhý směr. I to stačí.'
+  },
+  {
+    nazev:'Rytmus, opakování',
+    termin:'znovu a znovu',
+    citace:['"Oříšek."','"Díra."','"Zahrabat."','"Zamaskovat."','"Zamrkat."','"Znovu."'],
+    popis:'Sled krátkých vět vytváří rytmus nekonečného opakování, který je jádrem veverčí existence.'
+  },
+  {
+    nazev:'Paradox beze slov',
+    termin:'nikdy nemluvila, ale promlouvala',
+    citace:['"Nikdy nemluvila."','"Ale když se na ni někdo podíval, měl pocit, že mu právě něco řekla."'],
+    popis:'Paradox – absence řeči vytváří silnější komunikaci než slova.'
+  },
+  {
+    nazev:'Kontrast mezi akcí a řečí',
+    termin:'jezevec, který píše místo běhu',
+    citace:['"A pak se tvářil, že to vymyslel."','"A pak se snažil běhat jako ona."','"A po třetím oříšku si sedl."','"A po čtvrtém si začal stěžovat, že ho bolí tlapky."','"A po pátém napsal báseň o smyslu života."','"A pak se šel vyspat."'],
+    popis:'Jezevec chce napodobit veverku, ale rychle přechází od akce k mluvení a psaní. Kontrast mezi děláním a povídáním.'
+  },
+  {
+    nazev:'Myš jako hlas rozumu',
+    termin:'upřesnění',
+    citace:['"„To je prorok?“','„Ne. To je jen veverka.“ upřesnila myš."'],
+    popis:'Myš, kronikářka světa, přichází s věcnou opravou. Nepřipouští mytizaci.'
+  },
+  {
+    nazev:'Nedokončená myšlenka',
+    termin:'otázka bez odpovědi',
+    citace:['"Ale co když to není o tom, co dělá?"','"Ale o tom, že to dělá?"','"A nikdo neodpověděl."','"Protože veverka právě běžela kolem."'],
+    popis:'Důležitá otázka zůstává nezodpovězena. Odpovědí je sama přítomnost veverky.'
+  },
+  {
+    nazev:'Absurdní hledání smyslu',
+    termin:'zahrabávání na stejném místě',
+    citace:['"Jednou se stalo, že někdo zahrabal oříšek tam, kde už byl."','"A pak ho znovu vykopal."','"A pak ho znovu zahrabal."','"A pak řekl: „Tohle je hluboký smysl.“"'],
+    popis:'Činnost, která nemá smysl, je prohlášena za hluboký smysl. Ironie intelektuálů.'
+  },
+  {
+    nazev:'Řeč těla',
+    termin:'pohled, který řekne všechno',
+    citace:['"A veverka se na něj podívala."','"A pak se podívala jinam."','"A tím mu řekla všechno."'],
+    popis:'Beze slov, jen odvrácením pohledu, vyjádří víc než tisíc slov.'
+  },
+  {
+    nazev:'Definice negací',
+    termin:'neměla čas na...',
+    citace:['"Veverka neměla čas na významy."','"Neměla čas na otázky."','"Neměla čas na „proč“."'],
+    popis:'Veverka je definována tím, na co nemá čas. Co dělá, je zřejmé z kontextu.'
+  },
+  {
+    nazev:'Paradox',
+    termin:'měla jen čas, a ten běžel',
+    citace:['"Měla jen čas."','"A ten běžel."','"A ona s ním."'],
+    popis:'Čas není něco, co má, ale něco, s čím běží. Splynutí bytosti a času.'
+  },
+  {
+    nazev:'Marné napodobování',
+    termin:'krok za krokem, a pak co?',
+    citace:['"Jednou se někdo pokusil veverku napodobit."','"Přesně."','"Krok za krokem."','"A pak se zastavil."','"A řekl: „A co teď?“"'],
+    popis:'Napodobení bez pochopení vede k prázdnotě. Následování bez porozumění smyslu.'
+  },
+  {
+    nazev:'Komercializace moudrosti',
+    termin:'hrníčky, trička, plakáty',
+    citace:['"A tak to začali tisknout na hrníčky."','"A na trička."','"A na plakáty."','"A pak to přestali dělat."','"Protože to nikdo nekupoval."'],
+    popis:'Hluboká myšlenka se stává zbožím, a když se neprodává, zaniká.'
+  }
+];
+
+const list = document.getElementById('anomalie-list');
+ANOMALIE.forEach((a,i)=>{
+  const el = document.createElement('div');
+  el.className = 'anomalie';
+  el.innerHTML = `
+    <div class="anomalie-header" onclick="this.parentElement.classList.toggle('open')">
+      <div class="a-num">${String(i+1).padStart(2,'0')}</div>
+      <div class="a-meta">
+        <div class="a-nazev">${a.n}</div>
+        <div class="a-termin">${a.t}</div>
+      </div>
+      <div class="a-toggle">▾</div>
+    </div>
+    <div class="anomalie-body">
+      <div class="a-citace">${a.c.map(c=>`<span>${c}</span>`).join('')}</div>
+      <p class="a-popis">${a.popis}</p>
+    </div>`;
+  list.appendChild(el);
+});
+</script>
+</body>
+</html>
