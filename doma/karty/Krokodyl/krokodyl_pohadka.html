@@ -9,8 +9,8 @@
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
   --bg:#07090f;--s:#0d1018;--s2:#12161f;
-  --c:#cdd8e8;--dim:rgba(180,200,230,.35);--a:#2a7a6e;--a2:#1d5a4f;
-  --b:rgba(42,122,110,.12);--b2:rgba(42,122,110,.26);
+  --c:#cdd8e8;--dim:rgba(180,200,230,.35);--a:#8a6e9e;--a2:#5d4a6b;
+  --b:rgba(138,110,158,.12);--b2:rgba(138,110,158,.26);
   --serif:'Cormorant Garamond',Georgia,serif;--mono:'DM Mono',monospace;
 }
 html{scroll-behavior:smooth}
@@ -20,3 +20,265 @@ body{background:var(--bg);color:var(--c);font-family:var(--mono);font-size:13px;
 nav{position:sticky;top:0;z-index:99;border-bottom:1px solid var(--b);background:rgba(7,9,15,.96);backdrop-filter:blur(14px);padding:11px 24px;display:flex;align-items:center;justify-content:space-between}
 .nav-l{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);text-decoration:none;transition:color .15s}
 .nav-l:hover{color:var(--c)}
+.nav-links{display:flex;gap:4px}
+.nav-links a{font-size:10px;letter-spacing:.11em;text-transform:uppercase;color:var(--dim);text-decoration:none;padding:5px 10px;border:1px solid transparent;border-radius:2px;transition:all .15s}
+.nav-links a:hover,.nav-links a.active{color:var(--a);border-color:var(--b2)}
+
+.hero{padding:52px 0 36px;border-bottom:1px solid var(--b)}
+.hero-tag{font-size:10px;letter-spacing:.26em;text-transform:uppercase;color:var(--a2);margin-bottom:14px}
+.hero h1{font-family:var(--serif);font-size:clamp(3rem,8vw,5.4rem);font-weight:300;line-height:.95;letter-spacing:-.02em;margin-bottom:6px}
+.hero h1 em{font-style:italic;color:var(--a)}
+.hero-sub{font-family:var(--serif);font-style:italic;font-size:.9rem;color:var(--dim);border-left:1px solid var(--a2);padding-left:16px;margin:18px 0 20px;line-height:2;max-width:500px}
+.fenomen{border:1px solid var(--b2);padding:14px 20px;background:rgba(138,110,158,.03)}
+.fenomen-tag{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--a);margin-bottom:7px}
+.fenomen-text{font-size:.8rem;color:rgba(180,200,230,.52);line-height:1.95}
+
+.sec{padding:38px 0;border-bottom:1px solid var(--b)}
+.sec-tag{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--a2);margin-bottom:12px}
+h2{font-family:var(--serif);font-size:clamp(1.1rem,3vw,1.6rem);font-weight:300;margin-bottom:18px}
+h2 em{font-style:italic;color:var(--a)}
+
+/* POHÁDKA */
+.pohadka{font-family:var(--serif);font-size:.94rem;color:rgba(200,218,238,.74);border:1px solid var(--b);background:var(--s);padding:28px 32px;line-height:1}
+.d{display:block;padding:.22em 0}
+.d.br{padding:.55em 0}
+.d.silna{color:var(--a);font-weight:400}
+.d.dim{color:rgba(180,200,230,.38);font-style:italic}
+.d.it{font-style:italic}
+.d.dl{padding-left:1.4em;font-style:italic}
+/* třídy pro 13 anomálií */
+.j1{border-bottom:1px dotted var(--a);cursor:help}
+.j2{border-bottom:1px dashed var(--a2);cursor:help}
+.j3{background:rgba(138,110,158,.1);padding:0 2px;cursor:help}
+.j4{border-bottom:2px dotted var(--a);cursor:help}
+.j5{border-bottom:1px solid var(--a2);cursor:help}
+.j6{background:rgba(138,110,158,.2);padding:0 2px;cursor:help}
+.j7{border-bottom:1px double var(--a);cursor:help}
+.j8{text-decoration:underline wavy var(--a2);cursor:help}
+.j9{border-bottom:1px dashed var(--a);cursor:help}
+.j10{background:rgba(138,110,158,.05);border-bottom:1px dotted var(--a2);cursor:help}
+.j11{text-decoration:line-through 1px solid var(--a);cursor:help}
+.j12{border-left:2px solid var(--a);padding-left:4px;cursor:help}
+.j13{background:rgba(138,110,158,.15);border-radius:2px;padding:0 2px;cursor:help}
+.legenda{margin-top:10px;padding:10px 14px;background:var(--s);border:1px solid var(--b);font-size:.71rem;color:var(--dim);display:flex;flex-wrap:wrap;gap:4px 18px}
+
+/* ANOMÁLIE */
+.anomalie{border:1px solid var(--b);background:var(--s);margin-bottom:3px;overflow:hidden}
+.anomalie-header{display:flex;align-items:center;gap:14px;padding:14px 18px;cursor:pointer;user-select:none}
+.anomalie-header:hover{background:rgba(138,110,158,.04)}
+.a-num{font-family:var(--serif);font-size:1.5rem;font-weight:300;color:rgba(138,110,158,.2);min-width:28px;line-height:1}
+.a-meta{flex:1}
+.a-nazev{font-size:.83rem;color:var(--c);margin-bottom:2px}
+.a-termin{font-size:.69rem;color:var(--a2);letter-spacing:.06em;font-style:italic}
+.a-toggle{font-size:.68rem;color:var(--dim);letter-spacing:.1em;text-transform:uppercase;transition:transform .2s;white-space:nowrap}
+.anomalie.open .a-toggle{transform:rotate(180deg)}
+.anomalie-body{display:none;padding:4px 18px 20px;border-top:1px solid var(--b)}
+.anomalie.open .anomalie-body{display:block}
+.a-citace{font-family:var(--serif);font-style:italic;font-size:.83rem;color:rgba(138,110,158,.5);border-left:1px solid var(--b2);padding:7px 13px;margin:12px 0;line-height:1.85}
+.a-citace span{display:block}
+.a-popis{font-size:.78rem;color:rgba(180,200,230,.54);line-height:1.92;margin-bottom:0}
+
+.cta-box{margin-top:32px;padding:20px 22px;background:var(--s);border:1px solid var(--b2);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+.cta-text{font-size:.8rem;color:var(--dim);max-width:360px;line-height:1.85}
+.btn{padding:10px 22px;font-family:var(--mono);font-size:.75rem;letter-spacing:.1em;text-transform:uppercase;border:none;cursor:pointer;border-radius:2px;transition:all .15s;text-decoration:none;display:inline-block}
+.btn-p{background:var(--a);color:var(--bg)}
+.btn-p:hover{background:#a886bc}
+.btn-g{background:transparent;color:var(--dim);border:1px solid var(--b)}
+.btn-g:hover{color:var(--c);border-color:var(--b2)}
+
+footer{padding:26px 0;border-top:1px solid var(--b);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+footer p{font-size:.7rem;color:var(--dim)}
+footer a{color:var(--a)}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-l" href="../../../index.html">← Všechna zvířata</a>
+  <div class="nav-links">
+    <a href="krokodyl_pohadka.html" class="active">Pohádka</a>
+    <a href="krokodyl_diagnostika.html">Diagnostika</a>
+    <a href="krokodyl_workshop.html">Workshop</a>
+    <a href="analyzer.html">Analyzátor</a>
+  </div>
+</nav>
+
+<div class="wrap">
+
+<section class="hero">
+  <p class="hero-tag">Kreativní miniatura · Karta Krokodýl</p>
+  <h1>Krokodýl</h1>
+  <p class="hero-sub">„tento týden sleva 90% krokodýlí slzy totální výprodej“</p>
+  <div class="fenomen">
+    <div class="fenomen-tag">Fenomén — komodifikace emocí / ztráta jazyka skrze trh</div>
+    <p class="fenomen-text">Krokodýl se probudí a zjistí, že je zboží. Na čele má cenovku, na ocasu slevu, místo slz marketingové sdělení. Pohádka o tom, co se stane, když emoce dostanou expiraci, když pláč je v akci a když jazyk přijde kontrolovat, zda ještě existuje smysl.</p>
+  </div>
+</section>
+
+<!-- POHÁDKA -->
+<section class="sec">
+  <p class="sec-tag">Pohádka · čtěte pomalu</p>
+  <h2>O KROKODÝLOVI <em>(který šel do výprodeje)</em></h2>
+
+  <div class="pohadka">
+    <span class="d">—</span>
+    <span class="d br"></span>
+    <span class="d"><span class="j1" title="Proměna identity: zvíře → zboží">Krokodýl se jednoho dne probudil a zjistil,</span></span>
+    <span class="d"><span class="j1">že je zboží.</span></span>
+    <span class="d"><span class="j1">Ne zvíře.</span></span>
+    <span class="d"><span class="j1">Ne postava.</span></span>
+    <span class="d"><span class="j1">Ne symbol.</span></span>
+    <span class="d"><span class="j1">Ale produkt.</span></span>
+    <span class="d">—</span>
+    <span class="d"><span class="j2" title="Cenovka a sleva jako tělesné atributy">Na čele měl cenovku.</span></span>
+    <span class="d"><span class="j2">Na ocasu slevu.</span></span>
+    <span class="d"><span class="j3" title="Marketingové sdělení místo slz">A místo slz měl marketingové sdělení:</span></span>
+    <span class="d">—</span>
+    <span class="d dl"><span class="j4" title="Reklamní slogan jako citace">„Tento týden sleva 90 %. Tři za cenu jedné. Krokodýlí slzy. Totální výprodej.“</span></span>
+    <span class="d">—</span>
+    <span class="d br"></span>
+    <span class="d">Lidé chodili kolem a ptali se:</span>
+    <span class="d">„Co to vlastně je?“</span>
+    <span class="d">Prodavač se usmál:</span>
+    <span class="d"><span class="j5" title="Definice emoce skrze trh">„To je emoce. Ale levná. Už není čerstvá.“</span></span>
+    <span class="d br"></span>
+    <span class="d"><span class="j6" title="Paradox falešný × komerční">Krokodýl se snažil vysvětlit, že jeho slzy nejsou falešné.</span></span>
+    <span class="d"><span class="j6">Jsou jen komerčně dostupné.</span></span>
+    <span class="d"><span class="j7" title="Ztráta jazyka jako důvod pláče">Že pláče, protože přišel o jazyk, když ztratil smysl.</span></span>
+    <span class="d">Že kdysi byl symbolem:</span>
+    <span class="d dl">„Něčeho... Možná... Kdysi... Kdo ví..?</span>
+    <span class="d">Ale teď je tři za cenu jedné.“</span>
+    <span class="d">—-------</span>
+    <span class="d br"></span>
+    <span class="d">Jedna paní si ho koupila.</span>
+    <span class="d"><span class="j8" title="Polička vedle keramického smutku a plastového soucitu">Dala si ho na poličku vedle keramického smutku a plastového soucitu.</span></span>
+    <span class="d"><span class="j9" title="Tlačítko na břiše – mechanizace citu">A vždcky, když se cítila deprimovaná, zmáčkla tlačítko na jeho břiše.</span></span>
+    <span class="d"><span class="j9">Krokodýl řekl:</span></span>
+    <span class="d dl">„Buďte dojatí. Sleva končí v neděli.“</span>
+    <span class="d br"></span>
+    <span class="d"><span class="j10" title="Příchod Jazyka se Smyslem (personifikace abstrakt)">Jednou přišel jazyk.</span></span>
+    <span class="d"><span class="j10">také se smyslem.</span></span>
+    <span class="d"><span class="j10">Ne jako zákazníci</span></span>
+    <span class="d"><span class="j10">Ne jako návštěvníci.</span></span>
+    <span class="d"><span class="j10">Jako na kontrolu.</span></span>
+    <span class="d">—</span>
+    <span class="d br"></span>
+    <span class="d"><span class="j11" title="Diagnóza Jazyka (sebereference)">Jazyk vrhl na krokodýla pohled plný rozpaků a po hlubokém nádechu vypustil slova:</span></span>
+    <span class="d dl"><span class="j11">„Tohle není věta. To je výkřik v obalu!! Ale v nepoškozeném, neschváleném.“</span></span>
+    <span class="d br"></span>
+    <span class="d">Krokodýl se rozplakal.</span>
+    <span class="d">Ale slzy už nikdo nebral vážně.</span>
+    <span class="d">Byly v akci.</span>
+    <span class="d">Do vyprodání.</span>
+    <span class="d br"></span>
+    <span class="d">A krokodýl těchto dob říká, že když někdo pláče a mluví u toho jako leták reklamní,</span>
+    <span class="d">možná to není lež.</span>
+    <span class="d">Možná je to jen význam v akci.</span>
+    <span class="d">Sleva na smysl.</span>
+    <span class="d br"></span>
+    <span class="d"><span class="j12" title="Roztržené slovo na konci">Protož</span></span>
+    <span class="d"><span class="j12">e krokodýlí slzy nejsou falešné.</span></span>
+    <span class="d"><span class="j13" title="Bonus: archaická formule">Jsou jen snadno dostupné.</span></span>
+  </div>
+
+  <div class="legenda">
+    <span><span class="j1" style="cursor:default">tečkovaně</span> = proměna identity</span>
+    <span><span class="j2" style="cursor:default">přerušovaně</span> = cenovka/sleva na těle</span>
+    <span><span class="j3" style="cursor:default">podklad světlý</span> = marketing místo slz</span>
+    <span><span class="j4" style="cursor:default">dvojitě tečkovaně</span> = slogan jako citace</span>
+    <span><span class="j5" style="cursor:default">plně</span> = emoce skrze trh</span>
+    <span><span class="j6" style="cursor:default">podklad tmavší</span> = falešný × komerční</span>
+    <span><span class="j7" style="cursor:default">dvojitě</span> = ztráta jazyka = pláč</span>
+    <span><span class="j8" style="cursor:default">vlnovka</span> = keramický smutek</span>
+    <span><span class="j9" style="cursor:default">přerušovaně</span> = tlačítko na břiše</span>
+    <span><span class="j10" style="cursor:default">podklad + tečky</span> = příchod Jazyka</span>
+    <span><span class="j11" style="cursor:default">přeškrtnuto</span> = diagnóza Jazyka</span>
+    <span><span class="j12" style="cursor:default">levá linka</span> = roztržené Protože</span>
+    <span><span class="j13" style="cursor:default">podklad tmavý</span> = archaická formule</span>
+  </div>
+</section>
+
+<!-- 13 ANOMÁLIÍ -->
+<section class="sec">
+  <p class="sec-tag">13 jazykových anomálií · kliknutím otevřete</p>
+  <h2>Co pohádka dělá s jazykem</h2>
+
+  <div id="anomalie-list"></div>
+
+  <div class="cta-box">
+    <p class="cta-text">Pokračujte diagnostikou — zjistěte svůj kognitivní úhel a dostanete workshop přizpůsobený vám.</p>
+    <a href="krokodyl_diagnostika.html" class="btn btn-p">Přejít na diagnostiku →</a>
+  </div>
+</section>
+
+<footer>
+  <p>Karta Krokodýl · Chceš myš? · © 2026 Michaela Nováková</p>
+  <p><a href="mailto:chcesmys@gmail.com">chcesmys@gmail.com</a></p>
+</footer>
+</div>
+
+<script>
+const ANOMALIE = [
+  {n:'Proměna identity (zvíře → zboží)',t:'gradovaná negace',
+   c:['"Krokodýl se jednoho dne probudil a zjistil, že je zboží."','"Ne zvíře."','"Ne postava."','"Ne symbol."','"Ale produkt."'],
+   p:'Gradovaná negace postupně odebírá všechny vrstvy identity, až zbyde čistá komodita. Jazyk provádí amputaci významu.'},
+  {n:'Cenovka a sleva jako tělesné atributy',t:'marketing na těle',
+   c:['"Na čele měl cenovku."','"Na ocasu slevu."'],
+   p:'Marketingové prvky jsou fyzicky přítomny na těle. Tělo se stává nosičem ceny, ne života.'},
+  {n:'Marketingové sdělení místo slz',t:'emoce nahrazena reklamou',
+   c:['"A místo slz měl marketingové sdělení:"'],
+   p:'Emoce (pláč) jsou nahrazeny reklamním textem. Slzy jako nosiče smutku jsou vyměněny za nosiče prodeje.'},
+  {n:'Reklamní slogan jako citace',t:'hlas trhu',
+   c:['"„Tento týden sleva 90 %. Tři za cenu jedné. Krokodýlí slzy. Totální výprodej.“"'],
+   p:'Celý text je zarovnán jako citace. Je to hlas krokodýla, ale zároveň hlas trhu. Není jasné, kdo mluví.'},
+  {n:'Definice emoce skrze trh (prodavač)',t:'emoce s expirací',
+   c:['"To je emoce. Ale levná. Už není čerstvá."'],
+   p:'Emoce má expiraci, cenu, kvalitu. Je to zboží podléhající zkáze. Psychologie převedená do logistiky.'},
+  {n:'Paradox falešný × komerční',t:'rozlišení, které neexistuje',
+   c:['"Krokodýl se snažil vysvětlit, že jeho slzy nejsou falešné."','"Jsou jen komerčně dostupné."'],
+   p:'Pravda není protikladem lži, ale protikladem „dostupnosti“. Rozlišení, které v běžném jazyce neexistuje.'},
+  {n:'Ztráta jazyka jako důvod pláče',t:'jazyk a význam propojeny',
+   c:['"Že pláče, protože přišel o jazyk, když ztratil smysl."'],
+   p:'Pláč není ze smutku, ale ze ztráty řeči. A řeč byla ztracena spolu se smyslem.'},
+  {n:'Keramický smutek a plastový soucit',t:'materializace pocitů',
+   c:['"Dala si ho na poličku vedle keramického smutku a plastového soucitu."'],
+   p:'Emoce jako dekorace, jako umělé předměty. Materializace pocitů do podoby levných suvenýrů.'},
+  {n:'Tlačítko na břiše – mechanizace citu',t:'interakce jako konzum',
+   c:['"A vždcky, když se cítila deprimovaná, zmáčkla tlačítko na jeho břiše."','"Krokodýl řekl: / „Buďte dojatí. Sleva končí v neděli.“"'],
+   p:'Stisknutí tlačítka vyvolá předem nahranou frázi. Interakce s emocí je redukována na konzum.'},
+  {n:'Příchod Jazyka se Smyslem',t:'personifikace abstrakt',
+   c:['"Jednou přišel jazyk."','"také se smyslem."','"Ne jako zákazníci"','"Ne jako návštěvníci."','"Jako na kontrolu."'],
+   p:'Jazyk a Smysl jsou osoby, které přicházejí kontrolovat, co se děje. Abstrakta vstupují do děje.'},
+  {n:'Diagnóza Jazyka (sebereference)',t:'text komentuje sám sebe',
+   c:['"Tohle není věta. To je výkřik v obalu!! Ale v nepoškozeném, neschváleném."'],
+   p:'Jazyk komentuje vlastní stav. Věta, kterou právě čteme, je podle Jazyka „výkřik v obalu“. Text sám sebe diagnostikuje.'},
+  {n:'Roztržené slovo na konci',t:'Protož / e',
+   c:['"Protož"','"e krokodýlí slzy nejsou falešné."'],
+   p:'Slovo „protože“ je rozděleno na dva řádky. Vzniká tím mezera – jako by se důvod rozpadl, jako by logika měla slevu.'},
+  {n:'Archaická formule (bonus)',t:'krokodýl těchto dob',
+   c:['"A krokodýl těchto dob říká"'],
+   p:'Archaická formule („těchto dob“) vložená do příběhu o výprodeji. Mísí se mytický čas s aktuální nabídkou.'}
+];
+
+const list = document.getElementById('anomalie-list');
+ANOMALIE.forEach((a,i)=>{
+  const el = document.createElement('div');
+  el.className = 'anomalie';
+  el.innerHTML = `
+    <div class="anomalie-header" onclick="this.parentElement.classList.toggle('open')">
+      <div class="a-num">${String(i+1).padStart(2,'0')}</div>
+      <div class="a-meta">
+        <div class="a-nazev">${a.n}</div>
+        <div class="a-termin">${a.t}</div>
+      </div>
+      <div class="a-toggle">▾</div>
+    </div>
+    <div class="anomalie-body">
+      <div class="a-citace">${a.c.map(c=>`<span>${c}</span>`).join('')}</div>
+      <p class="a-popis">${a.p}</p>
+    </div>`;
+  list.appendChild(el);
+});
+</script>
+</body>
+</html>
