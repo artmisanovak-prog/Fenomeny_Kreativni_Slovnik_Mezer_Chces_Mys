@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pavouk — workshop · Chceš myš?</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#07090f;--s:#0d1018;--s2:#12161f;--s3:#171c27;
+  --c:#cdd8e8;--dim:rgba(180,200,230,.35);--a:#7a9ec0;--a2:#4a6e8e;
+  --b:rgba(120,160,200,.12);--b2:rgba(120,160,200,.26);--b3:rgba(120,160,200,.42);
+  --serif:'Cormorant Garamond',Georgia,serif;--mono:'DM Mono',monospace;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--c);font-family:var(--mono);font-size:13px;line-height:1.85;-webkit-font-smoothing:antialiased}
+.wrap{max-width:780px;margin:0 auto;padding:0 24px}
+
+nav{position:sticky;top:0;z-index:99;border-bottom:1px solid var(--b);background:rgba(7,9,15,.96);backdrop-filter:blur(14px);padding:11px 24px;display:flex;align-items:center;justify-content:space-between}
+.nav-l{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);text-decoration:none;transition:color .15s}
+.nav-l:hover{color:var(--c)}
+.nav-links{display:flex;gap:4px}
+.nav-links a{font-size:10px;letter-spacing:.11em;text-transform:uppercase;color:var(--dim);text-decoration:none;padding:5px 10px;border:1px solid transparent;border-radius:2px;transition:all .15s}
+.nav-links a:hover,.nav-links a.active{color:var(--a);border-color:var(--b2)}
+
+.hero{padding:44px 0 28px;border-bottom:1px solid var(--b)}
+.hero-tag{font-size:10px;letter-spacing:.26em;text-transform:uppercase;color:var(--a2);margin-bottom:12px}
+.hero h1{font-family:var(--serif);font-size:clamp(2rem,5vw,3.4rem);font-weight:300;line-height:1;letter-spacing:-.01em;margin-bottom:6px}
+.hero h1 em{font-style:italic;color:var(--a)}
+.hero-uhel{margin-top:14px;display:inline-flex;align-items:center;gap:10px;padding:9px 16px;background:rgba(120,160,200,.06);border:1px solid var(--b2)}
+.hero-uhel-tag{font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--a2)}
+.hero-uhel-val{font-family:var(--serif);font-size:.96rem;color:var(--a)}
+.hero-note{font-size:.76rem;color:var(--dim);margin-top:10px;line-height:1.9;max-width:520px}
+
+/* PŘEPÍNAČ ÚHLŮ */
+.uhel-switcher{padding:16px 0 0;display:flex;flex-wrap:wrap;gap:4px;border-bottom:1px solid var(--b);padding-bottom:16px}
+.uhel-btn{font-family:var(--mono);font-size:.65rem;letter-spacing:.09em;padding:4px 9px;background:transparent;border:1px solid var(--b);color:var(--dim);cursor:pointer;border-radius:2px;transition:all .15s}
+.uhel-btn:hover{color:var(--a);border-color:var(--b2)}
+.uhel-btn.active{background:rgba(120,160,200,.1);color:var(--a);border-color:var(--a2)}
+
+/* ANOMÁLIE */
+.anomalie-list{padding:8px 0}
+.anomalie{border:1px solid var(--b);background:var(--s);margin-bottom:3px;overflow:hidden;transition:border-color .15s}
+.anomalie:hover{border-color:var(--b2)}
+.anomalie-header{display:flex;align-items:center;gap:14px;padding:14px 18px;cursor:pointer;user-select:none}
+.a-num{font-family:var(--serif);font-size:1.5rem;font-weight:300;color:rgba(120,160,200,.14);min-width:28px;line-height:1}
+.a-meta{flex:1}
+.a-nazev{font-size:.83rem;color:var(--c);margin-bottom:2px}
+.a-termin{font-size:.68rem;color:var(--a2);letter-spacing:.06em;font-style:italic}
+.a-toggle{font-size:.68rem;color:var(--dim);letter-spacing:.1em;text-transform:uppercase;transition:transform .2s;white-space:nowrap}
+.anomalie.open .a-toggle{transform:rotate(180deg)}
+.anomalie-body{display:none;padding:4px 18px 20px;border-top:1px solid var(--b)}
+.anomalie.open .anomalie-body{display:block}
+
+.a-citace{font-family:var(--serif);font-style:italic;font-size:.82rem;color:rgba(120,160,200,.48);border-left:1px solid var(--b2);padding:7px 13px;margin:12px 0 10px;line-height:1.85}
+.a-citace span{display:block}
+.a-popis{font-size:.77rem;color:rgba(180,200,230,.5);line-height:1.9;margin-bottom:16px}
+
+/* CVIČENÍ */
+.ukol-wrap{background:var(--s2);border:1px solid var(--b)}
+.ukol-kalibrace{padding:9px 16px;border-bottom:1px solid var(--b);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--a);display:flex;align-items:center;gap:8px}
+.ukol-kalibrace span{color:var(--dim);font-size:.65rem}
+.ukol-text{padding:14px 16px;font-size:.82rem;color:rgba(200,218,238,.75);line-height:1.95}
+.ukol-jazyk{padding:8px 16px 12px;font-size:.71rem;color:var(--a2);font-style:italic;border-top:1px solid var(--b)}
+.pisarna{width:100%;background:var(--s3);border:none;border-top:1px solid var(--b);color:var(--c);padding:11px 14px;font-family:var(--mono);font-size:.78rem;line-height:1.75;resize:vertical;min-height:72px}
+.pisarna:focus{outline:1px solid var(--a2)}
+.pisarna::placeholder{color:rgba(180,200,230,.08)}
+
+.btn{padding:9px 20px;font-family:var(--mono);font-size:.73rem;letter-spacing:.1em;text-transform:uppercase;border:none;cursor:pointer;border-radius:2px;transition:all .15s;text-decoration:none;display:inline-block}
+.btn-g{background:transparent;color:var(--dim);border:1px solid var(--b)}
+.btn-g:hover{color:var(--c);border-color:var(--b2)}
+.a-btns{display:flex;gap:5px;padding:8px 14px 0}
+
+/* EXPORT BAR */
+.export-fixed{position:fixed;bottom:0;left:0;right:0;background:rgba(7,9,15,.97);border-top:1px solid var(--b);backdrop-filter:blur(12px);padding:9px 24px;display:flex;justify-content:space-between;align-items:center;z-index:90}
+.export-info{font-size:.72rem;color:var(--dim)}
+.export-info strong{color:var(--a)}
+.export-btns{display:flex;gap:5px}
+
+footer{padding:24px 0;border-top:1px solid var(--b);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:52px}
+footer p{font-size:.7rem;color:var(--dim)}
+footer a{color:var(--a)}
+
+@media print{nav,.export-fixed,.uhel-switcher,.a-btns,.pisarna{display:none!important}.anomalie-body{display:block!important}.anomalie{border:1px solid #ccc;page-break-inside:avoid}body{background:white;color:black}}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-l" href="../../../index.html">← Všechna zvířata</a>
+  <div class="nav-links">
+    <a href="pavouk_pohadka.html">Pohádka</a>
+    <a href="pavouk_diagnostika.html">Diagnostika</a>
+    <a href="pavouk_workshop.html" class="active">Workshop</a>
+  </div>
+</nav>
+
+<div class="wrap">
+
+<section class="hero">
+  <p class="hero-tag">Karta Pavouk · Workshop</p>
+  <h1>13 anomálií — <em>cvičení</em></h1>
+  <div class="hero-uhel">
+    <span class="hero-uhel-tag">Váš úhel:</span>
+    <span class="hero-uhel-val" id="uhel-display">— přejděte nejprve na diagnostiku —</span>
+  </div>
+  <p class="hero-note">Každá anomálie má cvičení přizpůsobené vašemu úhlu. Cvičení pracují s jazykem pohádky — píšete, konstruujete, rozkládáte věty. Čtěte i anomálie ostatních úhlů — jsou jiné.</p>
+</section>
+
+<div class="uhel-switcher" id="uhel-switcher"></div>
+
+<div class="anomalie-list" id="anomalie-list"></div>
+
+<footer>
+  <p>Karta Pavouk · Chceš myš? · © 2026 Michaela Nováková</p>
+  <p><a href="mailto:chcesmys@gmail.com">chcesmys@gmail.com</a></p>
+</footer>
+</div>
+
+<div class="export-fixed" id="export-fixed">
+  <div class="export-info">Workshop: <strong id="export-uhel-label">—</strong> · Karta Pavouk</div>
+  <div class="export-btns">
+    <button class="btn btn-g" style="font-size:.68rem;padding:6px 12px" onclick="ulozitMapu()">Uložit mapu</button>
+    <button class="btn btn-g" style="font-size:.68rem;padding:6px 12px" onclick="exportJSON()">Export JSON</button>
+    <button class="btn btn-g" style="font-size:.68rem;padding:6px 12px" onclick="window.print()">Tisk</button>
+    <button class="btn btn-g" style="font-size:.68rem;padding:6px 12px" onclick="sdilej()">Sdílet</button>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════════
+// ÚHLY
+// ══════════════════════════════════════════════
+const UHLY_LIST = [
+  {id:'0',  label:'0° Analytický'},
+  {id:'180',label:'180° Asociační'},
+  {id:'30', label:'30° Kulturní'},
+  {id:'210',label:'210° Introspektivní'},
+  {id:'60', label:'60° Filozofický'},
+  {id:'240',label:'240° Ironický'},
+  {id:'90', label:'90° Naivní'},
+  {id:'270',label:'270° Groteskní'},
+  {id:'120',label:'120° Jazykový'},
+  {id:'300',label:'300° Absurdní'},
+  {id:'150',label:'150° Metaforický'},
+  {id:'330',label:'330° Surrealistický'}
+];
+
+// ══════════════════════════════════════════════
+// 13 ANOMÁLIÍ — každá má 12 cvičení (jedno na úhel)
+// format: {nazev, termin, citace[], popis, jazyk_zaměření, ukoly:{0,180,30,210,60,240,90,270,120,300,150,330}}
+// ══════════════════════════════════════════════
+const ANOMALIE = [
+{
+  nazev:'Zadrhnutí v názvu',
+  termin:'anafora s přerušením',
+  citace:['"který byl jen Jen Tak. Tak."'],
+  popis:'Název se zadrhl: slovo „jen" se opakuje, pak „Tak" dostane tečku a zůstane stát samo. Opakování tu není rytmus — je to zastavení. Pohádka se představí tak, jak se i bude chovat.',
+  jazyk:'Opakování, tečka jako zlom, slovo které mění smysl podruhé',
+  ukoly:{
+    '0':  'Vyber slovo, které funguje jako příslovce i jako přídavné jméno zároveň — například „dávno", „ticho", „blízko". Napiš větu, kde se toto slovo opakuje, ale podruhé změní svůj větný člen. Pak za ním tečka. Přečti, jak se věta přelouskne.',
+    '180':'Piš rychle, bez zastavení. Začni libovolnou větou a sleduj, kde se ti pero samo zadrží na slově. Zopakuj to slovo. Nech tam tečku. Co bylo za tím zadrhnutím?',
+    '30': 'Napiš rčení nebo okřídlenou frázi, která se v pohádce nebo v životě říká tak často, že ztratila smysl. Pak ji zopakuj — ale podruhé ji zlom tečkou uprostřed. Co zbyde z té fráze, když se zadrhl?',
+    '210':'Vzpomeň na slovo, které jsi jednou musel/a říct dvakrát, protože poprvé nestačilo. Napiš větu s tím slovem. Zopakuj ho. Mezi oběma použitími nech tečku — jako pauzu, ve které ses nadechl/a.',
+    '60': 'Napiš větu o nekonečném nebo neskončitelném — čas, vědomí, ticho. Nech jedno slovo z té věty zopakovat se za tečkou. Co říká tato pauza uprostřed neskončitelného?',
+    '240':'Vezmi reklamní slogan nebo motivační citát — něco, co zní příliš jistě. Zopakuj klíčové slovo, mezi obě použití vlož tečku. Přečti: co se stalo s jeho přesvědčivostí?',
+    '90': 'Napiš dvě slova. Mezi nimi tečka. Tatáž dvě slova — nebo jedno z nich jinak. Nic víc. Přečti nahlas třikrát.',
+    '270':'Vyber slovo s největším emocionálním nábojem, jaký tě napadne. Napiš ho. Tečka. Znovu. Druhé použití musí být tišší než první — ale těžší.',
+    '120':'Napiš větu, kde se jedno slovo opakuje, ale podruhé mění slovní druh — ze slovesa na podstatné jméno, z přídavného jména na citoslovce. Zaznamenej, jak se mění gramatická funkce věty.',
+    '300':'Napiš větu, která se zadrhne na slově, které tam vůbec nedává smysl opakovat — třeba „okno", „čtvrtek", „ale". Tečka. Znovu to slovo. Co se stalo?',
+    '150':'Napiš větu a nech jedno slovo vrátit se jako ozvěna — ale podruhé jako obraz, ne jako pojem. „Ticho. Ticho jako dno studny." Zadrhnutí je vstup do metafory.',
+    '330':'Napiš větu, která se uprostřed slova přenese do jiné pohádky nebo jiného světa. Zadrhnutí je průchod. Co je za ním — zapiš jen první slovo.'
+  }
+},
+{
+  nazev:'Nitě jako nosiče abstrakt',
+  termin:'materializace nehmotného — definice negací',
+  citace:['"Ne věci jako ponožky nebo klíče."','"Slova, co se neřekla. Pocity, co se nehodily."'],
+  popis:'Pohádka nejdřív řekne co věci NEJSOU, pak teprve co jsou. Abstrakta dostávají fyzické vlastnosti: lze je věšet, mohou viset, mohou spadnout a nikdo je nezvedne.',
+  jazyk:'Negační definice, fyzická slovesa aplikovaná na abstrakta, katalog věcí',
+  ukoly:{
+    '0':  'Pro tři abstrakta (lítost, mlčení, očekávání) napiš fyzikální specifikaci: hmotnost v gramech, tvar, materiál, chování při teplotních změnách. Buď přesný. Na konci napiš, co se stane, když se tato tři abstrakta zavěsí na jednu nit.',
+    '180':'Napiš seznam deseti věcí, které se nedají držet. Volně, bez přemýšlení. Pak vybere tři z nich a ke každé napiš jeden zvuk, který vydává, když visí.',
+    '30': 'Napiš věty ve tvaru „Ne [konkrétní věc], ale [abstraktum]." Alespoň šest. Pak přečti jen druhé poloviny — tvoří katalog toho, co lidé skutečně nesou?',
+    '210':'Které abstraktum právě visí ve tvé síti? Popiš ho jako fyzický předmět: kde visí, jak vypadá, jak dlouho tam je. Dotkni se ho v psaní — aniž bys ho jmenoval/a.',
+    '60': 'Napiš filozofický text o tom, co se stane s abstraktem, když ho materializujeme. Ztrácí svou podstatu, nebo ji tímto způsobem teprve odhalí? Použij konkrétní příklad z pohádky.',
+    '240':'Napiš seznam věcí, které se „v životě opravdu vyplatí věšet na nit" — ironicky. Každá věc musí znít jako racionální životní rada, ale být absurdně konkrétní abstraktum.',
+    '90': 'Napiš pět vět. Každá: „[Abstraktum] visí. Těžké." Nic víc. Abstrakta vybírej co nejjednodušší.',
+    '270':'Jedno abstraktum přetěžkej — dej mu enormní fyzické vlastnosti, nesnesitelnou váhu, tvar který se nevejde do místnosti. Co se stane se sítí?',
+    '120':'Vyber pět sloves pohybu (viset, padat, houpat, ztvrdnout, rozmotat) a pro každé napiš větu, kde jeho subjektem je abstraktum. Sleduj, jak sloveso mění abstraktum.',
+    '300':'Napiš seznam věcí, které visí v síti — ale každá musí být fyzicky nemožná abstraktum. „Čtvrteční ticho. Barva lítosti. Váha „možná"." Katalog bez vysvětlení.',
+    '150':'Ke každému abstraktu najdi přírodní protějšek. „Mlčení je jako…" „Lítost je jako…" Pak tyto obrazy pověs na jednu nit — napiš větu, kde visí vedle sebe.',
+    '330':'Napiš o síti, kde visí věci z různých časových rovin — vzpomínky, budoucnosti, přítomné okamžiky, věci z minulých životů. Každá věc má jiné skupenství.'
+  }
+},
+{
+  nazev:'Nedokončená věta jako exponát',
+  termin:'aposiopeze — záměrné přerušení věty',
+  citace:['"Promiň, že jsem…"','"A dál už nic. Jen nit. Jen ticho."'],
+  popis:'Věta se zastavila. Pohádka ji nevysvětlí, nedoplní, neomluví. Vystaví ji jako objekt. Nedokončenost přestane být chybou a stane se formou.',
+  jazyk:'Práce s přerušením, ticho jako obsah, věta jako objekt',
+  ukoly:{
+    '0':  'Napiš větu, která se přeruší přesně před klíčovým větným členem — tam kde by přišel podmět nebo přísudek, který nese celý smysl. Pak napiš druhou větu, která popisuje, co syntakticky chybí. Dvě věty: exponát a jeho popis.',
+    '180':'Napiš pět začátků vět z různých oblastí: emoce, místo, zvuk, barva, pohyb. Nechej každou přesně kde začíná být zajímavá. Přerovnej je. Přečti jako sérii — co tvoří ta ticha dohromady?',
+    '30': 'Sbírej věty, které v pohádkách nebo v životě nikdo nedořekl. „Promiň, že jsem…" „Chtěl/a jsem ti říct…" „Vím, že…" Napiš sbírku šesti takových začátků. Každou osamotni na řádku.',
+    '210':'Jedna nedokončená věta, kterou jsi opravdu jednou nezačal/a — nebo začal/a a nedořekl/a. Napiš jen ten začátek. Osamotni ji. Nech ji viset. Pak napiš: co by se stalo, kdyby se dořekla dnes?',
+    '60': 'Napiš větu, která ze své podstaty nemůže být dokončena — ne z nedostatku slov, ale protože to, co popisuje, nemá konec. Pak jednu větu: co říká tato neskončitelnost o podstatě věci samotné?',
+    '240':'Napiš tři věty jako začátky omluv, slibů nebo vysvětlení — a nech každou ve chvíli, kde se věc stává konkrétní. Pod každou napiš jednu větu: co mluvčí tím přerušením zachránil?',
+    '90': 'Přepiš tři věty z pohádky. Každou zkrať o poslední slovo. Přečti. Co se změnilo? Kde věta visí nejhlasitěji?',
+    '270':'Napiš větu, která začne s maximálním dramatickým nasazením — a zlomí se do absolutního ticha přesně v polovině. Kontrast je obsah. Čím dramatičtější začátek, tím hlubší ticho.',
+    '120':'Napiš pět nedokončených vět, každá přerušená po jiném slovním druhu: podstatné jméno, sloveso, přídavné jméno, předložka, spojka. Ke každé napiš: jak zní ticho za různými slovními druhy?',
+    '300':'Napiš věty, které se přeruší na nejbanálnějším možném místě — „Šel jsem do…", „Okno bylo…" — a pak nechej absolutní ticho. Pět takových vět. Co je v tom tichu?',
+    '150':'Ke každé nedokončené větě napiš obraz pro to, co visí za přerušením. Nit? Mlha? Prázdná klec? Otevřené dveře? Metafora pro absenci.',
+    '330':'Napiš větu, která začne v reálném světě a přeruší se v momentě přechodu do snu nebo jiné dimenze. Přerušení je hranice. Jen větu — až k té hranici.'
+  }
+},
+{
+  nazev:'Vzpomínka jako nechtěná ozdoba',
+  termin:'prostorová metafora — čas dostane polohu, tvar a afektivní stav',
+  citace:['"Jedna vzpomínka visela nad dveřmi."','"Jako ozdoba, co nikdo nechtěl."'],
+  popis:'Vzpomínka visí nad dveřmi jako dekorace. Čas se stane prostorem — paměť má místo, tvar a afektivní stav. Popis se nestará o to, co se stalo — jen kde to teď je.',
+  jazyk:'Prostorová slovesa pro čas, konkrétní umístění abstrakta, nechtěná přítomnost',
+  ukoly:{
+    '0':  'Napiš mapu místnosti nebo prostoru, kde jsou rozloženy vzpomínky jako předměty. Ke každé vzpomínce-předmětu napiš: kde stojí/visí, jak velká je, proč je právě tam. Buď systematický jako při inventuře.',
+    '180':'Napiš sérii vět začínajících „Jedna vzpomínka…" — každá na jiném místě. Volně, bez plánování. Nech je přicházet jedna po druhé. Kde se zastavily?',
+    '30': 'Napiš o vzpomínkách, které visí ve sdíleném prostoru — v rodinném domě, v kanceláři, v čekárně. Vzpomínky, které tam jsou pro všechny, ale nikdo je nevzal. Co jsou to za ozdoby?',
+    '210':'Vyber jednu vzpomínku a popiš ji jako předmět na konkrétním místě v prostoru, který znáš. Kde visí nebo leží? Jaký tvar má? Je to věc, kterou si necháš, nebo čekáš, až ji někdo odnese?',
+    '60': 'Napiš o tom, co znamená, když má vzpomínka polohu. Mění se její podstata tím, že ji umístíme do prostoru? Je vzpomínka „nad dveřmi" jiná než vzpomínka „na dně šuplíku"?',
+    '240':'Napiš katalog „dekorací, co nikdo nechtěl" — vzpomínek, pocitů, situací, které visí v prostoru jako nevkusné ozdoby. Piš s ironickým tónem interiérového designéra.',
+    '90': 'Napiš pět vět: „Jedna [věc] visela [kde]." Různé věci, různá místa. Žádné vysvětlení proč.',
+    '270':'Napiš o vzpomínce, která je tak velká, že zaplňuje celý prostor — nedá se obejít, nedá se ignorovat. Co se děje s ostatními věcmi v místnosti?',
+    '120':'Napiš pět vět, kde prostorové sloveso (viset, ležet, stát, trčet, plout) popisuje abstraktum nebo vzpomínku. Pak ke každé větě napiš, které fyzikální vlastnosti to sloveso přenáší na abstraktum.',
+    '300':'Napiš o vzpomínkách na věci, které se nikdy nestaly — ale visí na konkrétních místech v prostoru. „Nad oknem visela vzpomínka na rozhovor, který jsme neměli." Tři takové věty.',
+    '150':'Vzpomínka jako ozdoba — ale jaká ozdoba přesně? Napiš tři vzpomínky a ke každé najdi konkrétní ozdobný předmět, který jí odpovídá. Vysvětli proč.',
+    '330':'Napiš o prostoru, kde vzpomínky visí mimo svůj čas — vzpomínky z budoucnosti, vzpomínky na cizí životy, vzpomínky, které nikdo nepamatuje. Kde visí? Co s nimi?'
+  }
+},
+{
+  nazev:'Omluva v dosahu',
+  termin:'fyzikalizace rozhodnutí — morální volba jako fyzická vzdálenost',
+  citace:['"Tak nízko, že se jí dalo dotknout."','"Protože co kdyby spadla?"'],
+  popis:'Omluva visí tak nízko, že se jí dá dotknout — ale nikdo to neudělal. Rozhodnutí se stane fyzickou vzdáleností. Strach z pádu je horší než existence věci ve visu.',
+  jazyk:'Vzdálenost jako morální kategorie, podmíněné věty, strach z dotyku',
+  ukoly:{
+    '0':  'Napiš větu popisující vzdálenost k věci, která je v dosahu — ale nedotčená. Pak napiš větu: jaký fyzikální zákon ji drží ve visu? Jaká síla brání kontaktu?',
+    '180':'Napiš sérii věcí, které jsou těsně v dosahu — ale nikdo po nich nesáhne. Každá na novém řádku. Nech je přicházet volně. Co mají společného?',
+    '30': 'Napiš o věcech, které jsou v dosahu celé společnosti nebo skupiny — a přesto je nikdo nevezme. Sdílená nedotčenost. Co jsou to za věci? Proč je bezpečnější nechat je viset?',
+    '210':'Napiš o věci, která je právě teď v tvém dosahu — a přesto po ní nesaháš. Napiš přesnou vzdálenost. Napiš podmíněnou větu: „Co kdyby spadla…"',
+    '60': 'Napiš o paradoxu dosahu: čím blíže věc je, tím nebezpečnější je dotyk. Proč vzdálenost chrání? Co se ztratí kontaktem? Pracuj s příkladem z pohádky.',
+    '240':'Napiš instrukce pro „správné zacházení s věcmi v dosahu" — ironicky, jako bezpečnostní manuál. Každý bod musí popisovat, jak se věci nedotknout, přestože na ni čekáš.',
+    '90': 'Napiš jednu větu: co je v dosahu. Jednu větu: proč se toho nedotknout. Tři páry takových vět.',
+    '270':'Napiš o věci, která je tak blízko, že ji cítíš — ale dotek by způsobil katastrofu. Přehnaně. Co přesně by se zhroutilo?',
+    '120':'Napiš pět podmíněných vět „Co kdyby…" — každá popisuje jiný druh pádu věci z věty: logický, fyzický, emocionální, sociální, gramatický. Jak se mění smysl „pádu" v každé větě?',
+    '300':'Napiš o věcech, které jsou v dosahu, ale nedávají smysl dotýkat se jich — „Co kdyby spadla úterý?" Tři věty s nemožnými kondicionály.',
+    '150':'Napiš větu o věci v dosahu jako obraz ze světa přírody. „Omluva visela jako…" „Byl to jako…" Vzdálenost jako přírodní jev.',
+    '330':'Napiš o věci v dosahu, která existuje jen v určitý moment — pak zmizí. Okno, ve kterém se jí dá dotknout, se zavírá. Jak dlouhé je to okno?'
+  }
+},
+{
+  nazev:'Nehybnost jako strategie',
+  termin:'fyzikální zákon jako existenciální princip',
+  citace:['"Protože když se hýbeš, věci padají."','"A když padají, už je nikdo nezvedne."'],
+  popis:'Pavouk se nehýbe, protože pohyb věci shodí a spadlé věci nikdo nezvedne. Fyzikální zákon se stane životní strategií. Zachování skrze nehybnost — aktivní volba, ne pasivita.',
+  jazyk:'Podmíněné věty jako zákon, pohyb vs. klid, fyzikální formulace',
+  ukoly:{
+    '0':  'Napiš tři fyzikální zákony ve tvaru „Když X, pak Y" — ale jejich subjektem musí být lidské jednání nebo vztah. Každý zákon musí platit jako fyzika i jako životní princip zároveň.',
+    '180':'Napiš o momentě, kdy se něco nepohnulo — a to bylo správně. Volně, bez struktury. Co se zachovalo díky nehybnosti? Co by se pohybem ztratilo?',
+    '30': 'Napiš o kolektivní nehybnosti — o situaci, kdy se celá skupina nebo kultura nehýbe, protože pohyb by shodil věci, které visí. Je to moudrost nebo paralýza?',
+    '210':'Napiš o svém vlastním centru klidu — místě nebo stavu, kde se nepohybuješ, aby věci zůstaly. Jak toto centrum vypadá? Co visí kolem tebe?',
+    '60': 'Napiš o paradoxu nehybnosti: je nehybnost forma zachování, nebo forma ztráty? Může být klid stejně destruktivní jako pohyb? Použij příklad Pavuuka i vlastní.',
+    '240':'Napiš pokyny pro „optimální strategii nehybnosti" — ironicky, jako příručku pro kancelářský nebo rodinný život. Kdy se nehýbat? Jak přesně nehybnost vykonávat?',
+    '90': 'Napiš tři věty: [Proč se nepohnout]. Tři věty: [Co by se stalo]. Žádné elaborace.',
+    '270':'Napiš o věci, která visela tak dlouho díky nehybnosti, že ztvrdla a teď se nedá sundat. Nehybnost jako past. Co se ztvrdlo?',
+    '120':'Napiš věty, kde slovesa klidu (sedět, stát, viset, mlčet) jsou aktivní — kde každé z těchto sloves popisuje intenzivní činnost. Klid jako verb.',
+    '300':'Napiš zákon fyziky pro situaci, která fyzikálně nedává smysl — „Když se nepohneš dost dlouho, čas začne viset." Tři takové zákony.',
+    '150':'Napiš obraz nehybnosti z přírody — pavouk v srdci sítě, oko hurikánu, dno studny. Pak větu: co tento obraz říká o tvé vlastní nehybnosti?',
+    '330':'Napiš o světě, kde platí opačný fyzikální zákon: pohyb zachovává, nehybnost ničí. Jaká by byla strategie Pavuuka v tomto světě?'
+  }
+},
+{
+  nazev:'Myš jako partner z jiného příběhu',
+  termin:'meta-postava — postava s pamětí přesahující tento text',
+  citace:['"Proč to nenecháš spadnout?" zeptala se myš."','"Ta, co si zapisuje ticho."'],
+  popis:'Myš vstoupí a jednou větou přinese celou svoji historii z jiného příběhu. Je to postava se svou vlastní kartou — a tady se ptá na věci, na které se pavouk zeptat nemůže.',
+  jazyk:'Apozice jako charakteristika, otázka jako vstup, dialog dvou světů',
+  ukoly:{
+    '0':  'Napiš dialog mezi dvěma postavami, které přicházejí z různých logických systémů. Každá mluví jazykem svého systému. Kde se jejich logiky kříží? Kde si nerozumí?',
+    '180':'Napiš scénu, kde do tvého vlastního příběhu vstoupí postava z jiného — nečekaně, bez vysvětlení. Co přinese? Jakou otázku položí, na kterou jsi nepomyslel/a?',
+    '30': 'Napiš dialog, kde jedna postava mluví za skupinu nebo kulturu a druhá přichází zvenku. Co vidí ta zvenčí, co insideři nevidí? Jaká otázka tohle odkryje?',
+    '210':'Napiš apozici pro sebe — „ta/ten, co…" — jednu větu, která tě definuje přes jednu vlastnost nebo zvyk. Pak napiš otázku, kterou by tato verze tebe položila.',
+    '60': 'Napiš o tom, co se stane, když do uzavřeného systému vstoupí někdo s jinou ontologií. Co systém nemůže vidět sám? Jakou otázku může položit jen outsider?',
+    '240':'Napiš dialog, kde meta-postava klade zdvořilé, nevinné otázky — a každá z nich odhalí absurditu situace, do které vstoupila. Ironie skrze naivní pohled zvenku.',
+    '90': 'Napiš tři otázky, které by mohla položit postava, která přišla z jiného příběhu a neví nic o tomto. Jednoduché, přímé otázky.',
+    '270':'Napiš scénu, kde vstup postavy z jiného příběhu způsobí dramatický přelom — věci začnou padat, síť se zachvěje. Zveliči dopad tohoto vstupu.',
+    '120':'Napiš apozici pro tři různé postavy z pohádek nebo příběhů, které znáš. „Ta, co…" / „Ten, co…" Každá apozice musí vystihnout postavu v jedné větě. Pak napiš otázku, kterou by každá z nich položila Pavukovi.',
+    '300':'Napiš dialog, kde myš klade otázky, které nedávají smysl — ale Pavouk na ně přesto odpovídá, jako by dávaly. Absurdní dialog, obě strany mluví vážně.',
+    '150':'Napiš scénu setkání dvou světů jako přírodní jev — vítr a síť, voda a kámen, světlo a stín. Který obraz odpovídá setkání Myši a Pavouka?',
+    '330':'Napiš dialog, kde obě postavy mluví o různých věcech — ale jejich věty se propojují do smyslu, který ani jedna neměla na mysli. Dialog jako náhoda.'
+  }
+},
+{
+  nazev:'Zápis do mezery mezi slovy',
+  termin:'médium jako absence — záznam do jazyka samotného',
+  citace:['"Myš si to poznamenala."','"Do mezery mezi slovy „jen" a „tak"."'],
+  popis:'Myš nezapisuje na papír, ale do mezery v jazyce. Mezera mezi slovy jako médium. Toto gesto propojuje pohádku o Pavukovi s pohádkou o Myši.',
+  jazyk:'Mezera jako prostor, zápis jako fyzický akt, médium jako absence',
+  ukoly:{
+    '0':  'Napiš větu. Pak napiš, co by bylo logicky uloženo do mezery mezi každými dvěma sousedními slovy. Co přemosťují? Co skrývají? Systematicky pro celou větu.',
+    '180':'Piš větu a sleduj mezery — ne slova. Co cítíš v mezerách? Napiš tři věty o mezerách, ne o slovech.',
+    '30': 'Napiš o mezerách ve sdíleném jazyce — co se skrývá mezi slovy, která všichni znají a používají. „Jak se máš" a „dobře" — co je v mezeře? Sbírka takových mezer.',
+    '210':'Napiš do mezery. Vezmi větu z pohádky a napiš, co by sis zapsal/a mezi dvě konkrétní slova. Ne vysvětlení — záznam. Co tam patří?',
+    '60': 'Napiš o podstatě mezery. Je mezera součástí jazyka, nebo jeho přerušením? Co existuje v mezeře? Je to prostor nebo substance?',
+    '240':'Napiš „instrukce pro správné využívání mezer v textu" — ironicky. Co se do mezer zapisovat nesmí? Co se tam přesto zapisuje vždy?',
+    '90': 'Vezmi větu. Vymaž všechna slova. Nech jen mezery. Teď je pojmenuj.',
+    '270':'Napiš větu, kde mezery jsou hlasitější než slova — kde to, co se neřeklo, přehluší to, co se řeklo. Přehnaně.',
+    '120':'Napiš pět různých vět, každou přerušenou mezerou na jiném místě. Ke každé napiš: jak se mění smysl věty podle toho, kde mezera je?',
+    '300':'Napiš text tvořený jen mezerami — bez slov. Dej mezerám délky a rytmus. Co říká?',
+    '150':'Mezera jako přírodní jev — mlčení lesa, pauza před bouří, prázdnota mezi dvěma vlnami. Napiš obraz mezery. Pak větu: co Myš do téhle mezery zapsala?',
+    '330':'Napiš příběh, který se odehrává v mezerách jiného příběhu — v tichu mezi větami, v prostoru mezi slovy. Co se tam děje, zatímco příběh běží?'
+  }
+},
+{
+  nazev:'Časová degradace visících věcí',
+  termin:'fyzikální změna abstrakta — nehmotné věci stárnou',
+  citace:['"A co když to visí moc dlouho?"','"Pak to ztvrdne. A už to nejde rozmotat."'],
+  popis:'Abstrakta podléhají fyzikálním změnám v čase. Nerozřešená věc není statická — aktivně stárne a mění skupenství. Ztvrdnutí jako metafora neřešitelnosti.',
+  jazyk:'Skupenství, fyzikální změna, čas jako proměnná',
+  ukoly:{
+    '0':  'Napiš tabulku skupenských stavů pro jedno abstraktum v čase: čerstvé (tekuté?), po týdnu, po roce, po desetiletí. Jaké fyzikální změny proběhnou? Kdy nastane bod tuhnutí?',
+    '180':'Napiš volně o věci, která kdysi byla pružná a teď je tuhá. Co se stalo mezitím? Kde se to zlomilo?',
+    '30': 'Napiš o věcech, které se kolektivně nechávají příliš dlouho viset — v rodinách, ve firmách, v kulturách. Co ztvrdlo? Co se nedá rozmotat? Je to vidět zvenku?',
+    '210':'Napiš o konkrétní věci ve tvém životě, která visí dlouho. Jaké má skupenství teď? Bylo jiné dříve? Napiš ji jako fyzikální zprávu o stavu vzorku.',
+    '60': 'Napiš o podstatě ztvrdnutí. Co se ztratí, když věc ztvrdne? Flexibility? Možnosti? Nebo naopak — je ztvrdnutí forma stability? Pracuj s příkladem z pohádky.',
+    '240':'Napiš návod „Jak správně nechat věci ztvrdnout" — ironicky. Kolik kroků má optimální zanedbání? Kdy nastane bod, kdy je věc konečně bezpečně neřešitelná?',
+    '90': 'Napiš pět vět o věcech, které ztvrdly. Každá věta: [věc] + [jak dlouho visela] + [co s ní teď]. Bez elaborace.',
+    '270':'Napiš o věci, která ztvrdla tak, že teď váží strašně. Celý text jako fyzické utrpení pod tou váhou. Přehnaně.',
+    '120':'Napiš větu pro každé skupenství (tekuté, tuhé, plynné, plasma) — a každé skupenství přiřaď jednomu jazykovému jevu. Tekutá věta: volné asociace. Tuhá věta: kratičké, pevné, nic navíc.',
+    '300':'Napiš o věcech, které ztvrdly do skupenství, která neexistují — „ztvrdla do průhledného zvuku", „zkrystalizovala do ticha váhy". Tři věty.',
+    '150':'Napiš obraz ztvrdnutí z přírody: jantar s hmyzem, led v trhlině, lávový kámen. Pak větu: které z těchto přírodnin odpovídá tvé vlastní ztvrdlé věci?',
+    '330':'Napiš o světě, kde čas teče opačně — ztvrdlé věci se postupně rozmotávají, roztávají, stávají se znovu pružnými. Co by se rozmotalo jako první?'
+  }
+},
+{
+  nazev:'Den, který se nestal',
+  termin:'negovaný čas jako objekt — neexistující událost má svou hmotnost',
+  citace:['"Jednu neděli, co se nikdy nestala."'],
+  popis:'Den v týdnu, který neexistoval, visí v síti jako skutečná věc. Nestal se — a přesto tam je. Negovaná událost má svou hmotnost stejně jako proběhlá.',
+  jazyk:'Negace existence, alternativní realita jako objekt, konkrétní den jako abstraktum',
+  ukoly:{
+    '0':  'Napiš systematický seznam věcí, které se nestaly — ale mohly. Pro každou napiš: jaká podmínka by musela platit, aby se stala? Logická analýza nenastalého.',
+    '180':'Napiš o dni, který se nestal — volně, bez struktury. Co bylo v tom dni? Jak vypadalo ráno? Co se dalo sníst k snídani v neexistující neděli?',
+    '30': 'Napiš o sdílených nenastalých dnech — událostech, které se měly stát pro celé město, generaci, zemi, ale nestaly se. Co nesou tito lidé v síti kolektivně?',
+    '210':'Napiš o konkrétním dni nebo setkání, které se nestalo — ale mělo. Popiš ho jako vzpomínku na něco skutečného. Co se v něm řeklo? Jak voněl?',
+    '60': 'Napiš o ontologickém statusu věcí, které se nestaly. Existují? V jakém smyslu? Mají svou vlastní realitu v možném světě? Jak se liší od věcí, které se staly?',
+    '240':'Napiš o nenastalých dnech jako o kariérní příležitosti — ironicky. „Nenastalá pondělí jsou nejproduktivnějším časem mého života." Katalog nenastalých úspěchů.',
+    '90': 'Napiš tři věty: „Jedna [časová jednotka], co se nikdy nestala." Různé časové jednotky — den, ráno, rok, hodina.',
+    '270':'Napiš o nenastalém dni, který by změnil vše — giganticky, dramaticky. Co se nezměnilo, protože se ten den nestal?',
+    '120':'Napiš věty s negovanými časovými výrazy: „neděle, co se nestala", „ráno bez data", „hodina mimo kalendář". Pro každou větu napiš, jak gramatická negace mění existenci věci.',
+    '300':'Napiš seznam nenastalých věcí, které nedávají smysl ani jako nenastalé: „neděle, co nikdy neměla číslo", „den, který přeskočil vlastní datum". Absurdní nenastalosti.',
+    '150':'Napiš obraz nenastalého dne jako přírodní jev — sucho, kdy déšť nepřišel. Prázdné hnízdo. Vlna, která se zlomila před břehem. Který obraz odpovídá nenastalé neděli?',
+    '330':'Napiš příběh z perspektivy nenastalého dne — co den zažívá, když se nestane? Jak vypadá existence v nenastalosti?'
+  }
+},
+{
+  nazev:'Vítr, který nic neshodil',
+  termin:'napětí bez rozuzlení — klimax bez katarze',
+  citace:['"Vítr přišel. Nenápadný. Ale přesný."','"A všechno se rozhoupalo. Ale nic nespadlo."'],
+  popis:'Pohádka zbuduje očekávání změny, rozhoupá vše — a pak nenechá nic spadnout. Napětí zůstane viset. Čtenář dostane klimax bez katarze.',
+  jazyk:'Napětí bez rozuzlení, kontrast „ale", rozhoupání bez pádu',
+  ukoly:{
+    '0':  'Napiš text s jasnou strukturou: příčina → napětí → očekávaný výsledek. Pak vymaž výsledek. Zůstane jen napětí bez rozuzlení. Napiš, jak se text mění bez posledního kroku.',
+    '180':'Napiš o momentu, kdy přišlo něco, co mělo vše změnit — ale nezměnilo. Volně. Co se rozhoupalo? Co zůstalo?',
+    '30': 'Napiš o společenských nebo kulturních momentech, kdy vítr přišel a nic neshodil — kdy bylo napětí, ale žádná změna. Co drží věci ve visu i po otřesu?',
+    '210':'Napiš o vlastním momentu „ale nic nespadlo" — kdy jsi čekal/a změnu, která nepřišla. Co to udělalo s tebou? Co se rozhoupalo uvnitř?',
+    '60': 'Napiš o filozofickém rozdílu mezi rozhoupáním a pádem. Je rozhoupání beze pádu cenné? Nebo je to nedokončená transformace? Co říká „ale nic nespadlo" o povaze změny?',
+    '240':'Napiš hodnocení větru jako zaměstnance: „Vítr přišel, byl nenápadný, přesný, způsobil rozhoupání — ale žádné výsledky." Ironické hodnocení výkonu bez efektu.',
+    '90': 'Napiš čtyři věty: co přišlo, co se rozhoupalo, co se čekalo, co se nestalo. Žádné vysvětlení.',
+    '270':'Napiš o větru, který přišel a málem — MÁLEM — vše shodil. Přehnaně. Co viselo na vlásku? Co se zachvělo a jakou silou?',
+    '120':'Vezmi spojku „ale" a napiš pět vět, kde „ale" odděluje napětí od jeho rozuzlení — ale rozuzlení vždy popírá očekávání. Jakou gramatickou práci dělá „ale" v těchto větách?',
+    '300':'Napiš o větru, který přišel, ale neshodil, protože shodil věci z jiného světa — věci, které nebyly v síti. Absurdní výsledek přesného větru.',
+    '150':'Napiš obraz napětí bez rozuzlení z přírody — hrom bez blesku, vlna bez břehu, déšť, který se nerozpadl. Který obraz sedí na ten vítr v pohádce?',
+    '330':'Napiš o větru, který přišel z jiného rozměru a rozhoupat se dají jen věci, které tam nepatří — věci z tohoto světa zůstanou nehnuté. Co se rozhoupalo?'
+  }
+},
+{
+  nazev:'Největší pád jako nezměna',
+  termin:'paradox — fyzika slova obrácena',
+  citace:['"Možná je tohle ten největší pád. Když se nic nezmění."'],
+  popis:'Myš obrátí fyziku slova: pád není pohyb dolů, pád je setrvání na místě. Největší pád je stagnace. Vítr přišel a nic neshodil — a tohle je pád.',
+  jazyk:'Paradox, obrácení fyziky slova, redefinice přes negaci pohybu',
+  ukoly:{
+    '0':  'Napiš paradox ve tvaru logického sylogismu: „Pokud pád = X a nezměna = Y, pak pád = nezměna tehdy, když…" Dokaž paradox jako logik.',
+    '180':'Napiš o věci, která padla tím, že zůstala. Volně. Kdy jsi viděl/a největší pád v nehybnosti?',
+    '30': 'Napiš o kolektivních pádech, které nikdo neviděl, protože se nic nepohnulo — kdy celá skupina nebo instituce padla tím, že se nezměnila. Kde jsou tyto pády?',
+    '210':'Napiš o vlastním pádu, který byl nezměnou. Kdy jsi padl/a tím, že jsi zůstal/a? Nebo kdy jsi viděl/a druhého padat skrz setrvání?',
+    '60': 'Napiš o podstatě pádu. Musí pád zahrnovat pohyb? Může být stagnace horší než pád? Co se ztratí, když věc padne stojíce na místě?',
+    '240':'Napiš oslavný proslov za největší pád — tím, že se nic nezměnilo. Ocenění za výjimečnou nehybnost. Ironicky.',
+    '90': 'Napiš tři věty: „Největší pád byl, když…" Každá musí popisovat situaci, kde se nic nepohnulo.',
+    '270':'Napiš o pádu-nezměně jako o katastrofě kosmického rozsahu. Přehnaně. Jak velký je tento tichý pád?',
+    '120':'Napiš pět slov, která mají jasný fyzický smysl (pád, vzestup, zlom, obrat, průlom). Pro každé napiš větu, kde toto slovo označuje svůj přesný opak.',
+    '300':'Napiš tři věty, kde paradox pádu-nezměny je absolutně doslovný a absurdní: „Stůl padl tím, že zůstal stát. Deset let. Na stejném místě."',
+    '150':'Napiš obraz pádu-nezměny z přírody — strom, který nepadl, ale přestal růst. Hora, která se nezhroutila, ale zvětráváním zmizela. Který obraz?',
+    '330':'Napiš o světě, kde fyzikální zákony pádu platí opačně — věci padají tím, že se nepohnou. Jak vypadá volný pád v nehybnosti?'
+  }
+},
+{
+  nazev:'Ticho jako zavěšený objekt',
+  termin:'sebereference — médium příběhu se stane jeho posledním předmětem',
+  citace:['"A zavěsil další věc."','"Tentokrát ticho."'],
+  popis:'Na konci pavouk zavěsí ticho. Ticho bylo dosud médiem — teď se stane věcí. Co bylo neviditelné se stane viditelným předmětem. Pohádka skončí novým přírůstkem do sítě.',
+  jazyk:'Sebereference, médium jako objekt, ticho jako poslední věta',
+  ukoly:{
+    '0':  'Napiš text, kde médium textu (jazyk, věty, slova) se na konci stane jeho posledním předmětem. Analyzuj, jak k tomuto přechodu dojde — kde přesně se médium stane objektem?',
+    '180':'Napiš volně o tichu, které sis jednou všiml/a — tichu, které bylo přítomné jako věc, ne jako absence. Co mělo za uši? Kde viselo?',
+    '30': 'Napiš o sdíleném tichu — tichu, které visí v místnostech po setkáních, v kulturách po traumatech, v rodinách po nevyslovených věcech. Katalog sdílených tiší.',
+    '210':'Co by sis ty zavěsil/a jako poslední věc? Napiš o té věci — ne co je, ale jak se jako věc chová. Jak visí? Jak je těžká?',
+    '60': 'Napiš o podstatě seberefence: kdy se médium stane svým vlastním obsahem? Co se změní na tichu, když se stane objektem? Je to stále ticho?',
+    '240':'Napiš rozhovor, kde se jazyk sám stane tématem rozhovoru — ironicky. Kde jazyk mluví o tom, že neumí mluvit o jazyku.',
+    '90': 'Napiš poslední větu příběhu. Pak napiš větu, která pojmenovává médium, v němž byl příběh napsán.',
+    '270':'Napiš o tichu, které bylo zavěšeno a teď váží víc než vše ostatní v síti. Co s tím tiším? Jaký je jeho objem?',
+    '120':'Napiš pět vět, kde slova „ticho", „mezera", „pauza", „přerušení", „konec" jsou gramatickým podmětem a konají aktivní sloveso. Ticho jako aktér.',
+    '300':'Napiš text, kde poslední věta je prázdná — jen prázdný řádek. Co říká tato sebereferencní tečka?',
+    '150':'Napiš obraz ticha jako fyzického předmětu z přírody: jantar, led, vzduch v uzavřené lahvi. Pak větu: jak by vypadalo toto ticho v Pavukově síti?',
+    '330':'Napiš příběh, který skončí tím, že médium příběhu (jazyk, papír, zvuk, světlo) se stane jeho posledním hrdinou. Co médium udělá, když se stane věcí?'
+  }
+}
+];
+
+// ══════════════════════════════════════════════
+// INICIALIZACE
+// ══════════════════════════════════════════════
+let aktivniUhel = localStorage.getItem('pavouk_uhel') || '0';
+
+function uhel_label(id){
+  const u = UHLY_LIST.find(u=>u.id===String(id));
+  return u ? u.label : '—';
+}
+
+function renderUhelSwitcher(){
+  const sw = document.getElementById('uhel-switcher');
+  sw.innerHTML = '';
+  UHLY_LIST.forEach(u=>{
+    const btn = document.createElement('button');
+    btn.className = 'uhel-btn' + (u.id===aktivniUhel?' active':'');
+    btn.textContent = u.label;
+    btn.onclick = ()=>{ aktivniUhel=u.id; renderUhelSwitcher(); renderAnomaalie(); };
+    sw.appendChild(btn);
+  });
+}
+
+function renderAnomaalie(){
+  const list = document.getElementById('anomalie-list');
+  const wasOpen = {};
+  list.querySelectorAll('.anomalie.open').forEach(el=>{wasOpen[el.dataset.idx]=true;});
+  list.innerHTML = '';
+
+  const uhel_nazev = uhel_label(aktivniUhel);
+  document.getElementById('uhel-display').textContent = uhel_nazev;
+  document.getElementById('export-uhel-label').textContent = uhel_nazev;
+
+  ANOMALIE.forEach((a,i)=>{
+    const ukol = a.ukoly[aktivniUhel] || a.ukoly['0'];
+    const el = document.createElement('div');
+    el.className = 'anomalie' + (wasOpen[i]?' open':'');
+    el.dataset.idx = i;
+    el.innerHTML = `
+      <div class="anomalie-header" onclick="this.parentElement.classList.toggle('open')">
+        <div class="a-num">${String(i+1).padStart(2,'0')}</div>
+        <div class="a-meta">
+          <div class="a-nazev">${a.nazev}</div>
+          <div class="a-termin">${a.termin}</div>
+        </div>
+        <div class="a-toggle">▾</div>
+      </div>
+      <div class="anomalie-body">
+        <div class="a-citace">${a.citace.map(c=>`<span>${c}</span>`).join('')}</div>
+        <p class="a-popis">${a.popis}</p>
+        <div class="ukol-wrap">
+          <div class="ukol-kalibrace">Cvičení <span>· ${uhel_nazev}</span></div>
+          <div class="ukol-text">${ukol}</div>
+          <div class="ukol-jazyk">Jazykové zaměření: ${a.jazyk}</div>
+          <textarea class="pisarna" placeholder="Pište sem…" rows="3"></textarea>
+          <div class="a-btns">
+            <button class="btn btn-g" style="font-size:.68rem;padding:5px 12px;margin-bottom:8px" onclick="ulozitCviceni(${i},this)">Uložit cvičení</button>
+          </div>
+        </div>
+      </div>`;
+    list.appendChild(el);
+  });
+}
+
+function ulozitCviceni(idx, btn){
+  const ta = btn.closest('.anomalie-body').querySelector('.pisarna');
+  const text = ta.value.trim();
+  if(!text){alert('Napište nejprve text cvičení.');return;}
+  const zaznam = {
+    datum: new Date().toLocaleDateString('cs-CZ'),
+    karta: 'Pavouk',
+    uhel: uhel_label(aktivniUhel),
+    anomalie: ANOMALIE[idx].nazev,
+    text: text
+  };
+  const ex = JSON.parse(localStorage.getItem('chcesmys_cviceni')||'[]');
+  ex.push(zaznam);
+  localStorage.setItem('chcesmys_cviceni', JSON.stringify(ex));
+  btn.textContent = 'Uloženo ✓';
+  setTimeout(()=>{btn.textContent='Uložit cvičení';},2000);
+}
+
+function ulozitMapu(){
+  const mapa = {datum:new Date().toLocaleDateString('cs-CZ'),karta:'Pavouk',uhel:uhel_label(aktivniUhel)};
+  const ex = JSON.parse(localStorage.getItem('chcesmys_zapisnik_mapy')||'[]');
+  ex.push(mapa);
+  localStorage.setItem('chcesmys_zapisnik_mapy',JSON.stringify(ex));
+  alert('Kognitivní mapa uložena. ('+ex.length+' záznamů)');
+}
+
+function exportJSON(){
+  const data = {
+    karta:'Pavouk',
+    uhel:uhel_label(aktivniUhel),
+    datum:new Date().toLocaleDateString('cs-CZ'),
+    cviceni:JSON.parse(localStorage.getItem('chcesmys_cviceni')||'[]').filter(c=>c.karta==='Pavouk'),
+    mapa:JSON.parse(localStorage.getItem('chcesmys_zapisnik_mapy')||'[]').filter(m=>m.karta==='Pavouk')
+  };
+  const blob = new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  const a = document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='pavouk_workshop.json';
+  a.click();
+}
+
+function sdilej(){
+  const url = window.location.href.split('?')[0]+'?uhel='+aktivniUhel;
+  if(navigator.share){navigator.share({title:'Pavouk workshop',url});}
+  else{navigator.clipboard.writeText(url).then(()=>alert('Odkaz zkopírován: '+url));}
+}
+
+// načíst úhel z URL parametru
+const urlParams = new URLSearchParams(window.location.search);
+if(urlParams.get('uhel')) aktivniUhel = urlParams.get('uhel');
+
+renderUhelSwitcher();
+renderAnomaalie();
+</script>
+</body>
+</html>
