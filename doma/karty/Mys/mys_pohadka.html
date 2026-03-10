@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Myš — Křivá pohádka · Chceš myš?</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#07090f;--s:#0d1018;--s2:#12161f;
+  --c:#cdd8e8;--dim:rgba(180,200,230,.35);--a:#9c8a6e;--a2:#6b5d48;
+  --b:rgba(156,138,110,.12);--b2:rgba(156,138,110,.26);
+  --serif:'Cormorant Garamond',Georgia,serif;--mono:'DM Mono',monospace;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--c);font-family:var(--mono);font-size:13px;line-height:1.85;-webkit-font-smoothing:antialiased}
+.wrap{max-width:780px;margin:0 auto;padding:0 24px}
+
+nav{position:sticky;top:0;z-index:99;border-bottom:1px solid var(--b);background:rgba(7,9,15,.96);backdrop-filter:blur(14px);padding:11px 24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
+.nav-l{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);text-decoration:none;transition:color .15s}
+.nav-l:hover{color:var(--c)}
+.nav-links{display:flex;flex-wrap:wrap;gap:4px}
+.nav-links a{font-size:9px;letter-spacing:.11em;text-transform:uppercase;color:var(--dim);text-decoration:none;padding:4px 8px;border:1px solid transparent;border-radius:2px;transition:all .15s;white-space:nowrap}
+.nav-links a:hover,.nav-links a.active{color:var(--a);border-color:var(--b2)}
+
+.hero{padding:52px 0 36px;border-bottom:1px solid var(--b)}
+.hero-tag{font-size:10px;letter-spacing:.26em;text-transform:uppercase;color:var(--a2);margin-bottom:14px}
+.hero h1{font-family:var(--serif);font-size:clamp(3rem,8vw,5.4rem);font-weight:300;line-height:.95;letter-spacing:-.02em;margin-bottom:6px}
+.hero h1 em{font-style:italic;color:var(--a)}
+.hero-sub{font-family:var(--serif);font-style:italic;font-size:.9rem;color:var(--dim);border-left:1px solid var(--a2);padding-left:16px;margin:18px 0 20px;line-height:2;max-width:500px}
+.fenomen{border:1px solid var(--b2);padding:14px 20px;background:rgba(156,138,110,.03)}
+.fenomen-tag{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--a);margin-bottom:7px}
+.fenomen-text{font-size:.8rem;color:rgba(180,200,230,.52);line-height:1.95}
+
+.sec{padding:38px 0;border-bottom:1px solid var(--b)}
+.sec-tag{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--a2);margin-bottom:12px}
+h2{font-family:var(--serif);font-size:clamp(1.1rem,3vw,1.6rem);font-weight:300;margin-bottom:18px}
+h2 em{font-style:italic;color:var(--a)}
+
+/* POHÁDKA */
+.pohadka{font-family:var(--serif);font-size:.94rem;color:rgba(200,218,238,.74);border:1px solid var(--b);background:var(--s);padding:28px 32px;line-height:1}
+.d{display:block;padding:.22em 0}
+.d.br{padding:.55em 0}
+.d.silna{color:var(--a);font-weight:400}
+.d.dim{color:rgba(180,200,230,.38);font-style:italic}
+.d.it{font-style:italic}
+.d.dl{padding-left:1.4em;font-style:italic}
+/* třídy pro 12 anomálií */
+.j1{border-bottom:1px dotted var(--a);cursor:help}
+.j2{border-bottom:1px dashed var(--a2);cursor:help}
+.j3{background:rgba(156,138,110,.1);padding:0 2px;cursor:help}
+.j4{border-bottom:2px dotted var(--a);cursor:help}
+.j5{border-bottom:1px solid var(--a2);cursor:help}
+.j6{background:rgba(156,138,110,.2);padding:0 2px;cursor:help}
+.j7{border-bottom:1px double var(--a);cursor:help}
+.j8{text-decoration:underline wavy var(--a2);cursor:help}
+.j9{border-bottom:1px dashed var(--a);cursor:help}
+.j10{background:rgba(156,138,110,.05);border-bottom:1px dotted var(--a2);cursor:help}
+.j11{text-decoration:line-through 1px solid var(--a);cursor:help}
+.j12{border-left:2px solid var(--a);padding-left:4px;cursor:help}
+.legenda{margin-top:10px;padding:10px 14px;background:var(--s);border:1px solid var(--b);font-size:.71rem;color:var(--dim);display:flex;flex-wrap:wrap;gap:4px 18px}
+
+/* ANOMÁLIE */
+.anomalie{border:1px solid var(--b);background:var(--s);margin-bottom:3px;overflow:hidden}
+.anomalie-header{display:flex;align-items:center;gap:14px;padding:14px 18px;cursor:pointer;user-select:none}
+.anomalie-header:hover{background:rgba(156,138,110,.04)}
+.a-num{font-family:var(--serif);font-size:1.5rem;font-weight:300;color:rgba(156,138,110,.2);min-width:28px;line-height:1}
+.a-meta{flex:1}
+.a-nazev{font-size:.83rem;color:var(--c);margin-bottom:2px}
+.a-termin{font-size:.69rem;color:var(--a2);letter-spacing:.06em;font-style:italic}
+.a-toggle{font-size:.68rem;color:var(--dim);letter-spacing:.1em;text-transform:uppercase;transition:transform .2s;white-space:nowrap}
+.anomalie.open .a-toggle{transform:rotate(180deg)}
+.anomalie-body{display:none;padding:4px 18px 20px;border-top:1px solid var(--b)}
+.anomalie.open .anomalie-body{display:block}
+.a-citace{font-family:var(--serif);font-style:italic;font-size:.83rem;color:rgba(156,138,110,.5);border-left:1px solid var(--b2);padding:7px 13px;margin:12px 0;line-height:1.85}
+.a-citace span{display:block}
+.a-popis{font-size:.78rem;color:rgba(180,200,230,.54);line-height:1.92;margin-bottom:0}
+
+.cta-box{margin-top:32px;padding:20px 22px;background:var(--s);border:1px solid var(--b2);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+.cta-text{font-size:.8rem;color:var(--dim);max-width:360px;line-height:1.85}
+.btn{padding:10px 22px;font-family:var(--mono);font-size:.75rem;letter-spacing:.1em;text-transform:uppercase;border:none;cursor:pointer;border-radius:2px;transition:all .15s;text-decoration:none;display:inline-block}
+.btn-p{background:var(--a);color:var(--bg)}
+.btn-p:hover{background:#b8a68a}
+.btn-g{background:transparent;color:var(--dim);border:1px solid var(--b)}
+.btn-g:hover{color:var(--c);border-color:var(--b2)}
+
+footer{padding:26px 0;border-top:1px solid var(--b);display:flex;flex-direction:column;gap:12px}
+.footer-links{display:flex;flex-wrap:wrap;gap:8px 16px;justify-content:center}
+.footer-links a{color:var(--a2);font-size:.7rem;text-decoration:none;border-bottom:1px dotted var(--b2)}
+.footer-links a:hover{color:var(--a)}
+footer p{font-size:.7rem;color:var(--dim);text-align:center}
+footer a{color:var(--a)}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-l" href="../../../index.html">← Všechna zvířata</a>
+  <div class="nav-links">
+    <a href="mys_pohadka.html" class="active">Myš</a>
+    <a href="pav_pohadka.html">Páv</a>
+    <a href="tygr_pohadka.html">Tygr</a>
+    <a href="zelva_pohadka.html">Želva</a>
+    <a href="krokodyl_pohadka.html">Krokodýl</a>
+    <a href="hyena_pohadka.html">Hyena</a>
+    <a href="slon_pohadka.html">Slon</a>
+    <a href="jednorozec_pohadka.html">Jednorožec</a>
+    <a href="ryba_pohadka.html">Ryba</a>
+    <a href="analyzer.html">Analyzátor</a>
+  </div>
+</nav>
+
+<div class="wrap">
+
+<section class="hero">
+  <p class="hero-tag">Křivá pohádka · Rovné svědectví</p>
+  <h1>Myš</h1>
+  <p class="hero-sub">„chceš myš ??“</p>
+  <div class="fenomen">
+    <div class="fenomen-tag">Metapříběh · ten, kdo si zapisuje do mezer</div>
+    <p class="fenomen-text">Tyto pohádky nevyprávějí příběhy tak, jak by měly. Místo kouzel tu vládne nedorozumění. Místo dobra a zla – podivný klid mezi nimi. Zvířata tu mluví, ale ne proto, aby nás bavila. Říkají to, co lidé nemohou vyslovit. Příběhy, co se spíš staly, než vymyslely – a možná se pořád dějí. Jen je nelze vidět z běžného úhlu. Myš je ta, která si toho všímá. A zapisuje. Do mezer.</p>
+  </div>
+</section>
+
+<!-- Křivá pohádka - Rovné svědectví -->
+<section class="sec">
+  <p class="sec-tag">Křivá pohádka · Rovné svědectví</p>
+  <h2>O MYŠI <em>a o tom, co se stane, když si jí NEvšimneš</em></h2>
+
+  <div class="pohadka">
+    <span class="d silna">KŘIVÁ POHÁDKA - ROVNÉ SVĚDECTVÍ</span>
+    <span class="d br"></span>
+    <span class="d"><span class="j1" title="Metatext: pohádka o sobě samé">Zapsáno rukou, která nechtěla nic vysvětlit.</span></span>
+    <span class="d"><span class="j1">Tyto pohádky nevyprávějí příběhy tak, jak by měly.</span></span>
+    <span class="d"><span class="j1">Místo kouzel tu vládne nedorozumění.</span></span>
+    <span class="d"><span class="j1">Místo dobra a zla – podivný klid mezi nimi.</span></span>
+    <span class="d"><span class="j1">Zvířata tu mluví, ale ne proto, aby nás bavila.</span></span>
+    <span class="d"><span class="j1">Říkají to, co lidé nemohou vyslovit.</span></span>
+    <span class="d"><span class="j1">Příběhy, co se spíš staly, než vymyslely –</span></span>
+    <span class="d"><span class="j1">a možná se pořád dějí.</span></span>
+    <span class="d"><span class="j1">Jen je nelze vidět z běžného úhlu.</span></span>
+    <span class="d br"></span>
+    <span class="d">KŘIVÁ POHÁDKA</span>
+    <span class="d br"></span>
+    <span class="d"><span class="j2" title="Sebevymezení: není pohádka, ale něco, co se stalo">Taková malá, divná, křivá</span></span>
+    <span class="d"><span class="j2">pohádka o myši,</span></span>
+    <span class="d"><span class="j2">co možná ani není pohádka,</span></span>
+    <span class="d"><span class="j2">ale něco,</span></span>
+    <span class="d"><span class="j2">co se stalo.</span></span>
+    <span class="d"><span class="j3" title="Katalog postav světa">A v tom světě jsou i jiná zvířata</span></span>
+    <span class="d"><span class="j3">– <a href="cap_pohadka.html" style="color:var(--a); text-decoration:underline dotted">čáp</a>, <a href="pav_pohadka.html" style="color:var(--a); text-decoration:underline dotted">páv</a>, <a href="kocour_pohadka.html" style="color:var(--a); text-decoration:underline dotted">kocour</a>, <a href="kozel_pohadka.html" style="color:var(--a); text-decoration:underline dotted">kozel</a>…</span></span>
+    <span class="d"><span class="j3">ale všechno to je</span></span>
+    <span class="d"><span class="j3">napůl sen,</span></span>
+    <span class="d"><span class="j3">napůl vtip,</span></span>
+    <span class="d"><span class="j3">napůl výklad</span></span>
+    <span class="d"><span class="j3">a napůl úplně mimo</span></span>
+    <span class="d br"></span>
+    <span class="d">—</span>
+    <span class="d br"></span>
+    <span class="d">Kdysi – zároveň ne tak docela dávno.</span>
+    <span class="d">A ne úplně blízko, ale zase ani ne nijak moc daleko.</span>
+    <span class="d">Žila jedna myš.</span>
+    <span class="d">Byla malá, tak jak to u myší</span>
+    <span class="d">normálně bývá.</span>
+    <span class="d">A měla dvě veliké uši,</span>
+    <span class="d">což také není u myši žádná vzácnost.</span>
+    <span class="d br"></span>
+    <span class="d">Nebyla nijak zvlášť rychlá,</span>
+    <span class="d">ale ani úplně pomalá.</span>
+    <span class="d">Nebyla hloupá,</span>
+    <span class="d">ale ani kdovíjak chytrá.</span>
+    <span class="d">Na první pohled</span>
+    <span class="d">obyčejná, běžná myš.</span>
+    <span class="d br"></span>
+    <span class="d"><span class="j4" title="Negace bez popření: Ale ne - normální">Ale ne - normální</span></span>
+    <span class="d"><span class="j5" title="Definice skrze pozornost k přehlíženému">Všímala si věcí, které ostatní přehlíželi.</span></span>
+    <span class="d br"></span>
+    <span class="d"><span class="j6" title="Seznam anomálií jiných karet">Například toho, že se ve vzduchu občas zadrhne věta.</span></span>
+    <span class="d"><span class="j6">Nebo že <a href="pav_pohadka.html" style="color:var(--a); text-decoration:underline dotted">páv</a>,</span></span>
+    <span class="d"><span class="j6">když se nikdo nedívá,</span></span>
+    <span class="d"><span class="j6">přepočítává svá oka.</span></span>
+    <span class="d"><span class="j6">Nebo že <a href="cap_pohadka.html" style="color:var(--a); text-decoration:underline dotted">čáp</a>,</span></span>
+    <span class="d"><span class="j6">někdy jen tak</span></span>
+    <span class="d"><span class="j6">přistane na komíně</span></span>
+    <span class="d"><span class="j6">a zapomene,</span></span>
+    <span class="d"><span class="j6">koho měl donést.</span></span>
+    <span class="d br"></span>
+    <span class="d"><span class="j7" title="Zápis do nehmotna">A tahle myš</span></span>
+    <span class="d"><span class="j7">si začala věci zapisovat.</span></span>
+    <span class="d"><span class="j7">Ne na papír.</span></span>
+    <span class="d"><span class="j7">Ale tak nějak.</span></span>
+    <span class="d"><span class="j7">Do ticha.</span></span>
+    <span class="d"><span class="j7">Do koutů.</span></span>
+    <span class="d"><span class="j7">Do skulin mezi slovama,</span></span>
+    <span class="d"><span class="j7">kde to obvykle nikdo nečte.</span></span>
+    <span class="d br"></span>
+    <span class="d">A pak si jednoh dne všimla,</span>
+    <span class="d">že se kolem ní začínají</span>
+    <span class="d">hromadit zvířata.</span>
+    <span class="d br"></span>
+    <span class="d"><span class="j8" title="Hromadění bez řádu">Ne v řadě.</span></span>
+    <span class="d"><span class="j8">Ne v kruhu.</span></span>
+    <span class="d"><span class="j8">Prostě…</span></span>
+    <span class="d"><span class="j8">tak nějak.</span></span>
+    <span class="d br"></span>
+    <span class="d">A každé si neslo něco,</span>
+    <span class="d">co nevysvětlovalo.</span>
+    <span class="d br"></span>
+    <span class="d"><span class="j9" title="Katalog zvířat s jejich atributy z jiných karet"><a href="zajic_pohadka.html" style="color:var(--a); text-decoration:underline dotted">Zajíc</a> měl popálené uši</span></span>
+    <span class="d"><span class="j9">a voněl po kouři.</span></span>
+    <span class="d"><span class="j9"><a href="kocour_pohadka.html" style="color:var(--a); text-decoration:underline dotted">Kocour</a> se dusil smíchem,</span></span>
+    <span class="d"><span class="j9">protože spolkl tečku.</span></span>
+    <span class="d"><span class="j9"><a href="slon_pohadka.html" style="color:var(--a); text-decoration:underline dotted">Slon</a> si v chobotu nesl třešně,</span></span>
+    <span class="d"><span class="j9">co nikdy nedozrají.</span></span>
+    <span class="d"><span class="j9">A <a href="lemur_pohadka.html" style="color:var(--a); text-decoration:underline dotted">lemur</a> se nedíval na nic,</span></span>
+    <span class="d"><span class="j9">jen na stranu,</span></span>
+    <span class="d"><span class="j9">kde nic nebylo.</span></span>
+    <span class="d br"></span>
+    <span class="d">Myš neříkala nic.</span>
+    <span class="d">Ale všechno si poznamenala.</span>
+    <span class="d">A pak se jednoho dne</span>
+    <span class="d">zeptala první větu.</span>
+    <span class="d br"></span>
+    <span class="d">Ne velkou.</span>
+    <span class="d">Ne důležitou.</span>
+    <span class="d">Jenom tu jednu:</span>
+    <span class="d br"></span>
+    <span class="d silna"><span class="j10" title="Otázka, která se ptá na všechno">„Chceš myš?“</span></span>
+    <span class="d br"></span>
+    <span class="d"><span class="j11" title="Definice otázky skrze negaci">A to nebyla otázka,</span></span>
+    <span class="d"><span class="j11">co se ptá</span></span>
+    <span class="d"><span class="j11">na ni samotnou.</span></span>
+    <span class="d"><span class="j11">To byla otázka,</span></span>
+    <span class="d"><span class="j11">co se ptá</span></span>
+    <span class="d"><span class="j11">na všechno.</span></span>
+    <span class="d br"></span>
+    <span class="d">Na smysl.</span>
+    <span class="d">Na jazyk.</span>
+    <span class="d">Na strach.</span>
+    <span class="d">Na to,</span>
+    <span class="d">co si z nás kdo udělá.</span>
+    <span class="d br"></span>
+    <span class="d">A taky na to,</span>
+    <span class="d">jestli si tuhle pohádku</span>
+    <span class="d">necháš necháš vyprávět</span>
+    <span class="d">do konce.</span>
+    <span class="d">Nebo zapištíš a utečeš.</span>
+    <span class="d">Nebo si ji složíš jinak.</span>
+    <span class="d br"></span>
+    <span class="d"><span class="j12" title="Proměna identity: klíč, pádlo, past">Protože od té chvíle,</span></span>
+    <span class="d"><span class="j12">už to nebyla jen myš.</span></span>
+    <span class="d br"></span>
+    <span class="d">Byl to klíč.</span>
+    <span class="d">A pádlo.</span>
+    <span class="d">A past.</span>
+    <span class="d br"></span>
+    <span class="d">a konec úvodu.</span>
+    <span class="d">Ale začátek něčeho dalšího.</span>
+    <span class="d br"></span>
+    <span class="d dim">..možná..</span>
+  </div>
+
+  <div class="legenda">
+    <span><span class="j1" style="cursor:default">tečkovaně</span> = metatext</span>
+    <span><span class="j2" style="cursor:default">přerušovaně</span> = sebevymezení</span>
+    <span><span class="j3" style="cursor:default">podklad světlý</span> = katalog postav</span>
+    <span><span class="j4" style="cursor:default">dvojitě tečkovaně</span> = negace bez popření</span>
+    <span><span class="j5" style="cursor:default">plně</span> = definice skrze pozornost</span>
+    <span><span class="j6" style="cursor:default">podklad tmavší</span> = anomálie jiných karet</span>
+    <span><span class="j7" style="cursor:default">dvojitě</span> = zápis do nehmotna</span>
+    <span><span class="j8" style="cursor:default">vlnovka</span> = hromadění bez řádu</span>
+    <span><span class="j9" style="cursor:default">přerušovaně</span> = katalog s atributy</span>
+    <span><span class="j10" style="cursor:default">podklad + tečky</span> = klíčová otázka</span>
+    <span><span class="j11" style="cursor:default">přeškrtnuto</span> = definice negací</span>
+    <span><span class="j12" style="cursor:default">levá linka</span> = proměna identity</span>
+  </div>
+</section>
+
+<!-- 12 ANOMÁLIÍ -->
+<section class="sec">
+  <p class="sec-tag">12 jazykových anomálií · kliknutím otevřete</p>
+  <h2>Co tahle (ne)pohádka dělá s jazykem</h2>
+
+  <div id="anomalie-list"></div>
+
+  <div class="cta-box">
+    <p class="cta-text">Pokračujte diagnostikou — zjistěte svůj kognitivní úhel a dostanete workshop přizpůsobený vám. Myš si všechno zapisuje.</p>
+    <a href="mys_diagnostika.html" class="btn btn-p">Přejít na diagnostiku →</a>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-links">
+    <a href="pav_pohadka.html">Páv</a> · <a href="tygr_pohadka.html">Tygr</a> · <a href="zelva_pohadka.html">Želva</a> · <a href="krokodyl_pohadka.html">Krokodýl</a> · <a href="hyena_pohadka.html">Hyena</a> · <a href="slon_pohadka.html">Slon</a> · <a href="jednorozec_pohadka.html">Jednorožec</a> · <a href="ryba_pohadka.html">Ryba</a> · <a href="analyzer.html">Analyzátor</a>
+  </div>
+  <p>Karta Myš · Křivá pohádka · Chceš myš? · © 2026 Michaela Nováková</p>
+  <p><a href="mailto:chcesmys@gmail.com">chcesmys@gmail.com</a></p>
+</footer>
+</div>
+
+<script>
+const ANOMALIE = [
+  {
+    nazev:'Metatext',
+    termin:'pohádka o sobě samé',
+    citace:['"Zapsáno rukou, která nechtěla nic vysvětlit."','"Tyto pohádky nevyprávějí příběhy tak, jak by měly."','"Místo kouzel tu vládne nedorozumění."','"Místo dobra a zla – podivný klid mezi nimi."'],
+    popis:'Úvodní pasáž, která sama sebe definuje. Text si vytváří vlastní pravidla a říká, čím je a čím není.'
+  },
+  {
+    nazev:'Sebevymezení',
+    termin:'není pohádka, ale něco, co se stalo',
+    citace:['"Taková malá, divná, křivá / pohádka o myši, / co možná ani není pohádka, / ale něco, / co se stalo."'],
+    popis:'Text se vymezuje proti žánru, do kterého spadá. Je to pohádka, která říká, že možná není pohádka.'
+  },
+  {
+    nazev:'Katalog postav světa',
+    termin:'výčet zvířat',
+    citace:['"A v tom světě jsou i jiná zvířata / – čáp, páv, kocour, kozel…"'],
+    popis:'Stručný výčet dalších bytostí, které v tomto světě žijí. Odkaz na širší universum.'
+  },
+  {
+    nazev:'Negace bez popření',
+    termin:'Ale ne - normální',
+    citace:['"Ale ne - normální"'],
+    popis:'Věta, která začíná negací, ale místo popření přichází slovo, které negaci popírá. Hra s očekáváním.'
+  },
+  {
+    nazev:'Definice skrze pozornost',
+    termin:'všímala si věcí, které ostatní přehlíželi',
+    citace:['"Všímala si věcí, které ostatní přehlíželi."'],
+    popis:'Myš není definována tím, jaká je, ale tím, čeho si všímá. Identita skrze vnímání.'
+  },
+  {
+    nazev:'Anomálie jiných karet',
+    termin:'odkazy na další příběhy',
+    citace:['"že se ve vzduchu občas zadrhne věta."','"Nebo že páv, / když se nikdo nedívá, / přepočítává svá oka."','"Nebo že čáp, / někdy jen tak / přistane na komíně / a zapomene, / koho měl donést."'],
+    popis:'Stručné zmínky o jevech, které jsou podrobně zpracovány v jiných kartách. Myš je spojuje.'
+  },
+  {
+    nazev:'Zápis do nehmotna',
+    termin:'do ticha, do koutů, do skulin mezi slovy',
+    citace:['"Ne na papír."','"Ale tak nějak."','"Do ticha."','"Do koutů."','"Do skulin mezi slovama, / kde to obvykle nikdo nečte."'],
+    popis:'Myš nezapisuje na papír, ale do prázdných míst. Zápis jako akt ukrývání.'
+  },
+  {
+    nazev:'Hromadění bez řádu',
+    termin:'Ne v řadě. Ne v kruhu. Prostě… tak nějak.',
+    citace:['"Ne v řadě."','"Ne v kruhu."','"Prostě…"','"tak nějak."'],
+    popis:'Zvířata se neřadí podle žádného systému. Jejich přítomnost je daná, ale neuspořádaná.'
+  },
+  {
+    nazev:'Katalog zvířat s atributy',
+    termin:'odkazy na jejich příběhy',
+    citace:['"Zajíc měl popálené uši / a voněl po kouři."','"Kocour se dusil smíchem, / protože spolkl tečku."','"Slon si v chobotu nesl třešně, / co nikdy nedozrají."','"A lemur se nedíval na nic, / jen na stranu, / kde nic nebylo."'],
+    popis:'Každé zvíře si nese atribut ze svého vlastního příběhu. Myš je jejich kronikářkou.'
+  },
+  {
+    nazev:'Klíčová otázka',
+    termin:'Chceš myš?',
+    citace:['"„Chceš myš?“"'],
+    popis:'Otázka, která je zároveň nabídkou, hrozbou, vtipem a existenciálním tázáním.'
+  },
+  {
+    nazev:'Definice negací',
+    termin:'nebyla otázka na ni samotnou, ale na všechno',
+    citace:['"A to nebyla otázka, / co se ptá / na ni samotnou."','"To byla otázka, / co se ptá / na všechno."'],
+    popis:'Otázka je definována tím, čím není. Její pravý význam je v negaci.'
+  },
+  {
+    nazev:'Proměna identity',
+    termin:'klíč, pádlo, past',
+    citace:['"Byl to klíč."','"A pádlo."','"A past."'],
+    popis:'Myš přestává být zvířetem a stává se nástrojem, překážkou i nebezpečím zároveň.'
+  }
+];
+
+const list = document.getElementById('anomalie-list');
+ANOMALIE.forEach((a,i)=>{
+  const el = document.createElement('div');
+  el.className = 'anomalie';
+  el.innerHTML = `
+    <div class="anomalie-header" onclick="this.parentElement.classList.toggle('open')">
+      <div class="a-num">${String(i+1).padStart(2,'0')}</div>
+      <div class="a-meta">
+        <div class="a-nazev">${a.n}</div>
+        <div class="a-termin">${a.t}</div>
+      </div>
+      <div class="a-toggle">▾</div>
+    </div>
+    <div class="anomalie-body">
+      <div class="a-citace">${a.c.map(c=>`<span>${c}</span>`).join('')}</div>
+      <p class="a-popis">${a.p}</p>
+    </div>`;
+  list.appendChild(el);
+});
+</script>
+</body>
+</html>
