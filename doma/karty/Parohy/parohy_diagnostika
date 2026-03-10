@@ -1,1 +1,283 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Parohy — diagnostika · Chceš myš?</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#07090f;--s:#0d1018;--s2:#12161f;
+  --c:#cdd8e8;--dim:rgba(180,200,230,.35);--a:#8e6b8a;--a2:#674a63;
+  --b:rgba(142,107,138,.12);--b2:rgba(142,107,138,.26);
+  --serif:'Cormorant Garamond',Georgia,serif;--mono:'DM Mono',monospace;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--c);font-family:var(--mono);font-size:13px;line-height:1.85;-webkit-font-smoothing:antialiased}
+.wrap{max-width:680px;margin:0 auto;padding:0 24px}
 
+nav{position:sticky;top:0;z-index:99;border-bottom:1px solid var(--b);background:rgba(7,9,15,.96);backdrop-filter:blur(14px);padding:11px 24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
+.nav-l{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);text-decoration:none;transition:color .15s}
+.nav-l:hover{color:var(--c)}
+.nav-links{display:flex;flex-wrap:wrap;gap:4px}
+.nav-links a{font-size:9px;letter-spacing:.11em;text-transform:uppercase;color:var(--dim);text-decoration:none;padding:4px 8px;border:1px solid transparent;border-radius:2px;transition:all .15s;white-space:nowrap}
+.nav-links a:hover,.nav-links a.active{color:var(--a);border-color:var(--b2)}
+
+.hero{padding:48px 0 32px;border-bottom:1px solid var(--b)}
+.hero-tag{font-size:10px;letter-spacing:.26em;text-transform:uppercase;color:var(--a2);margin-bottom:14px}
+.hero h1{font-family:var(--serif);font-size:clamp(2.2rem,6vw,3.8rem);font-weight:300;line-height:1;letter-spacing:-.01em;margin-bottom:6px}
+.hero h1 em{font-style:italic;color:var(--a)}
+.hero-note{font-size:.78rem;color:var(--dim);max-width:460px;line-height:1.95;margin-top:14px}
+
+/* PROGRESS */
+.progress{display:flex;gap:0;margin:24px 0 0;border:1px solid var(--b)}
+.prog-step{flex:1;padding:8px 10px;text-align:center;font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);border-right:1px solid var(--b);transition:all .2s}
+.prog-step:last-child{border-right:none}
+.prog-step.active{background:rgba(142,107,138,.08);color:var(--a)}
+.prog-step.done{color:rgba(142,107,138,.3)}
+
+/* OTÁZKY */
+.sec{padding:36px 0;border-bottom:1px solid var(--b)}
+.q-block{margin-bottom:28px}
+.q-num{font-family:var(--serif);font-size:2rem;font-weight:300;color:rgba(142,107,138,.15);line-height:1;margin-bottom:3px}
+.q-label{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--a);margin-bottom:7px}
+.q-text{font-size:.9rem;color:var(--c);margin-bottom:7px;line-height:1.8}
+.q-hint{font-size:.73rem;color:var(--dim);margin-bottom:9px;font-style:italic}
+textarea{width:100%;background:var(--s);border:1px solid var(--b);color:var(--c);padding:11px 14px;font-family:var(--mono);font-size:.8rem;line-height:1.75;resize:vertical;min-height:84px;border-radius:2px;transition:border-color .15s}
+textarea:focus{outline:none;border-color:var(--a2)}
+textarea::placeholder{color:rgba(180,200,230,.1)}
+
+.btn{padding:10px 22px;font-family:var(--mono);font-size:.75rem;letter-spacing:.1em;text-transform:uppercase;border:none;cursor:pointer;border-radius:2px;transition:all .15s;text-decoration:none;display:inline-block}
+.btn-p{background:var(--a);color:var(--bg)}
+.btn-p:hover{background:#a886a2}
+.btn-g{background:transparent;color:var(--dim);border:1px solid var(--b)}
+.btn-g:hover{color:var(--c);border-color:var(--b2)}
+.btn-row{display:flex;gap:7px;margin-top:14px;flex-wrap:wrap;align-items:center}
+
+/* VÝSLEDEK */
+#sec-vysledek{display:none}
+.uhel-card{border:1px solid var(--b2);background:var(--s);padding:24px 26px;margin-bottom:3px}
+.uhel-card-tag{font-size:.67rem;letter-spacing:.16em;text-transform:uppercase;margin-bottom:8px}
+.uhel-card-tag.dom{color:var(--a)}
+.uhel-card-tag.prot{color:rgba(142,107,138,.45)}
+.uhel-nazev{font-family:var(--serif);font-size:1.55rem;font-weight:300;margin-bottom:6px}
+.uhel-nazev em{font-style:italic;color:var(--a)}
+.uhel-popis{font-size:.76rem;color:rgba(180,200,230,.5);line-height:1.88}
+.vide-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--b);border:1px solid var(--b);margin:16px 0}
+@media(max-width:480px){.vide-grid{grid-template-columns:1fr}}
+.vide-item{background:var(--s);padding:11px 14px}
+.vide-jev{font-size:.67rem;letter-spacing:.14em;text-transform:uppercase;color:var(--a);margin-bottom:3px}
+.vide-text{font-size:.74rem;color:rgba(180,200,230,.48);line-height:1.7}
+
+/* ZÁPISNÍK */
+.zapisnik-note{font-size:.74rem;color:rgba(180,200,230,.38);font-style:italic;margin-top:10px}
+
+footer{padding:24px 0;border-top:1px solid var(--b);display:flex;flex-direction:column;gap:12px}
+.footer-links{display:flex;flex-wrap:wrap;gap:8px 16px;justify-content:center}
+.footer-links a{color:var(--a2);font-size:.7rem;text-decoration:none;border-bottom:1px dotted var(--b2)}
+.footer-links a:hover{color:var(--a)}
+footer p{font-size:.7rem;color:var(--dim);text-align:center}
+footer a{color:var(--a)}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-l" href="../../../index.html">← Všechna zvířata</a>
+  <div class="nav-links">
+    <a href="parohy_pohadka.html">Parohy</a>
+    <a href="mys_pohadka.html">Myš</a>
+    <a href="cap_pohadka.html">Čáp</a>
+    <a href="pav_pohadka.html">Páv</a>
+    <a href="tygr_pohadka.html">Tygr</a>
+    <a href="zelva_pohadka.html">Želva</a>
+    <a href="krokodyl_pohadka.html">Krokodýl</a>
+    <a href="hyena_pohadka.html">Hyena</a>
+    <a href="slon_pohadka.html">Slon</a>
+    <a href="jednorozec_pohadka.html">Jednorožec</a>
+    <a href="ryba_pohadka.html">Ryba</a>
+    <a href="analyzer.html">Analyzátor</a>
+  </div>
+</nav>
+
+<div class="wrap">
+
+<section class="hero">
+  <p class="hero-tag">Karta Parohy · Diagnostika</p>
+  <h1>Váš <em>úhel</em></h1>
+  <p class="hero-note">Tři otázky k pohádce o Parozích. Čteme strukturu vašich odpovědí, ne jejich obsah – délku vět, co opakujete, jak argumentujete. Každá fotka je blesk, každý úsměv může být nový paroh.</p>
+</section>
+
+<div class="progress" id="progress">
+  <div class="prog-step active" id="ps1">1 · otázky</div>
+  <div class="prog-step" id="ps2">2 · úhel</div>
+  <div class="prog-step" id="ps3">3 · workshop</div>
+</div>
+
+<!-- OTÁZKY -->
+<section class="sec" id="sec-otazky">
+  <div class="q-block">
+    <div class="q-num">01</div>
+    <div class="q-label">Smysl</div>
+    <p class="q-text">Co je podle vás hlavní sdělení pohádky o Parozích? (Co znamená, že parohy rostou z fotek a vzpomínek?)</p>
+    <p class="q-hint">Klidně jedna věta nebo deset. Forma je vaše volba.</p>
+    <textarea id="q1" placeholder="Tahle pohádka je pro mě o…"></textarea>
+  </div>
+  <div class="q-block">
+    <div class="q-num">02</div>
+    <div class="q-label">Záchyt</div>
+    <p class="q-text">Která část pohádky vás nejvíc oslovila? (blesk z foťáku, jméno Syyyr, parohy jako antény, klubání nového parohu…?)</p>
+    <p class="q-hint">Stačí název nebo citát – důležité je, proč zrovna tohle.</p>
+    <textarea id="q2" placeholder="Nejvíc mě oslovilo…"></textarea>
+  </div>
+  <div class="q-block">
+    <div class="q-num">03</div>
+    <div class="q-label">Aplikace</div>
+    <p class="q-text">„Když tě někdo vyfotí a ty se usměješ, možná se ti právě začíná klubat nový paroh.“ – Kdy ve vašem životě vzniká nová vzpomínka, která se stává součástí vás? (třeba nejen focení)</p>
+    <p class="q-hint">Konkrétní situace, vzpomínka, nebo protiargument.</p>
+    <textarea id="q3" placeholder="Nová vzpomínka vzniká, když…"></textarea>
+  </div>
+  <div class="btn-row">
+    <button class="btn btn-p" onclick="analyzovat()">Zjistit můj úhel →</button>
+    <a href="parohy_pohadka.html" class="btn btn-g">← zpět k pohádce</a>
+  </div>
+</section>
+
+<!-- VÝSLEDEK -->
+<section class="sec" id="sec-vysledek">
+  <p style="font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--a2);margin-bottom:14px">Váš kognitivní úhel</p>
+  <div class="uhel-card">
+    <div class="uhel-card-tag dom">Dominantní úhel</div>
+    <div class="uhel-nazev" id="res-dom"></div>
+    <div class="uhel-popis" id="res-dom-popis"></div>
+  </div>
+  <div class="uhel-card" style="margin-top:3px">
+    <div class="uhel-card-tag prot">Protilehlý úhel — prostor pro rozvoj</div>
+    <div class="uhel-nazev" id="res-prot"></div>
+    <div class="uhel-popis" id="res-prot-popis"></div>
+  </div>
+  <p style="font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--a2);margin:18px 0 10px">Co v tom, jak píšete, vidíme</p>
+  <div class="vide-grid" id="vide-grid"></div>
+  <p class="zapisnik-note" id="zapisnik-note"></p>
+  <div class="btn-row" style="margin-top:16px">
+    <a href="parohy_workshop.html" class="btn btn-p" id="btn-workshop">Přejít na workshop →</a>
+    <button class="btn btn-g" onclick="ulozit()">Uložit do zápisníku</button>
+    <button class="btn btn-g" onclick="window.print()">Tisk / PDF</button>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-links">
+    <a href="mys_pohadka.html">Myš</a> · <a href="cap_pohadka.html">Čáp</a> · <a href="pav_pohadka.html">Páv</a> · <a href="tygr_pohadka.html">Tygr</a> · <a href="zelva_pohadka.html">Želva</a> · <a href="krokodyl_pohadka.html">Krokodýl</a> · <a href="hyena_pohadka.html">Hyena</a> · <a href="slon_pohadka.html">Slon</a> · <a href="jednorozec_pohadka.html">Jednorožec</a> · <a href="ryba_pohadka.html">Ryba</a> · <a href="analyzer.html">Analyzátor</a>
+  </div>
+  <p>Karta Parohy · Chceš myš? · © 2026 Michaela Nováková</p>
+  <p><a href="mailto:chcesmys@gmail.com">chcesmys@gmail.com</a></p>
+</footer>
+</div>
+
+<script>
+const UHLY = {
+  0:{nazev:'0° Analytický',prot:180,popis:'Strukturujete logicky. Věty na sebe navazují jako argument.',kw:['protože','tedy','neboť','struktura','systém','logika','vztah','analýza','příčina','pořadí','proces','mechanismus','důsledek','vyplývá','princip','funguje']},
+  180:{nazev:'180° Asociační',prot:0,popis:'Odpovědi skáčou. Jeden obraz přivede jiný bez logického mostu.',kw:['napadá','připomíná','evokuje','najednou','mimochodem','vlastně','taky','jinak','zároveň','přitom','to mi','a pak','bez důvodu','vzpomínám na']},
+  30:{nazev:'30° Kulturní',prot:210,popis:'Pohádku čtete jako sdílenou výpověď. Kolektivní vzorce.',kw:['všichni','vždy','každý','společnost','normální','tradičně','obecně','lidé','svět','jak se říká','obvykle','přirozené','typické','kolektivně','obecná']},
+  210:{nazev:'210° Introspektivní',prot:30,popis:'Mluvíte o vlastním prožitku. Pohádku vztahujete k sobě.',kw:['já','mě','mi','mám','cítím','prožívám','vzpomínám','osobně','ve mně','uvnitř','sám','sobě','moje','znám to','zažil','zažila','u mě','pro mě']},
+  60:{nazev:'60° Filozofický',prot:240,popis:'Hledáte abstraktní pravdu, podstatu.',kw:['smysl','podstata','pravda','existence','bytí','otázka','hloubka','princip','zákon','vědomí','skutečnost','realita','identita','čas','minulost','přítomnost']},
+  240:{nazev:'240° Ironický',prot:60,popis:'Komentujete s odstupem. Vidíte paradoxy.',kw:['samozřejmě','ale','přitom','paradoxně','ovšem','jak jinak','pochopitelně','nicméně','ačkoliv','jenže','přesto','jistě','logicky','jasně','typicky']},
+  90:{nazev:'90° Naivní',prot:270,popis:'Přímočarost, krátké věty, žádné elaborace.',kw:['prostě','jednoduše','jasně','tak','ano','je to o','říká','stačí','jen','zkrátka','jasné','přímočaré','jednoduché','hotovo','věc se má tak']},
+  270:{nazev:'270° Groteskní',prot:90,popis:'Dramatičnost, přehánění, extrémní kontrast.',kw:['strašně','hrozně','naprosto','absolutně','úplně','totálně','extrémně','neskutečně','šílené','brutální','ohromné','nevýslovné','intenzivně','děsivě','ohromující']},
+  120:{nazev:'120° Jazykový',prot:300,popis:'Všímáte si formy. Komentujete, jak je text napsaný.',kw:['slovo','jazyk','forma','rytmus','napsáno','věta','text','výraz','styl','formulace','pojmenování','způsob','opakování','struktura','syntaxe','jazykově']},
+  300:{nazev:'300° Absurdní',prot:120,popis:'Logika se rozpadá. Záměrná nelogičnost.',kw:['nevím','asi','možná','ale ne','nebo tak','nějak','záhadné','bez důvodu','nemá smysl','přesto','kdoví','nahodile','chaoticky','nesmyslně','bez logiky']},
+  150:{nazev:'150° Metaforický',prot:330,popis:'Myslíte v obrazech. Přirovnání, symboly.',kw:['jako','připomíná','obraz','symbol','jakoby','ztělesňuje','přirovnal','vypadá jako','funguje jako','je to jako','metafora','symbolizuje','evokuje','obrazně']},
+  330:{nazev:'330° Surrealistický',prot:150,popis:'Snová logika, nereálné přechody.',kw:['sen','snový','podivný','nereálné','plovoucí','magicky','nevysvětlitelně','jak ze sna','záhadně','mysticky','nelogicky','surreálně','halucinačně','snivě']}
+};
+
+function skore(txt){
+  const s={};Object.keys(UHLY).forEach(k=>s[k]=0);
+  Object.entries(UHLY).forEach(([k,u])=>{
+    u.kw.forEach(kw=>{
+      const re=new RegExp('(?<![a-záčďéěíňóřšťůúýž])'+kw.replace(/[-\/\\^$*+?.()|[\]{}]/g,'\\$&')+'(?![a-záčďéěíňóřšťůúýž])','gi');
+      s[k]+=(txt.match(re)||[]).length*2;
+    });
+  });
+  const vety=txt.split(/[.!?…]+/).filter(v=>v.trim().length>2);
+  const avg=vety.length?vety.reduce((a,v)=>a+v.trim().split(/\s+/).length,0)/vety.length:0;
+  const ja=(txt.match(/\bjá\b|\bjsem\b|\bmi\b|\bmě\b/gi)||[]).length;
+  const jako=(txt.match(/\bjako\b/gi)||[]).length;
+  const ale=(txt.match(/\bale\b/gi)||[]).length;
+  const q=(txt.match(/\?/g)||[]).length;
+  if(avg<7)s[90]+=4;if(avg>16){s[60]+=3;s[0]+=2;}
+  s[210]+=ja;s[150]+=jako*2;s[240]+=ale;s[60]+=q*2;
+  if(vety.length>=3){
+    const lens=vety.map(v=>v.trim().split(/\s+/).length);
+    const av=lens.reduce((a,b)=>a+b)/lens.length;
+    const sd=Math.sqrt(lens.map(l=>(l-av)**2).reduce((a,b)=>a+b)/lens.length);
+    if(sd>5)s[270]+=4;
+  }
+  if((txt.match(/\.\.\.|–\s*$|—\s*$/gm)||[]).length>1)s[300]+=3;
+  return s;
+}
+
+function vidJevy(txt,u){
+  const vety=txt.split(/[.!?…]+/).filter(v=>v.trim().length>2);
+  const avg=vety.length?vety.reduce((a,v)=>a+v.trim().split(/\s+/).length,0)/vety.length:0;
+  const ja=(txt.match(/\bjá\b|\bjsem\b|\bmi\b|\bmě\b/gi)||[]).length;
+  const jako=(txt.match(/\bjako\b/gi)||[]).length;
+  const ale=(txt.match(/\bale\b/gi)||[]).length;
+  const q=(txt.match(/\?/g)||[]).length;
+  const r=[];
+  if(avg<8)r.push({j:'Délka vět',t:'Krátké věty — každá myšlenka stojí sama.'});
+  else if(avg>15)r.push({j:'Délka vět',t:`Průměr ${Math.round(avg)} slov — dlouhé, vrstvené věty.`});
+  else r.push({j:'Délka vět',t:`Průměr ${Math.round(avg)} slov.`});
+  if(ja>4)r.push({j:'Perspektiva',t:'Osobní pohled — pohádku vztahujete k vlastní zkušenosti.'});
+  if(jako>1)r.push({j:'Obrazy',t:`${jako}× „jako" — myslíte přirovnáními.`});
+  if(q>1)r.push({j:'Otázky',t:`${q} otázky — hledáte, nestanovujete.`});
+  if(ale>2)r.push({j:'Kontrast',t:`${ale}× „ale" — napětí mezi dvěma stranami.`});
+  if(r.length<3)r.push({j:'Vzorec',t:UHLY[u].popis.split('.')[0]+'.'});
+  return r.slice(0,4);
+}
+
+function analyzovat(){
+  const q1=document.getElementById('q1').value.trim();
+  const q2=document.getElementById('q2').value.trim();
+  const q3=document.getElementById('q3').value.trim();
+  if(!q1&&!q2&&!q3){alert('Vyplňte alespoň jednu odpověď.');return;}
+  const txt=q1+' '+q2+' '+q3;
+  const s=skore(txt);
+  const u=Object.entries(s).sort((a,b)=>b[1]-a[1])[0][0];
+  const U=UHLY[u],P=UHLY[U.prot];
+
+  localStorage.setItem('parohy_uhel',u);
+  localStorage.setItem('parohy_uhel_nazev',U.nazev);
+  localStorage.setItem('parohy_datum',new Date().toLocaleDateString('cs-CZ'));
+
+  document.getElementById('res-dom').innerHTML=`<em>${U.nazev}</em>`;
+  document.getElementById('res-dom-popis').textContent=U.popis;
+  document.getElementById('res-prot').innerHTML=`<em>${P.nazev}</em>`;
+  document.getElementById('res-prot-popis').textContent=P.popis;
+
+  const g=document.getElementById('vide-grid');g.innerHTML='';
+  vidJevy(txt,u).forEach(i=>{
+    const d=document.createElement('div');d.className='vide-item';
+    d.innerHTML=`<div class="vide-jev">${i.j}</div><div class="vide-text">${i.t}</div>`;
+    g.appendChild(d);
+  });
+
+  document.getElementById('sec-otazky').style.display='none';
+  document.getElementById('sec-vysledek').style.display='block';
+  document.getElementById('ps1').className='prog-step done';
+  document.getElementById('ps2').className='prog-step active';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function ulozit(){
+  const u=localStorage.getItem('parohy_uhel');
+  if(!u){alert('Nejprve proveďte diagnostiku.');return;}
+  const mapa={datum:localStorage.getItem('parohy_datum'),karta:'Parohy',uhel:localStorage.getItem('parohy_uhel_nazev'),uhel_id:u};
+  const ex=JSON.parse(localStorage.getItem('chcesmys_zapisnik_mapy')||'[]');
+  ex.push(mapa);localStorage.setItem('chcesmys_zapisnik_mapy',JSON.stringify(ex));
+  document.getElementById('zapisnik-note').textContent=`Uloženo. (${ex.length} záznamů v zápisníku kognitivních map)`;
+}
+</script>
+</body>
+</html>
