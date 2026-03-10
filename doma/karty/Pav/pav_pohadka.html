@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Páv — pohádka · Chceš myš?</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#07090f;--s:#0d1018;--s2:#12161f;
+  --c:#cdd8e8;--dim:rgba(180,200,230,.35);--a:#2a7a6e;--a2:#1d5a4f;
+  --b:rgba(42,122,110,.12);--b2:rgba(42,122,110,.26);
+  --serif:'Cormorant Garamond',Georgia,serif;--mono:'DM Mono',monospace;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--c);font-family:var(--mono);font-size:13px;line-height:1.85;-webkit-font-smoothing:antialiased}
+.wrap{max-width:780px;margin:0 auto;padding:0 24px}
+
+nav{position:sticky;top:0;z-index:99;border-bottom:1px solid var(--b);background:rgba(7,9,15,.96);backdrop-filter:blur(14px);padding:11px 24px;display:flex;align-items:center;justify-content:space-between}
+.nav-l{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);text-decoration:none;transition:color .15s}
+.nav-l:hover{color:var(--c)}
+.nav-links{display:flex;gap:4px}
+.nav-links a{font-size:10px;letter-spacing:.11em;text-transform:uppercase;color:var(--dim);text-decoration:none;padding:5px 10px;border:1px solid transparent;border-radius:2px;transition:all .15s}
+.nav-links a:hover,.nav-links a.active{color:var(--a);border-color:var(--b2)}
+
+.hero{padding:52px 0 36px;border-bottom:1px solid var(--b)}
+.hero-tag{font-size:10px;letter-spacing:.26em;text-transform:uppercase;color:var(--a2);margin-bottom:14px}
+.hero h1{font-family:var(--serif);font-size:clamp(3rem,8vw,5.4rem);font-weight:300;line-height:.95;letter-spacing:-.02em;margin-bottom:6px}
+.hero h1 em{font-style:italic;color:var(--a)}
+.hero-sub{font-family:var(--serif);font-style:italic;font-size:.9rem;color:var(--dim);border-left:1px solid var(--a2);padding-left:16px;margin:18px 0 20px;line-height:2;max-width:500px}
+.fenomen{border:1px solid var(--b2);padding:14px 20px;background:rgba(42,122,110,.03)}
+.fenomen-tag{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--a);margin-bottom:7px}
+.fenomen-text{font-size:.8rem;color:rgba(180,200,230,.52);line-height:1.95}
+
+.sec{padding:38px 0;border-bottom:1px solid var(--b)}
+.sec-tag{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--a2);margin-bottom:12px}
+h2{font-family:var(--serif);font-size:clamp(1.1rem,3vw,1.6rem);font-weight:300;margin-bottom:18px}
+h2 em{font-style:italic;color:var(--a)}
+
+/* POHÁDKA */
+.pohadka{font-family:var(--serif);font-size:.94rem;color:rgba(200,218,238,.74);border:1px solid var(--b);background:var(--s);padding:28px 32px;line-height:1}
+.d{display:block;padding:.22em 0}
+.d.br{padding:.55em 0}
+.d.silna{color:var(--a);font-weight:400}
+.d.dim{color:rgba(180,200,230,.38);font-style:italic}
+.d.it{font-style:italic}
+.d.dl{padding-left:1.4em;font-style:italic}
+/* třídy pro 12 anomálií */
+.j1{border-bottom:1px dotted var(--a);cursor:help}
+.j2{border-bottom:1px dashed var(--a2);cursor:help}
+.j3{background:rgba(42,122,110,.1);padding:0 2px;cursor:help}
+.j4{border-bottom:2px dotted var(--a);cursor:help}
+.j5{border-bottom:1px solid var(--a2);cursor:help}
+.j6{background:rgba(42,122,110,.2);padding:0 2px;cursor:help}
+.j7{border-bottom:1px double var(--a);cursor:help}
+.j8{text-decoration:underline wavy var(--a2);cursor:help}
+.j9{border-bottom:1px dashed var(--a);cursor:help}
+.j10{background:rgba(42,122,110,.05);border-bottom:1px dotted var(--a2);cursor:help}
+.j11{text-decoration:line-through 1px solid var(--a);cursor:help}
+.j12{border-left:2px solid var(--a);padding-left:4px;cursor:help}
+.legenda{margin-top:10px;padding:10px 14px;background:var(--s);border:1px solid var(--b);font-size:.71rem;color:var(--dim);display:flex;flex-wrap:wrap;gap:4px 18px}
+
+/* ANOMÁLIE */
+.anomalie{border:1px solid var(--b);background:var(--s);margin-bottom:3px;overflow:hidden}
+.anomalie-header{display:flex;align-items:center;gap:14px;padding:14px 18px;cursor:pointer;user-select:none}
+.anomalie-header:hover{background:rgba(42,122,110,.04)}
+.a-num{font-family:var(--serif);font-size:1.5rem;font-weight:300;color:rgba(42,122,110,.2);min-width:28px;line-height:1}
+.a-meta{flex:1}
+.a-nazev{font-size:.83rem;color:var(--c);margin-bottom:2px}
+.a-termin{font-size:.69rem;color:var(--a2);letter-spacing:.06em;font-style:italic}
+.a-toggle{font-size:.68rem;color:var(--dim);letter-spacing:.1em;text-transform:uppercase;transition:transform .2s;white-space:nowrap}
+.anomalie.open .a-toggle{transform:rotate(180deg)}
+.anomalie-body{display:none;padding:4px 18px 20px;border-top:1px solid var(--b)}
+.anomalie.open .anomalie-body{display:block}
+.a-citace{font-family:var(--serif);font-style:italic;font-size:.83rem;color:rgba(42,122,110,.5);border-left:1px solid var(--b2);padding:7px 13px;margin:12px 0;line-height:1.85}
+.a-citace span{display:block}
+.a-popis{font-size:.78rem;color:rgba(180,200,230,.54);line-height:1.92;margin-bottom:0}
+
+.cta-box{margin-top:32px;padding:20px 22px;background:var(--s);border:1px solid var(--b2);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+.cta-text{font-size:.8rem;color:var(--dim);max-width:360px;line-height:1.85}
+.btn{padding:10px 22px;font-family:var(--mono);font-size:.75rem;letter-spacing:.1em;text-transform:uppercase;border:none;cursor:pointer;border-radius:2px;transition:all .15s;text-decoration:none;display:inline-block}
+.btn-p{background:var(--a);color:var(--bg)}
+.btn-p:hover{background:#3e9e8e}
+.btn-g{background:transparent;color:var(--dim);border:1px solid var(--b)}
+.btn-g:hover{color:var(--c);border-color:var(--b2)}
+
+footer{padding:26px 0;border-top:1px solid var(--b);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+footer p{font-size:.7rem;color:var(--dim)}
+footer a{color:var(--a)}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-l" href="../../../index.html">← Všechna zvířata</a>
+  <div class="nav-links">
+    <a href="pav_pohadka.html" class="active">Pohádka</a>
+    <a href="pav_diagnostika.html">Diagnostika</a>
+    <a href="pav_workshop.html">Workshop</a>
+    <a href="analyzer.html">Analyzátor</a>
+  </div>
+</nav>
+
+<div class="wrap">
+
+<section class="hero">
+  <p class="hero-tag">Kreativní miniatura · Karta Páv</p>
+  <h1>Páv</h1>
+  <p class="hero-sub">„Oko za okem, páv za pávem – a nikdo neví proč."</p>
+  <div class="fenomen">
+    <div class="fenomen-tag">Fenomén — zrcadlení / kvantifikace identity</div>
+    <p class="fenomen-text">Páv má tolik ok na ocase, že se mu začnou dívat zpátky. Svět se stává odrazem jeho vlastního obrazu. Pohádka zkoumá, co se stane, když se bytost snaží být „méně páv" – a jestli je možné uniknout vlastní podstatě. Každé zvíře je páv v jiném stádiu rozpadu.</p>
+  </div>
+</section>
+
+<!-- POHÁDKA -->
+<section class="sec">
+  <p class="sec-tag">Pohádka · čtěte pomalu</p>
+  <h2>O PÁVOVI <em>(oko za okem, páv za pávem)</em></h2>
+
+  <div class="pohadka">
+    <span class="d silna"><span class="j1" title="Deformovaná fraseologie: parafráze ‚oko za oko‘">Oko za okem, páv za pávem</span></span>
+    <span class="d dim">– a nikdo neví proč.</span>
+    <span class="d br"></span>
+    <span class="d">Byl jednou jeden páv, který měl tolik <span class="j2" title="Homonymní hra: oka = oči i kresba na peří">ok na ocase</span>, že se mu začaly dívat zpátky.</span>
+    <span class="d"><span class="j3" title="Inverze subjektu a objektu: Ne on na svět, ale svět na něj">Ne on na svět, ale svět na něj – skrz jeho vlastní pera.</span></span>
+    <span class="d">A to byl problém.</span>
+    <span class="d br"></span>
+    <span class="d">Protože když se díváš na svět skrz sebe, všechno vypadá jako ty.</span>
+    <span class="d">A páv si začal myslet, že celý svět je páv.</span>
+    <span class="d"><span class="j4" title="Anaforické řazení: Že stromy… Že mraky… A že myš…">Že stromy jsou pávové, jen bez per.</span></span>
+    <span class="d"><span class="j4">Že mraky jsou pávové, co se rozplynuli.</span></span>
+    <span class="d"><span class="j4">A že myš je jen páv, co se zapomněl rozvinout.</span></span>
+    <span class="d br"></span>
+    <span class="d">A tak začal pávy počítat.</span>
+    <span class="d">Ne podle počtu nohou, ale podle počtu ok.</span>
+    <span class="d"><span class="j5" title="Kvantifikace očí: víc než jedno × méně než jedno">Kdo měl víc než jedno oko, byl podezřelý.</span></span>
+    <span class="d"><span class="j5">Kdo měl méně než jedno, byl prorok.</span></span>
+    <span class="d br"></span>
+    <span class="d">Jednou potkal lemura, co se díval jen na stranu.</span>
+    <span class="d">Páv se zarazil: <span class="j6" title="Apoziční definice: ‚To je páv, co…‘">„To je páv, co se otočil dovnitř.“</span></span>
+    <span class="d">Pak potkal kocoura, co krkal tečky.</span>
+    <span class="d"><span class="j6">„To je páv, co spolkl interpunkci.“</span></span>
+    <span class="d br"></span>
+    <span class="d">A když potkal zaječici, co prošla ohněm, řekl:</span>
+    <span class="d"><span class="j7" title="Neologismus: ‚přepálil se‘ – doslovně i metaforicky">„To je páv, co se přepálil.“</span></span>
+    <span class="d br"></span>
+    <span class="d"><span class="j8" title="Stupňování abstrakce: ‚nová teorie‘ v pohádce">A tak vznikla nová teorie:</span></span>
+    <span class="d dl">Každé zvíře je páv v jiném stádiu rozpadu.</span>
+    <span class="d dl">A každé oko je jen <span class="j9" title="Materializace zrcadla: oko jako zrcadlo s pamětí">zrcadlo, co se snaží zapomenout, co vidělo.</span></span>
+    <span class="d br"></span>
+    <span class="d">Páv si začal odtrhávat pera.</span>
+    <span class="d">Ne proto, že by chtěl být méně krásný.</span>
+    <span class="d">Ale proto, že chtěl být <span class="j10" title="Kvantifikace identity: ‚méně páv‘ – gramatická deviace">méně páv</span>.</span>
+    <span class="d br"></span>
+    <span class="d">A když mu zbylo jen jedno oko, konečně uviděl:</span>
+    <span class="d">Že není páv.</span>
+    <span class="d">Že je pohádka.</span>
+    <span class="d dim br"></span>
+    <span class="d"><span class="j11" title="Rozdělení spojky na konci: A že / pohádka…">A že</span></span>
+    <span class="d"><span class="j12" title="Přirovnání s negací: nedá rozvinout jako ocas">pohádka se nedá rozvinout jako ocas.</span></span>
+  </div>
+
+  <div class="legenda">
+    <span><span class="j1" style="cursor:default">tečkovaně</span> = deformovaná fraseologie</span>
+    <span><span class="j2" style="cursor:default">přerušovaně</span> = homonymní hra</span>
+    <span><span class="j3" style="cursor:default">podklad světlý</span> = inverze subjekt/objekt</span>
+    <span><span class="j4" style="cursor:default">dvojitě tečkovaně</span> = anaforické řazení</span>
+    <span><span class="j5" style="cursor:default">plně</span> = kvantifikace očí</span>
+    <span><span class="j6" style="cursor:default">podklad tmavší</span> = apoziční definice</span>
+    <span><span class="j7" style="cursor:default">dvojitě</span> = neologismus</span>
+    <span><span class="j8" style="cursor:default">vlnovka</span> = stupňování abstrakce</span>
+    <span><span class="j9" style="cursor:default">přerušovaně</span> = materializace zrcadla</span>
+    <span><span class="j10" style="cursor:default">podklad + tečky</span> = kvantifikace identity</span>
+    <span><span class="j11" style="cursor:default">přeškrtnuto</span> = rozdělení spojky</span>
+    <span><span class="j12" style="cursor:default">levá linka</span> = přirovnání s negací</span>
+  </div>
+</section>
+
+<!-- 12 ANOMÁLIÍ -->
+<section class="sec">
+  <p class="sec-tag">12 jazykových anomálií · kliknutím otevřete</p>
+  <h2>Co pohádka dělá s jazykem</h2>
+
+  <div id="anomalie-list"></div>
+
+  <div class="cta-box">
+    <p class="cta-text">Pokračujte diagnostikou — zjistěte svůj kognitivní úhel a dostanete workshop přizpůsobený vám.</p>
+    <a href="pav_diagnostika.html" class="btn btn-p">Přejít na diagnostiku →</a>
+  </div>
+</section>
+
+<footer>
+  <p>Karta Páv · Chceš myš? · © 2026 Michaela Nováková</p>
+  <p><a href="mailto:chcesmys@gmail.com">chcesmys@gmail.com</a></p>
+</footer>
+</div>
+
+<script>
+const ANOMALIE = [
+  {n:'Deformovaná fraseologie',t:'parafráze s významovým posunem',
+   c:['"Oko za okem, páv za pávem"'],
+   p:'Parafráze biblického „oko za oko“. Druhý člen je sémanticky prázdný – vytváří rytmus, ne význam.'},
+  {n:'Homonymní hra',t:'jedno slovo, dva významy',
+   c:['"měl tolik ok na ocase"'],
+   p:'„Oka“ jsou zároveň oči i kresba na peří. Jedno slovo, dva významy, které se v textu propojují.'},
+  {n:'Inverze subjektu a objektu',t:'převrácení perspektivy bez slovesa',
+   c:['"Ne on na svět, ale svět na něj – skrz jeho vlastní pera."'],
+   p:'Věta bez slovesa, obrácený slovosled. Kdo se dívá na koho?'},
+  {n:'Anaforické řazení',t:'trojité opakování „že“',
+   c:['"Že stromy jsou pávové…"','"Že mraky jsou pávové…"','"A že myš je jen páv…"'],
+   p:'Stejná syntaktická struktura, různý obsah. Rytmus vytváří dojem systematičnosti.'},
+  {n:'Kvantifikace očí',t:'logika selhává, syntax zůstává',
+   c:['"Kdo měl víc než jedno oko, byl podezřelý."','"Kdo měl méně než jedno, byl prorok."'],
+   p:'„Méně než jedno oko“ je matematicky nemožné, ale jazykově existuje.'},
+  {n:'Apoziční definice',t:'„to je X, co Y“ jako definiční vzorec',
+   c:['"To je páv, co se otočil dovnitř."','"To je páv, co spolkl interpunkci."','"To je páv, co se přepálil."'],
+   p:'Každé zvíře je definováno jako poddruh páva. Větná konstrukce vytváří novou taxonomii.'},
+  {n:'Neologismus',t:'doslovné i metaforické užití',
+   c:['"To je páv, co se přepálil."'],
+   p:'„Přepálit“ obvykle znamená zničit teplem. Tady přeneseno na zaječici, která prošla ohněm – slovo funguje obojím způsobem.'},
+  {n:'Stupňování abstrakce',t:'vědecký termín v pohádce',
+   c:['"A tak vznikla nová teorie:"'],
+   p:'Dvojtečka uvozuje výčet, který je čistě fantazijní. „Teorie“ v pohádce vytváří kontrast.'},
+  {n:'Materializace zrcadla',t:'personifikace a paměť',
+   c:['"každé oko je jen zrcadlo, co se snaží zapomenout, co vidělo."'],
+   p:'Zrcadlo má paměť a snahu. Oko přestává být orgánem, stává se objektem.'},
+  {n:'Kvantifikace identity',t:'gramaticky deviantní',
+   c:['"chtěl být méně páv"'],
+   p:'Obvykle se kvantifikují adjektiva (méně krásný), ne substantiva. „Méně páv“ je gramaticky nemožné, ale dává smysl.'},
+  {n:'Rozdělení spojky na konci',t:'grafické členění',
+   c:['"A že / pohádka se nedá rozvinout jako ocas."'],
+   p:'Spojka „že“ je oddělena na samostatný řádek. Pauza mezi „že“ a obsahem věty.'},
+  {n:'Přirovnání s negací',t:'paralelní struktura s opačným významem',
+   c:['"pohádka se nedá rozvinout jako ocas."'],
+   p:'Přirovnání, které popírá samo sebe – ocas se rozvinout dá, pohádka ne.'}
+];
+
+const list = document.getElementById('anomalie-list');
+ANOMALIE.forEach((a,i)=>{
+  const el = document.createElement('div');
+  el.className = 'anomalie';
+  el.innerHTML = `
+    <div class="anomalie-header" onclick="this.parentElement.classList.toggle('open')">
+      <div class="a-num">${String(i+1).padStart(2,'0')}</div>
+      <div class="a-meta">
+        <div class="a-nazev">${a.n}</div>
+        <div class="a-termin">${a.t}</div>
+      </div>
+      <div class="a-toggle">▾</div>
+    </div>
+    <div class="anomalie-body">
+      <div class="a-citace">${a.c.map(c=>`<span>${c}</span>`).join('')}</div>
+      <p class="a-popis">${a.p}</p>
+    </div>`;
+  list.appendChild(el);
+});
+</script>
+</body>
+</html>
