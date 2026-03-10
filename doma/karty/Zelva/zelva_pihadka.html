@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Želva — pohádka · Chceš myš?</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#07090f;--s:#0d1018;--s2:#12161f;
+  --c:#cdd8e8;--dim:rgba(180,200,230,.35);--a:#2a7a6e;--a2:#1d5a4f;
+  --b:rgba(42,122,110,.12);--b2:rgba(42,122,110,.26);
+  --serif:'Cormorant Garamond',Georgia,serif;--mono:'DM Mono',monospace;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--c);font-family:var(--mono);font-size:13px;line-height:1.85;-webkit-font-smoothing:antialiased}
+.wrap{max-width:780px;margin:0 auto;padding:0 24px}
+
+nav{position:sticky;top:0;z-index:99;border-bottom:1px solid var(--b);background:rgba(7,9,15,.96);backdrop-filter:blur(14px);padding:11px 24px;display:flex;align-items:center;justify-content:space-between}
+.nav-l{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);text-decoration:none;transition:color .15s}
+.nav-l:hover{color:var(--c)}
+.nav-links{display:flex;gap:4px}
+.nav-links a{font-size:10px;letter-spacing:.11em;text-transform:uppercase;color:var(--dim);text-decoration:none;padding:5px 10px;border:1px solid transparent;border-radius:2px;transition:all .15s}
+.nav-links a:hover,.nav-links a.active{color:var(--a);border-color:var(--b2)}
+
+.hero{padding:52px 0 36px;border-bottom:1px solid var(--b)}
+.hero-tag{font-size:10px;letter-spacing:.26em;text-transform:uppercase;color:var(--a2);margin-bottom:14px}
+.hero h1{font-family:var(--serif);font-size:clamp(3rem,8vw,5.4rem);font-weight:300;line-height:.95;letter-spacing:-.02em;margin-bottom:6px}
+.hero h1 em{font-style:italic;color:var(--a)}
+.hero-sub{font-family:var(--serif);font-style:italic;font-size:.9rem;color:var(--dim);border-left:1px solid var(--a2);padding-left:16px;margin:18px 0 20px;line-height:2;max-width:500px}
+.fenomen{border:1px solid var(--b2);padding:14px 20px;background:rgba(42,122,110,.03)}
+.fenomen-tag{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--a);margin-bottom:7px}
+.fenomen-text{font-size:.8rem;color:rgba(180,200,230,.52);line-height:1.95}
+
+.sec{padding:38px 0;border-bottom:1px solid var(--b)}
+.sec-tag{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--a2);margin-bottom:12px}
+h2{font-family:var(--serif);font-size:clamp(1.1rem,3vw,1.6rem);font-weight:300;margin-bottom:18px}
+h2 em{font-style:italic;color:var(--a)}
+
+/* POHÁDKA */
+.pohadka{font-family:var(--serif);font-size:.94rem;color:rgba(200,218,238,.74);border:1px solid var(--b);background:var(--s);padding:28px 32px;line-height:1}
+.d{display:block;padding:.22em 0}
+.d.br{padding:.55em 0}
+.d.silna{color:var(--a);font-weight:400}
+.d.dim{color:rgba(180,200,230,.38);font-style:italic}
+.d.it{font-style:italic}
+.d.dl{padding-left:1.4em;font-style:italic}
+/* třídy pro 13 anomálií */
+.j1{border-bottom:1px dotted var(--a);cursor:help}
+.j2{border-bottom:1px dashed var(--a2);cursor:help}
+.j3{background:rgba(42,122,110,.1);padding:0 2px;cursor:help}
+.j4{border-bottom:2px dotted var(--a);cursor:help}
+.j5{border-bottom:1px solid var(--a2);cursor:help}
+.j6{background:rgba(42,122,110,.2);padding:0 2px;cursor:help}
+.j7{border-bottom:1px double var(--a);cursor:help}
+.j8{text-decoration:underline wavy var(--a2);cursor:help}
+.j9{border-bottom:1px dashed var(--a);cursor:help}
+.j10{background:rgba(42,122,110,.05);border-bottom:1px dotted var(--a2);cursor:help}
+.j11{text-decoration:line-through 1px solid var(--a);cursor:help}
+.j12{border-left:2px solid var(--a);padding-left:4px;cursor:help}
+.j13{background:rgba(42,122,110,.15);border-radius:2px;padding:0 2px;cursor:help}
+.legenda{margin-top:10px;padding:10px 14px;background:var(--s);border:1px solid var(--b);font-size:.71rem;color:var(--dim);display:flex;flex-wrap:wrap;gap:4px 18px}
+
+/* ANOMÁLIE */
+.anomalie{border:1px solid var(--b);background:var(--s);margin-bottom:3px;overflow:hidden}
+.anomalie-header{display:flex;align-items:center;gap:14px;padding:14px 18px;cursor:pointer;user-select:none}
+.anomalie-header:hover{background:rgba(42,122,110,.04)}
+.a-num{font-family:var(--serif);font-size:1.5rem;font-weight:300;color:rgba(42,122,110,.2);min-width:28px;line-height:1}
+.a-meta{flex:1}
+.a-nazev{font-size:.83rem;color:var(--c);margin-bottom:2px}
+.a-termin{font-size:.69rem;color:var(--a2);letter-spacing:.06em;font-style:italic}
+.a-toggle{font-size:.68rem;color:var(--dim);letter-spacing:.1em;text-transform:uppercase;transition:transform .2s;white-space:nowrap}
+.anomalie.open .a-toggle{transform:rotate(180deg)}
+.anomalie-body{display:none;padding:4px 18px 20px;border-top:1px solid var(--b)}
+.anomalie.open .anomalie-body{display:block}
+.a-citace{font-family:var(--serif);font-style:italic;font-size:.83rem;color:rgba(42,122,110,.5);border-left:1px solid var(--b2);padding:7px 13px;margin:12px 0;line-height:1.85}
+.a-citace span{display:block}
+.a-popis{font-size:.78rem;color:rgba(180,200,230,.54);line-height:1.92;margin-bottom:0}
+
+.cta-box{margin-top:32px;padding:20px 22px;background:var(--s);border:1px solid var(--b2);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+.cta-text{font-size:.8rem;color:var(--dim);max-width:360px;line-height:1.85}
+.btn{padding:10px 22px;font-family:var(--mono);font-size:.75rem;letter-spacing:.1em;text-transform:uppercase;border:none;cursor:pointer;border-radius:2px;transition:all .15s;text-decoration:none;display:inline-block}
+.btn-p{background:var(--a);color:var(--bg)}
+.btn-p:hover{background:#3e9e8e}
+.btn-g{background:transparent;color:var(--dim);border:1px solid var(--b)}
+.btn-g:hover{color:var(--c);border-color:var(--b2)}
+
+footer{padding:26px 0;border-top:1px solid var(--b);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+footer p{font-size:.7rem;color:var(--dim)}
+footer a{color:var(--a)}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-l" href="../../../index.html">← Všechna zvířata</a>
+  <div class="nav-links">
+    <a href="zelva_pohadka.html" class="active">Pohádka</a>
+    <a href="zelva_diagnostika.html">Diagnostika</a>
+    <a href="zelva_workshop.html">Workshop</a>
+    <a href="analyzer.html">Analyzátor</a>
+  </div>
+</nav>
+
+<div class="wrap">
+
+<section class="hero">
+  <p class="hero-tag">Kreativní miniatura · Karta Želva</p>
+  <h1>Želva</h1>
+  <p class="hero-sub">„želva běží závod celé roky zajíc poslal už čtyři pohlednice Sicílie Madrid Grónsko a Nemanice“</p>
+  <div class="fenomen">
+    <div class="fenomen-tag">Fenomén — důkladnost jako cesta / psaní jako důvod</div>
+    <p class="fenomen-text">Želva běží, ne pomalu, ale důkladně. Zajíc už dávno doběhl a teď posílá pohlednice z míst, která možná ani neexistují. Pohádka o tom, že závod není o čase, ale o tom, kdo si pamatuje, proč vůbec závodil. A že psát má smysl, dokud někdo běží a čte.</p>
+  </div>
+</section>
+
+<!-- POHÁDKA -->
+<section class="sec">
+  <p class="sec-tag">Pohádka · čtěte pomalu</p>
+  <h2>O ŽELVĚ <em>(která běží závod, a zajíci, který posílá pohlednice)</em></h2>
+
+  <div class="pohadka">
+    <span class="d silna">Želva běží závod.</span>
+    <span class="d"><span class="j1" title="Krátká věta jako rytmus">Celé roky.</span></span>
+    <span class="d"><span class="j2" title="Negace a upřesnění: Ne pomalu. Jen důkladně.">Ne pomalu.</span></span>
+    <span class="d"><span class="j2">Jen důkladně.</span></span>
+    <span class="d">Každý krok je jako otisk.</span>
+    <span class="d">Každý otisk stopy jako razítko.</span>
+    <span class="d"><span class="j3" title="Metafora času: kalendář, co nikdo neotáčí">Každý den jako další stránka v kalendáři, co nikdo neotáčí.</span></span>
+    <span class="d br"></span>
+    <span class="d">Zajíc už dávno doběhl.</span>
+    <span class="d">Pak se vrátil.</span>
+    <span class="d">Pak zase odběhl.</span>
+    <span class="d">Pak si sedl.</span>
+    <span class="d">Pak si lehl.</span>
+    <span class="d">A pak začal psát.</span>
+    <span class="d br"></span>
+    <span class="d"><span class="j4" title="Výčet míst s poetickým popisem">Poslal pohlednici ze Sicílie.</span></span>
+    <span class="d dl">„Tady je slunce, co se tváří jako výmluva.“</span>
+    <span class="d"><span class="j4">Poslal pohlednici z Madridu.</span></span>
+    <span class="d dl">„Tady se běhá akorát v myšlenkách.“</span>
+    <span class="d"><span class="j4">Poslal pohlednici z Grónska.</span></span>
+    <span class="d dl">„Tady je ticho, co se nedá doběhnout.“</span>
+    <span class="d"><span class="j4">A nakonec z Nemanic.</span></span>
+    <span class="d dl">„Tady není nic. Ale to nevadí.“</span>
+    <span class="d br"></span>
+    <span class="d">Želva běží.</span>
+    <span class="d">Dlouho</span>
+    <span class="d">Nečte hned.</span>
+    <span class="d">Času má dost.</span>
+    <span class="d"><span class="j5" title="Materializace abstrakt: pohlednice přistávají na krunýři">Ale každý pohled jí přistane na krunýři.</span></span>
+    <span class="d">A ona je nese.</span>
+    <span class="d">Jako důkazy.</span>
+    <span class="d">Jako sny.</span>
+    <span class="d">Jako možnosti.</span>
+    <span class="d">Jako mapy míst, kde nikdy nebyla, ale možná jednou bude.</span>
+    <span class="d br"></span>
+    <span class="d">Ale někdy po cestě,</span>
+    <span class="d">když se zastaví,</span>
+    <span class="d"><span class="j6" title="Rozdělení slov: ba chvíli">ba chvíli</span></span>
+    <span class="d">třeba kvůli křovisu, co se tváří</span>
+    <span class="d">jako večeře — vytáhne jednu.</span>
+    <span class="d br"></span>
+    <span class="d">Sicílie.</span>
+    <span class="d">Slunce, co se tváří jako výmluva.</span>
+    <span class="d">A želva si řekne: „Tam bych mohla jednou dojít.“</span>
+    <span class="d">A běží dál.</span>
+    <span class="d br"></span>
+    <span class="d">Madrid.</span>
+    <span class="d">Město, kde se běhá jenom v myšlenkách.</span>
+    <span class="d">To ji zaujme.</span>
+    <span class="d">Protože ona běží tělem..</span>
+    <span class="d">Ale možná by mohla i v myšlenkách?</span>
+    <span class="d">A tak si to poznamená.</span>
+    <span class="d"><span class="j7" title="Zápis do fyzického objektu: Do krunýře. Do vzoru.">Do krunýře.</span></span>
+    <span class="d"><span class="j7">Do vzoru.</span></span>
+    <span class="d br"></span>
+    <span class="d">Grónsko.</span>
+    <span class="d">Ticho, který se nedá předběhnout.</span>
+    <span class="d">To ji dojme.</span>
+    <span class="d">Protože to ona zná.</span>
+    <span class="d">Ale nikdy to nepředběhla.</span>
+    <span class="d">Jen jí to něco přesně připomíná.</span>
+    <span class="d br"></span>
+    <span class="d">Nemanice.</span>
+    <span class="d"><span class="j8" title="Definice nicoty: Nic. Ale to nevadí.">Nic.</span></span>
+    <span class="d"><span class="j8">Ale to nevadí.</span></span>
+    <span class="d">To je její oblíbená.</span>
+    <span class="d">Protože nic je místo, kde se může stát všechno.</span>
+    <span class="d br"></span>
+    <span class="d">A tak želva běží.</span>
+    <span class="d">A čte.</span>
+    <span class="d">A každý pohled má jako směr.</span>
+    <span class="d">Ne cíl.</span>
+    <span class="d">Ale důvod.</span>
+    <span class="d br"></span>
+    <span class="d">Zajíc mezitím píše dál.</span>
+    <span class="d">Ne proto, že by musel.</span>
+    <span class="d">Ale protože želva běží.</span>
+    <span class="d">A dokud běží, má komu psát.</span>
+    <span class="d br"></span>
+    <span class="d">Jednou napíše:</span>
+    <span class="d dl">„Tady jsem si uvědomil, že možná nejde o to, kdo doběhne.</span>
+    <span class="d dl">Ale o to, kdo má kam psát.“</span>
+    <span class="d br"></span>
+    <span class="d">A želva si to přečte.</span>
+    <span class="d">A usměje se.</span>
+    <span class="d">Ne proto, že by to bylo vtipné.</span>
+    <span class="d">Ale protože to je pravda.</span>
+    <span class="d br"></span>
+    <span class="d">A tak běží dál.</span>
+    <span class="d">A pohlednice jí šustí na zádech.</span>
+    <span class="d">Slova se splétají jako mašle.</span>
+    <span class="d">A vítr je čte s ní.</span>
+    <span class="d">A slunce je bledne.</span>
+    <span class="d">A déšť je rozmazává.</span>
+    <span class="d br"></span>
+    <span class="d">A zajíc píše dál.</span>
+    <span class="d">Z míst, která možná</span>
+    <span class="d"><span class="j9" title="Překlep / záměrná chyba: eexistující">ani eexistující.</span></span>
+    <span class="d">Ale pokud je želva</span>
+    <span class="d">jednou přečte,</span>
+    <span class="d">možná začnou.</span>
+    <span class="d br"></span>
+    <span class="d">A každý z nich běží závod.</span>
+    <span class="d">Jiný cíl, stejný důvod.</span>
+    <span class="d">„Zajíc běží, aby mohl psát.</span>
+    <span class="d">A želva běží, aby mohla číst.“</span>
+    <span class="d">a želva čte, aby zajíc mohl psat.”</span>
+    <span class="d"><span class="j10" title="Rozdělení slova: a zaj / íc">a zaj</span></span>
+    <span class="d"><span class="j10">íc píše, aby želva měla co číst.</span></span>
+    <span class="d br"></span>
+    <span class="d"><span class="j11" title="Závěrečná pointa: závod není o čase">A že závod není o čase.</span></span>
+    <span class="d"><span class="j12" title="Závěr: kdo si pamatuje, proč závodil">Je o tom, kdo si pamatuje, proč vůbec závodíl.</span></span>
+  </div>
+
+  <div class="legenda">
+    <span><span class="j1" style="cursor:default">tečkovaně</span> = krátká věta jako rytmus</span>
+    <span><span class="j2" style="cursor:default">přerušovaně</span> = negace a upřesnění</span>
+    <span><span class="j3" style="cursor:default">podklad světlý</span> = metafora času</span>
+    <span><span class="j4" style="cursor:default">dvojitě tečkovaně</span> = výčet míst s poetickým popisem</span>
+    <span><span class="j5" style="cursor:default">plně</span> = materializace abstrakt</span>
+    <span><span class="j6" style="cursor:default">podklad tmavší</span> = rozdělení slov</span>
+    <span><span class="j7" style="cursor:default">dvojitě</span> = zápis do fyzického objektu</span>
+    <span><span class="j8" style="cursor:default">vlnovka</span> = definice nicoty</span>
+    <span><span class="j9" style="cursor:default">přerušovaně</span> = překlep / záměrná chyba</span>
+    <span><span class="j10" style="cursor:default">podklad + tečky</span> = rozdělení slova</span>
+    <span><span class="j11" style="cursor:default">přeškrtnuto</span> = závěrečná pointa</span>
+    <span><span class="j12" style="cursor:default">levá linka</span> = závěr</span>
+  </div>
+</section>
+
+<!-- 13 ANOMÁLIÍ -->
+<section class="sec">
+  <p class="sec-tag">13 jazykových anomálií · kliknutím otevřete</p>
+  <h2>Co pohádka dělá s jazykem</h2>
+
+  <div id="anomalie-list"></div>
+
+  <div class="cta-box">
+    <p class="cta-text">Pokračujte diagnostikou — zjistěte svůj kognitivní úhel a dostanete workshop přizpůsobený vám.</p>
+    <a href="zelva_diagnostika.html" class="btn btn-p">Přejít na diagnostiku →</a>
+  </div>
+</section>
+
+<footer>
+  <p>Karta Želva · Chceš myš? · © 2026 Michaela Nováková</p>
+  <p><a href="mailto:chcesmys@gmail.com">chcesmys@gmail.com</a></p>
+</footer>
+</div>
+
+<script>
+const ANOMALIE = [
+  {n:'Krátká věta jako rytmus',t:'izolovaný časový údaj',
+   c:['"Celé roky."'],
+   p:'Dvouslovná věta, která stojí samostatně. Vytváří rytmus a zdůrazňuje nekonečnost času.'},
+  {n:'Negace a upřesnění',t:'antitetická dvojice',
+   c:['"Ne pomalu."','"Jen důkladně."'],
+   p:'Popis nejdřív neguje očekávání (pomalu), pak přináší vlastní definici (důkladně).'},
+  {n:'Metafora času',t:'kalendář, co nikdo neotáčí',
+   c:['"Každý den jako další stránka v kalendáři, co nikdo neotáčí."'],
+   p:'Čas je personifikován jako kniha, kterou nikdo nelistuje. Dny ubíhají bez povšimnutí.'},
+  {n:'Výčet míst s poetickým popisem',t:'opakující se struktura',
+   c:['"Poslal pohlednici ze Sicílie."','"Tady je slunce, co se tváří jako výmluva."','"Poslal pohlednici z Madridu."','"Tady se běhá akorát v myšlenkách."','"Poslal pohlednici z Grónska."','"Tady je ticho, co se nedá doběhnout."','"A nakonec z Nemanic."','"Tady není nic. Ale to nevadí."'],
+   p:'Čtyři pohlednice, každá má stejnou strukturu: místo + poetická definice. Nemanice jsou vrchol – místo, kde není nic.'},
+  {n:'Materializace abstrakt',t:'pohlednice jako fyzické objekty na krunýři',
+   c:['"Ale každý pohled jí přistane na krunýři."'],
+   p:'Abstraktní poselství (pohled) se stává fyzickým předmětem, který želva nosí na zádech.'},
+  {n:'Rozdělení slov',t:'ba chvíli',
+   c:['"ba chvíli"'],
+   p:'Spojení „bacha“ nebo „na chvíli“ je rozděleno a „ba“ stojí samostatně. Vzniká nový význam.'},
+  {n:'Zápis do fyzického objektu',t:'do krunýře, do vzoru',
+   c:['"Do krunýře."','"Do vzoru."'],
+   p:'Myšlenka se zapisuje do hmoty – do krunýře, do jeho přirozeného vzoru. Zápis jako součást bytí.'},
+  {n:'Definice nicoty',t:'Nic jako místo',
+   c:['"Nic."','"Ale to nevadí."'],
+   p:'Nic je definováno pozitivně: je to místo, kde se může stát všechno.'},
+  {n:'Překlep / záměrná chyba',t:'eexistující',
+   c:['"ani eexistující."'],
+   p:'Zdvojené „e“ může být překlep, ale v kontextu pohádky to zdůrazňuje, že místa možná vůbec neexistují.'},
+  {n:'Rozdělení slova',t:'a zaj / íc',
+   c:['"a zaj"','"íc píše"'],
+   p:'Slovo „zajíc“ je rozděleno na dva řádky. Vzniká nová možnost čtení: „a zaj“ (a zajímavé?) a „íc“ (jako přípona).'},
+  {n:'Závěrečná pointa',t:'závod není o čase',
+   c:['"A že závod není o čase."'],
+   p:'Přímé popření tradičního chápání závodu. Nejde o rychlost.'},
+  {n:'Závěr',t:'kdo si pamatuje, proč závodil',
+   c:['"Je o tom, kdo si pamatuje, proč vůbec závodíl."'],
+   p:'Poslední věta definuje smysl celého příběhu: paměť na původní motivaci.'}
+];
+
+const list = document.getElementById('anomalie-list');
+ANOMALIE.forEach((a,i)=>{
+  const el = document.createElement('div');
+  el.className = 'anomalie';
+  el.innerHTML = `
+    <div class="anomalie-header" onclick="this.parentElement.classList.toggle('open')">
+      <div class="a-num">${String(i+1).padStart(2,'0')}</div>
+      <div class="a-meta">
+        <div class="a-nazev">${a.n}</div>
+        <div class="a-termin">${a.t}</div>
+      </div>
+      <div class="a-toggle">▾</div>
+    </div>
+    <div class="anomalie-body">
+      <div class="a-citace">${a.c.map(c=>`<span>${c}</span>`).join('')}</div>
+      <p class="a-popis">${a.p}</p>
+    </div>`;
+  list.appendChild(el);
+});
+</script>
+</body>
+</html>
