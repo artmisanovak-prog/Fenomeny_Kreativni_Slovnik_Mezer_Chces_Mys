@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zaječice — workshop · Chceš myš?</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#0d0900;--s:#150e04;--s2:#1a1106;--s3:#1f1508;--c:#e8d8c0;--dim:rgba(220,180,120,.35);--a:#d4722a;--a2:#964e1a;--b:rgba(200,120,40,.12);--b2:rgba(200,120,40,.28);--serif:'Cormorant Garamond',Georgia,serif;--mono:'DM Mono',monospace;}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--c);font-family:var(--mono);font-size:13px;line-height:1.85;-webkit-font-smoothing:antialiased}
+.wrap{max-width:780px;margin:0 auto;padding:0 24px}
+nav{position:sticky;top:0;z-index:99;border-bottom:1px solid var(--b);background:rgba(13,9,0,.96);backdrop-filter:blur(14px);padding:11px 24px;display:flex;align-items:center;justify-content:space-between}
+.nav-l{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);text-decoration:none;transition:color .15s}
+.nav-l:hover{color:var(--c)}
+.nav-links{display:flex;gap:4px}
+.nav-links a{font-size:10px;letter-spacing:.11em;text-transform:uppercase;color:var(--dim);text-decoration:none;padding:5px 10px;border:1px solid transparent;border-radius:2px;transition:all .15s}
+.nav-links a:hover,.nav-links a.active{color:var(--a);border-color:var(--b2)}
+.hero{padding:44px 0 28px;border-bottom:1px solid var(--b)}
+.hero-tag{font-size:10px;letter-spacing:.26em;text-transform:uppercase;color:var(--a2);margin-bottom:12px}
+.hero h1{font-family:var(--serif);font-size:clamp(2rem,5vw,3.4rem);font-weight:300;line-height:1;margin-bottom:6px}
+.hero h1 em{font-style:italic;color:var(--a)}
+.hero-uhel{margin-top:14px;display:inline-flex;align-items:center;gap:10px;padding:9px 16px;background:rgba(200,120,40,.06);border:1px solid var(--b2)}
+.hero-uhel-tag{font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--a2)}
+.hero-uhel-val{font-family:var(--serif);font-size:.96rem;color:var(--a)}
+.hero-note{font-size:.76rem;color:var(--dim);margin-top:10px;line-height:1.9;max-width:520px}
+.uhel-switcher{padding:16px 0;display:flex;flex-wrap:wrap;gap:4px;border-bottom:1px solid var(--b)}
+.uhel-btn{font-family:var(--mono);font-size:.65rem;letter-spacing:.09em;padding:4px 9px;background:transparent;border:1px solid var(--b);color:var(--dim);cursor:pointer;border-radius:2px;transition:all .15s}
+.uhel-btn:hover{color:var(--a);border-color:var(--b2)}
+.uhel-btn.active{background:rgba(200,120,40,.1);color:var(--a);border-color:var(--a2)}
+.anomalie{border:1px solid var(--b);background:var(--s);margin-bottom:3px;overflow:hidden;transition:border-color .15s}
+.anomalie:hover{border-color:var(--b2)}
+.anomalie-header{display:flex;align-items:center;gap:14px;padding:14px 18px;cursor:pointer;user-select:none}
+.a-num{font-family:var(--serif);font-size:1.5rem;font-weight:300;color:rgba(200,120,40,.14);min-width:28px;line-height:1}
+.a-meta{flex:1}
+.a-nazev{font-size:.83rem;color:var(--c);margin-bottom:2px}
+.a-termin{font-size:.68rem;color:var(--a2);letter-spacing:.06em;font-style:italic}
+.a-toggle{font-size:.68rem;color:var(--dim);letter-spacing:.1em;text-transform:uppercase;transition:transform .2s;white-space:nowrap}
+.anomalie.open .a-toggle{transform:rotate(180deg)}
+.anomalie-body{display:none;padding:4px 18px 20px;border-top:1px solid var(--b)}
+.anomalie.open .anomalie-body{display:block}
+.a-citace{font-family:var(--serif);font-style:italic;font-size:.82rem;color:rgba(200,120,40,.48);border-left:1px solid var(--b2);padding:7px 13px;margin:12px 0 10px;line-height:1.85}
+.a-citace span{display:block}
+.a-popis{font-size:.77rem;color:rgba(220,180,120,.5);line-height:1.9;margin-bottom:16px}
+.ukol-wrap{background:var(--s2);border:1px solid var(--b)}
+.ukol-kalibrace{padding:9px 16px;border-bottom:1px solid var(--b);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--a);display:flex;align-items:center;gap:8px}
+.ukol-kalibrace span{color:var(--dim);font-size:.65rem}
+.ukol-text{padding:14px 16px;font-size:.82rem;color:rgba(220,190,150,.75);line-height:1.95}
+.ukol-jazyk{padding:8px 16px 12px;font-size:.71rem;color:var(--a2);font-style:italic;border-top:1px solid var(--b)}
+.pisarna{width:100%;background:var(--s3);border:none;border-top:1px solid var(--b);color:var(--c);padding:11px 14px;font-family:var(--mono);font-size:.78rem;line-height:1.75;resize:vertical;min-height:72px}
+.pisarna:focus{outline:1px solid var(--a2)}
+.pisarna::placeholder{color:rgba(220,180,120,.08)}
+.btn{padding:9px 20px;font-family:var(--mono);font-size:.73rem;letter-spacing:.1em;text-transform:uppercase;border:none;cursor:pointer;border-radius:2px;transition:all .15s;text-decoration:none;display:inline-block}
+.btn-g{background:transparent;color:var(--dim);border:1px solid var(--b)}
+.btn-g:hover{color:var(--c);border-color:var(--b2)}
+.a-btns{display:flex;gap:5px;padding:8px 14px 0}
+.export-fixed{position:fixed;bottom:0;left:0;right:0;background:rgba(13,9,0,.97);border-top:1px solid var(--b);backdrop-filter:blur(12px);padding:9px 24px;display:flex;justify-content:space-between;align-items:center;z-index:90}
+.export-info{font-size:.72rem;color:var(--dim)}
+.export-info strong{color:var(--a)}
+.export-btns{display:flex;gap:5px}
+footer{padding:24px 0;border-top:1px solid var(--b);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:52px}
+footer p{font-size:.7rem;color:var(--dim)}
+footer a{color:var(--a)}
+@media print{nav,.export-fixed,.uhel-switcher,.a-btns,.pisarna{display:none!important}.anomalie-body{display:block!important}body{background:white;color:black}}
+</style>
+</head>
+<body>
+<nav>
+  <a class="nav-l" href="../../../index.html">← Všechna zvířata</a>
+  <div class="nav-links">
+    <a href="zajecice_pohadka.html">Pohádka</a>
+    <a href="zajecice_diagnostika.html">Diagnostika</a>
+    <a href="zajecice_workshop.html" class="active">Workshop</a>
+  </div>
+</nav>
+<div class="wrap">
+<section class="hero">
+  <p class="hero-tag">Karta Zaječice · Workshop</p>
+  <h1>12 anomálií — <em>cvičení</em></h1>
+  <div class="hero-uhel">
+    <span class="hero-uhel-tag">Váš úhel:</span>
+    <span class="hero-uhel-val" id="uhel-display">— přejděte nejprve na diagnostiku —</span>
+  </div>
+  <p class="hero-note">Každá anomálie má cvičení přizpůsobené vašemu úhlu. Přepínačem nahoře zobrazíte cvičení pro libovolný úhel.</p>
+</section>
+<div class="uhel-switcher" id="uhel-switcher"></div>
+<div id="anomalie-list"></div>
+<footer>
+  <p>Karta Zaječice · Chceš myš? · © 2026 Michaela Nováková</p>
+  <p><a href="mailto:chcesmys@gmail.com">chcesmys@gmail.com</a></p>
+</footer>
+</div>
+<div class="export-fixed">
+  <div class="export-info">Workshop: <strong id="export-uhel-label">—</strong> · Karta Zaječice</div>
+  <div class="export-btns">
+    <button class="btn btn-g" style="font-size:.68rem;padding:6px 12px" onclick="ulozitMapu()">Uložit mapu</button>
+    <button class="btn btn-g" style="font-size:.68rem;padding:6px 12px" onclick="exportJSON()">Export JSON</button>
+    <button class="btn btn-g" style="font-size:.68rem;padding:6px 12px" onclick="window.print()">Tisk</button>
+    <button class="btn btn-g" style="font-size:.68rem;padding:6px 12px" onclick="sdilej()">Sdílet</button>
+  </div>
+</div>
+<script>
+const UHLY_LIST=[
+  {id:'0',label:'0° Analytický'},{id:'180',label:'180° Asociační'},
+  {id:'30',label:'30° Kulturní'},{id:'210',label:'210° Introspektivní'},
+  {id:'60',label:'60° Filozofický'},{id:'240',label:'240° Ironický'},
+  {id:'90',label:'90° Naivní'},{id:'270',label:'270° Groteskní'},
+  {id:'120',label:'120° Jazykový'},{id:'300',label:'300° Absurdní'},
+  {id:'150',label:'150° Metaforický'},{id:'330',label:'330° Surrealistický'}
+];
+
+const ANOMALIE=[
+{
+  nazev:'Parenteze s opravou',
+  termin:'vsuvka s „vlastně" — syntaktické zaváhání',
+  citace:['"Jenže jeden zajíc – vlastně zaječice – byla jiná."'],
+  popis:'Vsuvka s „vlastně" opravuje rod a druh uprostřed věty. Pomlčky oddělují opravu jako závorka, která přiznává omyl ještě za chodu. Je to poctivost vepsaná do syntaxe.',
+  jazyk:'Vsuvka, oprava uprostřed věty, pomlčky jako závorky, zaváhání jako forma',
+  ukoly:{
+    '0':  'Napiš větu s parentezí, která opravuje svůj vlastní původní výrok — systematicky, logicky. Kde přesně věta přiznala nepřesnost? Co se tím změnilo v jejím smyslu?',
+    '180':'Napiš sérii vět, kde každá vsuvka přivede jinou asociaci — a ta asociace změní, co věta říká. Nechej vsuvky přicházet volně.',
+    '30': 'Napiš text, kde kolektivní výrok se uprostřed sám opraví — „Všichni říkají — vlastně ne všichni — ale většina…" Kde se sdílená pravda zaváhá?',
+    '210':'Napiš větu, která se uprostřed opraví, protože jsi si uvědomil/a nepřesnost. Reálnou. Větu, která by mohla být o tobě.',
+    '60': 'Napiš o tom, co dělá parenteze s filozofickým výrokem. Je oprava uprostřed věty silnější než oprava na konci? Co říká o vztahu mluvčího k pravdě?',
+    '240':'Napiš text plný ironických parentezí, které opravují výroky, které nepotřebovaly opravu — nebo které opraví smysl do absurda.',
+    '90': 'Napiš tři věty, každá s jednou vsuvkou. Vsuvka každou větu opraví. Nic víc.',
+    '270':'Napiš větu, kde parenteze dramaticky zvrátí smysl — kde oprava je silnější a závažnější než původní výrok.',
+    '120':'Napiš pět vět s různými typy vsuvek: závorka, pomlčky, čárky, „vlastně", „nebo spíš". Jak se mění síla opravy se způsobem oddělení?',
+    '300':'Napiš věty, kde vsuvka opravuje větu způsobem, který nedává smysl — „Šel — vlastně letěl — na nákup." Tři absurdní opravy.',
+    '150':'Napiš větu jako obraz: zaváhání uprostřed jako přírodní jev — vlna, která změní směr, vítr, který se odrazí. Který obraz sedí na syntaktické zaváhání?',
+    '330':'Napiš větu, kde vsuvka pochází z jiného světa nebo dimenze — kde oprava narušuje realitu věty samotné.'
+  }
+},
+{
+  nazev:'Trojí negace jako definice hrdinky',
+  termin:'gradace absencí — hrdinství bez vlastností',
+  citace:['"Nebyla statečnější než ostatní, nebyla chytřejší, dokonce ani nebyla rychlejší."'],
+  popis:'Třikrát „nebyla" — gradace vlastností, které postava nemá. Hrdinství je definováno absencí. Text říká, kdo zaječice není, a tímto způsobem ji vystihne přesněji než seznam toho, kdo je.',
+  jazyk:'Negační gradace, definice skrze absenci, trojí „nebyla"',
+  ukoly:{
+    '0':  'Napiš systematickou charakteristiku postavy výhradně přes to, co není — tři kategorie vlastností, třikrát negace. Na konci napiš: co z tohoto portrétu zbývá?',
+    '180':'Napiš volně sérii toho, čím nejsi — bez plánování. Kde se negace zastaví? Co nechají viditelné?',
+    '30': 'Napiš o kolektivním hrdinství skrze absenci: „Nebyli silnější, nebyli odvážnější, nebyli připravení — a přesto." Co se stane s hrdinou, který nemá vlastnosti?',
+    '210':'Napiš svůj vlastní portrét přes trojí negaci. Co nejsi? A co tím portrétem přesto říkáš o sobě?',
+    '60': 'Napiš o filozofii absence jako definice. Je negace přesnější než afirmace? Co se ztratí a co se získá, když hrdinství popíšeme tím, co hrdina není?',
+    '240':'Napiš ironický životopis přes negace: „Nebyl nejchytřejší, nebyl nejtvrdší pracant, nebyl nejlépe placený — ale byl." Co z toho čtenář uslyší?',
+    '90': 'Napiš tři věty. Každá začíná „nebyl/nebyla". Žádné vysvětlení.',
+    '270':'Napiš portrét přes maximální negace — kde každá negace je dramatičtější, větší, definitivnější než předchozí.',
+    '120':'Napiš pět negačních vět — každá „nebyl/a" v jiné gramatické konstrukci. Sleduj, jak se mění síla negace se syntaxí.',
+    '300':'Napiš portrét přes negace věcí, které nedávají smysl negovat: „Nebyla rychlejší než středa, nebyla chytřejší než mlčení."',
+    '150':'Napiš obraz absence z přírody: prázdné hnízdo, suchá řeka, místo kde byl strom. Který obraz odpovídá definici přes negaci?',
+    '330':'Napiš o postavě, jejíž identita je tvořena jen negacemi — a negace jsou z různých realit. Co zůstane?'
+  }
+},
+{
+  nazev:'Chiasmus',
+  termin:'kontrastní paralelismus — pohyb vpřed × pohyb vzad',
+  citace:['"zatímco ostatní běželi kupředu před ohněm, ona udělala pravý opak"'],
+  popis:'Pohyb vpřed × pohyb vzad. Kontrastní paralelismus, který strukturuje celý klíčový moment. Chiasmus tu není ornament — je to geometrie rozhodnutí.',
+  jazyk:'Chiasmus, kontrastní paralelismus, dvě osy pohybu v jedné větě',
+  ukoly:{
+    '0':  'Napiš chiasmus pro situaci, kde dvě protikladné strategie vedou k témuž výsledku — nebo k opačným. Analyzuj geometrii věty: kde se osy kříží?',
+    '180':'Napiš sérii protikladů, které se ti vybaví k jednomu tématu. Pak z nejsilnějšího páru vytvoř chiasmus.',
+    '30': 'Napiš chiasmus o kolektivním pohybu: „zatímco ostatní X, my jsme Y." Jak tato struktura vytvoří skupinovou identitu přes kontrast?',
+    '210':'Napiš chiasmus pro svůj vlastní klíčový moment — kdy jsi šel/šla jinam než ostatní. Věta musí držet obě trajektorie najednou.',
+    '60': 'Napiš o chiasmu jako myšlenkovém pohybu. Co dělá se smyslem, když dvě protipohybové trajektorie existují v jedné větě?',
+    '240':'Napiš ironický chiasmus, kde protikladné pohyby vedou ke stejně směšnému výsledku — kde symetrie odhalí absurditu.',
+    '90': 'Napiš jednu větu s chiasmusem. Pak napiš: co říkají obě části zvlášť.',
+    '270':'Napiš chiasmus, kde protikladné pohyby jsou extrémně dramaticky rozdílné — kde kontrast je maximální.',
+    '120':'Napiš tři chiasmy — každý s jiným typem protikladu: pohyb/klid, řeč/ticho, přítomnost/absence. Jak se mění geometrie věty?',
+    '300':'Napiš chiasmus, kde obě strany dělají to samé, ale věta tvrdí, že jde o pravý opak. Absurdní symetrie.',
+    '150':'Napiš chiasmus jako přírodní obraz: příliv a odliv, den a noc. Pak větu, kde zaječicin chiasmus odpovídá jednomu z těchto obrazů.',
+    '330':'Napiš chiasmus, kde obě strany jsou z různých světů — kde „zatímco" spojuje dva nesouvisející vesmíry.'
+  }
+},
+{
+  nazev:'Oslovení čtenáře',
+  termin:'apostrofa — narušení vyprávěcí roviny',
+  citace:['"Teď byste čekali, že se promění v popel… Ale kdepak."'],
+  popis:'Apostrofa čtenáře narušuje vyprávěcí rovinu. „Kdepak" je hovorový prvek v jinak knižním vyprávění — stylový zlom, který pohladí čtenáře po hlavě a pak ho překvapí.',
+  jazyk:'Apostrofa, narušení vyprávěcí roviny, registrový zlom, „ale kdepak"',
+  ukoly:{
+    '0':  'Napiš text, kde vypravěč jednou osloví čtenáře přímo — systematicky, jako by přerušil přednášku. Co toto přerušení říká o vztahu textu a čtenáře?',
+    '180':'Napiš moment, kdy se text obrátí na čtenáře — bez plánování. Jaká otázka nebo věta se sama nabídla?',
+    '30': 'Napiš text, kde apostrofa oslovuje kolektivního čtenáře — „vy všichni víte, jak to dopadá". Jak se mění tón, když se text obrátí na nás?',
+    '210':'Napiš text, kde se autor obrátí na konkrétního čtenáře — jako by věděl, kdo čte. Co by ten text řekl tobě?',
+    '60': 'Napiš o filozofickém efektu apostrofy. Co se stane s fikcí, když text promluví přímo na čtenáře? Kde je hranice mezi příběhem a rozhovorem?',
+    '240':'Napiš apostrofu, která osloví čtenáře ironicky — která předpokládá špatnou interpretaci a pak ji komentuje.',
+    '90': 'Napiš tři věty. Jedna mluví k čtenáři přímo. Dvě ne. Pak přečti: kde je zlom?',
+    '270':'Napiš apostrofu, která dramaticky přeruší děj v nejintenzivnějším momentu — kde oslovení čtenáře je samo dramatickým gestem.',
+    '120':'Napiš tři různé apostrofy pro ten samý moment — formální, hovorovou, poetickou. Jak registr mění efekt oslovení?',
+    '300':'Napiš apostrofu, která osloví čtenáře, který neexistuje — nebo osloví špatnou osobu. Tři absurdní oslovení.',
+    '150':'Napiš apostrofu jako gesto z přírody: déšť, který promluví. Vítr, který se zeptá. Který přírodní obraz sedí na pohladění po hlavě před překvapením?',
+    '330':'Napiš text, kde apostrofa osloví čtenáře z jiné časové roviny — minulého nebo budoucího čtenáře.'
+  }
+},
+{
+  nazev:'Opakování slovesa',
+  termin:'infinitivní anafora — rytmické stupňování pohybu',
+  citace:['"Utíkat. Utíkat pryč, co nejdál, co nejrychleji."'],
+  popis:'Infinitiv na začátku věty, pak zopakován s příslovci. Rytmické stupňování — první „utíkat" je čistý impuls, druhé ho rozvíjí do směru a rychlosti.',
+  jazyk:'Infinitiv jako věta, opakování slovesa s příslovci, gradace pohybu',
+  ukoly:{
+    '0':  'Napiš větu se slovesem, pak ji zopakuj s příslovci — systematicky, jako by ses přibližoval/a k přesnější definici pohybu. Co přidá každé příslovce?',
+    '180':'Napiš sérii infinitivů — akcí, pohybů, stavů — volně, bez plánování. Pak jeden zopakuj s rozvinutím. Který se sám nabídl?',
+    '30': 'Napiš infinitivní anaforu pro kolektivní pohyb — pro to, co dělá skupina, komunita, generace. „Pracovat. Pracovat tvrdě, bez nároku."',
+    '210':'Napiš vlastní infinitivní anaforu pro impuls, který sis jednou musel/a opakovat. Co přidalo opakování?',
+    '60': 'Napiš o tom, co dělá opakování slovesa se smyslem. Je druhé použití přesnější, nebo intenzivnější? Kdy opakování graduje a kdy se vyprázdní?',
+    '240':'Napiš infinitivní anaforu pro ironicky banální činnost: „Schůzovat. Schůzovat efektivně, se správnými lidmi, v pravou chvíli."',
+    '90': 'Napiš jedno sloveso. Pak ho zopakuj. Přidej dvě příslovce. Hotovo.',
+    '270':'Napiš infinitivní anaforu pro maximálně dramatický pohyb — kde opakování stupňuje intenzitu až k prahu.',
+    '120':'Napiš pět infinitivních anafor — každá s jiným typem slovesa (pohyb, stav, komunikace, percepce, tvorba). Jak se mění rytmus s typem slovesa?',
+    '300':'Napiš infinitivní anaforu pro pohyb, který není pohyb: „Stát. Stát nehybně, co nejtiše, co nejdéle."',
+    '150':'Napiš infinitivní anaforu jako přírodní obrazu: vlna, která přijde — a pak přijde znovu, silněji.',
+    '330':'Napiš infinitivní anaforu, kde opakování přenese sloveso do jiné reality — kde druhé „utíkat" utíká jinam.'
+  }
+},
+{
+  nazev:'Věta jako definice žánru',
+  termin:'sebedefinice textu — pohádka jako nelogické přežití',
+  citace:['"Protože všechno, co přežije proti logice, se stane pohádkou."'],
+  popis:'Sebedefinice textu. Věta tvrdí, že pohádka je nelogické přežití — a zároveň komentuje sama sebe, jak se stala.',
+  jazyk:'Sebedefinice, metatext, žánrová věta, „proti logice" jako adverbium',
+  ukoly:{
+    '0':  'Napiš větu, která definuje žánr nebo formu textu, který píšeš — přesně, logicky. Co musí být splněno, aby se text stal pohádkou? Esejí? Básní?',
+    '180':'Napiš, co pro tebe pohádka je — volně, bez definice. Pak z toho napiš jednu větu, která tu definici drží.',
+    '30': 'Napiš větu, která definuje, co se stane pohádkou v rámci kultury nebo tradice. Co musí přežít a jak?',
+    '210':'Napiš větu, která definuje žánr tvé vlastní tvorby nebo způsobu myšlení. Co přežívá „proti logice" u tebe?',
+    '60': 'Napiš o tom, proč nelogické přežití tvoří pohádku. Je to dobrá definice? Co z ní vyplývá o vztahu pohádky a skutečnosti?',
+    '240':'Napiš ironicky větu, která definuje jiný žánr přes přežití: „Vše, co přežije meeting, se stane strategií." Tři takové definice.',
+    '90': 'Napiš jednu větu: co se stane pohádkou. Pak jednu větu: co se pohádkou nestane.',
+    '270':'Napiš větu, která definuje žánr přes maximálně dramatické přežití — kde „přežít proti logice" je téměř nemožné.',
+    '120':'Napiš pět různých žánrových sebedefinic — pro pohádku, román, báseň, esej, ticho. Každá věta jako definice přes přežití.',
+    '300':'Napiš větu, která definuje žánr absurdně: „Vše, co přežije úterý, se stane básní." Tři nesmyslné žánrové definice.',
+    '150':'Napiš obraz nelogického přežití z přírody: plevel přes asfalt, strom přes zeď, mech přes kámen. Který obraz sedí na pohádce?',
+    '330':'Napiš větu, která definuje žánr z perspektivy textu samotného — kde pohádka mluví o tom, jak se stala.'
+  }
+},
+{
+  nazev:'Enumerace verzí',
+  termin:'trojice interpretací — mnohohlas bez pravdy',
+  citace:['"Jedni tvrdili… Jiní říkali… A další vykládali…"'],
+  popis:'Trojice různých interpretací jedné události. Každá začíná jiným distributivním zájmenem. Vytváří dojem mnohohlasu — a zároveň ukazuje, že žádná verze není pravda.',
+  jazyk:'Distributivní zájmena, enumerace hlasů, mnohohlas, absence pravdy',
+  ukoly:{
+    '0':  'Napiš tři různé interpretace jedné události — systematicky, každá z jiného logického východiska. Na konci napiš: kde se shodují? Kde se rozcházejí?',
+    '180':'Napiš sérii hlasů o jednom tématu — volně, každý začíná jiným zájmenem. Nech hlasy přicházet bez cenzury.',
+    '30': 'Napiš o tom, jak se kolektivní pravda tvoří z mnohohlasu. Kdy tři různé verze vytvářejí sdílený mýtus — i když žádná není správná?',
+    '210':'Napiš tři verze jedné věci, která se ti přihodila — jak ji popsali jiní. Která verze je ti nejcizejší?',
+    '60': 'Napiš o epistemologickém problému mnohohlasu. Existuje pravda pod verzemi, nebo je pravda mnohohlas sám? Co říká pohádka o tom, jak vznikají legendy?',
+    '240':'Napiš tři ironicky protichůdné verze jedné banální události — každá přehání jinak. Kde se mnohohlas stane satirou?',
+    '90': 'Napiš tři věty: jedni říkali. Jiní říkali. A další říkali. Každá jinak.',
+    '270':'Napiš tři dramaticky neslučitelné verze téže události — kde každá je absolutně jistá a navzájem si odporují.',
+    '120':'Napiš pět různých distributivních zájmen a ke každému větu o téže události. Jak zájmeno mění tón výpovědi?',
+    '300':'Napiš tři verze události, kde každá verze popisuje jiné události — ale všechny tvrdí, že popisují totéž.',
+    '150':'Napiš mnohohlas jako přírodní obraz: tři různé větve, tři různé proudy jedné řeky. Který obraz zachycuje enumeraci bez pravdy?',
+    '330':'Napiš tři verze téže události z různých časových rovin — minulost, přítomnost, možná budoucnost. Kde se setkají?'
+  }
+},
+{
+  nazev:'Paradox',
+  termin:'fyzický pohyb s abstraktem — strach jako překážka',
+  citace:['"která jen zakopla o vlastní strach"'],
+  popis:'Fyzický pohyb (zakopnout) je spojen s abstraktem (strach). Strach je věc, o kterou lze klopýtnout. Toto přirovnání říká víc než jakékoli vysvětlení.',
+  jazyk:'Paradox, fyzické sloveso s abstraktním podmětem, konkretizace abstrakta',
+  ukoly:{
+    '0':  'Napiš tři paradoxy, kde fyzické sloveso dostane abstraktní podmět nebo předmět. Analyzuj: jak fyzické sloveso mění abstraktum? Co přibude?',
+    '180':'Napiš o abstraktu, o který se dá zakopnout — volně. Jaký je tvůj strach? Tvá pochybnost? Tvá naděje jako fyzická věc?',
+    '30': 'Napiš o kolektivních abstraktech, o které se zakopává — o sdílených straších nebo nadějích jako fyzických překážkách v prostoru.',
+    '210':'Napiš o konkrétním abstraktu, o který jsi zakopla/zakopnul. Co to bylo? Jak vypadalo jako fyzická věc?',
+    '60': 'Napiš o paradoxu fyzického a abstraktního. Co se stane, když abstraktum dostane fyzikální vlastnosti? Ztratí svou podstatu, nebo ji tím teprve odhalí?',
+    '240':'Napiš ironický katalog abstrakt, o která se v životě zakopává — „Zakopla o vlastní ambici. Přepadla přes svou skromnost."',
+    '90': 'Napiš tři věty: zakopla o [abstraktum]. Různá abstrakta. Žádné vysvětlení.',
+    '270':'Napiš scénu, kde zakopnutí o abstraktum způsobí dramatický pád — kde kolize s vlastním strachem je katastrofální.',
+    '120':'Napiš pět fyzických sloves (zakopnout, srazit, narazit, nést, pustit) a ke každému přiřaď abstraktní podmět. Jak se mění sloveso s každým abstraktem?',
+    '300':'Napiš paradoxy, kde abstrakta zakopávají o fyzické věci — „Strach zakopnul o stoličku." Tři obrácené paradoxy.',
+    '150':'Napiš obraz abstrakta jako fyzické překážky z přírody: kámen uprostřed cesty, mlha v lese, mělčina pod hladinou. Který obraz sedí na „zakopnout o vlastní strach"?',
+    '330':'Napiš o světě, kde abstrakta jsou fyzikálně přítomná — kde strach má tvar, tíhu, barvu. Jak by vypadala zaječicina louka?'
+  }
+},
+{
+  nazev:'Přímá řeč jako vnitřní monolog',
+  termin:'prosté věty — bagatelizace vlastního činu',
+  citace:['"Já jsem se jen lekla. Jen jsem skočila blbě."'],
+  popis:'Krátké, prosté věty. Opakování „jen" — bagatelizace vlastního činu. Kontrast s tím, co následuje: enumerace hrdinských interpretací.',
+  jazyk:'Přímá řeč, prosté věty, opakování „jen", kontrast s mýtem',
+  ukoly:{
+    '0':  'Napiš vnitřní monolog, který systematicky bagatelizuje velký čin — přes „jen", „prostě", „nic zvláštního". Na konci napiš: co z toho vyplývá o vztahu mluvčího k vlastnímu výkonu?',
+    '180':'Napiš vnitřní monolog volně — co by zaječice říkala po přeskočení ohně. Nechej slova přicházet přirozeně.',
+    '30': 'Napiš vnitřní monolog hrdiny, který ví, že ho ostatní vidí jinak. Jak mluví ten, kdo je uvnitř mýtu, ale sám ho neprožívá?',
+    '210':'Napiš svůj vlastní vnitřní monolog pro situaci, kdy tě někdo pochválil za věc, která ti přišla banální. Co jsi říkal/a uvnitř?',
+    '60': 'Napiš o napětí mezi vnitřní a vnější pravdou. Je zaječicin vnitřní monolog pravdivější než legenda? Co říká toto napětí o povaze hrdinství?',
+    '240':'Napiš ironický vnitřní monolog hrdiny, který si je velmi dobře vědom propasti mezi svým činem a mýtem — a ironicky ji komentuje.',
+    '90': 'Napiš tři věty vnitřního monologu. Každá začíná „jen". Nic složitého.',
+    '270':'Napiš vnitřní monolog, kde bagatelizace přeroste v dramatické popření — kde „jen jsem skočila blbě" eskaluje.',
+    '120':'Napiš tři verze téhož vnitřního monologu — v různých délkách a syntaxích. Jak se mění upřímnost s délkou věty?',
+    '300':'Napiš vnitřní monolog, kde bagatelizace je natolik absurdní, že se stane novou legendou. „Jen jsem tak trochu přestoupila hranici dimenzí."',
+    '150':'Napiš obraz bagatelizace z přírody: kapka, která neví, že zaplavila. Semínko, které neví, že je strom. Který obraz odpovídá zaječicině „jen"?',
+    '330':'Napiš vnitřní monolog z pohledu zaječice, která existuje ve dvou časových rovinách — ta, která skočila, a ta, která bude legendou.'
+  }
+},
+{
+  nazev:'Metafora vrstev',
+  termin:'prostorová hierarchie — realita dole, legenda nahoře',
+  citace:['"Realita byla jen podklad, jako spáleniště pod jejími tlapkami. To, co rostlo nad ní, byla řeč, příběh, legenda."'],
+  popis:'Prostorová metafora: podklad (dole) × to, co roste (nahoře). Abstraktní hierarchie převedená do vertikály. Z popela roste příběh, stejně jako z popela roste tráva.',
+  jazyk:'Prostorová metafora, vertikální hierarchie, podklad × vrůst, konkretizace abstrakta',
+  ukoly:{
+    '0':  'Napiš systematický popis dvouvrstvé metafory — co je podklad a co roste. Pro tři různé páry: realita/příběh, zkušenost/paměť, fakta/interpretace.',
+    '180':'Napiš volně o vrstvách — o tom, co leží pod povrchem a co z toho vyrůstá. Nechej obrazy přicházet.',
+    '30': 'Napiš o kolektivních podkladech: co je podkladem kolektivní paměti? Co z ní vyrůstá jako sdílená legenda?',
+    '210':'Napiš o vrstvách vlastní zkušenosti — co je tvůj podklad a co z něj vyrostlo? Co bys nenazval/a realitou, ale příběhem?',
+    '60': 'Napiš o filozofickém problému vrstev. Je realita vždy pod příběhem? Nebo může být příběh podkladem pro realitu? Kdy se hierarchie obrátí?',
+    '240':'Napiš ironicky o podkladech, ze kterých vyrůstají absurdní věci: „Z nudné schůzky vyrostla firemní kultura." Tři takové vrstvy.',
+    '90': 'Napiš dvě věty. První: co je podklad. Druhá: co z něj roste.',
+    '270':'Napiš o podkladu, ze kterého vyrůstá něco příliš velkého — kde vrůst přeroste podklad dramaticky.',
+    '120':'Napiš pět prostorových metafor pro abstraktní vztahy — každá s jiným slovesem pohybu (růst, ležet, viset, stát, plout). Jak sloveso mění vertikální hierarchii?',
+    '300':'Napiš o podkladech, ze kterých vyrůstají věci, které nedávají smysl: „Z ticha vyrostlo číslo." Tři absurdní vrstvy.',
+    '150':'Napiš o spáleništi jako obrazu: z popela tráva, z trávy les. Pak větu: co je tvůj zápalný bod — co muselo shoret, aby mohlo vyrůst?',
+    '330':'Napiš o světě, kde vrstvy existují v opačném pořadí — kde legenda je podkladem a realita vyrůstá z ní.'
+  }
+},
+{
+  nazev:'Performativní proměna',
+  termin:'přehodnocení chyby — omyl jako koruna',
+  citace:['"naučila se nosit svůj omyl jako korunu"'],
+  popis:'Omyl (negativní) se stává korunou (pozitivní symbol). Přehodnocení vlastní chyby skrze jazyk. Performativní: naučit se nosit znamená opakovat tento akt každý den.',
+  jazyk:'Performativní jazyk, přehodnocení, „nosit jako", opakovaný akt',
+  ukoly:{
+    '0':  'Napiš systematickou analýzu performativní proměny: co se musí stát, aby se omyl stal korunou? Jaké kroky, jaký jazyk, jaký opakovaný akt?',
+    '180':'Napiš volně o věci, kterou jsi jednou nosil/a jako hanbu — a o tom, kdy se to změnilo. Nebo kdy ne.',
+    '30': 'Napiš o kolektivní performativní proměně: kdy skupina přehodnotí svůj omyl jako zdroj identity nebo hrdosti?',
+    '210':'Napiš o vlastním omylu, který se stal — nebo by se mohl stát — korunou. Co by muselo nastat, abys ho začal/a nosit jinak?',
+    '60': 'Napiš o filozofii přehodnocení. Je omyl-koruna stále omylem? Nebo přehodnocení mění ontologický status věci? Co říká „nosit" o opakovaném aktu?',
+    '240':'Napiš ironický manuál „Jak přehodnotit svůj největší omyl jako výjimečnou vlastnost" — krok za krokem.',
+    '90': 'Napiš jednu větu: co nosíš jako korunu. Pak jednu větu: jak jsi se to naučil/a.',
+    '270':'Napiš o proměně, která je příliš dramatická — kde omyl je tak velký, že koruna nestačí. Co je potom?',
+    '120':'Napiš pět různých metafor pro přehodnocení: nosit jako korunu, nést jako trofej, schovat jako poklad, předat jako dar, uložit jako základ. Jak každá metafora mění akt přehodnocení?',
+    '300':'Napiš o přehodnocení věcí, které přehodnotit nelze — nebo které jsou tak banální, že koruna nedává smysl.',
+    '150':'Napiš obraz přehodnocení z přírody: jizva jako mapa, vrásčité kůra jako kronika, suché pole jako výchozí bod. Který obraz sedí na omylu-koruně?',
+    '330':'Napiš o zaječici, která si korunu nasazuje každý den — kde performativní akt proměny je rituál. Jak vypadá ten rituál?'
+  }
+},
+{
+  nazev:'Roztržené „i když"',
+  termin:'grafické dělení spojky — vizuální doutnání',
+  citace:['"doutná, i / když pole dávno vychladlo."'],
+  popis:'Spojka „i když" je roztržena na dva řádky. Vzniká mezera, která vizuálně znázorňuje doutnání — přerušovaný, ale trvající proces. „I" doutná samo. „Když" přijde pak.',
+  jazyk:'Grafické dělení, vizuální rytmus, mezera jako obsah, roztržení jako znázornění',
+  ukoly:{
+    '0':  'Napiš text, kde grafické rozdělení slova nebo fráze nese analytický smysl — kde mezera uprostřed funguje jako přesný vizuální popis obsahu.',
+    '180':'Napiš sérii slov nebo frází, které se ti zdají roztržené — kde cítíš mezeru uvnitř. Pak jedno rozděl na dva řádky.',
+    '30': 'Napiš o sdílené mezery — o kolektivním „i / když" — o věci, která doutná v kultuře nebo komunitě po dlouhém vychladnutí.',
+    '210':'Napiš o vlastním doutnání — o věci, která stále doutná, i když pole vychladlo. Pak ji zapiš graficky: kde je mezera?',
+    '60': 'Napiš o tom, co dělá grafická mezera s filozofickým výrokem. Je přerušení viditelné jinak než přerušení zvukové? Co říká „i / když" o trvání navzdory?',
+    '240':'Napiš ironická grafická roztržení — slova, která by se neměla rozdělit, ale ve svém rozdělení odhalí absurdní smysl.',
+    '90': 'Napiš jednu větu. Uprostřed ji rozděl na dva řádky. Přečti obě části zvlášť.',
+    '270':'Napiš text, kde roztržení je v maximálně dramatickém místě — kde mezera je nositelem největšího napětí.',
+    '120':'Napiš pět různých spojek nebo frází a každou rozděl na jiném místě. Jak se mění smysl se místem rozdělení?',
+    '300':'Napiš text, kde jsou roztržena slova, která fyzicky nelze rozdělit — jednohlásková, zkratky, vlastní jména. Co vznikne?',
+    '150':'Napiš obraz doutnání z přírody: žhavý uhlík, jiskra ve vlhku, tlení pod sněhem. Který obraz sedí na „i / když pole dávno vychladlo"?',
+    '330':'Napiš text, kde každé slovo je roztrženo — kde celý text existuje ve stavu mezery. Co říká?'
+  }
+}
+];
+
+let aktivniUhel=localStorage.getItem('zajecice_uhel')||'0';
+function uhel_label(id){const u=UHLY_LIST.find(u=>u.id===String(id));return u?u.label:'—';}
+function renderSwitcher(){
+  const sw=document.getElementById('uhel-switcher');sw.innerHTML='';
+  UHLY_LIST.forEach(u=>{
+    const btn=document.createElement('button');
+    btn.className='uhel-btn'+(u.id===aktivniUhel?' active':'');
+    btn.textContent=u.label;
+    btn.onclick=()=>{aktivniUhel=u.id;renderSwitcher();renderAnomaalie();};
+    sw.appendChild(btn);
+  });
+}
+function renderAnomaalie(){
+  const list=document.getElementById('anomalie-list');
+  const wasOpen={};
+  list.querySelectorAll('.anomalie.open').forEach(el=>{wasOpen[el.dataset.idx]=true;});
+  list.innerHTML='';
+  const uhel_nazev=uhel_label(aktivniUhel);
+  document.getElementById('uhel-display').textContent=uhel_nazev;
+  document.getElementById('export-uhel-label').textContent=uhel_nazev;
+  ANOMALIE.forEach((a,i)=>{
+    const ukol=a.ukoly[aktivniUhel]||a.ukoly['0'];
+    const el=document.createElement('div');
+    el.className='anomalie'+(wasOpen[i]?' open':'');
+    el.dataset.idx=i;
+    el.innerHTML=`<div class="anomalie-header" onclick="this.parentElement.classList.toggle('open')"><div class="a-num">${String(i+1).padStart(2,'0')}</div><div class="a-meta"><div class="a-nazev">${a.nazev}</div><div class="a-termin">${a.termin}</div></div><div class="a-toggle">▾</div></div><div class="anomalie-body"><div class="a-citace">${a.citace.map(c=>`<span>${c}</span>`).join('')}</div><p class="a-popis">${a.popis}</p><div class="ukol-wrap"><div class="ukol-kalibrace">Cvičení <span>· ${uhel_nazev}</span></div><div class="ukol-text">${ukol}</div><div class="ukol-jazyk">Jazykové zaměření: ${a.jazyk}</div><textarea class="pisarna" placeholder="Pište sem…" rows="3"></textarea><div class="a-btns"><button class="btn btn-g" style="font-size:.68rem;padding:5px 12px;margin-bottom:8px" onclick="ulozitCviceni(${i},this)">Uložit cvičení</button></div></div></div>`;
+    list.appendChild(el);
+  });
+}
+function ulozitCviceni(idx,btn){
+  const ta=btn.closest('.anomalie-body').querySelector('.pisarna');
+  const text=ta.value.trim();
+  if(!text){alert('Napište nejprve text cvičení.');return;}
+  const zaznam={datum:new Date().toLocaleDateString('cs-CZ'),karta:'Zaječice',uhel:uhel_label(aktivniUhel),anomalie:ANOMALIE[idx].nazev,text};
+  const ex=JSON.parse(localStorage.getItem('chcesmys_cviceni')||'[]');
+  ex.push(zaznam);localStorage.setItem('chcesmys_cviceni',JSON.stringify(ex));
+  btn.textContent='Uloženo ✓';setTimeout(()=>{btn.textContent='Uložit cvičení';},2000);
+}
+function ulozitMapu(){
+  const mapa={datum:new Date().toLocaleDateString('cs-CZ'),karta:'Zaječice',uhel:uhel_label(aktivniUhel)};
+  const ex=JSON.parse(localStorage.getItem('chcesmys_zapisnik_mapy')||'[]');
+  ex.push(mapa);localStorage.setItem('chcesmys_zapisnik_mapy',JSON.stringify(ex));
+  alert('Kognitivní mapa uložena. ('+ex.length+' záznamů)');
+}
+function exportJSON(){
+  const data={karta:'Zaječice',uhel:uhel_label(aktivniUhel),datum:new Date().toLocaleDateString('cs-CZ'),
+    cviceni:JSON.parse(localStorage.getItem('chcesmys_cviceni')||'[]').filter(c=>c.karta==='Zaječice'),
+    mapa:JSON.parse(localStorage.getItem('chcesmys_zapisnik_mapy')||'[]').filter(m=>m.karta==='Zaječice')};
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='zajecice_workshop.json';a.click();
+}
+function sdilej(){
+  const url=window.location.href.split('?')[0]+'?uhel='+aktivniUhel;
+  if(navigator.share){navigator.share({title:'Zaječice workshop',url});}
+  else{navigator.clipboard.writeText(url).then(()=>alert('Odkaz zkopírován: '+url));}
+}
+const urlParams=new URLSearchParams(window.location.search);
+if(urlParams.get('uhel'))aktivniUhel=urlParams.get('uhel');
+renderSwitcher();
+renderAnomaalie();
+</script>
+</body>
+</html>
