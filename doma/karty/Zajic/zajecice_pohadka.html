@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zaječice — pohádka · Chceš myš?</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0d0900;--s:#150e04;--s2:#1a1106;
+  --c:#e8d8c0;--dim:rgba(220,180,120,.35);--a:#d4722a;--a2:#964e1a;
+  --b:rgba(200,120,40,.12);--b2:rgba(200,120,40,.28);
+  --serif:'Cormorant Garamond',Georgia,serif;--mono:'DM Mono',monospace;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--c);font-family:var(--mono);font-size:13px;line-height:1.85;-webkit-font-smoothing:antialiased}
+.wrap{max-width:780px;margin:0 auto;padding:0 24px}
+nav{position:sticky;top:0;z-index:99;border-bottom:1px solid var(--b);background:rgba(13,9,0,.96);backdrop-filter:blur(14px);padding:11px 24px;display:flex;align-items:center;justify-content:space-between}
+.nav-l{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);text-decoration:none;transition:color .15s}
+.nav-l:hover{color:var(--c)}
+.nav-links{display:flex;gap:4px}
+.nav-links a{font-size:10px;letter-spacing:.11em;text-transform:uppercase;color:var(--dim);text-decoration:none;padding:5px 10px;border:1px solid transparent;border-radius:2px;transition:all .15s}
+.nav-links a:hover,.nav-links a.active{color:var(--a);border-color:var(--b2)}
+.ilustrace{width:100%;max-height:420px;overflow:hidden;display:block}
+.ilustrace img{width:100%;height:420px;object-fit:cover;object-position:center top;filter:grayscale(100%) contrast(1.05);display:block}
+.hero{padding:44px 0 32px;border-bottom:1px solid var(--b)}
+.hero-tag{font-size:10px;letter-spacing:.26em;text-transform:uppercase;color:var(--a2);margin-bottom:14px}
+.hero h1{font-family:var(--serif);font-size:clamp(3rem,8vw,5.4rem);font-weight:300;line-height:.95;letter-spacing:-.02em;margin-bottom:6px}
+.hero h1 em{font-style:italic;color:var(--a)}
+.hero-sub{font-family:var(--serif);font-style:italic;font-size:.9rem;color:var(--dim);border-left:1px solid var(--a2);padding-left:16px;margin:18px 0 20px;line-height:2;max-width:520px}
+.fenomen{border:1px solid var(--b2);padding:14px 20px;background:rgba(200,120,40,.03)}
+.fenomen-tag{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--a);margin-bottom:7px}
+.fenomen-text{font-size:.8rem;color:rgba(220,180,120,.52);line-height:1.95}
+.sec{padding:38px 0;border-bottom:1px solid var(--b)}
+.sec-tag{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--a2);margin-bottom:12px}
+h2{font-family:var(--serif);font-size:clamp(1.1rem,3vw,1.6rem);font-weight:300;margin-bottom:18px}
+h2 em{font-style:italic;color:var(--a)}
+.pohadka{font-family:var(--serif);font-size:.94rem;color:rgba(220,190,150,.74);border:1px solid var(--b);background:var(--s);padding:28px 32px;line-height:1}
+.d{display:block;padding:.22em 0}
+.d.br{padding:.55em 0}
+.d.silna{color:var(--a);font-weight:400}
+.d.dim{color:rgba(220,180,120,.38);font-style:italic}
+.d.it{font-style:italic}
+.d.dl{padding-left:1.4em;font-style:italic}
+.j1{border-bottom:1px dotted rgba(200,120,40,.42);cursor:help}
+.j2{border-bottom:1px dashed rgba(200,120,40,.38);cursor:help}
+.j3{border-bottom:1px solid rgba(200,120,40,.26);cursor:help}
+.j4{background:rgba(200,120,40,.07);padding:0 2px;cursor:help}
+.legenda{margin-top:10px;padding:10px 14px;background:var(--s);border:1px solid var(--b);font-size:.71rem;color:var(--dim);display:flex;flex-wrap:wrap;gap:4px 18px}
+.anomalie{border:1px solid var(--b);background:var(--s);margin-bottom:3px;overflow:hidden}
+.anomalie-header{display:flex;align-items:center;gap:14px;padding:14px 18px;cursor:pointer;user-select:none}
+.anomalie-header:hover{background:rgba(200,120,40,.04)}
+.a-num{font-family:var(--serif);font-size:1.5rem;font-weight:300;color:rgba(200,120,40,.14);min-width:28px;line-height:1}
+.a-meta{flex:1}
+.a-nazev{font-size:.83rem;color:var(--c);margin-bottom:2px}
+.a-termin{font-size:.69rem;color:var(--a2);letter-spacing:.06em;font-style:italic}
+.a-toggle{font-size:.68rem;color:var(--dim);letter-spacing:.1em;text-transform:uppercase;transition:transform .2s;white-space:nowrap}
+.anomalie.open .a-toggle{transform:rotate(180deg)}
+.anomalie-body{display:none;padding:4px 18px 20px;border-top:1px solid var(--b)}
+.anomalie.open .anomalie-body{display:block}
+.a-citace{font-family:var(--serif);font-style:italic;font-size:.83rem;color:rgba(200,120,40,.5);border-left:1px solid var(--b2);padding:7px 13px;margin:12px 0;line-height:1.85}
+.a-citace span{display:block}
+.a-popis{font-size:.78rem;color:rgba(220,180,120,.54);line-height:1.92}
+.cta-box{margin-top:32px;padding:20px 22px;background:var(--s);border:1px solid var(--b2);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+.cta-text{font-size:.8rem;color:var(--dim);max-width:360px;line-height:1.85}
+.btn{padding:10px 22px;font-family:var(--mono);font-size:.75rem;letter-spacing:.1em;text-transform:uppercase;border:none;cursor:pointer;border-radius:2px;transition:all .15s;text-decoration:none;display:inline-block}
+.btn-p{background:var(--a);color:var(--bg)}
+.btn-p:hover{background:#e8904a}
+footer{padding:26px 0;border-top:1px solid var(--b);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+footer p{font-size:.7rem;color:var(--dim)}
+footer a{color:var(--a)}
+</style>
+</head>
+<body>
+<nav>
+  <a class="nav-l" href="../../../index.html">← Všechna zvířata</a>
+  <div class="nav-links">
+    <a href="zajecice_pohadka.html" class="active">Pohádka</a>
+    <a href="zajecice_diagnostika.html">Diagnostika</a>
+    <a href="zajecice_workshop.html">Workshop</a>
+  </div>
+</nav>
+
+<div class="ilustrace">
+  <img src="../../ilustrace/zajic.jpg" alt="Zaječice — ilustrace">
+</div>
+
+<div class="wrap">
+<section class="hero">
+  <p class="hero-tag">Kreativní miniatura · Karta Zaječice</p>
+  <h1>Zaje<em>čice</em></h1>
+  <p class="hero-sub">„Naučila se nosit svůj omyl jako korunu."<br>aneb zajícem nezatopíš</p>
+  <div class="fenomen">
+    <div class="fenomen-tag">Fenomén — chyba jako zdroj legendy / omyl jako performativní proměna</div>
+    <p class="fenomen-text">Zaječice nebyla ani statečnější, ani chytřejší, ani rychlejší než ostatní. Zakopla o vlastní strach — a svět to přečetl jako hrdinství. Pohádka zkoumá, co se stane, když realita slouží jen jako podklad a to, co roste nad ní, je řeč, příběh, legenda. A zaječice se naučila nosit svůj omyl jako korunu.</p>
+  </div>
+</section>
+
+<section class="sec">
+  <p class="sec-tag">Pohádka · čtěte jako zápalku</p>
+  <h2>O zaječici, <em>aneb zajícem nezatopíš</em></h2>
+  <div class="pohadka">
+    <span class="d">Bylo nebylo, byl jeden zajíčí lid.</span>
+    <span class="d">Žili na louce. Bylo jim dobře.</span>
+    <span class="d">Báli se vlků, bouřek a ohně.</span>
+    <span class="d dim">Tak jako všichni.</span>
+    <span class="d br"></span>
+    <span class="d">Jenže jeden zajíc — <span class="j1" title="Parenteze s opravou: vsuvka s „vlastně" opravuje rod a druh, pomlčky oddělují syntaktické zaváhání">vlastně zaječice</span> — byla jiná.</span>
+    <span class="d dim">Ne hrdinstvím. Ne odvahou.</span>
+    <span class="d"><span class="j2" title="Trojí negace jako definice: hrdinství definováno absencí vlastností">Nebyla statečnější než ostatní.</span></span>
+    <span class="d"><span class="j2">Nebyla chytřejší.</span></span>
+    <span class="d"><span class="j2">Dokonce ani nebyla rychlejší.</span></span>
+    <span class="d br"></span>
+    <span class="d">Jednoho dne přišel oheň.</span>
+    <span class="d">Vítr ho přinesl z druhého kopce.</span>
+    <span class="d">Louka začala hořet.</span>
+    <span class="d br"></span>
+    <span class="d">Všichni zajíci utíkali.</span>
+    <span class="d silna"><span class="j4" title="Opakování slovesa: infinitiv jako rytmické stupňování pohybu">Utíkat. Utíkat pryč, co nejdál, co nejrychleji.</span></span>
+    <span class="d br"></span>
+    <span class="d"><span class="j3" title="Chiasmus: pohyb kupředu × pohyb vzad, kontrastní paralelismus klíčového momentu">Zatímco ostatní běželi kupředu před ohněm, ona udělala pravý opak.</span></span>
+    <span class="d">Otočila se.</span>
+    <span class="d">A skočila do ohně.</span>
+    <span class="d br"></span>
+    <span class="d dim it"><span class="j1" title="Apostrofa čtenáře: narušení vyprávěcí roviny, „kdepak" hovorový prvek v knižním textu">Teď byste čekali, že se promění v popel.</span></span>
+    <span class="d silna"><span class="j1">Ale kdepak.</span></span>
+    <span class="d br"></span>
+    <span class="d">Oheň ji minul.</span>
+    <span class="d">Přeskočila ho. Nebo ho přeskočil on.</span>
+    <span class="d dim">Nikdo to pořádně neviděl.</span>
+    <span class="d br"></span>
+    <span class="d">A ona stála na druhé straně. Celá.</span>
+    <span class="d it">Trochu opálená. Trochu vyděšená.</span>
+    <span class="d br"></span>
+    <span class="d dl silna"><span class="j3" title="Přímá řeč / vnitřní monolog: prosté věty, „jen" jako bagatelizace vlastního činu">„Já jsem se jen lekla. Jen jsem skočila blbě."</span></span>
+    <span class="d br"></span>
+    <span class="d">Ale ostatní to viděli jinak.</span>
+    <span class="d br"></span>
+    <span class="d"><span class="j2" title="Enumerace verzí: trojice interpretací, distributivní zájmena, mnohohlas bez pravdy">Jedni tvrdili, že skočila, aby je zachránila.</span></span>
+    <span class="d"><span class="j2">Jiní říkali, že znala tajnou stezku skrz plameny.</span></span>
+    <span class="d"><span class="j2">A další vykládali, že se oheň bál jí.</span></span>
+    <span class="d br"></span>
+    <span class="d dim">Zaječice poslouchala. A mlčela.</span>
+    <span class="d br"></span>
+    <span class="d">Protože co mohla říct?</span>
+    <span class="d">Že to byla jen zaječice, <span class="j4" title="Paradox: fyzický pohyb (zakopnout) spojen s abstraktem (strach) — strach jako věc">která jen zakopla o vlastní strach?</span></span>
+    <span class="d br"></span>
+    <span class="d"><span class="j3" title="Metafora vrstev: realita jako podklad dole, legenda jako to, co roste nahoře">Realita byla jen podklad,</span></span>
+    <span class="d"><span class="j3">jako spáleniště pod jejími tlapkami.</span></span>
+    <span class="d"><span class="j3">To, co rostlo nad ní, byla řeč, příběh, legenda.</span></span>
+    <span class="d br"></span>
+    <span class="d">A zaječice to věděla.</span>
+    <span class="d silna"><span class="j4" title="Performativní proměna: omyl (negativní) se stává korunou (pozitivní symbol)">A naučila se nosit svůj omyl jako korunu.</span></span>
+    <span class="d br"></span>
+    <span class="d">Protože <span class="j1" title="Sebedefinice textu: pohádka = nelogické přežití">všechno, co přežije proti logice, se stane pohádkou.</span></span>
+    <span class="d br"></span>
+    <span class="d dim">A ta zaječice — ta doutná.</span>
+    <span class="d dim">Doutná,</span>
+    <span class="d silna"><span class="j2" title="Roztržené „i když": spojka rozdělena na dva řádky, vizuální doutnání">i /</span></span>
+    <span class="d dim"><span class="j2">když pole dávno vychladlo.</span></span>
+  </div>
+  <div class="legenda">
+    <span><span class="j1" style="cursor:default">tečkovaně</span> = parenteze / apostrofa / sebedefinice</span>
+    <span><span class="j2" style="cursor:default">přerušované</span> = negace / enumerace / roztržení</span>
+    <span><span class="j3" style="cursor:default">plné</span> = chiasmus / přímá řeč / metafora vrstev</span>
+    <span><span class="j4" style="cursor:default;padding:0 3px">podklad</span> = opakování / paradox / performativní obrat</span>
+  </div>
+</section>
+
+<section class="sec">
+  <p class="sec-tag">12 jazykových anomálií · kliknutím otevřete</p>
+  <h2>Co pohádka dělá s jazykem</h2>
+  <div id="anomalie-list"></div>
+  <div class="cta-box">
+    <p class="cta-text">Pokračujte diagnostikou — zjistěte svůj kognitivní úhel a dostanete workshop přizpůsobený vám.</p>
+    <a href="zajecice_diagnostika.html" class="btn btn-p">Přejít na diagnostiku →</a>
+  </div>
+</section>
+
+<footer>
+  <p>Karta Zaječice · Chceš myš? · © 2026 Michaela Nováková</p>
+  <p><a href="mailto:chcesmys@gmail.com">chcesmys@gmail.com</a></p>
+</footer>
+</div>
+<script>
+const ANOMALIE=[
+  {n:'Parenteze s opravou',t:'vsuvka s „vlastně" — syntaktické zaváhání',
+   c:['"Jenže jeden zajíc – vlastně zaječice – byla jiná."'],
+   p:'Vsuvka s „vlastně" opravuje rod a druh uprostřed věty. Pomlčky oddělují opravu jako závorka, která přiznává omyl ještě za chodu. Vzniká syntaktické zaváhání — věta se chytí na vlastní nepřesnosti a opraví se veřejně. Je to poctivost vepsaná do syntaxe.'},
+  {n:'Trojí negace jako definice hrdinky',t:'gradace absencí — hrdinství bez vlastností',
+   c:['"Nebyla statečnější než ostatní, nebyla chytřejší, dokonce ani nebyla rychlejší."'],
+   p:'Třikrát „nebyla" — gradace vlastností, které postava nemá. Hrdinství je definováno absencí. Text říká, kdo zaječice není, a tímto způsobem ji přesněji vystihne než seznam toho, kdo je.'},
+  {n:'Chiasmus',t:'kontrastní paralelismus — pohyb vpřed × pohyb vzad',
+   c:['"zatímco ostatní běželi kupředu před ohněm, ona udělala pravý opak"'],
+   p:'Pohyb vpřed × pohyb vzad. Kontrastní paralelismus, který strukturuje celý klíčový moment. Chiasmus tu není ornament — je to geometrie rozhodnutí. V jedné větě drží celý příběh.'},
+  {n:'Oslovení čtenáře',t:'apostrofa — narušení vyprávěcí roviny',
+   c:['"Teď byste čekali, že se promění v popel… Ale kdepak."'],
+   p:'Apostrofa čtenáře narušuje vyprávěcí rovinu. „Kdepak" je hovorový prvek v jinak knižním vyprávění — stylový zlom, který pohladí čtenáře po hlavě a pak ho překvapí. Pohádka tu mluví přímo na nás.'},
+  {n:'Opakování slovesa',t:'infinitivní anafora — rytmické stupňování pohybu',
+   c:['"Utíkat. Utíkat pryč, co nejdál, co nejrychleji."'],
+   p:'Infinitiv na začátku věty, pak zopakován s příslovci. Rytmické stupňování — první „utíkat" je čistý impuls, druhé ho rozvíjí do směru a rychlosti. Opakování není chyba, je to zrychlující se pohyb.'},
+  {n:'Věta jako definice žánru',t:'sebedefinice textu — pohádka jako nelogické přežití',
+   c:['"Protože všechno, co přežije proti logice, se stane pohádkou."'],
+   p:'Sebedefinice textu. „Proti logice" modifikuje „přežije". Věta tvrdí, že pohádka je nelogické přežití — a zároveň tím pohádka komentuje sama sebe, jak se stala.'},
+  {n:'Enumerace verzí',t:'trojice interpretací — mnohohlas bez pravdy',
+   c:['"Jedni tvrdili… Jiní říkali… A další vykládali…"'],
+   p:'Trojice různých interpretací jedné události. Každá začíná jiným distributivním zájmenem (jedni, jiní, další). Vytváří dojem mnohohlasu — a zároveň ukazuje, že žádná verze není pravda, protože pravdu neřekla ani zaječice.'},
+  {n:'Paradox',t:'fyzický pohyb s abstraktem — strach jako překážka',
+   c:['"která jen zakopla o vlastní strach"'],
+   p:'Fyzický pohyb (zakopnout) je spojen s abstraktem (strach). Strach je věc, o kterou lze klopýtnout. Toto přirovnání říká víc než jakékoli vysvětlení — a přitom se tváří, že to bagatelizuje.'},
+  {n:'Přímá řeč jako vnitřní monolog',t:'prosté věty — bagatelizace vlastního činu',
+   c:['"Já jsem se jen lekla. Jen jsem skočila blbě."'],
+   p:'Krátké, prosté věty. Opakování „jen" — bagatelizace vlastního činu. Kontrast s tím, co následuje: enumerace hrdinských interpretací. Vnitřní pravda (leknutí) versus vnější mýtus (hrdinství).'},
+  {n:'Metafora vrstev',t:'prostorová hierarchie — realita dole, legenda nahoře',
+   c:['"Realita byla jen podklad, jako spáleniště pod jejími tlapkami. To, co rostlo nad ní, byla řeč, příběh, legenda."'],
+   p:'Prostorová metafora: podklad (dole) × to, co roste (nahoře). Abstraktní hierarchie převedená do vertikály. Realita se stane půdou — a z půdy roste příběh, stejně jako z popela roste tráva.'},
+  {n:'Performativní proměna',t:'přehodnocení chyby — omyl jako koruna',
+   c:['"naučila se nosit svůj omyl jako korunu"'],
+   p:'Omyl (negativní) se stává korunou (pozitivní symbol). Přehodnocení vlastní chyby skrze jazyk — ne tím, že chyba zmizí, ale tím, že změní svůj tvar. Performativní: naučit se nosit znamená opakovat tento akt každý den.'},
+  {n:'Roztržené „i když"',t:'grafické dělení spojky — vizuální doutnání',
+   c:['"doutná, i / když pole dávno vychladlo."'],
+   p:'Spojka „i když" je roztržena na dva řádky. Vzniká mezera, která vizuálně znázorňuje doutnání — přerušovaný, ale trvající proces. „I" na konci řádku doutná samo. „Když" přijde pak. Jako jiskra.'}
+];
+const list=document.getElementById('anomalie-list');
+ANOMALIE.forEach((a,i)=>{
+  const el=document.createElement('div');el.className='anomalie';
+  el.innerHTML=`<div class="anomalie-header" onclick="this.parentElement.classList.toggle('open')"><div class="a-num">${String(i+1).padStart(2,'0')}</div><div class="a-meta"><div class="a-nazev">${a.n}</div><div class="a-termin">${a.t}</div></div><div class="a-toggle">▾</div></div><div class="anomalie-body"><div class="a-citace">${a.c.map(c=>`<span>${c}</span>`).join('')}</div><p class="a-popis">${a.p}</p></div>`;
+  list.appendChild(el);
+});
+</script>
+</body>
+</html>
