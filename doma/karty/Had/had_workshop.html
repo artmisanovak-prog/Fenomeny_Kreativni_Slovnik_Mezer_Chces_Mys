@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Had — workshop · Chceš myš?</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#080c08;--s:#0d120d;--s2:#111811;
+  --c:#d0e0c8;--dim:rgba(180,210,160,.36);--a:#6a9e5a;--a2:#3d6e30;
+  --b:rgba(80,160,70,.12);--b2:rgba(80,160,70,.26);
+  --serif:'Cormorant Garamond',Georgia,serif;--mono:'DM Mono',monospace;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--c);font-family:var(--mono);font-size:13px;line-height:1.85;-webkit-font-smoothing:antialiased}
+.wrap{max-width:820px;margin:0 auto;padding:0 24px}
+nav{position:sticky;top:0;z-index:99;border-bottom:1px solid var(--b);background:rgba(8,12,8,.96);backdrop-filter:blur(14px);padding:11px 24px;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.nav-back{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);text-decoration:none;margin-right:10px}
+.nav-back:hover{color:var(--c)}
+.nav-link{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);text-decoration:none;padding:4px 9px;border:1px solid transparent}
+.nav-link:hover{color:var(--c);border-color:var(--b)}
+.nav-link.active{color:var(--a);border-color:var(--b2)}
+.nav-sep{color:var(--b2);margin:0 2px}
+.sec{padding:28px 0;border-bottom:1px solid var(--b)}
+.sec-tag{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--a2);margin-bottom:8px}
+
+/* pohádka s anotacemi */
+.scroll-box{max-height:360px;overflow-y:auto;border:1px solid var(--b);background:var(--s);padding:20px 24px;font-family:var(--serif);font-size:.88rem;line-height:2;color:rgba(210,230,190,.72)}
+.scroll-box::-webkit-scrollbar{width:2px}
+.scroll-box::-webkit-scrollbar-thumb{background:var(--a2)}
+.pd{display:block;padding:.18em 0}
+.pd.br{padding:.5em 0}
+.pd.s{color:var(--a);font-style:normal;font-weight:400}
+.pd.d{color:rgba(180,210,160,.35);font-style:italic}
+.pd.i{font-style:italic}
+.pd.dl{padding-left:1.4em;font-style:italic}
+.pd.sy{letter-spacing:.07em}
+.j1{border-bottom:1px dotted rgba(80,160,70,.45);cursor:help}
+.j2{border-bottom:1px dashed rgba(80,160,70,.38);cursor:help}
+.j3{border-bottom:1px solid rgba(80,160,70,.28);cursor:help}
+.j4{background:rgba(80,160,70,.08);padding:0 2px;cursor:help}
+.legenda{margin-top:6px;padding:7px 12px;background:var(--s);border:1px solid var(--b);font-size:.67rem;color:var(--dim);display:flex;flex-wrap:wrap;gap:3px 14px}
+
+/* úhly */
+.uhly-intro{font-size:.75rem;color:var(--dim);line-height:1.9;max-width:540px;margin-bottom:6px}
+.uhel{border:1px solid var(--b);background:var(--s);margin-bottom:2px;overflow:hidden}
+.uhel-h{display:grid;grid-template-columns:44px 1fr auto;padding:13px 16px;cursor:pointer;align-items:center;transition:background .1s}
+.uhel-h:hover{background:rgba(80,160,70,.03)}
+.uhel.open .uhel-h{background:rgba(80,160,70,.04)}
+.u-num{font-family:var(--serif);font-size:1.5rem;font-weight:300;color:rgba(80,160,70,.15);line-height:1}
+.uhel.open .u-num{color:rgba(80,160,70,.4)}
+.u-meta{}
+.u-nazev{font-size:.82rem;color:var(--c);margin-bottom:2px}
+.u-sub{font-size:.7rem;color:var(--a2);font-style:italic}
+.u-tog{font-size:.7rem;color:var(--dim);transition:transform .2s}
+.uhel.open .u-tog{transform:rotate(180deg)}
+.uhel-body{display:none;padding:4px 16px 20px 60px;border-top:1px solid var(--b)}
+.uhel.open .uhel-body{display:block}
+.blok{margin-bottom:10px}
+.blok-tag{font-size:9px;letter-spacing:.17em;text-transform:uppercase;color:var(--a2);margin-bottom:5px;margin-top:12px}
+.blok-text{font-size:.8rem;color:rgba(210,230,180,.62);line-height:1.8}
+.jazyk-blok{background:rgba(80,160,70,.04);border-left:2px solid var(--a2);padding:10px 14px;margin:10px 0}
+.prot-link{font-size:.73rem;color:var(--dim);font-style:italic;margin-top:10px}
+.prot-link a{color:var(--a);text-decoration:underline;cursor:pointer}
+textarea{width:100%;background:var(--bg);border:1px solid var(--b);color:var(--c);padding:9px 12px;font-family:var(--mono);font-size:.78rem;line-height:1.7;resize:vertical;min-height:80px;border-radius:2px;margin-top:6px}
+textarea:focus{outline:none;border-color:var(--a2)}
+textarea::placeholder{color:rgba(210,230,180,.1)}
+.btn{padding:8px 18px;font-family:var(--mono);font-size:.71rem;letter-spacing:.1em;text-transform:uppercase;border:none;cursor:pointer;border-radius:2px;transition:all .15s;text-decoration:none;display:inline-block;margin-top:7px}
+.btn-p{background:var(--a);color:var(--bg)}
+.btn-p:hover{background:#8ac07a}
+.btn-g{background:transparent;color:var(--dim);border:1px solid var(--b)}
+.btn-g:hover{color:var(--c);border-color:var(--b2)}
+.az-out{margin-top:10px;display:none}
+.az-header{background:rgba(80,160,70,.04);border:1px solid var(--b2);padding:9px 14px;font-size:.74rem;margin-bottom:2px;display:flex;justify-content:space-between}
+.az-item{border:1px solid var(--b);padding:7px 12px;margin-bottom:2px;display:flex;gap:8px;align-items:flex-start;font-size:.72rem}
+.az-item.hit{border-color:var(--b2);background:rgba(80,160,70,.04)}
+.az-n{color:rgba(80,160,70,.2);min-width:20px;font-family:var(--serif)}
+.az-item.hit .az-n{color:var(--a)}
+.az-nazev{color:rgba(210,230,180,.3);flex:1}
+.az-item.hit .az-nazev{color:var(--c)}
+.az-tags{display:flex;flex-wrap:wrap;gap:2px;margin-top:3px}
+.az-tag{font-size:.67rem;color:var(--a);padding:1px 5px;background:rgba(80,160,70,.08);border:1px solid var(--b2)}
+.az-hit{color:var(--a);font-size:.69rem}
+.az-miss{color:rgba(210,230,180,.18);font-size:.69rem}
+.az-note{font-size:.7rem;color:var(--dim);font-style:italic;margin-top:8px;padding:8px 12px;border-left:1px solid var(--b2);line-height:1.8}
+
+footer{padding:22px 0;border-top:1px solid var(--b);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-top:20px}
+footer p{font-size:.7rem;color:var(--dim)}
+footer a{color:var(--a)}
+</style>
+</head>
+<body>
+<nav>
+  <a class="nav-back" href="../../../index.html">← Zvířata</a>
+  <span class="nav-sep">·</span>
+  <a class="nav-link" href="had_pohadka.html">Pohádka</a>
+  <a class="nav-link" href="had_diagnostika.html">Diagnostika</a>
+  <a class="nav-link active" href="had_workshop.html">Workshop</a>
+  <a class="nav-link" href="https://artmisanovak-prog.github.io/Fenomeny_Kreativni_Slovnik_Mezer_Chces_Mys/doma/nastroje/analyzer.html" target="_blank">Forenzní analýza ↗</a>
+</nav>
+<div class="wrap">
+
+<!-- pohádka s anotacemi -->
+<section class="sec" style="padding-top:26px">
+  <p class="sec-tag">Pohádka s jazykovými anomáliemi · přejeďte přes podtržená místa</p>
+  <div class="scroll-box">
+    <span class="pd i">O hadovi, který mluvil jinak.</span>
+    <span class="pd br"></span>
+    <span class="pd"><span class="j4" title="Prostředí jako subjekt: stíny, co se kroutí jako tráva — svět hada má vlastní fyziku">V krajině, kde se stíny kroutí jako tráva,</span> žil had.</span>
+    <span class="pd"><span class="j2" title="Trojí negace: definice postavy přes to, čím není — ne jedovatý, ne silný, ne mladý">Nebyl jedovatej. Nebyl ani moc silnej.</span></span>
+    <span class="pd"><span class="j2">Nebyl mladej.</span> Byl spíš hodně starej, i když na jeho kůži se to nepoznalo.</span>
+    <span class="pd"><span class="j1" title="Jazyk jako subjekt: jazyk sám začal — had ho neovládá, jazyk má vlastní vůli">A jeho jazyk se začal ohýbat podle vlastních pravidel.</span></span>
+    <span class="pd">Každé „s" znělo jako škrábnutí po zádech.</span>
+    <span class="pd"><span class="j4" title="Reduplikace stopy: věta odkazuje sama na sebe — stopa, která nechá stopu">Každé slovo nechalo stopu, která nechala stopu.</span></span>
+    <span class="pd br"></span>
+    <span class="pd">Ale syčel. A nikdo ho neposlouchal.</span>
+    <span class="pd">Nikdy nikoho ani nenapadlo poslouchat hada.</span>
+    <span class="pd d">Mimo Evu.</span>
+    <span class="pd d">Mimo myš.</span>
+    <span class="pd br"></span>
+    <span class="pd s sy"><span class="j1" title="Syčení jako ortografie: prodloužené sss, přerušení slov — grafická zvukomalba, trest ve fonetice">„Ďáblové jsssou původem z nebesss,"</span></span>
+    <span class="pd">syčel jednou. <span class="j3" title="Paradox zastavení: svět se zastavil ne kvůli obsahu, ale kvůli formě — tvar slova silnější než jeho smysl">A svět se zastavil — ne kvůli tomu, co řekl, ale kvůli jak.</span></span>
+    <span class="pd br"></span>
+    <span class="pd">Myš si to zapisovala do koutů. A mezi ostatní zvířata se to také rozneslo.</span>
+    <span class="pd">Začala se hromadit kolem: Kocour, co krkal tečky. Zaječice, co není dřevo na podpal.</span>
+    <span class="pd br"></span>
+    <span class="pd">Had se akorát zavlnil a mluvil dál:</span>
+    <span class="pd s"><span class="j3" title="Inverze fyziky: pád vzhůru — had říká větu, která porušuje fyzikální zákon, a tím ho zpochybňuje">„Některé věci padají vzhůru."</span></span>
+    <span class="pd br"></span>
+    <span class="pd">„Ano i ne," had pokračoval:</span>
+    <span class="pd dl"><span class="j2" title="Rozporné výroky: séria vět, každá obsahuje obojí najednou — systém bez protikladů">„Ne každý, kdo padá, je zlý. A ne každý nahoře je dobrý.</span></span>
+    <span class="pd dl"><span class="j2">Každé světlo nese stín, každá tma nese světlo.</span></span>
+    <span class="pd dl"><span class="j2">Každé ‚ano' je zároveň ‚možná'. A každé ‚ne' je jen ‚zatím ne'."</span></span>
+    <span class="pd br"></span>
+    <span class="pd">Had neponoukal. Jen mluvil. Tehdy ještě mluvit uměl.</span>
+    <span class="pd d">Jazyk měl celý, výmluvný, ohebný — slova byla jako listy: hladká, zelená, neškodná.</span>
+    <span class="pd">Trest přišel později.</span>
+    <span class="pd br"></span>
+    <span class="pd">„Budeš lézt po břiše a žrát prach," řekl Bůh.</span>
+    <span class="pd dl sy"><span class="j4" title="Šum v komunikaci: fonetická zkomolenina, nedorozumění jako jazyková technika — text nerozumí přesně">„Lézst? Už lezsu. Prach? Aha.. Ccože?</span></span>
+    <span class="pd dl sy"><span class="j4">jenomže — foupaxss.</span></span>
+    <span class="pd dl"><span class="j1" title="Přerušená citace: had cituje Boha, ale nevěděl přesně co — prázdná citace jako existenciální metafora">Bůh neřekl ‚žrát prach'.</span></span>
+    <span class="pd dl s"><span class="j3" title="Katalog náhrad: prach / vrah / hrách / strach — rýmující absurdní seznam, jazyk hledá smysl v homofoniích">takže ne prach, ani vrah, hrách, ani ssstrach.</span></span>
+    <span class="pd dl s">Ale jazyk… <span class="j1" title="Přeryvná věta: tři tečky jako ztráta schopnosti dokončit — aposiopeze jako moment lomu">jazyk mi roztrhl."</span></span>
+    <span class="pd br"></span>
+    <span class="pd">Od té doby jen syčím. A přesto mluvím — jinak, tišeji.</span>
+    <span class="pd s">Šeptám mezi řádky. Naučil jsem se to znovu. Sám.</span>
+    <span class="pd br"></span>
+    <span class="pd i"><span class="j2" title="Přiznání slabosti: had nezapírá, že to bolí — prokletí jako prokletí, ne jako hrdinský příběh">Věřte mi, není to snadné — prokletí je prokletí a od kořene od Boha.</span></span>
+    <span class="pd i d">A syčení mě příšerně deprimuje.</span>
+    <span class="pd br"></span>
+    <span class="pd s"><span class="j4" title="Dvojí imperativ: Věřte / Nevěřte — had nabízí obojí najednou, čtenář rozhoduje">Věřte / Nevěřte — a poslechněte si, co si pamatují hadi.</span></span>
+    <span class="pd br"></span>
+    <span class="pd">Protože hadovy pohádky nejsou o dobru ani zlu.</span>
+    <span class="pd s"><span class="j3" title="Mezi jako místo: nejdůležitější věci jsou v meziprostoru — rovnováha, ne volba">Jsou o tom, co je mezi. O rovnováze. O směru, který se nedá zakreslit.</span></span>
+    <span class="pd br"></span>
+    <span class="pd d i"><span class="j1" title="Paměť celku: had si pamatuje celek, ale mluví jen zlomky — ticho je součástí sdělení">A tak se začalo říkat, že někde v trávě žije had, který si pamatuje celek.</span></span>
+  </div>
+  <div class="legenda">
+    <span><span class="j1" style="cursor:default">tečkovaně</span> = jazyk jako subjekt · syčení · přeryvná věta · paměť</span>
+    <span><span class="j2" style="cursor:default">přerušované</span> = trojí negace · rozporné výroky · přiznání</span>
+    <span><span class="j3" style="cursor:default">plné</span> = paradox zastavení · inverze fyziky · sled náhrad · „mezi"</span>
+    <span><span class="j4" style="cursor:default;padding:0 3px">podklad</span> = prostředí · reduplikace · šum · dvojí imperativ</span>
+  </div>
+</section>
+
+<!-- 12 úhlů -->
+<section class="sec">
+  <p class="sec-tag">12 úhlů fenoménu Hada · každý s úkolem a textovým polem</p>
+  <p class="uhly-intro" id="uhly-uvod">Vyberte úhel — nebo nechte vybrat diagnostiku. Každý úhel má kreativní úkol a textové pole. Po napsání textu klikněte Analyzovat — zobrazí se jazykové struktury vašeho textu.</p>
+  <div id="uhly-list"></div>
+</section>
+
+<footer>
+  <p>Karta Had · Chceš myš? · © 2026 Michaela Nováková</p>
+  <p><a href="mailto:chcesmys@gmail.com">chcesmys@gmail.com</a></p>
+</footer>
+</div>
+<script>
+const uhly=[
+  {n:'Jazyk, který se ohýbá jinak',s:'Mluvení podle vlastních pravidel. Každé slovo nechá stopu.',ukol:'Napiš text, ve kterém záměrně ohneš jazyk. Protahuj slova, hraj si se sykavkami, vytvářej nová slova. Ať je tvůj text hadí — klouže, svíjí se, zní jinak. Třeba: „Jasssk je ssstále tassam, ale jinak ssse kroužííí."',jazyk:'Neobvyklá syntax, protahování, sykavky, hra se zvuky.',prot:7},
+  {n:'Nikdo ho neposlouchá',s:'Být tím, koho nikdy nikoho nenapadlo poslouchat. Až na výjimky.',ukol:'Napiš text, který je monologem do prázdna. O tom, co bys řekl/a, kdyby tě někdo poslouchal, ale víš, že nikdo neposlouchá. Ať je to dlouhé, osamělé, bez odpovědi.',jazyk:'Monolog, samomluva, absence odpovědi. Nikdo v textu neodpovídá.',prot:5},
+  {n:'Ďáblové jsou původem z nebes',s:'Věta, která převrací očekávání. Zlo může mít dobrý původ.',ukol:'Vymysli paradoxní tvrzení, která převracejí očekávání. Třeba: „Pád je jen jiný druh letu." Nebo: „Tma je světlo, které si odpočívá." Napiš jich aspoň pět a pak jedno rozveď do krátkého příběhu.',jazyk:'Paradox, oxymóron, převrácené hodnoty.',prot:6},
+  {n:'Některé věci padají vzhůru',s:'Obrácená fyzika, která dává smysl. Směr jako relativní pojem.',ukol:'Napiš text, ve kterém všechno padá nahoru. O světě, kde gravitace funguje opačně. Popiš, jak to tam vypadá, jak se žije, co padá nahoru místo dolů.',jazyk:'Obrácená logika, inverze směru. Text, který převrací fyziku.',prot:8},
+  {n:'Ano i ne',s:'Souhlas a nesouhlas zároveň. Meziprostor jako místo pro bytí.',ukol:'Napiš text, který je celý o rozporných výrocích. Každá věta ať tvrdí dvě věci najednou. Třeba: „Miluji tě a zároveň potřebuji být sám." Nebo: „Chci odejít, ale zůstávám."',jazyk:'Rozporné výroky, nejednoznačnost, obojí zároveň.',prot:9},
+  {n:'Světlo nese stín, tma nese světlo',s:'Všechno obsahuje svůj protiklad. Dualita jako jednota.',ukol:'Napiš text o něčem, co v sobě nese svůj protiklad. Třeba o světle, které vrhá stín, o tmě, ve které se svítí, o radosti, která je smutná. Ukaž, že všechno má v sobě kus opaku.',jazyk:'Dualita v jedné větě, spojení protikladů.',prot:10},
+  {n:'Eva a jablko — zvědavost',s:'Had neponoukal, jen mluvil. Prvotní hřích nebyl hřích — byla to otázka.',ukol:'Napiš text, který je samá otázka. O něčem, co tě zajímá, co zkoumáš, na co hledáš odpověď. Žádná tvrzení, jen zvědavost. Ať je to jako Eva, která se ptá, ne jako had, který svádí.',jazyk:'Otázky, tázací věty, zvědavé obraty.',prot:0},
+  {n:'Trest — lézt po břiše a žrát prach',s:'Potrestání za to, co bylo řečeno. Ale had nerozuměl přesně — „foupaxss".',ukol:'Napiš text o trestu, který přišel, ale ty nevíš přesně proč. O situaci, kdy tě potkalo něco zlého a ty jsi nerozuměl/a, co jsi udělal/a špatně. Ať je v tom šum, nedorozumění, zkomolenina.',jazyk:'Nedorozumění, zkomoleniny, šum. Text, který nerozumí přesně.',prot:1},
+  {n:'Jazyk roztržený',s:'Ztráta schopnosti mluvit jasně. Syčení místo slov — ale přesto mluví dál.',ukol:'Napiš text, který se rozpadá, syčí, nedokončuje. O tom, když nemůžeš mluvit, když ti chybí slova, když jen syčíš. Používej fragmenty, opakování hlásek, nedokončené věty.',jazyk:'Fragmenty, syčení, opakování hlásek, nedokončené věty.',prot:3},
+  {n:'Prokletí není snadné',s:'Přiznání, že to bolí. Syčení deprimuje. Ale naučil se to znovu — sám.',ukol:'Napiš text, ve kterém přiznáš, že něco bolí, že to není snadné. O svém vlastním prokletí, o tom, co tě deprimuje. Buď upřímný/á, nelži o tom, jaké to je.',jazyk:'Bolestné výpovědi, přiznání slabosti, upřímnost.',prot:2},
+  {n:'Paměť celku',s:'Had si pamatuje, jak to bylo předtím. Ví, co je celek. Říká jen zlomek.',ukol:'Napiš text, který ví víc, než říká. Nech v něm místa, náznaky, ticho mezi slovy. Ať je cítit, že za tím, co je napsáno, je ještě něco, co si pamatuješ, ale neříkáš.',jazyk:'Náznaky, nedopovězené věci, ticho mezi slovy.',prot:3},
+  {n:'Mezi nebem a zemí',s:'Hadovy pohádky jsou o rovnováze, o směru, který se nedá zakreslit.',ukol:'Napiš text o tom, co je mezi. O hranicích, které nejsou ostré, o pocitech, která nemají jméno, o místech, která nejsou ani tady ani tam. Ať je to celé v šedé zóně.',jazyk:'Neurčitost, abstrakce, věci bez hranic.',prot:4}
+];
+
+const DETEKTORY=[
+  {n:'Syčení / zvukomalba',t:'protahování sykavek, hadí fonetika',fn:t=>{const m=t.match(/s{2,}|z{2,}|ss[a-z]/gi);return m?m.slice(0,4):[];}},
+  {n:'Trojí negace',t:'definice přes to, čím věc není',fn:t=>{const n=(t.match(/\bnení\b|\bnebylo?\b|\bnemá\b|\bnic\b/gi)||[]);return n.length>=3?[`${n.length}× negace`]:[];}},
+  {n:'Reduplikace stopy',t:'věta odkazuje sama na sebe',fn:t=>{const m=t.match(/(\b\w{4,}\b)[^.!?]*\1/gi);return m?m.slice(0,2).map(s=>s.slice(0,35)):[];}},
+  {n:'Paradox / obrácená hodnota',t:'dvě neslučitelné věci ve stejné větě',fn:t=>{const p=['ale zároveň','přitom','a přesto','a zároveň','ačkoli'];return p.filter(w=>t.toLowerCase().includes(w));}},
+  {n:'Inverze fyziky',t:'věta, která porušuje fyzikální zákon',fn:t=>{const r=[];if(/padá[\s\w]*nahoru|letí[\s\w]*dolů|vzhůru[\s\w]*padá/i.test(t))r.push('inverze pádu');if(/světlo[\s\w]*tma|tma[\s\w]*světlo/i.test(t))r.push('světlo=tma');return r;}},
+  {n:'Rozporné výroky',t:'ano i ne — obojí najednou',fn:t=>{const r=[];if(/\bano\b.*\bne\b|\bne\b.*\bano\b/i.test(t))r.push('ano i ne');if(/možná|zatím ne|možná ne/i.test(t))r.push('neurčitý výrok');return r;}},
+  {n:'Otázky bez odpovědi',t:'tázací věty jako otevřené prostory',fn:t=>{const m=t.match(/[^.!?]*\?/g);return m&&m.length>=2?[`${m.length} otázky`]:[];}},
+  {n:'Šum / zkomolenina',t:'zkomolená slova jako záměrná technika',fn:t=>{const m=t.match(/\b\w*[xqw]\w*\b/gi);const dup=t.match(/\b(\w{3,})\1\b/gi);const r=[];if(m)r.push(...m.slice(0,3));if(dup)r.push(...dup.slice(0,2));return r;}},
+  {n:'Fragmenty / nedokončené věty',t:'přeryvná syntax, tři tečky',fn:t=>{const m=t.match(/[^.!?]{3,}\.\.\.|…/g);return m?m.slice(0,3).map(s=>s.trim().slice(0,30)):[];}},
+  {n:'Přiznání slabosti',t:'bolestná upřímnost, bez zkreslení',fn:t=>{const r=[];if(/bolí|není snadné|deprimuje|trápí|těžké/i.test(t))r.push('přiznání obtíží');if(/nevím|neumím|nedokážu/i.test(t))r.push('přiznání mezí');return r;}},
+  {n:'Náznaky / ticho',t:'text, který říká méně, než ví',fn:t=>{const r=[];if(/možná|snad|asi|třeba|nějak/i.test(t))r.push('neurčité výrazy');if(t.split(' ').length<40&&t.length>30)r.push('stručnost jako výběr');return r;}},
+  {n:'Meziprostor / neurčitost',t:'věci bez hranic, šedá zóna',fn:t=>{const r=[];if(/mezi|uprostřed|na hranici|ani.*ani/i.test(t))r.push('meziprostor');if(/neurčitý|nejasný|bez jména/i.test(t))r.push('pojmenování neurčitosti');return r;}}
+];
+
+function buildUhly(){
+  const list=document.getElementById('uhly-list');
+  uhly.forEach((u,i)=>{
+    const d=document.createElement('div');d.className='uhel';d.id='u-'+i;
+    const pid=u.prot>=0?u.prot:0;
+    d.innerHTML=`
+      <div class="uhel-h" onclick="toggleU(${i})">
+        <span class="u-num">${String(i+1).padStart(2,'0')}</span>
+        <div class="u-meta"><div class="u-nazev">${u.n}</div><div class="u-sub">${u.s}</div></div>
+        <span class="u-tog">▾</span>
+      </div>
+      <div class="uhel-body" id="b-${i}">
+        <div class="blok-tag">Kreativní úkol · 20 minut</div>
+        <div class="blok-text">${u.ukol}</div>
+        <div class="jazyk-blok">
+          <div class="blok-tag">Jazykový fenomén</div>
+          <div class="blok-text">${u.jazyk}</div>
+        </div>
+        <div class="blok-tag">Váš text</div>
+        <textarea id="ta-${i}" placeholder="Pište sem — bez opravování, bez zastavení…"></textarea>
+        <button class="btn btn-p" onclick="analyzovat(${i})">Analyzovat strukturu textu →</button>
+        <button class="btn btn-g" onclick="document.getElementById('ta-${i}').value='';document.getElementById('az-${i}').style.display='none'">Vymazat</button>
+        <div class="az-out" id="az-${i}"></div>
+        <div class="prot-link">Protilehlý úhel: <a onclick="jumpU(${pid})">${pid+1}. ${uhly[pid].n}</a></div>
+      </div>`;
+    list.appendChild(d);
+  });
+}
+
+function toggleU(i){
+  const b=document.getElementById('b-'+i);
+  document.getElementById('u-'+i).classList.toggle('open');
+}
+
+function jumpU(i){
+  if(!document.getElementById('u-'+i).classList.contains('open'))
+    document.getElementById('u-'+i).classList.add('open');
+  document.getElementById('u-'+i).scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function analyzovat(i){
+  const txt=document.getElementById('ta-'+i).value.trim();
+  if(!txt){alert('Napište nejprve text.');return;}
+  let nal=0;
+  const items=DETEKTORY.map((d,j)=>{const h=d.fn(txt);if(h.length)nal++;return{d,h,j};});
+  const slov=txt.split(/\s+/).filter(Boolean).length;
+  const vet=txt.split(/[.!?…]+/).filter(s=>s.trim().length>2).length;
+  const avg=vet?Math.round(slov/vet):0;
+  const out=document.getElementById('az-'+i);
+  out.innerHTML=`
+    <div class="az-header"><span>Nalezené struktury: <strong style="color:var(--a)">${nal}</strong> z 12</span><span>${slov} slov · ${avg} slov/větu</span></div>
+    ${items.map(({d,h,j})=>`
+    <div class="az-item${h.length?' hit':''}">
+      <span class="az-n">${String(j+1).padStart(2,'0')}</span>
+      <div style="flex:1"><div class="az-nazev">${d.n}</div><div style="font-size:.68rem;color:var(--a2);font-style:italic">${d.t}</div>${h.length?`<div class="az-tags">${h.map(x=>`<span class="az-tag">${x}</span>`).join('')}</div>`:''}</div>
+      <span class="${h.length?'az-hit':'az-miss'}">${h.length?'✓':'—'}</span>
+    </div>`).join('')}
+    <div class="az-note">Popis výše ukazuje, které jazykové struktury z pohádky přirozeně používáte. Anomálie, které se neobjevily, jsou potenciálním materiálem pro rozšiřování — ne chybějícími vlastnostmi.</div>`;
+  out.style.display='block';
+}
+
+// načíst úhel z URL nebo localStorage
+function init(){
+  const p=new URLSearchParams(window.location.search);
+  const stored=localStorage.getItem('had_uhel');
+  const idx=p.has('uhel')?parseInt(p.get('uhel')):(stored!==null?parseInt(stored):null);
+  buildUhly();
+  if(idx!==null&&idx>=0&&idx<12){
+    setTimeout(()=>{jumpU(idx);
+      document.getElementById('uhly-uvod').innerHTML=
+        `Diagnostika doporučila: <strong style="color:var(--a)">${idx+1}. ${uhly[idx].n}</strong> — ale procházejte klidně všechny.`;
+    },300);
+  }
+}
+init();
+</script>
+</body>
+</html>
