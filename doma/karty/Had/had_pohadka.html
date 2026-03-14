@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Had — pohádka · Chceš myš?</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#080c08;--s:#0d120d;--s2:#111811;
+  --c:#d0e0c8;--dim:rgba(180,210,160,.36);--a:#6a9e5a;--a2:#3d6e30;
+  --b:rgba(80,160,70,.12);--b2:rgba(80,160,70,.26);
+  --serif:'Cormorant Garamond',Georgia,serif;--mono:'DM Mono',monospace;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--c);font-family:var(--mono);font-size:13px;line-height:1.85;-webkit-font-smoothing:antialiased}
+.wrap{max-width:820px;margin:0 auto;padding:0 24px}
+nav{position:sticky;top:0;z-index:99;border-bottom:1px solid var(--b);background:rgba(8,12,8,.96);backdrop-filter:blur(14px);padding:11px 24px;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.nav-back{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);text-decoration:none;margin-right:10px}
+.nav-back:hover{color:var(--c)}
+.nav-link{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);text-decoration:none;padding:4px 9px;border:1px solid transparent}
+.nav-link:hover{color:var(--c);border-color:var(--b)}
+.nav-link.active{color:var(--a);border-color:var(--b2)}
+.nav-sep{color:var(--b2);margin:0 2px}
+
+.hero{padding:36px 0 28px;border-bottom:1px solid var(--b);display:grid;grid-template-columns:200px 1fr;gap:32px;align-items:start}
+@media(max-width:600px){.hero{grid-template-columns:1fr}}
+.hero-img img{width:100%;display:block;filter:grayscale(100%) contrast(1.1);border:1px solid var(--b)}
+.hero-tag{font-size:10px;letter-spacing:.26em;text-transform:uppercase;color:var(--a2);margin-bottom:10px}
+.hero-title{font-family:var(--serif);font-size:clamp(2.6rem,6vw,4.2rem);font-weight:300;line-height:.9;letter-spacing:-.02em;margin-bottom:14px}
+.hero-title em{font-style:italic;color:var(--a)}
+.fenomen{background:var(--s);border:1px solid var(--b);border-left:2px solid var(--a2);padding:14px 18px;margin-bottom:16px}
+.fen-tag{font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--a2);margin-bottom:6px}
+.fen-text{font-size:.76rem;color:var(--dim);line-height:1.9}
+
+.sec{padding:32px 0;border-bottom:1px solid var(--b)}
+.sec-tag{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--a2);margin-bottom:10px}
+.scroll-box{max-height:440px;overflow-y:auto;border:1px solid var(--b);background:var(--s);padding:22px 26px;font-family:var(--serif);font-size:.9rem;line-height:2;color:rgba(210,230,190,.72)}
+.scroll-box::-webkit-scrollbar{width:2px}
+.scroll-box::-webkit-scrollbar-thumb{background:var(--a2)}
+.pd{display:block;padding:.2em 0}
+.pd.br{padding:.5em 0}
+.pd.s{color:var(--a);font-style:normal;font-weight:400}
+.pd.d{color:rgba(180,210,160,.35);font-style:italic}
+.pd.i{font-style:italic}
+.pd.dl{padding-left:1.4em;font-style:italic}
+.pd.syceni{letter-spacing:.07em}
+.scroll-hint{font-size:.68rem;color:rgba(180,210,160,.2);text-align:right;margin-top:4px}
+
+.cta-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:24px}
+.btn{padding:11px 24px;font-family:var(--mono);font-size:.74rem;letter-spacing:.1em;text-transform:uppercase;border:none;cursor:pointer;border-radius:2px;transition:all .15s;text-decoration:none;display:inline-block}
+.btn-p{background:var(--a);color:var(--bg)}
+.btn-p:hover{background:#8ac07a}
+.btn-g{background:transparent;color:var(--dim);border:1px solid var(--b)}
+.btn-g:hover{color:var(--c);border-color:var(--b2)}
+footer{padding:22px 0;border-top:1px solid var(--b);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-top:20px}
+footer p{font-size:.7rem;color:var(--dim)}
+footer a{color:var(--a)}
+</style>
+</head>
+<body>
+<nav>
+  <a class="nav-back" href="../../../index.html">← Zvířata</a>
+  <span class="nav-sep">·</span>
+  <a class="nav-link active" href="had_pohadka.html">Pohádka</a>
+  <a class="nav-link" href="had_diagnostika.html">Diagnostika</a>
+  <a class="nav-link" href="had_workshop.html">Workshop</a>
+  <a class="nav-link" href="https://artmisanovak-prog.github.io/Fenomeny_Kreativni_Slovnik_Mezer_Chces_Mys/doma/nastroje/analyzer.html" target="_blank">Forenzní analýza ↗</a>
+</nav>
+<div class="wrap">
+<section class="hero">
+  <div class="hero-img">
+    <img src="../../ilustrace/had.jpg" alt="Had">
+  </div>
+  <div>
+    <p class="hero-tag">Kreativní miniatura · Karta Had</p>
+    <h1 class="hero-title">Ha<em>d</em></h1>
+    <div class="fenomen">
+      <div class="fen-tag">Fenomén — Jazyk, který mluví jinak / syčení jako paměť celku</div>
+      <p class="fen-text">Had nebyl jedovatý. Nebyl moc silný. Ale jeho jazyk se ohýbal podle vlastních pravidel. Nikdo ho neposlouchal. Kromě Evy. Kromě myši. A pak přišel trest — ne za lež, ale za jazyk. Roztrhli mu ho. Od té doby jen syčí. Fenomén Hada zkoumá, co se stane, když mluvíš jinak, než se čeká — a co z tebe zůstane, když ti vezmou slova.</p>
+    </div>
+    <div class="cta-row">
+      <a class="btn btn-p" href="had_diagnostika.html">Zjistit svůj úhel →</a>
+      <a class="btn btn-g" href="had_workshop.html">Workshop →</a>
+    </div>
+  </div>
+</section>
+
+<section class="sec">
+  <p class="sec-tag">Pohádka · čtěte pomalu · sledujte kde vás zastaví</p>
+  <div class="scroll-box">
+    <span class="pd i">O hadovi, který mluvil jinak.</span>
+    <span class="pd br"></span>
+    <span class="pd">V krajině, kde se stíny kroutí jako tráva, žil had.</span>
+    <span class="pd">Nebyl jedovatej. Nebyl ani moc silnej.</span>
+    <span class="pd">Nebyl mladej. Byl spíš hodně starej, i když na jeho kůži se to nepoznalo.</span>
+    <span class="pd">A jeho jazyk se začal ohýbat podle vlastních pravidel.</span>
+    <span class="pd">Každé „s" znělo jako škrábnutí po zádech.</span>
+    <span class="pd">Každé slovo nechalo stopu, která nechala stopu.</span>
+    <span class="pd br"></span>
+    <span class="pd">Ale syčel. A nikdo ho neposlouchal.</span>
+    <span class="pd">Nikdy nikoho ani nenapadlo poslouchat hada.</span>
+    <span class="pd">Mimo Evu.</span>
+    <span class="pd">Mimo myš.</span>
+    <span class="pd br"></span>
+    <span class="pd s syceni">„Ďáblové jsssou původem z nebesss,"</span>
+    <span class="pd">syčel jednou. A svět se zastavil — ne kvůli tomu, co řekl, ale kvůli jak.</span>
+    <span class="pd d">Bylo v tom něco, co připomínalo pravdu.</span>
+    <span class="pd br"></span>
+    <span class="pd">Myš si to zapisovala do koutů. A mezi ostatní zvířata se to také rozneslo.</span>
+    <span class="pd">Začala se hromadit kolem:</span>
+    <span class="pd dl">Kocour, co krkal tečky.</span>
+    <span class="pd dl">Zaječice, co není dřevo na podpal.</span>
+    <span class="pd dl">Ryba rapující proudy.</span>
+    <span class="pd dl">Dráček s chrchlákem místo ohně.</span>
+    <span class="pd br"></span>
+    <span class="pd">Had se akorát zavlnil a mluvil dál:</span>
+    <span class="pd s">„Některé věci padají vzhůru."</span>
+    <span class="pd br"></span>
+    <span class="pd d">A plameňák přikyvoval.</span>
+    <span class="pd d">A pavouk poznamenal, že některé věci nepadají vůbec.</span>
+    <span class="pd br"></span>
+    <span class="pd">„Ano i ne," had pokračoval:</span>
+    <span class="pd dl">„Ne každý, kdo padá, je zlý.</span>
+    <span class="pd dl">A ne každý nahoře je dobrý.</span>
+    <span class="pd dl">Každé světlo nese stín, každá tma nese světlo.</span>
+    <span class="pd dl">Každé ‚ano' je zároveň ‚možná'.</span>
+    <span class="pd dl">A každé ‚ne' je jen ‚zatím ne'."</span>
+    <span class="pd br"></span>
+    <span class="pd">A tenkrát přišla Eva. A jablko. A otázka — ne pokušení, jen zvědavost.</span>
+    <span class="pd">Had neponoukal. Jen mluvil.</span>
+    <span class="pd d">Tehdy ještě mluvit uměl. Jazyk měl celý, výmluvný, ohebný — slova byla jako listy: hladká, zelená, neškodná.</span>
+    <span class="pd">Trest přišel později.</span>
+    <span class="pd br"></span>
+    <span class="pd">„Budeš lézt po břiše a žrát prach," řekl Bůh.</span>
+    <span class="pd">Had se podíval dolů:</span>
+    <span class="pd dl syceni">„Lézst? Už lezsu.</span>
+    <span class="pd dl syceni">Prach? Aha.. Ccože? Oh, no tak O.Kaa, proti prachu jsssem nicc nemel..</span>
+    <span class="pd dl syceni">jenomže — foupaxss.</span>
+    <span class="pd dl">Bůh neřekl ‚žrát prach'.</span>
+    <span class="pd dl syceni">Za Boha jsssem mu nerozumněl, co to přesně řekl..</span>
+    <span class="pd dl">ale..hm..hned mi to došsslo..aha..</span>
+    <span class="pd dl">takže ne prach, ani vrah, hrách, ani ssstrach.</span>
+    <span class="pd dl s">Ale jazyk… jazyk mi roztrhl."</span>
+    <span class="pd br"></span>
+    <span class="pd">Žrát prach musím taky, protože nemůžu pít vodu.</span>
+    <span class="pd">Od té doby jen syčím.</span>
+    <span class="pd">A přesto mluvím — jinak, tišeji.</span>
+    <span class="pd s">Šeptám mezi řádky. Naučil jsem se to znovu. Sám.</span>
+    <span class="pd br"></span>
+    <span class="pd i">Věřte mi, není to snadné — prokletí je prokletí a od kořene od Boha.</span>
+    <span class="pd i">Jazyk se mi plete pod jazyk, jako opilec, co se nedokáže napít ani vody.</span>
+    <span class="pd i d">A syčení mě příšerně deprimuje.</span>
+    <span class="pd br"></span>
+    <span class="pd s">Věřte / Nevěřte — a poslechněte si, co si pamatují hadi.</span>
+    <span class="pd br"></span>
+    <span class="pd">Zvířata mlčí. Ne ze strachu, ale z úžasu.</span>
+    <span class="pd">Protože hadovy pohádky nejsou o dobru ani zlu.</span>
+    <span class="pd s">Jsou o tom, co je mezi.</span>
+    <span class="pd">O rovnováze. O směru, který se nedá zakreslit.</span>
+    <span class="pd br"></span>
+    <span class="pd d i">A tak se začalo říkat, že někde v trávě, kde se svět dělí na části,</span>
+    <span class="pd d i">žije had, který si pamatuje celek.</span>
+  </div>
+  <p class="scroll-hint">↑ scrollujte · pohádka pokračuje</p>
+</section>
+
+<footer>
+  <p>Karta Had · Chceš myš? · © 2026 Michaela Nováková</p>
+  <p><a href="mailto:chcesmys@gmail.com">chcesmys@gmail.com</a></p>
+</footer>
+</div>
+</body>
+</html>
