@@ -1,5 +1,7 @@
-## Fenomeny - Kreativni - 
-# Slovnik_Mezer_Chces_Mys
+## Fenomeny - Jazyk - Kreativita
+---
+
+# Chces Mys? Slovnik Mezer
 
 - [analyzér](doma/nastroje/analyzer.html)
 - [analyzér](doma/nastroje/analyzer_poruch.html)
