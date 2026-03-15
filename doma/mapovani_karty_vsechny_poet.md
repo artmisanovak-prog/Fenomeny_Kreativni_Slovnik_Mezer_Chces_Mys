@@ -11,7 +11,7 @@ Viz `mapovani_universal.md` pro přiřazení poruch k úhlům.
 
 ---
 
-| Porucha | Jednorožec | Motýl | Ryba | Netopýr | Lemur | Páv |
+| Anomálie | Jednorožec | Motýl | Ryba | Netopýr | Lemur | Páv |
 |---------|-----------|-------|------|---------|-------|-----|
 | Opakování | Krajina výčtem | Věta která se usadí v hlavě | Zvuková instrumentace | Refrén „všechno bylo…" | Rituální předsevzetí | Anaforické řazení |
 | Přeskok | Panika z vlastní reálnosti | Stichomythie | Záměna subjektu a objektu | Ráno jako destrukce | Gradace absurdity | Paradox definice |
@@ -28,7 +28,7 @@ Viz `mapovani_universal.md` pro přiřazení poruch k úhlům.
 
 ---
 
-| Porucha | Krokodýl | Plameňák | Krávy | Pavouk | Želva | Liška |
+| Anomálie | Krokodýl | Plameňák | Krávy | Pavouk | Želva | Liška |
 |---------|---------|---------|-------|--------|-------|-------|
 | Opakování | Rituální struktura vzali/zůstalo | Gradace výšky | Anafora jako beat | Rituální formule Jen tak | Krok jako razítko | Rituální odebírání |
 | Přeskok | Proměna identity | Směr jako náhrada cíle | Enumerace s odhmotňováním | Zákon nehybnosti | Čtení při běhu | Pohyb bez těla |
@@ -45,7 +45,7 @@ Viz `mapovani_universal.md` pro přiřazení poruch k úhlům.
 
 ---
 
-| Porucha | Kocour | Zaječice | Myš | Čáp |
+| Anomálie | Kocour | Zaječice | Myš | Čáp |
 |---------|--------|---------|-----|-----|
 | Opakování | Matematická přesnost | Trojí negace hrdinky | Negace jako definice | Říkanka jako rámec |
 | Přeskok | Paradox tečky | Chiasmus | Meta-pozorovatel | Děti bez příčiny |
