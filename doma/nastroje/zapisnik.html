@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Zápisník mezer — Fyzika jazyka</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --bg:#0f0d0a;--s:#171410;--s2:#1e1a14;
+      --cream:#e8e0d0;--dim:rgba(232,224,208,.42);--dim2:rgba(232,224,208,.2);
+      --accent:#a89880;--accent2:#786858;
+      --border:rgba(168,152,128,.14);--border-hi:rgba(168,152,128,.3);
+      --serif:'Cormorant Garamond',Georgia,serif;--mono:'DM Mono',monospace;
+    }
+    html{scroll-behavior:smooth}
+    body{background:var(--bg);color:var(--cream);font-family:var(--mono);font-size:13px;line-height:1.8;-webkit-font-smoothing:antialiased}
+    a{color:inherit;text-decoration:none}
+    .wrap{max-width:920px;margin:0 auto;padding:0 24px}
+    nav{position:sticky;top:0;z-index:100;border-bottom:1px solid var(--border);background:rgba(15,13,10,.94);backdrop-filter:blur(14px);padding:11px 24px;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+    .nav-brand{font-family:var(--serif);font-size:.88rem;font-weight:300}
+    .nav-brand em{font-style:italic;color:var(--accent)}
+    .nav-links{display:flex;gap:4px;flex-wrap:wrap}
+    .nav-link{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);padding:4px 9px;border:1px solid transparent;transition:all .12s}
+    .nav-link:hover{color:var(--cream);border-color:var(--border)}
+
+    .hero{padding:40px 0 28px;border-bottom:1px solid var(--border)}
+    .hero-label{font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin-bottom:12px}
+    h1{font-family:var(--serif);font-size:clamp(1.9rem,5vw,3rem);font-weight:300;line-height:1.05;margin-bottom:6px}
+    h1 em{font-style:italic;color:var(--accent)}
+    .hero-desc{font-size:.76rem;color:var(--dim);max-width:460px;line-height:1.9;margin-top:8px}
+
+    .layout{display:grid;grid-template-columns:200px 1fr;gap:0;min-height:60vh}
+    @media(max-width:660px){.layout{grid-template-columns:1fr}}
+
+    .sidebar{border-right:1px solid var(--border);padding:18px 0;position:sticky;top:57px;height:calc(100vh - 57px);overflow-y:auto}
+    @media(max-width:660px){.sidebar{position:static;height:auto;border-right:none;border-bottom:1px solid var(--border)}}
+    .sidebar::-webkit-scrollbar{width:2px}
+    .sidebar::-webkit-scrollbar-thumb{background:var(--accent2)}
+    .sb-lbl{font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--dim2);padding:0 12px;margin-bottom:6px}
+    .sb-item{display:flex;align-items:center;gap:7px;padding:6px 12px;cursor:pointer;transition:background .1s;border-left:2px solid transparent;font-size:.72rem}
+    .sb-item:hover{background:var(--s)}
+    .sb-item.active{background:var(--s);border-left-color:var(--accent)}
+    .sb-count{font-size:.58rem;color:var(--dim2);margin-left:auto}
+    .sb-new{margin:10px 12px 0;padding:6px 10px;background:transparent;border:1px solid var(--border);color:var(--dim);font-family:var(--mono);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;width:calc(100% - 24px);transition:all .12s;text-align:left}
+    .sb-new:hover{border-color:var(--accent);color:var(--accent)}
+
+    .main{padding:18px 0 18px 24px}
+    @media(max-width:660px){.main{padding:14px 0}}
+
+    .mapa-header{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:16px;flex-wrap:wrap}
+    .mapa-title{font-family:var(--serif);font-size:1.2rem;font-weight:300}
+    .mapa-title em{font-style:italic;color:var(--accent)}
+    .btn{padding:6px 13px;font-family:var(--mono);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;border:none;cursor:pointer;transition:all .12s}
+    .btn-g{background:transparent;color:var(--dim);border:1px solid var(--border)}
+    .btn-g:hover{color:var(--cream);border-color:var(--border-hi)}
+    .btn-d{background:transparent;color:rgba(168,80,80,.5);border:1px solid rgba(168,80,80,.18);font-size:.58rem}
+    .btn-d:hover{color:#e88;border-color:rgba(168,80,80,.45)}
+
+    .stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border:1px solid var(--border);margin-bottom:18px}
+    .stat{background:var(--s);padding:9px 12px}
+    .stat-val{font-family:var(--serif);font-size:1.2rem;font-weight:300}
+    .stat-lbl{font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--dim2);margin-top:1px}
+
+    .mapa-viz{display:flex;gap:20px;align-items:flex-start;margin-bottom:20px;flex-wrap:wrap}
+    canvas{cursor:pointer;display:block;flex-shrink:0}
+    .legenda-col{flex:1;min-width:150px}
+    .leg-i{display:flex;align-items:center;gap:6px;padding:3px 0;cursor:pointer;opacity:.45;transition:opacity .15s;font-size:.68rem}
+    .leg-i:hover,.leg-i.hi{opacity:1}
+    .leg-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+    .leg-cnt{font-size:.58rem;color:var(--dim);margin-left:auto}
+
+    .slepa{background:var(--s);border:1px solid var(--border);padding:12px 14px;margin-bottom:16px}
+    .sec-lbl{font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);margin-bottom:7px}
+    .sm-r{display:flex;align-items:center;gap:7px;padding:3px 0;font-size:.68rem;color:var(--dim)}
+    .sm-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+    .sm-bar-w{flex:1;height:2px;background:var(--border);overflow:hidden}
+    .sm-bar{height:100%}
+    .sm-lnk{font-size:.58rem;color:var(--accent);cursor:pointer}
+    .sm-lnk:hover{text-decoration:underline}
+
+    .tl-sec{margin-bottom:16px}
+    .tl-bar{display:flex;gap:3px;flex-wrap:wrap;min-height:14px}
+    .tl-dot{width:11px;height:11px;border-radius:50%;cursor:pointer;transition:transform .1s}
+    .tl-dot:hover{transform:scale(1.4)}
+    .tl-labels{display:flex;justify-content:space-between;font-size:.56rem;color:var(--dim2);margin-top:3px}
+
+    .filter-bar{display:flex;gap:3px;flex-wrap:wrap;margin-bottom:10px}
+    .f-btn{padding:3px 8px;font-family:var(--mono);font-size:.58rem;letter-spacing:.08em;text-transform:uppercase;background:transparent;border:1px solid var(--border);color:var(--dim);cursor:pointer;transition:all .1s}
+    .f-btn:hover,.f-btn.active{border-color:var(--accent);color:var(--accent)}
+
+    .entry{border:1px solid var(--border);background:var(--s);margin-bottom:3px;overflow:hidden}
+    .entry-head{display:grid;grid-template-columns:auto 1fr auto;gap:7px;padding:8px 12px;cursor:pointer;align-items:center;transition:background .1s;font-size:.7rem}
+    .entry-head:hover{background:var(--s2)}
+    .entry.open .entry-head{background:var(--s2);border-bottom:1px solid var(--border)}
+    .e-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+    .e-meta{display:flex;flex-direction:column;gap:1px}
+    .e-top{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+    .e-tag{font-size:.58rem;color:var(--dim);padding:1px 5px;border:1px solid var(--border)}
+    .e-prev{font-size:.66rem;color:var(--dim);font-style:italic;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:360px}
+    .e-dat{font-size:.56rem;color:var(--dim2)}
+    .e-tog{font-size:.62rem;color:var(--dim);transition:transform .2s}
+    .entry.open .e-tog{transform:rotate(180deg)}
+    .entry-body{display:none;padding:11px 13px 13px 25px}
+    .entry.open .entry-body{display:block}
+    .e-text{font-family:var(--serif);font-size:.84rem;color:rgba(232,224,208,.8);line-height:1.9;margin-bottom:9px;white-space:pre-wrap}
+    .e-acts{display:flex;gap:4px;flex-wrap:wrap}
+
+    .prazdny{padding:28px 0;text-align:center;font-size:.76rem;color:var(--dim2);font-style:italic}
+
+    .modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.76);z-index:200;align-items:center;justify-content:center;padding:20px}
+    .modal.open{display:flex}
+    .modal-box{background:var(--s);border:1px solid var(--border-hi);padding:20px;width:100%;max-width:360px}
+    .modal-box h3{font-family:var(--serif);font-size:.95rem;font-weight:300;margin-bottom:12px}
+    .m-input{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--cream);padding:8px 11px;font-family:var(--mono);font-size:.76rem;margin-bottom:7px}
+    .m-input:focus{outline:1px solid var(--accent)}
+    .m-acts{display:flex;gap:5px;justify-content:flex-end;margin-top:8px}
+
+    footer{padding:18px 0;border-top:1px solid var(--border);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-top:20px}
+    footer p{font-size:.66rem;color:var(--dim2)}
+    footer a{color:var(--accent)}
+  </style>
+</head>
+<body>
+<nav>
+  <span class="nav-brand"><em>Chceš myš?</em> — zápisník mezer</span>
+  <div class="nav-links">
+    <a class="nav-link" href="../../../index.html">← Zvířata</a>
+    <a class="nav-link" href="analyzer.html">Analyzátor</a>
+    <a class="nav-link" href="knihovna_figur.html">Figury</a>
+  </div>
+</nav>
+<div class="wrap">
+
+<section class="hero">
+  <p class="hero-label">Fyzika jazyka · Zápisník mezer</p>
+  <h1>Zápisník <em>mezer</em></h1>
+  <p class="hero-desc">Zápisuje do ticha. Automaticky mapuje vaše cvičení ze všech karet na 12 úhlů — vidíte kde se pohybujete a kde jsou slepá místa k prozkoumání.</p>
+</section>
+
+<div class="layout">
+  <div class="sidebar">
+    <p class="sb-lbl">Mapy</p>
+    <div id="sb-list"></div>
+    <button class="sb-new" onclick="openNewModal()">+ Nová mapa</button>
+  </div>
+
+  <div class="main">
+    <div class="mapa-header">
+      <div>
+        <div class="mapa-title" id="mapa-nazev"><em>Vyberte mapu</em></div>
+        <div style="font-size:.68rem;color:var(--dim);margin-top:2px" id="mapa-popis"></div>
+      </div>
+      <div style="display:flex;gap:4px;flex-wrap:wrap" id="mapa-acts" style="display:none">
+        <button class="btn btn-g" onclick="exportovat()">↓ Export</button>
+        <button class="btn btn-d" onclick="smazatMapu()">Smazat</button>
+      </div>
+    </div>
+
+    <div class="stats-row" id="stats-row" style="display:none">
+      <div class="stat"><div class="stat-val" id="st-c">0</div><div class="stat-lbl">Cvičení</div></div>
+      <div class="stat"><div class="stat-val" id="st-u">0</div><div class="stat-lbl">Úhlů</div></div>
+      <div class="stat"><div class="stat-val" id="st-s">0</div><div class="stat-lbl">Slov</div></div>
+    </div>
+
+    <div id="viz" style="display:none">
+      <div class="mapa-viz">
+        <canvas id="wheel" width="190" height="190"></canvas>
+        <div class="legenda-col" id="legenda"></div>
+      </div>
+
+      <div class="slepa">
+        <div class="sec-lbl">Slepá místa</div>
+        <div id="slepa"></div>
+      </div>
+
+      <div class="tl-sec">
+        <p class="sec-lbl">Časová osa</p>
+        <div class="tl-bar" id="tl-bar"></div>
+        <div class="tl-labels" id="tl-labels"></div>
+      </div>
+
+      <p class="sec-lbl">Záznamy</p>
+      <div class="filter-bar" id="filter-bar"></div>
+      <div id="entries"></div>
+    </div>
+
+    <div id="prazdny" class="prazdny">← Vyberte nebo vytvořte mapu</div>
+  </div>
+</div>
+
+<footer>
+  <p>Zápisník mezer · Fyzika jazyka · Chceš myš? · © 2026 Michaela Nováková</p>
+  <p><a href="mailto:chcesmys@gmail.com">chcesmys@gmail.com</a></p>
+</footer>
+</div>
+
+<div class="modal" id="modal-new">
+  <div class="modal-box">
+    <h3>Nová mapa</h3>
+    <input class="m-input" id="new-name" placeholder="Název — třída 3B, osobní, projekt…" maxlength="40">
+    <input class="m-input" id="new-popis" placeholder="Popis (nepovinný)…" maxlength="100">
+    <div class="m-acts">
+      <button class="btn btn-g" onclick="closeModals()">Zrušit</button>
+      <button class="btn" style="background:var(--accent);color:var(--bg)" onclick="vytvorMapu()">Vytvořit</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const UM=[
+  {st:0,n:'Analytický',p:'Ticho, které není prázdné',b:'#5a7fa8'},
+  {st:30,n:'Kulturní',p:'Rytmus proudů',b:'#6a9e72'},
+  {st:60,n:'Filozofický',p:'Hloubka',b:'#9b72b5'},
+  {st:90,n:'Naivní',p:'Vlna a ohlas',b:'#5fa8a0'},
+  {st:120,n:'Jazykový',p:'Mezera mezi bublinama',b:'#8e7248'},
+  {st:150,n:'Metaforický',p:'Přesnost bez hlasu',b:'#5a8a5a'},
+  {st:180,n:'Asociační',p:'Flow',b:'#a85a5a'},
+  {st:210,n:'Introspektivní',p:'Smysl v tichu',b:'#c8a832'},
+  {st:240,n:'Ironický',p:'Ryba na hladině',b:'#c8722a'},
+  {st:270,n:'Groteskní',p:'Hudba pro oko',b:'#a83060'},
+  {st:300,n:'Absurdní',p:'Vodní kruhy',b:'#6080a0'},
+  {st:330,n:'Surrealistický',p:'Poslední verš',b:'#8060b0'},
+];
+const BD={};UM.forEach(u=>BD[u.st]=u);
+const KEY='chcesmys_zapisnik';
+let AM=null,FU=null;
+
+const load=()=>{try{return JSON.parse(localStorage.getItem(KEY)||'{}')}catch{return{}}};
+const save=d=>localStorage.setItem(KEY,JSON.stringify(d));
+const escH=s=>(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+
+function renderSB(){
+  const data=load(),maps=Object.keys(data),list=document.getElementById('sb-list');
+  list.innerHTML='';
+  if(!maps.length){list.innerHTML='<div style="padding:5px 12px;font-size:.66rem;color:var(--dim2);font-style:italic">Zatím žádné mapy</div>';return;}
+  maps.forEach(id=>{
+    const m=data[id],count=(m.entries||[]).length;
+    const div=document.createElement('div');div.className='sb-item'+(AM===id?' active':'');
+    div.innerHTML=`<span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${m.name}</span><span class="sb-count">${count}</span>`;
+    div.onclick=()=>{AM=id;FU=null;renderSB();renderMain()};
+    list.appendChild(div);
+  });
+}
+
+function renderMain(){
+  const data=load();
+  if(!AM||!data[AM]){
+    ['viz','stats-row'].forEach(id=>document.getElementById(id).style.display='none');
+    document.getElementById('prazdny').style.display='block';
+    document.getElementById('mapa-nazev').innerHTML='<em>Vyberte mapu</em>';
+    document.getElementById('mapa-popis').textContent='';
+    document.getElementById('mapa-acts').style.display='none';
+    return;
+  }
+  const m=data[AM],entries=m.entries||[];
+  document.getElementById('prazdny').style.display='none';
+  document.getElementById('viz').style.display='block';
+  document.getElementById('stats-row').style.display='grid';
+  document.getElementById('mapa-acts').style.display='flex';
+  document.getElementById('mapa-nazev').innerHTML=`<em>${m.name}</em>`;
+  document.getElementById('mapa-popis').textContent=m.popis||'';
+  const slova=entries.reduce((a,e)=>a+(e.text||'').split(/\s+/).filter(Boolean).length,0);
+  const uset=new Set(entries.map(e=>e.uhel));
+  document.getElementById('st-c').textContent=entries.length;
+  document.getElementById('st-u').textContent=uset.size;
+  document.getElementById('st-s').textContent=slova;
+  drawWheel(entries);renderLeg(entries);renderSlepa(entries);renderTL(entries);renderFB(entries);renderEntries(entries);
+}
+
+function drawWheel(entries){
+  const cv=document.getElementById('wheel'),ctx=cv.getContext('2d');
+  ctx.clearRect(0,0,190,190);
+  const CX=95,CY=95,R=86,IR=30,seg=(Math.PI*2)/12;
+  const cnt={};UM.forEach(u=>cnt[u.st]=0);entries.forEach(e=>{if(cnt[e.uhel]!==undefined)cnt[e.uhel]++;});
+  const maxC=Math.max(...Object.values(cnt),1);
+  UM.forEach((u,i)=>{
+    const sa=-Math.PI/2+i*seg,ea=sa+seg,inten=cnt[u.st]/maxC;
+    ctx.beginPath();ctx.moveTo(CX,CY);ctx.arc(CX,CY,R,sa,ea);ctx.closePath();
+    ctx.fillStyle=cnt[u.st]>0?u.b+Math.round(25+inten*140).toString(16).padStart(2,'0'):'#1a1610';
+    ctx.fill();ctx.strokeStyle='rgba(168,152,128,.08)';ctx.lineWidth=1;ctx.stroke();
+    const mA=sa+seg/2,lr=(R+IR)/2+5;
+    ctx.save();ctx.translate(CX+Math.cos(mA)*lr,CY+Math.sin(mA)*lr);ctx.rotate(mA+Math.PI/2);
+    ctx.fillStyle=cnt[u.st]>0?u.b:'rgba(168,152,128,.16)';
+    ctx.font='300 6.5px DM Mono,monospace';ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.fillText(u.n,0,0);ctx.restore();
+    if(cnt[u.st]>0){ctx.beginPath();ctx.arc(CX,CY,IR+2,sa+.07,ea-.07);ctx.strokeStyle=u.b;ctx.lineWidth=Math.max(1.5,inten*4);ctx.globalAlpha=0.4+inten*.6;ctx.stroke();ctx.globalAlpha=1;}
+  });
+  ctx.beginPath();ctx.arc(CX,CY,IR,0,Math.PI*2);ctx.fillStyle='#0f0d0a';ctx.fill();
+  ctx.strokeStyle='rgba(168,152,128,.12)';ctx.lineWidth=1;ctx.stroke();
+  ctx.fillStyle='rgba(168,152,128,.25)';ctx.font='300 8.5px DM Mono';ctx.textAlign='center';ctx.textBaseline='middle';
+  ctx.fillText(entries.length===0?'prázdná':`${entries.length} záz.`,CX,CY);
+  cv.onclick=e=>{
+    const rc=cv.getBoundingClientRect(),sc=190/rc.width;
+    const mx=(e.clientX-rc.left)*sc-CX,my=(e.clientY-rc.top)*sc-CY,dist=Math.sqrt(mx*mx+my*my);
+    if(dist<IR||dist>R){FU=null;renderMain();return;}
+    let ang=Math.atan2(my,mx)+Math.PI/2;if(ang<0)ang+=Math.PI*2;
+    const u=UM[Math.floor(ang/(Math.PI*2/12))];
+    if(u){FU=FU===u.st?null:u.st;renderMain();}
+  };
+}
+
+function renderLeg(entries){
+  const cnt={};UM.forEach(u=>cnt[u.st]=0);entries.forEach(e=>{if(cnt[e.uhel]!==undefined)cnt[e.uhel]++;});
+  document.getElementById('legenda').innerHTML=[...UM].sort((a,b)=>cnt[b.st]-cnt[a.st]).filter(u=>cnt[u.st]>0).map(u=>`
+    <div class="leg-i${FU===u.st?' hi':''}" onclick="FU=FU===${u.st}?null:${u.st};renderMain()">
+      <span class="leg-dot" style="background:${u.b}"></span><span>${u.n}</span><span class="leg-cnt">${cnt[u.st]}×</span>
+    </div>`).join('')||'<div style="font-size:.68rem;color:var(--dim2);font-style:italic">Zatím žádné záznamy</div>';
+}
+
+function renderSlepa(entries){
+  const cnt={};UM.forEach(u=>cnt[u.st]=0);entries.forEach(e=>{if(cnt[e.uhel]!==undefined)cnt[e.uhel]++;});
+  const maxC=Math.max(...Object.values(cnt),1);
+  const slepa=UM.filter(u=>cnt[u.st]===0);
+  const slaba=UM.filter(u=>cnt[u.st]>0&&cnt[u.st]<maxC*.3);
+  const vse=[...slepa,...slaba].slice(0,5);
+  document.getElementById('slepa').innerHTML=vse.length?vse.map(u=>`
+    <div class="sm-r">
+      <span class="sm-dot" style="background:${u.b}"></span>
+      <span style="flex:1">${u.n} — ${u.p}</span>
+      <div class="sm-bar-w"><div class="sm-bar" style="width:${Math.round(cnt[u.st]/maxC*100)}%;background:${u.b}"></div></div>
+      <span class="sm-lnk" onclick="FU=${u.st};renderMain()">filtr</span>
+    </div>`).join(''):'<div style="font-size:.68rem;color:var(--dim2);font-style:italic">Všechny úhly prozkoumány.</div>';
+}
+
+function renderTL(entries){
+  const sorted=[...entries].sort((a,b)=>a.ts-b.ts);
+  document.getElementById('tl-bar').innerHTML=sorted.map(e=>{
+    const u=BD[e.uhel]||{b:'#888',n:''};
+    const d=new Date(e.ts).toLocaleDateString('cs-CZ',{day:'2-digit',month:'2-digit'});
+    return `<div class="tl-dot" style="background:${u.b}" title="${u.n} · ${d}" onclick="scrollEnt('${e.id}')"></div>`;
+  }).join('');
+  if(sorted.length>1){
+    const f=new Date(sorted[0].ts).toLocaleDateString('cs-CZ',{day:'2-digit',month:'2-digit',year:'2-digit'});
+    const l=new Date(sorted[sorted.length-1].ts).toLocaleDateString('cs-CZ',{day:'2-digit',month:'2-digit',year:'2-digit'});
+    document.getElementById('tl-labels').innerHTML=`<span>${f}</span><span>${l}</span>`;
+  }else document.getElementById('tl-labels').innerHTML='';
+}
+
+function renderFB(entries){
+  const used=new Set(entries.map(e=>e.uhel));
+  let h=`<button class="f-btn${!FU?' active':''}" onclick="FU=null;renderMain()">Vše</button>`;
+  UM.filter(u=>used.has(u.st)).forEach(u=>{h+=`<button class="f-btn${FU===u.st?' active':''}" style="${FU===u.st?`border-color:${u.b};color:${u.b}`:''}" onclick="FU=FU===${u.st}?null:${u.st};renderMain()">${u.n}</button>`;});
+  document.getElementById('filter-bar').innerHTML=h;
+}
+
+function renderEntries(entries){
+  let filtered=FU?entries.filter(e=>e.uhel===FU):entries;
+  filtered=[...filtered].sort((a,b)=>b.ts-a.ts);
+  if(!filtered.length){document.getElementById('entries').innerHTML='<div class="prazdny">Žádné záznamy'+(FU?' pro tento úhel':'')+'.</div>';return;}
+  document.getElementById('entries').innerHTML=filtered.map(e=>{
+    const u=BD[e.uhel]||{n:'',b:'#888',st:e.uhel};
+    const d=new Date(e.ts).toLocaleDateString('cs-CZ',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'});
+    const prev=(e.text||'').slice(0,80)+((e.text||'').length>80?'…':'');
+    return `<div class="entry" id="ent-${e.id}">
+      <div class="entry-head" onclick="togEnt('${e.id}')">
+        <span class="e-dot" style="background:${u.b}"></span>
+        <div class="e-meta">
+          <div class="e-top"><span style="font-size:.7rem;color:${u.b}">${u.st}° ${u.n}</span>${e.karta?`<span class="e-tag">${e.karta}</span>`:''} ${e.poeticky?`<span class="e-tag" style="font-style:italic">${e.poeticky}</span>`:''}</div>
+          <div class="e-prev">${escH(prev)}</div>
+          <div class="e-dat">${d}</div>
+        </div>
+        <span class="e-tog">▾</span>
+      </div>
+      <div class="entry-body">
+        <div class="e-text">${escH(e.text||'')}</div>
+        <div class="e-acts">
+          <button class="btn btn-g" onclick="kopEnt('${e.id}')">Kopírovat</button>
+          <button class="btn btn-g" onclick="dlEnt('${e.id}')">↓ Stáhnout</button>
+          <button class="btn btn-d" onclick="delEnt('${e.id}')">Smazat</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function togEnt(id){document.getElementById('ent-'+id).classList.toggle('open');}
+function scrollEnt(id){const el=document.getElementById('ent-'+id);if(el){el.scrollIntoView({behavior:'smooth',block:'start'});el.classList.add('open');}}
+function kopEnt(id){const data=load(),e=data[AM]?.entries?.find(e=>e.id===id);if(e&&navigator.clipboard)navigator.clipboard.writeText(e.text||'');}
+function dlEnt(id){
+  const data=load(),e=data[AM]?.entries?.find(x=>x.id===id);if(!e)return;
+  const u=BD[e.uhel];
+  const blob=new Blob([`${e.karta||''} · ${u?.st||''}° ${u?.n||''} — ${e.poeticky||''}\n${new Date(e.ts).toLocaleDateString('cs-CZ')}\n\n${e.text||''}`],{type:'text/plain;charset=utf-8'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`zaznam_${u?.n||e.uhel}.txt`;a.click();
+}
+function delEnt(id){if(!AM||!confirm('Smazat?'))return;const data=load();data[AM].entries=data[AM].entries.filter(e=>e.id!==id);save(data);renderMain();}
+
+function openNewModal(){document.getElementById('modal-new').classList.add('open');document.getElementById('new-name').focus();}
+function closeModals(){document.querySelectorAll('.modal').forEach(m=>m.classList.remove('open'));}
+function vytvorMapu(){
+  const name=document.getElementById('new-name').value.trim();if(!name)return;
+  const popis=document.getElementById('new-popis').value.trim();
+  const data=load(),id='map_'+Date.now();
+  data[id]={name,popis,entries:[],created:Date.now()};save(data);AM=id;
+  document.getElementById('new-name').value='';document.getElementById('new-popis').value='';
+  closeModals();renderSB();renderMain();
+}
+function smazatMapu(){
+  if(!AM)return;const data=load();if(!confirm(`Smazat mapu „${data[AM]?.name}"?`))return;
+  delete data[AM];AM=null;save(data);renderSB();renderMain();
+}
+function exportovat(){
+  const data=load();if(!AM||!data[AM])return;
+  const m=data[AM];
+  let txt=`Zápisník mezer — ${m.name}\n${new Date().toLocaleDateString('cs-CZ')}\n${m.entries.length} záznamů\n\n${'─'.repeat(38)}\n\n`;
+  [...m.entries].sort((a,b)=>a.ts-b.ts).forEach((e,i)=>{
+    const u=BD[e.uhel];const d=new Date(e.ts).toLocaleDateString('cs-CZ',{day:'2-digit',month:'2-digit',year:'numeric'});
+    txt+=`${i+1}. ${d} · ${u?u.st+'° '+u.n:e.uhel}${e.karta?' · '+e.karta:''}${e.poeticky?' — '+e.poeticky:''}\n${e.text||''}\n\n`;
+  });
+  const blob=new Blob([txt],{type:'text/plain;charset=utf-8'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`zapisnik_${m.name.replace(/\s+/g,'_')}.txt`;a.click();
+}
+
+// Globální funkce — volá ji karta při ukládání
+window.kogMapaUlozit=function(z){
+  const data=load();
+  if(!AM){const id='map_default';if(!data[id])data[id]={name:'Zápisník mezer',popis:'',entries:[],created:Date.now()};AM=id;}
+  data[AM].entries.unshift({id:'e_'+Date.now(),ts:Date.now(),...z});
+  save(data);renderSB();renderMain();
+};
+
+// URL params z karty
+(function(){
+  const p=new URLSearchParams(window.location.search);
+  if(p.has('karta')&&p.has('uhel')){
+    window.kogMapaUlozit({karta:p.get('karta'),uhel:parseInt(p.get('uhel')),nazev:p.get('nazev')||'',poeticky:p.get('poeticky')||'',text:p.get('ukol')||''});
+    window.history.replaceState({},'',window.location.pathname);
+  }
+})();
+
+document.getElementById('modal-new').addEventListener('click',e=>{if(e.target===e.currentTarget)closeModals();});
+document.getElementById('new-name').addEventListener('keydown',e=>{if(e.key==='Enter')vytvorMapu();});
+
+(function init(){const data=load(),maps=Object.keys(data);if(maps.length)AM=maps[0];renderSB();renderMain();})();
+</script>
+</body>
+</html>
