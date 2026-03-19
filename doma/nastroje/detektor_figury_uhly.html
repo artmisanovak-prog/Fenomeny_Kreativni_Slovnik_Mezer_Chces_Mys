@@ -1,0 +1,950 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jazykový analyzátor — Chceš myš?</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+  <style>
+    /*────────────────── ZÁKLAD ──────────────────*/
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0f0f0f; --surface: #161616; --surface2: #1c1c1c;
+      --cream: #e8e0d0; --dim: rgba(232,224,208,0.42); --accent: #a89880;
+      --border: rgba(168,152,128,0.15); --border-hi: rgba(168,152,128,0.35);
+      --serif: 'Cormorant Garamond', Georgia, serif; --mono: 'DM Mono', monospace;
+      /* 12 úhlů */
+      --c0: #5a7fa8; --c30: #6a9e72; --c60: #9b72b5; --c90: #5fa8a0;
+      --c120: #8e7248; --c150: #5a8a5a; --c180: #a85a5a; --c210: #c8a832;
+      --c240: #c8722a; --c270: #a83060; --c300: #6080a0; --c330: #8060b0;
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg); color: var(--cream);
+      font-family: var(--mono); font-size: 13px; line-height: 1.8;
+      -webkit-font-smoothing: antialiased; min-height: 100vh;
+    }
+
+    /*────────────────── NAVIGACE ──────────────────*/
+    header nav {
+      position: sticky; top: 0; z-index: 100;
+      border-bottom: 1px solid var(--border);
+      background: rgba(15,15,15,0.94); backdrop-filter: blur(14px);
+      padding: 13px 32px; display: flex; align-items: center;
+      justify-content: space-between; gap: 12px;
+    }
+    .nav-brand { font-family: var(--serif); font-size: 0.9rem; font-weight: 300; letter-spacing: 0.06em; }
+    .nav-brand em { font-style: italic; color: var(--accent); }
+    .nav-sub { font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--dim); }
+
+    /*────────────────── LAYOUT ──────────────────*/
+    .wrap { max-width: 1100px; margin: 0 auto; padding: 0 32px; }
+
+    /*──── sekce hero ────*/
+    .hero { padding: 52px 0 40px; border-bottom: 1px solid var(--border); }
+    .hero-label {
+      font-size: 10px; letter-spacing: 0.24em; text-transform: uppercase;
+      color: var(--accent); margin-bottom: 14px;
+    }
+    .hero h1 {
+      font-family: var(--serif); font-size: clamp(2.2rem, 5vw, 4rem);
+      font-weight: 300; line-height: 1.05; margin-bottom: 10px;
+    }
+    .hero h1 em { font-style: italic; color: var(--accent); }
+    .hero-desc { font-size: 0.82rem; color: var(--dim); max-width: 540px; line-height: 1.9; }
+
+    /*──── co analyzuje (3 sloupce) ────*/
+    .co-analyzuje {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px;
+      background: var(--border); border: 1px solid var(--border); margin: 36px 0;
+    }
+    .co-item { background: var(--surface); padding: 20px 22px; }
+    .co-num {
+      font-family: var(--serif); font-size: 2.2rem; font-weight: 300;
+      color: rgba(168,152,128,0.18); line-height: 1; margin-bottom: 8px;
+    }
+    .co-title {
+      font-size: 0.76rem; letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--accent); margin-bottom: 8px;
+    }
+    .co-text { font-size: 0.8rem; color: var(--dim); line-height: 1.8; }
+
+    /*──── hlavní grid (vstup + kolo) ────*/
+    .main {
+      display: grid; grid-template-columns: 1fr 380px; gap: 0;
+      padding: 40px 0; border-bottom: 1px solid var(--border);
+    }
+    @media (max-width: 860px) { .main { grid-template-columns: 1fr; } }
+
+    /*── levý panel (vstup) ──*/
+    .panel-left { padding-right: 40px; border-right: 1px solid var(--border); }
+    @media (max-width: 860px) {
+      .panel-left { padding-right: 0; border-right: none; padding-bottom: 32px; border-bottom: 1px solid var(--border); }
+    }
+    .panel-label {
+      font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--accent); margin-bottom: 12px;
+    }
+    textarea {
+      width: 100%; background: var(--surface); border: 1px solid var(--border);
+      color: var(--cream); padding: 16px; font-family: var(--mono);
+      font-size: 0.85rem; line-height: 1.85; resize: vertical; min-height: 220px;
+      transition: border-color 0.15s;
+    }
+    textarea:focus { outline: none; border-color: var(--border-hi); }
+    textarea::placeholder { color: rgba(232,224,208,0.16); }
+    .btn-row { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
+    .btn {
+      padding: 11px 24px; font-family: var(--mono); font-size: 0.78rem;
+      letter-spacing: 0.1em; text-transform: uppercase; border: none;
+      cursor: pointer; transition: background 0.12s, color 0.12s;
+    }
+    .btn-primary { background: var(--accent); color: var(--bg); }
+    .btn-primary:hover { background: #c0aa90; }
+    .btn-ghost {
+      background: transparent; color: var(--dim); border: 1px solid var(--border);
+    }
+    .btn-ghost:hover { color: var(--cream); border-color: var(--border-hi); }
+    .btn-ghost.active { color: var(--accent); border-color: var(--accent); }
+
+    .highlighted-box {
+      display: none; margin-top: 16px; border: 1px solid var(--border);
+      background: var(--surface); padding: 16px; font-family: var(--serif);
+      font-size: 0.88rem; line-height: 2; white-space: pre-wrap;
+      max-height: 280px; overflow-y: auto;
+    }
+    .highlighted-box::-webkit-scrollbar { width: 2px; }
+    .highlighted-box::-webkit-scrollbar-thumb { background: var(--accent); }
+
+    /*── pravý panel (kolo) ──*/
+    .panel-right {
+      padding-left: 40px; display: flex; flex-direction: column;
+      align-items: center;
+    }
+    @media (max-width: 860px) { .panel-right { padding-left: 0; padding-top: 32px; } }
+    canvas { display: block; width: 100%; max-width: 320px; height: auto; cursor: pointer; }
+    .wheel-hint {
+      font-size: 0.72rem; color: var(--dim); text-align: center;
+      margin-top: 8px; letter-spacing: 0.06em;
+    }
+
+    /*──── sekce výsledky ────*/
+    .results { padding: 40px 0; border-bottom: 1px solid var(--border); }
+    .results-label {
+      font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--accent); margin-bottom: 20px;
+    }
+    .dominant-box {
+      border: 1px solid var(--accent); background: rgba(168,152,128,0.06);
+      padding: 20px 24px; margin-bottom: 24px;
+    }
+    .dominant-angle {
+      font-family: var(--serif); font-size: 1.8rem; font-weight: 300;
+      margin-bottom: 4px;
+    }
+    .dominant-angle em { font-style: italic; color: var(--accent); }
+    .dominant-meta { font-size: 0.78rem; color: var(--dim); line-height: 1.9; }
+
+    .protilehly-box {
+      background: var(--surface); border: 1px solid var(--border);
+      padding: 14px 20px; border-left: 2px solid var(--accent); margin-bottom: 24px;
+    }
+    .protilehly-label {
+      font-size: 0.68rem; letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--accent); margin-bottom: 6px;
+    }
+    .protilehly-name { font-family: var(--serif); font-size: 1.1rem; font-weight: 300; }
+    .protilehly-tip { font-size: 0.78rem; color: var(--dim); margin-top: 6px; line-height: 1.8; }
+
+    /* akční tlačítka u výsledků */
+    .results-actions {
+      display: flex; gap: 10px; flex-wrap: wrap; margin: 16px 0 24px;
+    }
+    .btn-outline {
+      background: transparent; border: 1px solid var(--border);
+      color: var(--dim); padding: 8px 18px; cursor: pointer;
+      font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.1em;
+      text-transform: uppercase; transition: all 0.12s;
+    }
+    .btn-outline:hover { border-color: var(--accent); color: var(--cream); }
+
+    .scores-grid {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px;
+      background: var(--border); border: 1px solid var(--border); margin-top: 24px;
+    }
+    @media (max-width: 600px) { .scores-grid { grid-template-columns: repeat(2, 1fr); } }
+    .score-cell {
+      background: var(--surface); padding: 12px 14px; cursor: pointer;
+      transition: background 0.1s;
+    }
+    .score-cell:hover { background: var(--surface2); }
+    .score-cell.hi { background: rgba(168,152,128,0.12); }
+    .sc-name { font-size: 0.72rem; color: var(--cream); margin-bottom: 4px; }
+    .sc-dot {
+      width: 6px; height: 6px; border-radius: 50%; display: inline-block;
+      margin-right: 5px; vertical-align: middle;
+    }
+    .sc-bar { height: 2px; background: var(--border); margin-bottom: 4px; overflow: hidden; }
+    .sc-fill { height: 100%; background: var(--accent); transition: width 0.4s ease; }
+    .sc-val { font-size: 0.68rem; color: var(--dim); }
+
+    /*──── detail úhlu ────*/
+    .angle-detail { display: none; padding: 40px 0; border-bottom: 1px solid var(--border); }
+    .angle-detail.visible { display: block; }
+    .ad-label {
+      font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--accent); margin-bottom: 16px;
+    }
+    .ad-title { font-family: var(--serif); font-size: 1.6rem; font-weight: 300; margin-bottom: 8px; }
+    .ad-grid {
+      display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1px;
+      background: var(--border); border: 1px solid var(--border); margin-top: 16px;
+    }
+    .ad-cell { background: var(--surface); padding: 16px 18px; }
+    .ad-cell-label {
+      font-size: 0.68rem; letter-spacing: 0.16em; text-transform: uppercase;
+      color: var(--accent); margin-bottom: 8px;
+    }
+    .ad-cell-text { font-size: 0.82rem; color: rgba(232,224,208,0.7); line-height: 1.8; }
+
+    /*──── seznam párů ────*/
+    .pairs { padding: 40px 0; }
+    .pairs-label {
+      font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--accent); margin-bottom: 20px;
+    }
+    .pairs h2 {
+      font-family: var(--serif); font-size: 1.4rem; font-weight: 300;
+      margin-bottom: 16px;
+    }
+    .pair-list {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 1px;
+      background: var(--border); border: 1px solid var(--border);
+    }
+    @media (max-width: 560px) { .pair-list { grid-template-columns: 1fr; } }
+    .pair { display: flex; align-items: stretch; background: var(--surface); }
+    .pair-a, .pair-b {
+      flex: 1; padding: 14px 18px; cursor: pointer; transition: background 0.1s;
+    }
+    .pair-a { border-right: 1px solid var(--border); }
+    .pair-a:hover, .pair-b:hover { background: var(--surface2); }
+    .pair-deg {
+      font-size: 0.68rem; color: var(--accent); letter-spacing: 0.1em;
+      margin-bottom: 3px;
+    }
+    .pair-name { font-size: 0.84rem; color: var(--cream); }
+    .pair-desc { font-size: 0.72rem; color: var(--dim); margin-top: 4px; line-height: 1.7; }
+    .pair-dot {
+      width: 7px; height: 7px; border-radius: 50%; display: inline-block;
+      margin-right: 6px; vertical-align: middle; opacity: 0.7;
+    }
+    .pair-arrow {
+      display: flex; align-items: center; padding: 0 10px;
+      color: var(--dim); font-size: 0.8rem;
+    }
+
+    /*──── modální okno pro sdílení ────*/
+    .modal {
+      display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(15,15,15,0.95); backdrop-filter: blur(8px); z-index: 1000;
+      align-items: center; justify-content: center;
+    }
+    .modal.visible { display: flex; }
+    .modal-content {
+      max-width: 400px; width: 90%; background: var(--surface);
+      border: 1px solid var(--border); padding: 32px; position: relative;
+    }
+    .modal-close {
+      position: absolute; top: 16px; right: 16px; font-size: 1.2rem;
+      color: var(--dim); cursor: pointer;
+    }
+    .modal-close:hover { color: var(--cream); }
+    .modal h3 { font-family: var(--serif); font-size: 1.2rem; font-weight: 300; margin-bottom: 16px; }
+    .share-icons {
+      display: flex; gap: 16px; justify-content: center; margin: 24px 0;
+    }
+    .share-icon {
+      width: 48px; height: 48px; border-radius: 50%; background: var(--surface2);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.6rem; cursor: pointer; border: 1px solid transparent;
+      transition: all 0.12s;
+    }
+    .share-icon:hover { border-color: var(--accent); color: var(--accent); transform: scale(1.05); }
+    .share-link { display: flex; margin-top: 16px; border: 1px solid var(--border); }
+    .share-link input {
+      flex: 1; background: var(--surface2); border: none; padding: 10px;
+      color: var(--cream); font-family: var(--mono); font-size: 0.8rem;
+    }
+    .share-link button {
+      background: var(--accent); color: var(--bg); border: none;
+      padding: 10px 16px; cursor: pointer; font-family: var(--mono);
+      font-size: 0.7rem; text-transform: uppercase;
+    }
+
+    /*──── patička ────*/
+    footer {
+      padding: 32px 0; border-top: 1px solid var(--border);
+      display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px;
+    }
+    footer p { font-size: 0.74rem; color: var(--dim); }
+    footer a { color: var(--accent); }
+  </style>
+</head>
+<body>
+
+<header>
+  <nav>
+    <span class="nav-brand"><em>Chceš myš?</em> — jazykový analyzátor</span>
+    <span class="nav-sub">12 kognitivních úhlů</span>
+  </nav>
+</header>
+
+<main class="wrap">
+
+  <!-- HERO -->
+  <section class="hero">
+    <p class="hero-label">Nástroj · Strukturní analýza textu</p>
+    <h1>Co říká váš jazyk —<br><em>ne obsah, ale forma.</em></h1>
+    <p class="hero-desc">Analyzátor čte strukturu textu, ne jeho téma. Zjistí, jaké jazykové vzorce převažují a přiřadí je ke 12 kognitivním úhlům systému Chceš myš?. Výsledek ukáže dominantní způsob vyjádření a navrhne protilehlý jako kreativní intervenci.</p>
+  </section>
+
+  <!-- CO ANALYZUJE (3 články) -->
+  <section class="co-analyzuje">
+    <article class="co-item">
+      <div class="co-num">01</div>
+      <h2 class="co-title">Klíčová slova a vzorce</h2>
+      <p class="co-text">Každý úhel má svůj slovník — charakteristická slova a obraty, které signalizují daný způsob myšlení. Analyzátor je hledá a počítá.</p>
+    </article>
+    <article class="co-item">
+      <div class="co-num">02</div>
+      <h2 class="co-title">Struktura vět</h2>
+      <p class="co-text">Délka vět, jejich variabilita, počet krátkých útržků, opakování slov — to vše ukazuje, jak mysl organizuje myšlenky, ne co myslí.</p>
+    </article>
+    <article class="co-item">
+      <div class="co-num">03</div>
+      <h2 class="co-title">Protilehlý úhel</h2>
+      <p class="co-text">Dominantní úhel odhaluje, kde jste silní. Protilehlý ukazuje, kde je prostor pro rozvoj. Intervence cílí právě tam.</p>
+    </article>
+  </section>
+
+  <!-- HLAVNÍ GRID: VSTUP + KOLO -->
+  <div class="main">
+    <section class="panel-left">
+      <p class="panel-label">Váš text — vložte cokoli</p>
+      <textarea id="txt" placeholder="Vložte text — e-mail, odpovědi na otázky k pohádce, úvahu, deník, zprávu... Analyzátor nepracuje s tématem, jen se strukturou."></textarea>
+      <div class="btn-row">
+        <button class="btn btn-primary" id="analyzeBtn">Analyzovat →</button>
+        <button class="btn btn-ghost" id="highlightBtn">Zvýraznit v textu</button>
+        <button class="btn btn-ghost" id="resetBtn">Smazat</button>
+      </div>
+      <div class="highlighted-box" id="highlighted"></div>
+    </section>
+
+    <section class="panel-right">
+      <p class="panel-label" style="align-self:flex-start">12 úhlů — klikněte na segment</p>
+      <canvas id="wheel" width="320" height="320"></canvas>
+      <p class="wheel-hint">Po analýze se rozsvítí dominantní úhly · kliknutím zobrazíte detail</p>
+    </section>
+  </div>
+
+  <!-- VÝSLEDKY ANALÝZY -->
+  <section class="results" id="results" style="display:none">
+    <p class="results-label">Výsledek analýzy</p>
+    <div class="dominant-box">
+      <div class="dominant-angle" id="res-dominant"></div>
+      <div class="dominant-meta" id="res-meta"></div>
+    </div>
+    <div class="protilehly-box" id="res-protilehly" style="display:none">
+      <div class="protilehly-label">Protilehlý úhel — doporučená intervence</div>
+      <div class="protilehly-name" id="res-prot-name"></div>
+      <p class="protilehly-tip" id="res-prot-tip"></p>
+    </div>
+
+    <!-- NOVÁ TLAČÍTKA U VÝSLEDKŮ -->
+    <div class="results-actions">
+      <button class="btn-outline" id="saveToLabBtn">🗂 Uložit do laboratoře</button>
+      <button class="btn-outline" id="downloadBtn">⬇ Stáhnout výsledky</button>
+      <button class="btn-outline" id="shareBtn">📤 Sdílet</button>
+      <button class="btn-outline" id="printBtn">🖨 Tisknout</button>
+    </div>
+
+    <div class="scores-grid" id="scores-grid"></div>
+  </section>
+
+  <!-- DETAIL ÚHLU -->
+  <section class="angle-detail" id="angle-detail">
+    <p class="ad-label" id="ad-label">Detail úhlu</p>
+    <h2 class="ad-title" id="ad-title"></h2>
+    <div class="ad-grid">
+      <article class="ad-cell">
+        <h3 class="ad-cell-label">Technika</h3>
+        <p class="ad-cell-text" id="ad-technika"></p>
+      </article>
+      <article class="ad-cell">
+        <h3 class="ad-cell-label">Popis</h3>
+        <p class="ad-cell-text" id="ad-popis"></p>
+      </article>
+      <article class="ad-cell">
+        <h3 class="ad-cell-label">Protilehlý</h3>
+        <p class="ad-cell-text" id="ad-protilehly"></p>
+      </article>
+    </div>
+  </section>
+
+  <!-- SEZNAM VŠECH PÁRŮ -->
+  <section class="pairs">
+    <p class="pairs-label">12 úhlů · 6 protilehlých párů</p>
+    <div class="pair-list" id="pair-list"></div>
+  </section>
+
+</main>
+
+<!-- PATIČKA -->
+<footer>
+  <p>Jazykový analyzátor · Chceš myš? · © 2026 Michaela Nováková</p>
+  <p><a href="mailto:chcesmys@gmail.com">chcesmys@gmail.com</a></p>
+</footer>
+
+<!-- MODÁLNÍ OKNO PRO SDÍLENÍ -->
+<div class="modal" id="shareModal">
+  <div class="modal-content">
+    <span class="modal-close" id="closeModal">&times;</span>
+    <h3>Sdílet výsledek analýzy</h3>
+    <div class="share-icons">
+      <div class="share-icon" title="Facebook" id="shareFb">📘</div>
+      <div class="share-icon" title="Twitter" id="shareTw">🐦</div>
+      <div class="share-icon" title="Email" id="shareMail">✉️</div>
+      <div class="share-icon" title="Zkopírovat odkaz" id="copyLink">🔗</div>
+    </div>
+    <div class="share-link">
+      <input type="text" id="shareUrl" readonly value="">
+      <button id="copyUrlBtn">Kopírovat</button>
+    </div>
+    <p style="font-size:.7rem;color:var(--dim);margin-top:16px">Odkaz obsahuje zakódované výsledky – po otevření se obnoví analýza.</p>
+  </div>
+</div>
+
+<script>
+// ────────────────────────────────────────────────────────────
+// DATA – 12 ÚHLŮ (každý má nyní 13–14 patternů, aby to bylo férové)
+// ────────────────────────────────────────────────────────────
+const UHLY = [
+  { st:0,   nazev:'Analytický',    prot:180, barva:'#5a7fa8',
+    technika:'Hledání paralel a struktur',
+    popis:'Analyzuje vztahy, hledá řád, logické závislosti. Věty jsou propojeny příčinnými spojkami.',
+    cil:'Procvičte volné asociace bez logické kontroly.',
+    patterns:['analýza','struktura','vztah','souvislost','paralela','systém','logika','tedy','protože','neboť','systematicky','pravidlo','princip','řád'] },
+  { st:180, nazev:'Asociační',     prot:0,   barva:'#a85a5a',
+    technika:'Odskoky, rozpad koheze',
+    popis:'Myšlenky plynou volně, skáčí mezi tématy. Málo logických spojek, náhlé přechody.',
+    cil:'Procvičte strukturované, lineární argumentování.',
+    patterns:['napadá','evokuje','připomíná','jako když','najednou','a pak','mimochodem','vlastně','no tak','přitom','zároveň','jinak','ostatně'] },
+  { st:30,  nazev:'Kulturní',      prot:210, barva:'#6a9e72',
+    technika:'Přesycení, kulturní fráze',
+    popis:'Opírá se o sdílené vzorce a klišé. Obecně srozumitelné, bez osobního hlediska.',
+    cil:'Procvičte osobní, niterný pohled bez klišé.',
+    patterns:['jak se říká','tradice','normální','každý ví','běžné','kultura','společenský','obecně','zvyk','pravidlo','vždy se','tak to je','společnost'] },
+  { st:210, nazev:'Introspektivní',prot:30,  barva:'#c8a832',
+    technika:'Izolace osobního pocitu',
+    popis:'Zaměřuje se na vlastní emoce a vnitřní prožitky. Vysoká frekvence zájmena já.',
+    cil:'Procvičte pohled z vnějšího, kulturního rámce.',
+    patterns:['cítím','prožívám','uvnitř','já','můj','mě','osobně','ve mně','emoce','pocit','vnitřně','sobě','sám','mně'] },
+  { st:60,  nazev:'Filozofický',   prot:240, barva:'#9b72b5',
+    technika:'Záměrná nejednoznačnost',
+    popis:'Klade abstraktní otázky, zpochybňuje pevné významy. Dlouhé, komplexní věty.',
+    cil:'Procvičte ironii a nadhled nad abstraktem.',
+    patterns:['smysl','podstata','existuje','bytí','pravda','vědomí','absolutní','relativní','proč','podstatou','otázka je','co je','jaký je','být'] },
+  { st:240, nazev:'Ironický',      prot:60,  barva:'#c8722a',
+    technika:'Spojení protikladů, nadsázka',
+    popis:'Vytváří napětí skrze paradoxní spojení a ironii. Kontrast mezi tím, co se říká a míní.',
+    cil:'Procvičte přímý, filozofický pohled bez ironie.',
+    patterns:['samozřejmě','jak jinak','paradox','ironie','naopak','ovšem','jasně','bezpochyby','pochopitelně','rozhodně','že ano','určitě','nepochybně'] },
+  { st:90,  nazev:'Naivní',        prot:270, barva:'#5fa8a0',
+    technika:'Minimalismus, elipsa',
+    popis:'Přímé, jednoduché věty bez elaborace. Popis děje bez hodnocení.',
+    cil:'Procvičte dramatičnost a emocionální nabitost.',
+    patterns:['prostě','jednoduché','hotovo','tak','ano','ne','jasně','hm','tak a','okay','ok','dobře','stačí','fajn'] },
+  { st:270, nazev:'Groteskní',     prot:90,  barva:'#a83060',
+    technika:'Extrémní kontrasty délek vět',
+    popis:'Dramatický, přehnaný projev. Střídání velmi krátkých a velmi dlouhých vět.',
+    cil:'Procvičte jednoduchost a minimalismus.',
+    patterns:['absurdní','přehnaný','neskutečný','obrovský','strašně','hrozně','fantasticky','drama','neuvěřitelný','šílený','brutální','extrémní','mega'] },
+  { st:120, nazev:'Jazykový',      prot:300, barva:'#8e7248',
+    technika:'Hra se slovy, zvukomalba',
+    popis:'Estetika jazyka je v popředí. Zvuk, rytmus, forma slov mají vlastní hodnotu.',
+    cil:'Procvičte absurdní logiku bez jazykové hry.',
+    patterns:['zvuk','slovo','rým','jazyk','vyslovit','hra','básnický','znít','klang','melodie','zvučí','rytmus','hláska','báseň'] },
+  { st:300, nazev:'Absurdní',      prot:120, barva:'#6080a0',
+    technika:'Permutace, rozpad syntaxe',
+    popis:'Narušení logické stavby, nesmyslné ale gramaticky možné konstrukce.',
+    cil:'Procvičte jazykovou estetiku a zvukovou hru.',
+    patterns:['proč','kdyby','co když','nesmysl','nelogické','absurdita','není možné','nic nedává','jiný svět','jiná logika','kdoví','záhadné','nemožné'] },
+  { st:150, nazev:'Metaforický',   prot:330, barva:'#5a8a5a',
+    technika:'Neobvyklá sousedství, obrazy',
+    popis:'Spojuje vzdálené koncepty. Vytváří metafory, symboly, obrazná pojmenování.',
+    cil:'Procvičte snovou, nekauzální imaginaci.',
+    patterns:['jako','metafora','obraz','symbol','znamená','vyjadřuje','připomíná','ztěleshňuje','obraz je','připomíná','jako by','jakoby','ztělesňuje'] },
+  { st:330, nazev:'Surrealistický',prot:150, barva:'#8060b0',
+    technika:'Snová logika, rozpad koheze',
+    popis:'Propojování nesouvisejících obrazů do snových scén. Fantazijní prvky.',
+    cil:'Procvičte vědomé metaforické propojování.',
+    patterns:['sen','zdálo se','podivný','magický','nereálný','fantazie','představa','snový','jako ze sna','nevím odkud','plovoucí','najednou se','prolínání','iluze'] }
+];
+
+// pomocné indexy
+const byDeg = {};
+UHLY.forEach(u => byDeg[u.st] = u);
+
+// utility
+function escapeReg(s) { return s.replace(/[-\/\\^$*+?.()|[\]{}]/g,'\\$&'); }
+
+// stav
+let scores = {};
+let markedHTML = '';
+let selectedAngle = null;
+let highlightOn = false;
+let lastText = '';
+UHLY.forEach(u => scores[u.st] = 0);
+
+// ────────────────────────────────────────────────────────────
+// VYKRESLENÍ PÁRŮ (seznam dole)
+// ────────────────────────────────────────────────────────────
+(function buildPairs() {
+  const pairs = [[0,180],[30,210],[60,240],[90,270],[120,300],[150,330]];
+  const container = document.getElementById('pair-list');
+  pairs.forEach(([a,b]) => {
+    const ua = byDeg[a], ub = byDeg[b];
+    const div = document.createElement('div');
+    div.className = 'pair';
+    div.innerHTML = `
+      <div class="pair-a" data-deg="${a}">
+        <div class="pair-deg"><span class="pair-dot" style="background:${ua.barva}"></span>${a}°</div>
+        <div class="pair-name">${ua.nazev}</div>
+        <div class="pair-desc">${ua.technika}</div>
+      </div>
+      <div class="pair-arrow">↔</div>
+      <div class="pair-b" data-deg="${b}">
+        <div class="pair-deg"><span class="pair-dot" style="background:${ub.barva}"></span>${b}°</div>
+        <div class="pair-name">${ub.nazev}</div>
+        <div class="pair-desc">${ub.technika}</div>
+      </div>`;
+    container.appendChild(div);
+  });
+  // kliknutí na páry
+  document.querySelectorAll('.pair-a, .pair-b').forEach(el => {
+    el.addEventListener('click', e => {
+      const deg = parseInt(el.dataset.deg);
+      showDetail(deg);
+    });
+  });
+})();
+
+// ────────────────────────────────────────────────────────────
+// KOLO (canvas)
+// ────────────────────────────────────────────────────────────
+const canvas = document.getElementById('wheel');
+const ctx = canvas.getContext('2d');
+const CX = 160, CY = 160, R = 140, IR = 52;
+
+function drawWheel(highlightDeg = null) {
+  ctx.clearRect(0,0,320,320);
+  const segAngle = (Math.PI*2)/12;
+  UHLY.forEach((u,i) => {
+    const startA = -Math.PI/2 + i*segAngle;
+    const endA = startA + segAngle;
+    const isHi = highlightDeg === u.st;
+    const hasScore = scores[u.st] > 0;
+    const maxScore = Math.max(...Object.values(scores), 1);
+    const intensity = scores[u.st] / maxScore;
+
+    // výplň segmentu
+    ctx.beginPath();
+    ctx.moveTo(CX, CY);
+    ctx.arc(CX, CY, R, startA, endA);
+    ctx.closePath();
+    if (isHi) {
+      ctx.fillStyle = u.barva + 'e0';
+    } else if (hasScore) {
+      const alpha = Math.round(30 + intensity * 120).toString(16).padStart(2,'0');
+      ctx.fillStyle = u.barva + alpha;
+    } else {
+      ctx.fillStyle = '#1c1c1c';
+    }
+    ctx.fill();
+    ctx.strokeStyle = 'rgba(168,152,128,.12)';
+    ctx.lineWidth = 1;
+    ctx.stroke();
+
+    // popisek
+    const midA = startA + segAngle/2;
+    const lr = (R + IR)/2 + 8;
+    const lx = CX + Math.cos(midA) * lr;
+    const ly = CY + Math.sin(midA) * lr;
+    ctx.save();
+    ctx.translate(lx, ly);
+    ctx.rotate(midA + Math.PI/2);
+    ctx.fillStyle = isHi ? '#e8e0d0' : (hasScore ? u.barva : 'rgba(168,152,128,.3)');
+    ctx.font = `${isHi ? '500' : '300'} 9px DM Mono, monospace`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(u.nazev, 0, 0);
+    ctx.restore();
+
+    // oblouk síly
+    if (hasScore) {
+      ctx.beginPath();
+      ctx.arc(CX, CY, IR + 4, startA + 0.05, endA - 0.05);
+      ctx.strokeStyle = u.barva;
+      ctx.lineWidth = Math.max(1, intensity * 5);
+      ctx.globalAlpha = 0.6 + intensity * 0.4;
+      ctx.stroke();
+      ctx.globalAlpha = 1;
+    }
+  });
+
+  // vnitřní kruh
+  ctx.beginPath();
+  ctx.arc(CX, CY, IR, 0, Math.PI*2);
+  ctx.fillStyle = '#0f0f0f';
+  ctx.fill();
+  ctx.strokeStyle = 'rgba(168,152,128,.2)';
+  ctx.lineWidth = 1;
+  ctx.stroke();
+
+  // text uprostřed
+  if (highlightDeg !== null && byDeg[highlightDeg]) {
+    const u = byDeg[highlightDeg];
+    ctx.fillStyle = u.barva;
+    ctx.font = '300 10px DM Mono';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(u.st + '°', CX, CY - 8);
+    ctx.fillStyle = '#e8e0d0';
+    ctx.font = '300 9px Cormorant Garamond';
+    ctx.fillText(u.nazev, CX, CY + 8);
+  } else {
+    ctx.fillStyle = 'rgba(168,152,128,.25)';
+    ctx.font = '300 10px DM Mono';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('12 úhlů', CX, CY);
+  }
+}
+drawWheel();
+
+// klik na kolo
+canvas.addEventListener('click', e => {
+  const rect = canvas.getBoundingClientRect();
+  const scaleX = 320/rect.width;
+  const mx = (e.clientX - rect.left) * scaleX - CX;
+  const my = (e.clientY - rect.top) * scaleX - CY;
+  const dist = Math.sqrt(mx*mx + my*my);
+  if (dist < IR || dist > R) return;
+  let angle = Math.atan2(my, mx) + Math.PI/2;
+  if (angle < 0) angle += Math.PI*2;
+  const segIdx = Math.floor(angle / (Math.PI*2/12));
+  const u = UHLY[segIdx];
+  if (u) showDetail(u.st);
+});
+
+// ────────────────────────────────────────────────────────────
+// ANALÝZA TEXTU
+// ────────────────────────────────────────────────────────────
+function analyze() {
+  const text = document.getElementById('txt').value;
+  if (!text.trim()) return;
+  lastText = text;
+
+  // reset skóre
+  UHLY.forEach(u => scores[u.st] = 0);
+
+  // 1) klíčová slova
+  UHLY.forEach(u => {
+    u.patterns.forEach(pat => {
+      const re = new RegExp(`(?<![a-záčďéěíňóřšťůúýž])${escapeReg(pat)}(?![a-záčďéěíňóřšťůúýž])`,'gi');
+      const matches = (text.match(re)||[]).length;
+      scores[u.st] += matches;
+    });
+  });
+
+  // 2) strukturální vlastnosti (bonusy)
+  const sents = text.split(/[.!?…]+/).filter(s=>s.trim().length > 2);
+  if (sents.length >= 3) {
+    const lens = sents.map(s => s.trim().split(/\s+/).length);
+    const avg = lens.reduce((a,b)=>a+b,0)/lens.length;
+    const variance = lens.map(l=>(l-avg)**2).reduce((a,b)=>a+b,0)/lens.length;
+    if (Math.sqrt(variance) > 3) scores[270] += 1.5;  // Groteskní
+    if (lens.filter(l=>l<=3).length > sents.length*0.3) scores[90] += 1; // Naivní
+    if (avg > 15) scores[60] += 1; // Filozofický
+  }
+
+  // 3) opakování slov → Kulturní, Jazykový
+  const words = text.toLowerCase().split(/\s+/);
+  const freq = {};
+  words.forEach(w => { const c = w.replace(/[^a-záčďéěíňóřšťůúýž]/g,''); if(c.length>4) freq[c]=(freq[c]||0)+1; });
+  const reps = Object.values(freq).filter(v=>v>=3).length;
+  if (reps > 2) { scores[30] += reps*0.5; scores[120] += reps*0.5; }
+
+  // 4) první osoba → Introspektivní
+  const jaCount = (text.match(/\bjá\b|\bjsem\b|\bmi\b|\bmě\b|\bmou\b|\bsebe\b/gi)||[]).length;
+  scores[210] += jaCount * 0.7;
+
+  // 5) otázky → Filozofický, Absurdní
+  const qCount = (text.match(/\?/g)||[]).length;
+  scores[60] += qCount * 0.5;
+  scores[300] += qCount * 0.3;
+
+  // NORMALIZACE – každý úhel vydělíme počtem jeho patternů (kvůli férovosti)
+  UHLY.forEach(u => {
+    scores[u.st] = scores[u.st] / u.patterns.length;
+  });
+
+  // zvýraznění textu, pokud je zapnuté
+  if (highlightOn) {
+    highlightText(text);
+  } else {
+    document.getElementById('highlighted').innerHTML = '';
+  }
+
+  // najít dominantní úhel
+  const sorted = Object.entries(scores).sort((a,b)=>b[1]-a[1]);
+  const domDeg = parseInt(sorted[0][0]);
+  const domScore = sorted[0][1];
+  const domU = byDeg[domDeg];
+  const protU = byDeg[domU.prot];
+
+  // zobrazit výsledky
+  document.getElementById('results').style.display = 'block';
+  document.getElementById('res-dominant').innerHTML = `<span style="color:${domU.barva}">${domDeg}° ${domU.nazev}</span>`;
+
+  const total = Object.values(scores).reduce((a,b)=>a+b,0);
+  const domPercent = total > 0 ? (domScore/total*100).toFixed(1) : '0';
+  document.getElementById('res-meta').innerHTML =
+    `Celkem normalizovaných signálů: ${total.toFixed(2)} · Dominantní úhel: ${domPercent}%<br>
+    Technika: ${domU.technika}<br>${domU.popis}`;
+
+  if (domScore > 0) {
+    document.getElementById('res-protilehly').style.display = 'block';
+    document.getElementById('res-prot-name').innerHTML = `<span style="color:${protU.barva}">${protU.st}° ${protU.nazev}</span>`;
+    document.getElementById('res-prot-tip').textContent = protU.cil;
+  } else {
+    document.getElementById('res-protilehly').style.display = 'none';
+  }
+
+  // grid skóre
+  const grid = document.getElementById('scores-grid');
+  grid.innerHTML = '';
+  const maxSc = Math.max(...Object.values(scores), 1);
+  UHLY.forEach(u => {
+    const cell = document.createElement('div');
+    cell.className = 'score-cell' + (u.st === domDeg ? ' hi' : '');
+    cell.setAttribute('data-deg', u.st);
+    cell.addEventListener('click', () => showDetail(u.st));
+    const pct = Math.round(scores[u.st]/maxSc*100);
+    cell.innerHTML = `
+      <div class="sc-name"><span class="sc-dot" style="background:${u.barva}"></span>${u.st}° ${u.nazev}</div>
+      <div class="sc-bar"><div class="sc-fill" style="width:${pct}%;background:${u.barva}"></div></div>
+      <div class="sc-val">${scores[u.st].toFixed(2)}</div>`;
+    grid.appendChild(cell);
+  });
+
+  drawWheel(domDeg);
+  showDetail(domDeg);
+  document.getElementById('results').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+// zvýraznění textu
+function highlightText(text) {
+  let markedText = text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  UHLY.forEach(u => {
+    u.patterns.forEach(pat => {
+      const re = new RegExp(`(?<![a-záčďéěíňóřšťůúýž])${escapeReg(pat)}(?![a-záčďéěíňóřšťůúýž])`,'gi');
+      markedText = markedText.replace(re, m => 
+        `<mark style="background:${u.barva}22;color:${u.barva};border-bottom:1px solid ${u.barva};padding:0 1px" title="${u.st}° ${u.nazev}">${m}</mark>`
+      );
+    });
+  });
+  document.getElementById('highlighted').innerHTML = markedText;
+}
+
+function toggleHighlight() {
+  highlightOn = !highlightOn;
+  const btn = document.getElementById('highlightBtn');
+  const box = document.getElementById('highlighted');
+  btn.classList.toggle('active', highlightOn);
+  if (highlightOn && lastText) {
+    box.style.display = 'block';
+    highlightText(lastText);
+  } else {
+    box.style.display = 'none';
+  }
+}
+
+function resetAll() {
+  document.getElementById('txt').value = '';
+  document.getElementById('highlighted').innerHTML = '';
+  document.getElementById('highlighted').style.display = 'none';
+  document.getElementById('results').style.display = 'none';
+  document.getElementById('angle-detail').className = 'angle-detail';
+  document.getElementById('highlightBtn').classList.remove('active');
+  highlightOn = false;
+  lastText = '';
+  UHLY.forEach(u => scores[u.st] = 0);
+  drawWheel();
+}
+
+function showDetail(deg) {
+  const u = byDeg[deg];
+  if (!u) return;
+  selectedAngle = deg;
+  const protU = byDeg[u.prot];
+  document.getElementById('angle-detail').className = 'angle-detail visible';
+  document.getElementById('ad-label').textContent = `Detail úhlu · ${deg}°`;
+  document.getElementById('ad-title').innerHTML = `<span style="color:${u.barva}">${u.nazev}</span>`;
+  document.getElementById('ad-technika').textContent = u.technika;
+  document.getElementById('ad-popis').textContent = u.popis;
+  document.getElementById('ad-protilehly').innerHTML = `<span style="color:${protU.barva}">${protU.st}° ${protU.nazev}</span><br><span style="color:rgba(232,224,208,.5);font-size:.78rem">${protU.cil}</span>`;
+  drawWheel(deg);
+  document.getElementById('angle-detail').scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
+// ────────────────────────────────────────────────────────────
+// FUNKCE PRO TLAČÍTKA (laboratoř, sdílení, tisk, download)
+// ────────────────────────────────────────────────────────────
+function saveToLab() {
+  if (!lastText) return;
+  const params = new URLSearchParams();
+  params.set('text', lastText);
+  params.set('scores', JSON.stringify(scores));
+  window.location.href = `../nastroje/kogmapa.html?${params.toString()}`;
+}
+
+function downloadResults() {
+  if (!lastText) return;
+  const data = {
+    text: lastText,
+    scores: scores,
+    dominant: Object.entries(scores).sort((a,b)=>b[1]-a[1])[0][0],
+    timestamp: new Date().toISOString()
+  };
+  const blob = new Blob([JSON.stringify(data, null, 2)], {type: 'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `analyza_${new Date().toISOString().slice(0,10)}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function shareResults() {
+  if (!lastText) return;
+  const data = { text: lastText, scores: scores };
+  const json = JSON.stringify(data);
+  const base64 = btoa(unescape(encodeURIComponent(json)));
+  const url = new URL(window.location.href);
+  url.hash = base64;
+  document.getElementById('shareUrl').value = url.toString();
+  document.getElementById('shareModal').classList.add('visible');
+}
+
+function printResults() { window.print(); }
+function closeModal() { document.getElementById('shareModal').classList.remove('visible'); }
+
+function copyShareUrl() {
+  const input = document.getElementById('shareUrl');
+  input.select();
+  document.execCommand('copy');
+  alert('Odkaz zkopírován do schránky');
+}
+
+function shareFb() {
+  const url = encodeURIComponent(document.getElementById('shareUrl').value);
+  window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`, '_blank');
+}
+function shareTw() {
+  const url = encodeURIComponent(document.getElementById('shareUrl').value);
+  const text = encodeURIComponent('Můj výsledek v analyzátoru Chceš myš?');
+  window.open(`https://twitter.com/intent/tweet?url=${url}&text=${text}`, '_blank');
+}
+function shareMail() {
+  const url = document.getElementById('shareUrl').value;
+  const subject = encodeURIComponent('Výsledek analýzy z Chceš myš?');
+  const body = encodeURIComponent(`Podívej se na výsledek mé analýzy:\n\n${url}`);
+  window.location.href = `mailto:?subject=${subject}&body=${body}`;
+}
+
+// načtení z hashe při startu
+function loadFromHash() {
+  if (window.location.hash && window.location.hash.length > 1) {
+    try {
+      const base64 = window.location.hash.slice(1);
+      const json = decodeURIComponent(escape(atob(base64)));
+      const data = JSON.parse(json);
+      if (data.text) {
+        document.getElementById('txt').value = data.text;
+        if (data.scores) {
+          scores = data.scores;
+          lastText = data.text;
+          const sorted = Object.entries(scores).sort((a,b)=>b[1]-a[1]);
+          const domDeg = parseInt(sorted[0][0]);
+          drawWheel(domDeg);
+          showDetail(domDeg);
+          document.getElementById('results').style.display = 'block';
+          const domU = byDeg[domDeg];
+          const protU = byDeg[domU.prot];
+          document.getElementById('res-dominant').innerHTML = `<span style="color:${domU.barva}">${domDeg}° ${domU.nazev}</span>`;
+          const total = Object.values(scores).reduce((a,b)=>a+b,0);
+          document.getElementById('res-meta').innerHTML =
+            `Celkem normalizovaných signálů: ${total.toFixed(2)} · Dominantní úhel: ${(scores[domDeg]/total*100).toFixed(1)}%<br>
+            Technika: ${domU.technika}<br>${domU.popis}`;
+          document.getElementById('res-protilehly').style.display = 'block';
+          document.getElementById('res-prot-name').innerHTML = `<span style="color:${protU.barva}">${protU.st}° ${protU.nazev}</span>`;
+          document.getElementById('res-prot-tip').textContent = protU.cil;
+
+          const grid = document.getElementById('scores-grid');
+          grid.innerHTML = '';
+          const maxSc = Math.max(...Object.values(scores), 1);
+          UHLY.forEach(u => {
+            const cell = document.createElement('div');
+            cell.className = 'score-cell' + (u.st === domDeg ? ' hi' : '');
+            cell.setAttribute('data-deg', u.st);
+            cell.addEventListener('click', () => showDetail(u.st));
+            const pct = Math.round(scores[u.st]/maxSc*100);
+            cell.innerHTML = `
+              <div class="sc-name"><span class="sc-dot" style="background:${u.barva}"></span>${u.st}° ${u.nazev}</div>
+              <div class="sc-bar"><div class="sc-fill" style="width:${pct}%;background:${u.barva}"></div></div>
+              <div class="sc-val">${scores[u.st].toFixed(2)}</div>`;
+            grid.appendChild(cell);
+          });
+        }
+      }
+    } catch (e) { console.warn('Neplatný hash', e); }
+  }
+}
+
+// ────────────────────────────────────────────────────────────
+// EVENT LISTENERS
+// ────────────────────────────────────────────────────────────
+document.getElementById('analyzeBtn').addEventListener('click', analyze);
+document.getElementById('highlightBtn').addEventListener('click', toggleHighlight);
+document.getElementById('resetBtn').addEventListener('click', resetAll);
+document.getElementById('saveToLabBtn').addEventListener('click', saveToLab);
+document.getElementById('downloadBtn').addEventListener('click', downloadResults);
+document.getElementById('shareBtn').addEventListener('click', shareResults);
+document.getElementById('printBtn').addEventListener('click', printResults);
+document.getElementById('closeModal').addEventListener('click', closeModal);
+document.getElementById('copyUrlBtn').addEventListener('click', copyShareUrl);
+document.getElementById('shareFb').addEventListener('click', shareFb);
+document.getElementById('shareTw').addEventListener('click', shareTw);
+document.getElementById('shareMail').addEventListener('click', shareMail);
+document.getElementById('copyLink').addEventListener('click', copyShareUrl);
+
+window.addEventListener('click', e => {
+  const modal = document.getElementById('shareModal');
+  if (e.target === modal) closeModal();
+});
+
+window.addEventListener('load', loadFromHash);
+</script>
+</body>
+</html>
