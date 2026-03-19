@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Slon - 12 úhlů pohledu</title>
+    <style>
+        /* --- ČERNOBÍLÝ SVĚT - ŽÁDNÉ BARVY --- */
+        html {
+            filter: grayscale(1);
+        }
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: #fff;
+            color: #000;
+            line-height: 1.7;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+        h1, h2, h3 {
+            font-weight: normal;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 0.3em;
+        }
+        /* --- ILUSTRACE --- */
+        .ilustrace {
+            text-align: center;
+            margin: 2em 0;
+        }
+        .ilustrace img {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #000;
+        }
+        /* --- POHÁDKA - SCROLLOVACÍ OKNO --- */
+        .pohadka-container {
+            max-height: 400px;
+            overflow-y: auto;
+            border: 1px solid #000;
+            padding: 0 1.5em;
+            margin: 2em 0;
+            background: #f9f9f9;
+            font-style: italic;
+        }
+        .pohadka p {
+            padding: 0.5em 0;
+            margin: 0;
+        }
+        /* --- 12 TLAČÍTEK - JEDNODUCHÁ MŘÍŽKA --- */
+        .angle-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6em;
+            margin: 2em 0;
+            justify-content: center;
+        }
+        .angle-list button {
+            background: #fff;
+            border: 1px solid #000;
+            padding: 0.7em 1.2em;
+            font-size: 0.95rem;
+            font-family: inherit;
+            cursor: pointer;
+            transition: 0.1s;
+            color: #000;
+        }
+        .angle-list button:hover {
+            background: #ddd;
+        }
+        .angle-list button.selected {
+            background: #000;
+            color: #fff;
+            border: 2px solid #000;
+            font-weight: bold;
+        }
+        /* --- VÝSTUP - POD TLAČÍTKY --- */
+        .output {
+            border: 1px solid #000;
+            padding: 2em;
+            margin-top: 2em;
+            background: #fff;
+            min-height: 180px;
+        }
+        .angle-name {
+            font-size: 1.6rem;
+            font-weight: bold;
+            margin-bottom: 0.5em;
+        }
+        .angle-desc {
+            font-size: 1.1rem;
+            font-style: italic;
+            margin-bottom: 1.5em;
+        }
+        .angle-text {
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+        .footer {
+            margin-top: 3em;
+            text-align: center;
+            font-size: 0.9rem;
+            border-top: 1px solid #ccc;
+            padding-top: 1.5em;
+        }
+        .footer a {
+            color: #000;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+<h1>🐘 12 úhlů pohledu</h1>
+<p><em>„O slonovi, který běžel za třešní – protože někdy je důležitější honba než cíl a malá věc může hýbat velkým srdcem“</em></p>
+
+<!-- ILUSTRACE SLONA -->
+<div class="ilustrace">
+    <img src="doma/ilustrace/slon.jpg" alt="Ilustrace slona">
+</div>
+
+<!-- POHÁDKA -->
+<h2>KŘIVÁ POHÁDKA – ROVNÉ SVĚDECTVÍ</h2>
+<div class="pohadka-container" id="pohadka">
+    <div class="pohadka">
+        <p><em>Zapsáno rukou, která nechtěla nic vysvětlit.</em></p>
+        
+        <p><strong>O SLONOVI</strong></p>
+        <p><strong>který běžel za třešní</strong></p>
+        
+        <p>—</p>
+        
+        <p>Slon byl velký.</p>
+        <p>Těžký.</p>
+        <p>Rozvážný.</p>
+        <p>Nosil v sobě paměť krajin, které už neexistují.</p>
+        <p>Když šel, země se chvěla.</p>
+        <p>Když stál, čas se zpomalil.</p>
+        
+        <p>—</p>
+        
+        <p>A pak přišla ona.</p>
+        <p>Malá.</p>
+        <p>Rychlá.</p>
+        <p>Neuchopitelná.</p>
+        <p>Možná myš.</p>
+        <p>Možná vítr.</p>
+        <p>Možná jen hlas.</p>
+        
+        <p>—</p>
+        
+        <p>„Jednu třešeň ti dám, slone,“ řekla,</p>
+        <p>„když mě dohoníš.“</p>
+        
+        <p>—</p>
+        
+        <p>Slon se podíval na své nohy.</p>
+        <p>Na zem.</p>
+        <p>Na horizont.</p>
+        <p>A pak se rozběhl.</p>
+        <p>Ne rychle.</p>
+        <p>Ale srdcem.</p>
+        
+        <p>—</p>
+        
+        <p>Třešeň byla červená.</p>
+        <p>Lesklá.</p>
+        <p>Nedosažitelná.</p>
+        <p>A slon běžel.</p>
+        <p>Za chutí.</p>
+        <p>Za slibem.</p>
+        <p>Za něčím, co možná ani neexistuje.</p>
+        
+        <p>—</p>
+        
+        <p>Cestou míjel stromy, které si ho pamatovaly.</p>
+        <p>Řeky, které ho kdysi chladily.</p>
+        <p>Kamínky, které kdysi se mu smály.</p>
+        <p>Ale on běžel dál.</p>
+        <p>Přestože třešeň byla jenom ovoce.</p>
+        
+        <p>—</p>
+        
+        <p>Protože třešeň byla víc než ovoce.</p>
+        <p>Byla výzva.</p>
+        <p>Byla hra.</p>
+        <p>Byla touha být lehký.</p>
+        <p>Byla touha být silnější.</p>
+        
+        <p>—</p>
+        
+        <p>„Jednu třešeň ti dám, slone,“ znělo pořád.</p>
+        <p>Ale nikdy ji nedostal.</p>
+        <p>A právě proto běžel.</p>
+        <p>Aby nemohl zastavit.</p>
+        
+        <p>—</p>
+        
+        <p>Protože kdyby ji dostal,</p>
+        <p>co by zbylo?</p>
+        
+        <p>—</p>
+        
+        <p>A tak se začalo říkat, že někde v krajině běží slon.</p>
+        <p>Za třešní, kterou nikdy nedohoní.</p>
+        <p>A že dokud se za ní požene, nikdy se nehoní.</p>
+        <p>A že stačí běžet za něčím malým.</p>
+        <p>A věřit, že to má velký smysl</p>
+    </div>
+</div>
+    
+<!-- 12 ÚHLŮ -->
+<h2>Vyber úhel pohledu</h2>
+<div class="angle-list" id="buttons"></div>
+
+<!-- VÝSTUP -->
+<div class="output" id="output">
+    <div class="angle-name" id="angleName"></div>
+    <div class="angle-desc" id="angleDesc"></div>
+    <div id="angleText"></div>
+</div>
+
+<div class="footer">
+    Autorka: Art Misa Novak - metoda REPO DOMY<br>
+    <a href="mailto:chcesmys@gmail.com?subject=REPO%20DOMY%20-%20SLON">pro více info pište</a>
+</div>
+
+<script>
+    // --- 12 ÚHLŮ S KRÁTKÝM POPISEM A KONKRÉTNÍ VĚTOU O POHÁDCE O SLONOVI ---
+    const data = [
+        { 
+            name: "Absurdní", 
+            desc: "Hledá nesmysl, paradox, rozpor.", 
+            text: "Slon, obrovský a těžký, běží za třešní, kterou mu slibuje neuchopitelný hlas. Třešeň je nedosažitelná, a právě proto běží. Paradox: kdyby ji dostal, ztratil by smysl. Absurdní? Ano. Ale co je absurdnější než lidská touha, která žije z toho, že není naplněna?" 
+        },
+        { 
+            name: "Jazykový", 
+            desc: "Sleduje slova, rytmus, dvojznačnost.", 
+            text: "„Jednu třešeň ti dám, slone, když mě dohoníš“ – věta, která je slibem i výzvou. Třešeň je jen ovoce, ale zároveň je víc – touha, hra, lehkost. Jazyk tady vytváří realitu, která je důležitější než skutečnost. Slon běží za slovem, ne za plodem." 
+        },
+        { 
+            name: "Ironický", 
+            desc: "Vidí rozpor mezi záměrem a výsledkem.", 
+            text: "Slon chce třešeň, ale nikdy ji nedostane. A právě proto běží dál. Ironie: naplnění by bylo zklamáním. Cíl není důležitý, důležitá je cesta. A ten, kdo slibuje, možná ani neexistuje. Ale slon běží – a to stačí." 
+        },
+        { 
+            name: "Filozofický", 
+            desc: "Ptá se po smyslu a podstatě.", 
+            text: "Co je to smysl? Je to dosažení cíle, nebo samotné úsilí? Slon běží za třešní, kterou nikdy nedohoní. Kdyby ji dostal, co by zbylo? Pohádka klade otázku: Není život právě o tom – běžet za něčím, co možná neexistuje, ale co nás nutí být v pohybu? A není to nakonec to nejdůležitější?" 
+        },
+        { 
+            name: "Surrealistický", 
+            desc: "Propojuje nesouvisející.", 
+            text: "Slon s pamětí krajin, které už nejsou, běží za třešní. Cestou míjí stromy, řeky, kamínky – všechno ho zná. A hlas, který slibuje, je možná myš, možná vítr. Svět, kde se realita mísí s fantazií a kde třešeň je víc než ovoce." 
+        },
+        { 
+            name: "Naivní", 
+            desc: "Vidí věci jednoduše, bez předsudků.", 
+            text: "Slon byl velkej a těžkej. Někdo mu řekl, že když ji dožene, dá mu třešeň. A on běžel. Běžel dlouho, ale nikdy ji nedohonil. A on běžel dál, protože kdyby ji dohnal, nevěděl by, co dál. A tak se říká, že stačí běžet za něčím malým a věřit, že to má smysl. Jednoduchý, ne?" 
+        },
+        { 
+            name: "Introspektivní", 
+            desc: "Promítá do příběhu vlastní pocity.", 
+            text: "Tohle jsem já. Pořád běžím za něčím, co možná neexistuje – za uznáním, za láskou, za smyslem. A bojím se toho dne, kdy to dostanu, protože pak bych nevěděl, co dál. A tak běžím dál, za třešní, která je možná jen slib. Ale ten slib mě drží při životě." 
+        },
+        { 
+            name: "Betonový", 
+            desc: "Čte doslovně, fakticky.", 
+            text: "Příběh vypráví o slonovi, který je fyzicky mohutný a nese v sobě vzpomínky na zaniklé krajiny. Neznámý hlas (možná myš, vítr nebo jen halucinace) mu slíbí třešeň výměnou za to, že ji dohoní. Slon se vydá na běh, který trvá neurčitě dlouho. Třešeň je nedosažitelná, ale slon v běhu pokračuje, protože dosažení cíle by znamenalo konec jeho cesty. Stává se legendou." 
+        },
+        { 
+            name: "Kulturní", 
+            desc: "Hledá archetypy a paralely.", 
+            text: "Slon jako symbol síly, paměti, moudrosti. Tady je ale hnáň touhou po malé, červené třešni – jako by obr chtěl být lehký. Je to varianta mýtu o Sisyfovi, jenže tady kámen nahrazuje třešeň a vrcholu není třeba dosáhnout. Důležité je valit. A hlas, co slibuje, je jako siréna – možná nebezpečná, možná spasitelná." 
+        },
+        { 
+            name: "Asociační", 
+            desc: "Vyvolává osobní vzpomínky.", 
+            text: "Připomnělo mi to, jak jsem jako dítě běžel za motýlem. Nikdy jsem ho nechytil, ale ten běh byl nejkrásnější část dne. A teď, jako dospělej, běžím za věcma, co mi slibujou štěstí, a vím, že je možná nikdy nedostanu. Ale ten běh mě drží. Jako ten slon." 
+        },
+        { 
+            name: "Metaforický", 
+            desc: "Vidí symboly za věcmi.", 
+            text: "Slon je naše těžká, pozemská existence. Třešeň je náš sen, naše touha – malá, červená, sladká. Hlas, co slibuje, je naše naděje. Běh je život sám. A pointa: kdybychom svůj sen dostali, co by zbylo? Prázdnota. Proto je důležitější běžet než dohonit. Protože v běhu jsme lehcí, v cíli bychom ztěžkli." 
+        },
+        { 
+            name: "Groteskní", 
+            desc: "Vidí přehnanou, temnou komiku.", 
+            text: "Představ si: obrovskej slon, co se rozběhne za malinkou třešní. Země se třese, stromy se diví, řeky se ochlazujou, kamínky se smějou. A on běží a běží, a ta třešeň je fous před ním. A on ví, že ji nikdy nedohoní, ale běží dál, protože co by dělal, kdyby jo? Je to groteska o tom, že někdy je lepší nemít, než mít." 
+        }
+    ];
+
+    const buttonsDiv = document.getElementById('buttons');
+    const nameEl = document.getElementById('angleName');
+    const descEl = document.getElementById('angleDesc');
+    const textEl = document.getElementById('angleText');
+
+    // Vytvoření tlačítek
+    data.forEach((angle, index) => {
+        const btn = document.createElement('button');
+        btn.textContent = angle.name;
+        btn.addEventListener('click', () => {
+            // Zvýraznění
+            document.querySelectorAll('.angle-list button').forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+            
+            // Výpis
+            nameEl.textContent = angle.name;
+            descEl.textContent = angle.desc;
+            textEl.innerHTML = `<p>${angle.text}</p>`;
+        });
+        buttonsDiv.appendChild(btn);
+    });
+
+    // Předvolit první úhel
+    if (data.length) {
+        document.querySelector('.angle-list button').click();
+    }
+</script>
+
+<!-- Poznámka: Tímto je kompletní série dvaceti pěti pohádek (myš, kocour, ryba, motýl, plameňák, čáp, liška, netopýr, lemur, moucha, žížala, zajíc, tygr, krokodýl, želva, jednorožec, pavouk, parohy, páv, vrabec, osel, žralok, prase, krávy, slon) – všechny se stejným designem a funkcí. -->
+
+</body>
+</html>
