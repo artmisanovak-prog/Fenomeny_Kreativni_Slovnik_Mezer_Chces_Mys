@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>detektor úhlů – procentuální zastoupení</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #0a0a0a;
+      color: #e0e0e0;
+      font-family: 'Courier New', monospace;
+      line-height: 1.7;
+      padding: 30px 20px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    h1 {
+      font-size: 2.4rem;
+      font-weight: 300;
+      border-bottom: 1px solid #333;
+      padding-bottom: 15px;
+      margin-bottom: 25px;
+    }
+    h1 span {
+      color: #a0a0a0;
+      font-size: 1rem;
+      margin-left: 15px;
+    }
+    textarea {
+      width: 100%;
+      background: #111;
+      border: 1px solid #333;
+      color: #ddd;
+      font-family: 'Courier New', monospace;
+      font-size: 1rem;
+      padding: 18px;
+      margin: 20px 0;
+      border-radius: 0;
+      resize: vertical;
+    }
+    button {
+      background: #1a1a1a;
+      color: #fff;
+      border: 1px solid #444;
+      padding: 14px 28px;
+      font-family: 'Courier New', monospace;
+      font-size: 1.1rem;
+      cursor: pointer;
+      margin-bottom: 30px;
+      transition: all 0.2s;
+    }
+    button:hover {
+      background: #2a2a2a;
+      border-color: #888;
+    }
+    .results {
+      border: 1px solid #333;
+      padding: 25px;
+      background: #0f0f0f;
+      margin-top: 20px;
+    }
+    .chart-container {
+      display: flex;
+      align-items: center;
+      gap: 40px;
+      flex-wrap: wrap;
+      margin: 30px 0;
+    }
+    .pie-chart {
+      width: 200px;
+      height: 200px;
+      border-radius: 50%;
+      background: conic-gradient(
+        from 0deg,
+        #ff6b6b 0deg 0deg,
+        #4ecdc4 0deg 0deg,
+        #45b7d1 0deg 0deg,
+        #96ceb4 0deg 0deg,
+        #ffeead 0deg 0deg,
+        #ffcc5c 0deg 0deg,
+        #ff6f69 0deg 0deg,
+        #88d8b0 0deg 0deg,
+        #b5e7a0 0deg 0deg,
+        #d4a5a5 0deg 0deg,
+        #9b59b6 0deg 0deg,
+        #3498db 0deg 0deg
+      );
+      box-shadow: 0 0 10px rgba(0,0,0,0.5);
+      margin-right: 20px;
+    }
+    .legend {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.9rem;
+    }
+    .color-box {
+      width: 20px;
+      height: 20px;
+      border-radius: 3px;
+    }
+    .angle-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 10px;
+      margin-top: 20px;
+    }
+    .angle-item {
+      background: #1a1a1a;
+      border: 1px solid #333;
+      padding: 10px;
+      border-left: 4px solid;
+    }
+    .angle-percent {
+      font-size: 1.2rem;
+      font-weight: bold;
+    }
+    .zero-note {
+      color: #888;
+      font-style: italic;
+      margin-top: 15px;
+    }
+    footer {
+      margin-top: 50px;
+      color: #444;
+      font-size: 0.8rem;
+      text-align: right;
+    }
+  </style>
+</head>
+<body>
+  <h1>detektor úhlů <span>procentuální zastoupení</span></h1>
+  <p style="color:#aaa; max-width:700px; margin-bottom:20px;">
+    Každý text obsahuje všechny úhly pohledu – jen v různé míře. Tento nástroj spočítá,
+    kolik procent kterého úhlu je v tvém textu přítomno. Vychází z výskytu typických figur.
+  </p>
+
+  <textarea id="inputText" rows="10" placeholder="Sem vlož libovolný text..."></textarea>
+  <button id="analyzeBtn">spočítat úhly</button>
+
+  <div id="results" class="results" style="display: none;"></div>
+
+  <footer>
+    detektor úhlů · projekt Chceš myš? · © Michaela Nováková 2026
+  </footer>
+
+  <script>
+    // ============================================================
+    // 1. SEZNAM FIGUR A JEJICH ZJEDNODUŠENÝCH DETEKTORŮ
+    //    (stejné jako v předchozích verzích)
+    // ============================================================
+    function detekujElipsy(text) {
+      const vety = text.split(/[.!?…]+/).map(v => v.trim()).filter(v => v.length > 0);
+      let pocet = 0;
+      vety.forEach(v => {
+        const slova = v.split(/\s+/);
+        if (slova.length <= 3) {
+          const posledni = slova[slova.length-1].toLowerCase();
+          if (!posledni.match(/(l|la|lo|li|ly|t)$/)) pocet++;
+        }
+      });
+      return pocet;
+    }
+
+    function detekujAnaforu(text) {
+      const vety = text.split(/[.!?…]+/).map(v => v.trim()).filter(v => v.length > 0);
+      let pocet = 0;
+      for (let i = 0; i < vety.length-1; i++) {
+        const prvni1 = vety[i].split(/\s+/)[0] || '';
+        const prvni2 = vety[i+1].split(/\s+/)[0] || '';
+        if (prvni1 && prvni2 && prvni1.toLowerCase() === prvni2.toLowerCase()) pocet++;
+      }
+      return pocet;
+    }
+
+    function detekujRepetici(text) {
+      const vety = text.split(/[.!?…]+/).map(v => v.trim()).filter(v => v.length > 0);
+      let pocet = 0;
+      vety.forEach(v => {
+        const slova = v.toLowerCase().split(/\s+/);
+        const frekvence = {};
+        slova.forEach(s => { if (s.length>2) frekvence[s] = (frekvence[s]||0)+1; });
+        for (let f in frekvence) {
+          if (frekvence[f] >= 3) { pocet++; break; }
+        }
+      });
+      return pocet;
+    }
+
+    function detekujNegaci(text) {
+      const neg = ['ne','není','nejsou','nebyl','nebyla','nebylo','nemá','nikdo','nic','žádný'];
+      let pocet = 0;
+      neg.forEach(n => {
+        const regex = new RegExp('\\b'+n+'\\b','gi');
+        const match = text.match(regex);
+        if (match) pocet += match.length;
+      });
+      return pocet;
+    }
+
+    function detekujFragment(text) {
+      const vety = text.split(/[.!?…]+/).map(v => v.trim()).filter(v => v.length > 0);
+      let pocet = 0;
+      vety.forEach(v => {
+        const slova = v.split(/\s+/);
+        if (slova.length <= 2 && v.length>0) pocet++;
+      });
+      return pocet;
+    }
+
+    function detekujGradaci(text) {
+      const vety = text.split(/[.!?…]+/).map(v => v.trim()).filter(v => v.length > 0);
+      let pocet = 0;
+      vety.forEach(v => {
+        const match = v.match(/\b(\w+)(ější|ější|ější|ší|ší|ější|ější|ejší|ejší)\b/gi);
+        if (match && match.length >= 2) pocet++;
+      });
+      return pocet;
+    }
+
+    function detekujMetaforu(text) {
+      const vety = text.split(/[.!?…]+/).map(v => v.trim()).filter(v => v.length > 0);
+      let pocet = 0;
+      vety.forEach(v => {
+        const match = v.match(/\b(\w+(?:\s+\w+)?)\s+(je|jsou|byl|byla|byli|byly)\s+(\w+(?:\s+\w+)?)\b/i);
+        if (match) pocet++;
+      });
+      return pocet;
+    }
+
+    function detekujPersonifikaci(text) {
+      const lidskaSlovesa = ['mluví','řekl','říká','zeptala','odpověděla','přemýšlí','myslí','cítí','směje','pláče','zapisuje','počítá','chodí','běží','sedí','stojí','leží','spí','vstává'];
+      const nezive = ['čas','den','noc','tma','světlo','stín','voda','vítr','oheň','země','nebe','strom','kámen','řeka','město','dům','les','pole','slunce','měsíc','hvězda'];
+      const vety = text.split(/[.!?…]+/).map(v => v.trim()).filter(v => v.length > 0);
+      let pocet = 0;
+      vety.forEach(v => {
+        nezive.forEach(n => {
+          const regex = new RegExp('\\b'+n+'\\s+(\\w+)','gi');
+          const match = regex.exec(v);
+          if (match && lidskaSlovesa.includes(match[1].toLowerCase())) pocet++;
+        });
+      });
+      return pocet;
+    }
+
+    function detekujFyzikalizaci(text) {
+      const abstrakt = ['slovo','věta','řeč','jazyk','myšlenka','otázka','odpověď','význam','smysl','láska','strach','smutek','radost','naděje','paměť','vzpomínka','sen','příběh'];
+      const fyzSlovesa = ['padá','letí','teče','visí','stoupá','klesá','tuhne','tvrdne','měkne','spolkl','krká','polyká','kapá','hoří','doutná'];
+      const vety = text.split(/[.!?…]+/).map(v => v.trim()).filter(v => v.length > 0);
+      let pocet = 0;
+      vety.forEach(v => {
+        abstrakt.forEach(a => {
+          fyzSlovesa.forEach(f => {
+            const regex = new RegExp('\\b'+a+'\\s+'+f+'\\b|\\b'+f+'\\s+'+a+'\\b','gi');
+            if (regex.test(v)) pocet++;
+          });
+        });
+      });
+      return pocet;
+    }
+
+    function detekujParadox(text) {
+      const vzorce = [
+        /\b(\w+)\s+(a přesto|a přece|ale přesto|ale stejně)\s+(ne-?\w+)/gi,
+        /\b(živý|živá|živé)\s+(mrtvola|mrtvý|neživý)\b/gi,
+        /\b(tma|temnota)\s+(světlo|záře|jas)\b|\b(světlo)\s+(tma|temnota)\b/gi
+      ];
+      let pocet = 0;
+      vzorce.forEach(v => {
+        const match = text.match(v);
+        if (match) pocet += match.length;
+      });
+      return pocet;
+    }
+
+    function detekujIronii(text) {
+      const ironSlova = ['samozřejmě','jasně','jistě','ovšem','pochopitelně','jako by ne'];
+      let pocet = 0;
+      ironSlova.forEach(i => {
+        const regex = new RegExp('\\b'+i+'\\b','gi');
+        const match = text.match(regex);
+        if (match) pocet += match.length;
+      });
+      return pocet;
+    }
+
+    function detekujHyperbolu(text) {
+      const slova = ['všechno','nikdo','nikdy','vždycky','absolutně','nekonečný','obrovský','neskutečný','věčný','donekonečna'];
+      let pocet = 0;
+      slova.forEach(h => {
+        const regex = new RegExp('\\b'+h+'\\b','gi');
+        const match = text.match(regex);
+        if (match) pocet += match.length;
+      });
+      return pocet;
+    }
+
+    function detekujApoziopezi(text) {
+      return (text.match(/\.\.\.|…/g) || []).length;
+    }
+
+    function detekujApostrofu(text) {
+      const osloveni = ['představte si','představ si','věřte mi','věř mi','poslouchejte','poslouchej','podívejte se','podívej se','dovedete si','dokážeš si'];
+      let pocet = 0;
+      osloveni.forEach(o => {
+        const regex = new RegExp(o,'gi');
+        const match = text.match(regex);
+        if (match) pocet += match.length;
+      });
+      return pocet;
+    }
+
+    function detekujKontrast(text) {
+      const antonyma = [
+        ['malý','velký'], ['malá','velká'], ['malé','velké'],
+        ['těžký','lehký'], ['rychlý','pomalý'], ['rychle','pomalu'],
+        ['černá','bílá'], ['světlo','tma'], ['den','noc'],
+        ['nahoře','dole'], ['nahoru','dolů'], ['vpřed','vzad'],
+        ['život','smrt'], ['láska','nenávist'], ['radost','smutek']
+      ];
+      let pocet = 0;
+      antonyma.forEach(([a,b]) => {
+        if (text.toLowerCase().includes(a) && text.toLowerCase().includes(b)) pocet++;
+      });
+      if (text.match(/ale|naopak|zatímco/gi)) pocet++;
+      return pocet;
+    }
+
+    // ============================================================
+    // 2. MAPA DETEKTORŮ
+    // ============================================================
+    const detektory = {
+      elipsa: detekujElipsy,
+      anafora: detekujAnaforu,
+      repetice: detekujRepetici,
+      negace: detekujNegaci,
+      fragment: detekujFragment,
+      gradace: detekujGradaci,
+      metafora: detekujMetaforu,
+      personifikace: detekujPersonifikaci,
+      fyzikalizace: detekujFyzikalizaci,
+      paradox: detekujParadox,
+      ironie: detekujIronii,
+      hyperbola: detekujHyperbolu,
+      apoziopeze: detekujApoziopezi,
+      apostrofa: detekujApostrofu,
+      kontrast: detekujKontrast
+    };
+
+    // ============================================================
+    // 3. PROFILY ÚHLŮ – každý úhel má seznam figur, které se pro něj počítají
+    //    (odvozeno ze 4 pohádek – Myš, Kocour, Ryba, Zaječice)
+    // ============================================================
+    const angleProfiles = {
+      '0° analytický': ['elipsa', 'gradace', 'kontrast', 'enumerace', 'anafora', 'negace', 'fragment'],
+      '30° kulturní': ['intertextualita', 'aforismus'],
+      '60° filozofický': ['paradox', 'kontrast', 'otázka', 'aforismus'],
+      '90° naivní': ['apostrofa', 'personifikace', 'jednoduché věty'],
+      '120° jazykový': ['fyzikalizace', 'apoziopeze', 'neologismus', 'elipsa'],
+      '150° metaforický': ['metafora', 'personifikace', 'symbol'],
+      '180° asociační': ['fragment', 'apoziopeze'],
+      '210° introspektivní': ['sebereflexe', 'vnitřní hlas', 'mlčení'],
+      '240° ironický': ['ironie', 'kontrast', 'paradox'],
+      '270° groteskní': ['hyperbola', 'absurdní obraz', 'onomatopoie'],
+      '300° absurdní': ['fragment', 'paradox', 'elipsa', 'nelogické spojení'],
+      '330° surrealistický': ['snový obraz', 'metamorfóza', 'synestezie']
+    };
+
+    // ============================================================
+    // 4. BARVY PRO JEDNOTLIVÉ ÚHLY (pro graf)
+    // ============================================================
+    const barvy = [
+      '#ff6b6b', // 0°
+      '#4ecdc4', // 30°
+      '#45b7d1', // 60°
+      '#96ceb4', // 90°
+      '#ffeead', // 120°
+      '#ffcc5c', // 150°
+      '#ff6f69', // 180°
+      '#88d8b0', // 210°
+      '#b5e7a0', // 240°
+      '#d4a5a5', // 270°
+      '#9b59b6', // 300°
+      '#3498db'  // 330°
+    ];
+
+    // ============================================================
+    // 5. HLAVNÍ FUNKCE
+    // ============================================================
+    document.getElementById('analyzeBtn').addEventListener('click', function() {
+      const text = document.getElementById('inputText').value.trim();
+      if (!text) { alert('Vlož text.'); return; }
+
+      // Získání počtů všech figur
+      const figCounts = {};
+      for (let [figname, detektor] of Object.entries(detektory)) {
+        figCounts[figname] = detektor(text);
+      }
+
+      // Výpočet skóre pro každý úhel (prostý součet výskytů typických figur)
+      const angleScores = {};
+      for (let [angle, figList] of Object.entries(angleProfiles)) {
+        let score = 0;
+        figList.forEach(fig => {
+          if (figCounts[fig]) score += figCounts[fig];
+        });
+        angleScores[angle] = score;
+      }
+
+      // Výpočet procent
+      const totalScore = Object.values(angleScores).reduce((a, b) => a + b, 0);
+      const anglePercents = {};
+      if (totalScore === 0) {
+        // Pokud není žádná figura, všechny úhly jsou 0 %
+        for (let angle in angleScores) {
+          anglePercents[angle] = 0;
+        }
+      } else {
+        for (let [angle, score] of Object.entries(angleScores)) {
+          anglePercents[angle] = (score / totalScore * 100).toFixed(1);
+        }
+      }
+
+      // Seřazení úhlů podle procent (pro zobrazení)
+      const sortedAngles = Object.entries(anglePercents).sort((a, b) => b[1] - a[1]);
+
+      // Příprava dat pro koláčový graf (pouze úhly s nenulovým procentem)
+      const nonZero = sortedAngles.filter(([_, p]) => parseFloat(p) > 0);
+      const grafData = nonZero.length > 0 ? nonZero : [['žádný úhel', 100]];
+
+      // Sestavení CSS pro konický gradient
+      let gradientParts = [];
+      let startAngle = 0;
+      grafData.forEach(([angle, percent], index) => {
+        const endAngle = startAngle + (parseFloat(percent) / 100 * 360);
+        gradientParts.push(`${barvy[index % barvy.length]} ${startAngle}deg ${endAngle}deg`);
+        startAngle = endAngle;
+      });
+      const gradientStyle = `conic-gradient(from 0deg, ${gradientParts.join(', ')})`;
+
+      // HTML výstup
+      let html = '<h2 style="margin-top:0;">📊 zastoupení úhlů</h2>';
+
+      if (totalScore === 0) {
+        html += '<p style="color:#888;">V textu nebyly nalezeny žádné výrazné figury. Zkus delší nebo výraznější text.</p>';
+      } else {
+        html += '<div class="chart-container">';
+        html += `<div class="pie-chart" style="background: ${gradientStyle};"></div>`;
+        html += '<div class="legend">';
+        grafData.forEach(([angle, percent], index) => {
+          html += `
+            <div class="legend-item">
+              <div class="color-box" style="background: ${barvy[index % barvy.length]};"></div>
+              <span>${angle}: <strong>${percent}%</strong></span>
+            </div>
+          `;
+        });
+        html += '</div></div>';
+
+        // Seznam všech úhlů s procenty (i nulovými)
+        html += '<h3>všechny úhly (i nulové)</h3>';
+        html += '<div class="angle-list">';
+        sortedAngles.forEach(([angle, percent], index) => {
+          const barva = barvy[index % barvy.length];
+          const nulova = parseFloat(percent) === 0 ? ' (nenalezen)' : '';
+          html += `
+            <div class="angle-item" style="border-left-color: ${barva};">
+              <div class="angle-percent">${percent}%</div>
+              <div>${angle}${nulova}</div>
+            </div>
+          `;
+        });
+        html += '</div>';
+
+        // Poznámka o nulových úhlech
+        const zeroAngles = sortedAngles.filter(([_, p]) => parseFloat(p) === 0).map(([a]) => a);
+        if (zeroAngles.length > 0) {
+          html += `<div class="zero-note">⚠️ Úhly s 0 %: ${zeroAngles.join(', ')} – v textu se nevyskytují figury pro tyto perspektivy. To je normální, každý text má svůj profil.</div>`;
+        }
+      }
+
+      document.getElementById('results').innerHTML = html;
+      document.getElementById('results').style.display = 'block';
+    });
+  </script>
+</body>
+</html>
