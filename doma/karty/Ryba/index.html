@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ryba — Fyzika jazyka · Chceš myš?</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --bg:#0f0d0a;--s:#171410;--s2:#1e1a14;--s3:#252018;
+      --cream:#e8e0d0;--dim:rgba(232,224,208,.42);--dim2:rgba(232,224,208,.2);
+      --a:#4a9ec8;--a2:#2d6e8a;--ab:rgba(74,158,200,.12);--ab2:rgba(74,158,200,.22);
+      --border:rgba(74,158,200,.14);--border-hi:rgba(74,158,200,.32);
+      --serif:'Cormorant Garamond',Georgia,serif;--mono:'DM Mono',monospace;
+    }
+    html{scroll-behavior:smooth}
+    body{background:var(--bg);color:var(--cream);font-family:var(--mono);font-size:13px;line-height:1.8;-webkit-font-smoothing:antialiased}
+    a{color:inherit;text-decoration:none}
+    .wrap{max-width:780px;margin:0 auto;padding:0 24px}
+
+    /* NAV */
+    nav{position:sticky;top:0;z-index:100;border-bottom:1px solid var(--border);background:rgba(15,13,10,.94);backdrop-filter:blur(14px);padding:12px 24px;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+    .nav-back{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);transition:color .2s}
+    .nav-back:hover{color:var(--cream)}
+    .nav-links{display:flex;gap:4px;flex-wrap:wrap}
+    .nav-link{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);padding:4px 9px;border:1px solid transparent;transition:all .12s}
+    .nav-link:hover{color:var(--cream);border-color:var(--border)}
+    .nav-link.active{color:var(--a);border-color:var(--border-hi)}
+
+    /* HERO */
+    .hero{padding:0 0 52px;border-bottom:1px solid var(--border)}
+    .hero-img{width:100%;max-height:340px;overflow:hidden;margin-bottom:36px;position:relative}
+    .hero-img img{width:100%;height:340px;object-fit:cover;object-position:center 40%;filter:grayscale(100%) contrast(1.1);display:block}
+    .hero-img-cap{position:absolute;bottom:10px;right:14px;font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:rgba(232,224,208,.25)}
+    .hero-label{font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--a);margin-bottom:16px}
+    h1{font-family:var(--serif);font-size:clamp(2.8rem,7vw,5rem);font-weight:300;line-height:1.0;margin-bottom:8px}
+    h1 em{font-style:italic;color:var(--a)}
+    .hero-veta{font-family:var(--serif);font-size:clamp(.9rem,2vw,1.15rem);font-style:italic;color:var(--dim);border-left:1px solid var(--a);padding-left:18px;max-width:480px;margin:18px 0 28px;line-height:1.9}
+    .fenomen-box{border:1px solid var(--a);padding:18px 20px;margin-bottom:28px;background:var(--ab)}
+    .fenomen-label{font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--a);margin-bottom:8px}
+    .fenomen-text{font-size:12px;color:rgba(232,224,208,.7);line-height:1.85}
+
+    /* VSTUP */
+    .var-bar{display:flex;gap:1px;background:var(--border);border:1px solid var(--border)}
+    .var-btn{flex:1;padding:12px 8px;background:var(--s);border:none;cursor:pointer;font-family:var(--mono);font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--dim);transition:all .12s;text-align:center}
+    .var-btn:hover{background:var(--s2);color:var(--cream)}
+    .var-btn.active{background:var(--a);color:var(--bg)}
+    .var-popis{padding:10px 14px;font-size:.76rem;color:var(--dim);border:1px solid var(--border);border-top:none;background:var(--s)}
+
+    /* SEKCE */
+    .sekce{padding:48px 0;border-bottom:1px solid var(--border)}
+    .sekce-label{font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--a);margin-bottom:14px}
+    h2{font-family:var(--serif);font-size:clamp(1.4rem,3.5vw,2.2rem);font-weight:300;margin-bottom:16px}
+    h2 em{font-style:italic;color:var(--a)}
+
+    /* POHÁDKA + FIGURY PANEL */
+    .pohadka-layout{display:grid;grid-template-columns:1fr 260px;gap:32px;align-items:start}
+    @media(max-width:660px){.pohadka-layout{grid-template-columns:1fr}}
+    .pohadka-text{font-family:var(--serif);font-size:.95rem;line-height:2;color:rgba(232,224,208,.85)}
+    .pohadka-text p{margin-bottom:.8em}
+    .pohadka-text .sep{text-align:center;color:var(--dim2);display:block;margin:.6em 0}
+
+    /* Highlight třídy */
+    .pohadka-text [data-fig]{transition:all .15s;border-radius:2px;padding:0 1px}
+    .pohadka-text [data-fig].hl{background:var(--ab2);color:var(--a);border-bottom:1px solid var(--a)}
+
+    /* FIGURY PANEL */
+    .fig-panel{position:sticky;top:58px}
+    @media(max-width:660px){.fig-panel{position:static}}
+    .fig-panel-label{font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--a);margin-bottom:8px}
+    .fig-row{padding:7px 10px;cursor:pointer;border-bottom:1px solid var(--border);font-size:.72rem;display:flex;justify-content:space-between;align-items:center;transition:background .1s}
+    .fig-row:hover{background:var(--s)}
+    .fig-row.hl{background:var(--ab);border-left:2px solid var(--a);color:var(--a)}
+    .fig-row-name{font-weight:500}
+    .fig-row-n{font-size:.6rem;color:var(--dim2)}
+    .fig-toggle-all{margin-top:6px;padding:5px 10px;font-family:var(--mono);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;background:transparent;border:1px solid var(--border);color:var(--dim);cursor:pointer;width:100%;transition:all .12s}
+    .fig-toggle-all:hover{border-color:var(--a);color:var(--a)}
+
+    /* DIAGNOSTIKA */
+    .diag-sec{padding:48px 0;border-bottom:1px solid var(--border)}
+    .otazky{border-top:1px solid var(--border)}
+    .otazka{padding:18px 0;border-bottom:1px solid var(--border)}
+    .q-label{font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:var(--a);margin-bottom:6px}
+    .q-text{font-size:.92rem;margin-bottom:6px;color:var(--cream)}
+    textarea{width:100%;background:var(--s);border:1px solid var(--border);color:var(--cream);padding:10px 12px;font-family:var(--mono);font-size:.82rem;line-height:1.7;resize:vertical;min-height:64px}
+    textarea:focus{outline:1px solid var(--a)}
+    textarea::placeholder{color:rgba(232,224,208,.18)}
+    .btn-diag{margin-top:16px;padding:11px 24px;font-size:10px;letter-spacing:.12em;text-transform:uppercase;background:var(--a);color:var(--bg);border:none;cursor:pointer;font-family:var(--mono);transition:background .15s}
+    .btn-diag:hover{background:#6ab8dc}
+    .diag-vysledek{display:none;border:1px solid var(--a);padding:20px;margin-top:16px;background:var(--s)}
+    .diag-vysledek h3{font-family:var(--serif);font-size:1rem;font-weight:400;margin-bottom:8px}
+    .navrh-btn{display:block;width:100%;padding:10px 14px;margin-bottom:4px;background:transparent;border:1px solid var(--border);color:var(--cream);font-family:var(--mono);font-size:.78rem;text-align:left;cursor:pointer;transition:all .12s}
+    .navrh-btn:hover{background:var(--a);border-color:var(--a);color:var(--bg)}
+
+    /* ÚHLY */
+    .uhel{border-bottom:1px solid var(--border)}
+    .uhel-h{display:grid;grid-template-columns:48px 1fr auto;padding:16px 0;cursor:pointer;align-items:center}
+    .uhel-h:hover .uhel-nazev{color:var(--a)}
+    .u-num{font-family:var(--serif);font-size:1.6rem;font-weight:300;color:rgba(74,158,200,.15);line-height:1}
+    .uhel.open .u-num{color:rgba(74,158,200,.4)}
+    .uhel-nazev{font-size:.86rem;color:var(--cream)}
+    .uhel-sub{font-size:.7rem;color:var(--dim);margin-top:2px;font-style:italic;font-family:var(--serif)}
+    .u-deg{font-size:.62rem;color:var(--a);font-family:var(--mono)}
+    .u-tog{font-size:.68rem;color:var(--dim);transition:transform .2s}
+    .uhel.open .u-tog{transform:rotate(180deg)}
+    .uhel-body{display:none;padding:0 0 24px 48px}
+    .uhel-body.open{display:block}
+
+    /* DLAŽDICE */
+    .dlazdice-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);margin-bottom:16px}
+    @media(max-width:500px){.dlazdice-grid{grid-template-columns:1fr}}
+    .dlazdice{background:var(--s);padding:14px 16px;cursor:pointer;transition:background .1s}
+    .dlazdice:hover{background:var(--s2)}
+    .dlazdice.open{background:var(--s2)}
+    .dl-icon{font-size:1.1rem;margin-bottom:6px}
+    .dl-label{font-size:.64rem;letter-spacing:.14em;text-transform:uppercase;color:var(--a);margin-bottom:4px}
+    .dl-text{font-size:.74rem;color:var(--dim);line-height:1.6}
+    .dl-arrow{font-size:.7rem;color:var(--dim2);margin-top:4px}
+
+    /* DETAIL DLAŽDICE */
+    .dl-detail{display:none;background:var(--s2);border:1px solid var(--border);border-top:none;padding:16px 18px;margin-bottom:2px}
+    .dl-detail.open{display:block}
+    .dl-detail-label{font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:var(--a);margin-bottom:6px;margin-top:12px}
+    .dl-detail-label:first-child{margin-top:0}
+    .dl-detail-text{font-size:.8rem;color:rgba(232,224,208,.68);line-height:1.8}
+    .dl-detail-text em{font-style:italic;color:var(--cream)}
+
+    /* TABULKA FIGUR */
+    .tbl-wrap{overflow-x:auto;margin:10px 0}
+    table{width:100%;border-collapse:collapse;font-size:.72rem}
+    thead tr{border-bottom:1px solid var(--border)}
+    thead th{padding:8px 10px;text-align:left;font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:var(--a);font-weight:400}
+    tbody tr{border-bottom:1px solid rgba(74,158,200,.06)}
+    tbody td{padding:8px 10px;color:rgba(232,224,208,.6);vertical-align:top}
+    tbody td:first-child{color:var(--a);font-size:.7rem;white-space:nowrap}
+
+    /* TLAČÍTKA */
+    .btn{padding:8px 18px;font-family:var(--mono);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;border:none;cursor:pointer;transition:all .12s;display:inline-block}
+    .btn-p{background:var(--a);color:var(--bg)}
+    .btn-p:hover{background:#6ab8dc}
+    .btn-g{background:transparent;color:var(--dim);border:1px solid var(--border)}
+    .btn-g:hover{color:var(--cream);border-color:var(--border-hi)}
+    .btn-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+
+    footer{padding:24px 0;border-top:1px solid var(--border);display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-top:8px}
+    footer p{font-size:.7rem;color:var(--dim2)}
+    footer a{color:var(--a)}
+  </style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-back" href="../../../index.html">← Všechna zvířata</a>
+  <div class="nav-links">
+    <a class="nav-link active" href="ryba_pohadka.html">Pohádka</a>
+    <a class="nav-link" href="../nastroje/knihovna_figur.html">Figury ↗</a>
+    <a class="nav-link" href="../nastroje/kogmapa.html">Laboratoř ↗</a>
+    <a class="nav-link" href="../nastroje/analyzer.html">Analyzátor ↗</a>
+
+    <a class="nav-link" href="../ryba_figury_index.html">index1 ↗</a>
+    <a class="nav-link" href="../nastroje/kogmapa.html">Laboratoř ↗</a>
+    <a class="nav-link" href="../nastroje/analyzer.html">Analyzátor ↗</a>
+    
+  </div>
+</nav>
+
+<div class="wrap">
+
+<!-- ── HERO ── -->
+<section class="hero">
+  <div class="hero-img">
+    <img src="../../ilustrace/ryba.jpg" alt="Ryba" onerror="this.parentElement.style.display='none'">
+    <span class="hero-img-cap">ilustrace · ryba</span>
+  </div>
+  <p class="hero-label">Fyzika jazyka · Karta Ryba</p>
+  <h1>Ryba</h1>
+  <p class="hero-veta">„rybí rap"</p>
+  <div class="fenomen-box">
+    <div class="fenomen-label">Fenomén Ryby — Hlas, který nikdo neslyší / ticho jako forma vyjádření</div>
+    <p class="fenomen-text">Ryby nemlčí. Rapují. Každý druh má svůj styl, svůj žánr, svůj rytmus. Ale tato hudba není pro uši — ovlivňuje vodní vlastnosti. Pohádka o Rybě zkoumá, co se děje, když nejdůležitější věci nejdou slyšet, a přesto jsou přítomné. A o tom, že vědět kdy mlčet je nejvyšší forma vyjádření.</p>
+  </div>
+  <div class="var-bar">
+    <button class="var-btn active" onclick="setVar('A',this)">🎲 Náhodně</button>
+    <button class="var-btn" onclick="setVar('B',this)">🧭 Podle nálady</button>
+    <button class="var-btn" onclick="setVar('C',this)">🔍 Diagnosticky</button>
+  </div>
+  <div class="var-popis" id="var-popis">Zavřete oči, ťukněte prstem na obrazovku — a jděte na ten úhel, který vybere prst.</div>
+</section>
+
+<!-- ── POHÁDKA + FIGURY ── -->
+<section class="sekce" id="pohadka">
+  <p class="sekce-label">Pohádka · čtěte pomalu</p>
+  <h2>O rybě, <em>která rapovala.</em></h2>
+  <p style="font-size:.76rem;color:var(--dim);margin-bottom:20px">Sledujte kde vás text zastaví. Kliknutím na figuru v panelu vpravo se označí příslušná místa v textu.</p>
+
+  <div class="pohadka-layout">
+
+    <!-- TEXT -->
+    <div class="pohadka-text" id="pohadka-text">
+      <p>Říká se, že ryby mlčí.<br>Že nemají hlas.<br>Že jen plavou, koukají, a občas se nechají chytit.<br><span data-fig="ironie">Ale to je omyl. Kec.<br>Suchozemská lež.</span></p>
+      <p>Ryby totiž nemlčí.<br>Ryby rapujou.</p>
+      <p>Ne tak, jak si to představuješ – žádné mikrofony, žádné beaty z repro beden.<br>
+      <span data-fig="anafora">„Rybí rap je jinej.<br>Je to rytmus proudů.<br>Je to nížka, výška vln a vlnek.<br>Je to tempo vodních kruhů.<br>Je to mezera mezi bublinama.</span></p>
+      <p><span data-fig="elipsa">Pod vodou se zvuk jinak šíří.<br>Hlubší. Širší. Pomalejší.</span><br>A tak ryby neřvou.<br>Ryby vibrujou.</p>
+      <p><span data-fig="enumerace">Každej druh rybí má svůj styl hudební.<br>Kosatky zpívají chansony – dlouhé, nostalgické, ovlivňují směry proudů.<br>Žraloci zpívaj gospel – hluboký a s ozvěnou.<br>Velryba si troufne na operu<br>a medúzy jí dělaj vokály nebo se daj na triangly, rolničky, zvonce.<br>Delfin je folklor.<br>Chobotnice strihne jazzove imprivizace.<br>Ryba co se nafukuje zvládá dechovky, ale nemá je ráda.<br>Piraňi balady.<br>A kapr zkouší hrdelní zpěvy.<br>Mušle a lastury pějí lovestory.<br>Ska umí létací ryby.<br>Tučňák se vidí v klasice.<br>Na pop je odbornice bělice.<br>A úhoř nemá hudební ambice.</span></p>
+      <p>Je toho více.<br>Ale tohle všechno není hudba pro uši,<br>Tohle ovlivňuje různé vodní vlastnosti.</p>
+      <p>A ryba?<br>Ryba má rap.<br><span data-fig="elipsa">Ne kvůli slávě.<br>Kvůli přesnosti.</span></p>
+      <p><span data-fig="chiasmus">Flow je king a king je ryba.</span><br>Beat jí dělá sea i jezera.<br><span data-fig="fyzikalizace">Riff kape, flow teče.<br>Přesná slova proudí jak voda.<br>Její punchline je fontána.</span></p>
+      <p>Každý verš má váhu.<br>A tohle ryby umí.<br>Líp než ptáci.</p>
+      <p><span data-fig="ironie">Ptačí zpěv?<br>Křikot je to.<br>Řev, ryk, krákot, jekot.<br>Tempo? Melodie? Text?<br>Ptáci neumí dávat.<br>Ptáci umí jen sprostě nadávat.<br>Píp rýmuje s píp, jinak bez ideje.<br>Cokoli řeknou hned se cenzuruje.</span></p>
+      <p><span data-fig="anafora2">Zato ryby fakt dávaj.<br>Dávaj rytmus vodě.<br>Dávaj smysl tichu.<br>Dávají beaty proudům.</span></p>
+      <p>A stalo se jednoho dne, že ryba začala rapovat i na hladině.<br>Ne pro ostatní.<br>Pro vodu.</p>
+      <p><span data-fig="personifikace">A voda odpověděla.<br>Jinak se zavlnila.<br>Do rytmu se natřásala.<br>Tvořila verše jako vodní kruhy, v kterých byly další kruhy.<br>Mlha, spadlá do polí, opsala jejich flow.<br>A vytvořila kruhy v obilí.</span><br><span data-fig="synestezie">Rybí hudba byla slyšet – ne uchem, ale okem, tělem.</span></p>
+      <p>A tak se po kapkách roznáší všude kolem,<br>že prvni místo v hitparádě,<br>vyhrály ryby - nepochybně.</p>
+      <p><span data-fig="aforismus">Ne proto, že zpívaj.<br>Ale proto, že ví..</span></p>
+      <p><span data-fig="elipsa">..kdy mlčet.</span></p>
+      <p><span data-fig="anafora3">Možná je čas,<br>aby se svět dozvěděl o rybím rapu.<br>–<br>Možná je čas,<br>aby se<br>přestalo poslouchat a začalo se vnímat.<br>—<br>Možná je čas,<br>aby se ticho konečně dostalo nad hladinu.</span></p>
+    </div>
+
+    <!-- FIGURY PANEL -->
+    <div class="fig-panel">
+      <div class="fig-panel-label">Figury v textu</div>
+      <div id="fig-list"></div>
+      <button class="fig-toggle-all" onclick="toggleAllFig()">Zobrazit vše / skrýt</button>
+    </div>
+  </div>
+</section>
+
+<!-- ── DIAGNOSTIKA ── -->
+<section class="diag-sec" id="diagnostika">
+  <p class="sekce-label">Diagnostika · Tři otázky k pohádce</p>
+  <h2>Co příběh říká <em>vám.</em></h2>
+  <p style="font-size:.78rem;color:var(--dim);margin-bottom:16px">Odpovězte rychle, bez opravování. Nehledáme správnou odpověď — hledáme váš přirozený úhel pohledu.</p>
+  <div class="otazky">
+    <div class="otazka">
+      <div class="q-label">Smysl</div>
+      <div class="q-text">Co je podle vás hlavní pointa pohádky? O čem je?</div>
+      <textarea id="q1" placeholder="Pište první co vás napadne…"></textarea>
+    </div>
+    <div class="otazka">
+      <div class="q-label">Zaujetí</div>
+      <div class="q-text">Která věta nebo obraz vás nejvíc zaujal — a proč?</div>
+      <textarea id="q2" placeholder="Konkrétní věta nebo moment…"></textarea>
+    </div>
+    <div class="otazka">
+      <div class="q-label">Aplikace</div>
+      <div class="q-text">Kdyby pohádka byla radou do vašeho života, co by vám říkala?</div>
+      <textarea id="q3" placeholder="Konkrétní situace nebo protiargument…"></textarea>
+    </div>
+  </div>
+  <button class="btn-diag" onclick="runDiag()">Zjistit můj úhel →</button>
+  <div class="diag-vysledek" id="diag-vysledek">
+    <h3 id="diag-nazev"></h3>
+    <p class="dominant" id="diag-popis"></p>
+    <div id="diag-navrhy"></div>
+  </div>
+</section>
+
+<!-- ── 12 ÚHLŮ ── -->
+<section class="sekce" id="uhly">
+  <p class="sekce-label">12 úhlů fenoménu Ryby</p>
+  <h2>Váš úhel — nebo nechte <em>vybrat příběh.</em></h2>
+  <div id="uhly-list"></div>
+</section>
+
+<footer>
+  <p>Karta Ryba · Fyzika jazyka · Chceš myš? · © 2026 Michaela Nováková</p>
+  <p><a href="mailto:chcesmys@gmail.com">chcesmys@gmail.com</a></p>
+</footer>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════
+// DATA KARTY — ZDE MĚŇTE PRO KAŽDOU KARTU
+// ═══════════════════════════════════════════════════
+const KARTA = {
+  nazev: 'Ryba',
+  akcent: '#4a9ec8',
+  ilustrace: '../../ilustrace/ryba.jpg',
+
+  // Figury v pohádce — id musí odpovídat data-fig v HTML textu
+  figury: [
+    {id:'anafora',  nazev:'Anafora',         popis:'Opakování „Je to" na začátku vět — vytváří rytmus a zdůrazňuje definici rybího rapu.'},
+    {id:'anafora2', nazev:'Anafora (Dávaj)',  popis:'Opakování „Dávaj" — ryby jsou aktivní, přinášejí, tvoří.'},
+    {id:'anafora3', nazev:'Anafora (Možná)',  popis:'Trojí „Možná je čas" — stupňující se naléhavost na konci.'},
+    {id:'elipsa',   nazev:'Elipsa / Fragment',popis:'Věty bez sloves: „Hlubší. Širší. Pomalejší." — vlastnosti existují samy o sobě.'},
+    {id:'enumerace',nazev:'Enumerace',        popis:'Výčet všech druhů ryb a jejich hudebních stylů — buduje hustý podvodní svět.'},
+    {id:'ironie',   nazev:'Ironie',           popis:'Zesměšnění ptačího zpěvu jako křiku — ironický kontrast k rybímu rapu.'},
+    {id:'chiasmus', nazev:'Chiasmus',         popis:'„Flow je king a king je ryba" — uzavřená řetězová definice.'},
+    {id:'fyzikalizace',nazev:'Fyzikalizace',  popis:'Hudba dostává fyzické vlastnosti — riff kape, flow teče, punchline tryská.'},
+    {id:'personifikace',nazev:'Personifikace',popis:'Voda a mlha jednají jako živé bytosti — odpovídají, opisují flow.'},
+    {id:'synestezie',nazev:'Synestezie',      popis:'„Hudba slyšet ne uchem, ale okem, tělem" — smísení smyslových vjemů.'},
+    {id:'aforismus',nazev:'Aforismus',        popis:'„Ne proto, že zpívaj. Ale proto, že ví… kdy mlčet." — filozofická pointa pohádky.'},
+  ],
+
+  // 12 úhlů
+  uhly: [
+    { st:0, nazev:'Analytický', sub:'Fakta, struktury, výčty',
+      co:'Hledá systematický přehled. Vidí encyklopedický výčet druhů ryb, opakující se struktury vět, kontrast jako stavební princip.',
+      figury:[
+        {nazev:'Elipsa',   ukazka:'"Hlubší. Širší. Pomalejší."',  misto:'Popis šíření zvuku',    co:'Věty bez sloves — vědecké pozorování, každá vlastnost stojí sama.'},
+        {nazev:'Anafora',  ukazka:'"Je to rytmus proudů. Je to…"',misto:'Definice rybího rapu', co:'Opakování vytváří rytmus — rap je definován přírodními jevy.'},
+        {nazev:'Enumerace',ukazka:'Kosatky, žraloci, velryby…',   misto:'Celý výčet druhů',      co:'Encyklopedická katalogizace — kompletní mapa podvodního světa.'},
+        {nazev:'Kontrast', ukazka:'ryby × ptáci',                 misto:'Celý text',             co:'Strukturní protiklad jako organizační princip celého textu.'},
+      ],
+      vyuziti:'Systematické výčty, analýzy, přehledy. Elipsa jako vědecký styl, anafora jako definice.',
+      ukol:'Vytvoř systematický výčet nějaké skupiny (druhy ptáků, hudební žánry, barvy) a ke každé položce přiřaď jednu charakteristiku. Použij alespoň tři elipsy a jednu gradaci.',
+      prot:180
+    },
+    { st:30, nazev:'Kulturní', sub:'Žánry, mýty, kulturní přiřazení',
+      co:'Vidí kulturní mapu — každý druh ryb nese konotace svého hudebního žánru. Gospel je duchovní, jazz improvizovaný, opera vznešená.',
+      figury:[
+        {nazev:'Kulturní přiřazení', ukazka:'Kosatky – chansony, žraloci – gospel', misto:'Výčet druhů', co:'Přenesení kulturních konotací na ryby.'},
+        {nazev:'Intertextualita',    ukazka:'Hudební tradice jako síť odkazů',       misto:'Celý výčet', co:'Čtenář přináší vlastní kulturní znalost.'},
+        {nazev:'Ironie',             ukazka:'"Ptačí zpěv? Křikot je to."',           misto:'Pasáž o ptácích', co:'Ironický komentář k lidskému vnímání hodnoty.'},
+      ],
+      vyuziti:'Kulturní stereotypy, archetypy, práce s očekáváním publika.',
+      ukol:'Vymysli vlastní kulturní mapu — různé druhy stromů, města nebo profese. Ke každé položce přiřaď hudební žánr nebo kulturní styl a vysvětli proč.',
+      prot:210
+    },
+    { st:60, nazev:'Filozofický', sub:'Smysl, ticho, paradox',
+      co:'Hledá poselství o moudrosti. Vidí závěrečný aforismus o tichu jako filozofickou pointu — pravé umění není v hluku, ale ve vědění kdy mlčet.',
+      figury:[
+        {nazev:'Aforismus', ukazka:'"Ne proto, že zpívaj. Ale proto, že ví… kdy mlčet."', misto:'Závěr', co:'Zhutněná moudrost — hodnota ticha nad hluk.'},
+        {nazev:'Paradox',   ukazka:'"ticho se konečně dostalo nad hladinu"',              misto:'Poslední věta', co:'Ticho jako aktivní síla, ne prázdnota.'},
+        {nazev:'Elipsa',    ukazka:'"..kdy mlčet."',                                      misto:'Konec',         co:'Nedokončená věta jako pozvání k zamyšlení.'},
+      ],
+      vyuziti:'Slogany, pointy, aforismy. Paradox jako způsob zastavení čtenáře.',
+      ukol:'Napiš krátkou úvahu: „Kdy je lepší mlčet než mluvit?" Použij alespoň jeden paradox a jeden aforismus.',
+      prot:240
+    },
+    { st:90, nazev:'Naivní', sub:'Hravost, jednoduchost, personifikace',
+      co:'Vidí dětskou fantazii — ryby v podvodní kapele, každá se svým nástrojem. Jednoduché věty, přímé oslovení, personifikace jako samozřejmost.',
+      figury:[
+        {nazev:'Personifikace', ukazka:'"voda odpověděla. Jinak se zavlnila."', misto:'Závěr', co:'Voda a mlha ožívají — dětský animismus.'},
+        {nazev:'Apostrofa',     ukazka:'"Ne tak, jak si to představuješ"',      misto:'Úvod',  co:'Přímé oslovení — intimní dětský tón.'},
+        {nazev:'Anafora',       ukazka:'"Říká se, že… Že… Že…"',               misto:'Úvod',  co:'Opakování jako dětská říkanka.'},
+      ],
+      vyuziti:'Pohádky pro děti, přátelský marketing, přímé oslovení.',
+      ukol:'Převyprávěj pohádku, jako bys ji vyprávěl pětiletému dítěti. Nejjednodušší věty, hodně personifikací, přímá oslovení. Ať ryby mluví a zpívají.',
+      prot:270
+    },
+    { st:120, nazev:'Jazykový', sub:'Fyzikalizace, neologismy, hra',
+      co:'Vidí kde se jazyk stává hmotou. Hudební termíny jsou kapaliny — riff kape, flow teče. Neologismy a zkomoleniny jako autentický styl.',
+      figury:[
+        {nazev:'Fyzikalizace', ukazka:'"Riff kape, flow teče. Punchline je fontána."', misto:'Střed', co:'Abstraktní hudba dostává fyzické vlastnosti vody.'},
+        {nazev:'Neologismus',  ukazka:'"imprivizace", "rapujou"',                      misto:'Výčet', co:'Hovorové tvary dodávají autenticitu a hravost.'},
+        {nazev:'Metafora',     ukazka:'"Flow je king a king je ryba."',                misto:'Střed', co:'Řetězová metafora propojující abstraktní a konkrétní.'},
+      ],
+      vyuziti:'Reklama, copywriting, neologismy v brandingu. Fyzikalizace abstraktních benefitů.',
+      ukol:'Vymysli pět spojení kde abstraktní pojem (láska, čas, myšlenka) se chová jako kapalina. „Láska se rozlévá." „Čas utíká." Rozveď tři z nich do věty.',
+      prot:300
+    },
+    { st:150, nazev:'Metaforický', sub:'Obrazy, symboly, přenosy',
+      co:'Vidí celý podvodní svět jako metaforu — ryby jsou různé hlasy a kultury, flow je kreativní energie. Voda jako médium všeho.',
+      figury:[
+        {nazev:'Metafora (řetěz)', ukazka:'"Flow je king a king je ryba."',      misto:'Střed', co:'Řetěz metafor propojující abstraktní s konkrétním.'},
+        {nazev:'Symbol',           ukazka:'Ryby jako různé kultury a hlasy',     misto:'Celý text', co:'Každý druh ryb zastupuje určitou kulturu.'},
+        {nazev:'Personifikace',    ukazka:'"voda odpověděla", "mlha opsala"',    misto:'Závěr', co:'Přírodní živly jako aktéři.'},
+      ],
+      vyuziti:'Obrazná pojmenování v literatuře a marketingu. Symbol jako způsob zhustit komplexní obsah.',
+      ukol:'Vezmi abstraktní pojem (kreativita, svoboda, paměť) a popiš ho řetězem metafor. „Kreativita je řeka a řeka je život a život je…" Dojdi ke čtyřem krokům.',
+      prot:330
+    },
+    { st:180, nazev:'Asociační', sub:'Proud vědomí, odskoky, volné řetězení',
+      co:'Vidí proud vědomí v dlouhém výčtu — jeden druh vyvolá další, jeden styl přejde v druhý. Aposiopeze jako prostor pro vlastní asociace.',
+      figury:[
+        {nazev:'Enumerace (proud)', ukazka:'Výčet všech druhů — jeden za druhým', misto:'Výčet', co:'Volné asociace, jeden druh vyvolává další.'},
+        {nazev:'Aposiopeze',        ukazka:'"že ví.." "..kdy mlčet."',            misto:'Závěr', co:'Tři tečky jako prostor pro čtenářovy vlastní asociace.'},
+        {nazev:'Fragment',          ukazka:'"Tempo? Melodie? Text?"',             misto:'Ptáci', co:'Otázky bez odpovědí — vědomí tápající v prázdnu.'},
+      ],
+      vyuziti:'Proud vědomí, brainstorming, free writing. Aposiopeze jako otevření prostoru.',
+      ukol:'Napiš proud vědomí na téma „voda". 5 minut bez přemýšlení, bez korektur. Nech slova řetězit sama — od moře k rybám, od ryb k hudbě, od hudby k tichu.',
+      prot:0
+    },
+    { st:210, nazev:'Introspektivní', sub:'Vnitřní hlas, motivace, ticho',
+      co:'Hledá vnitřní svět. „Ne pro ostatní. Pro vodu." — ryba tvoří z vnitřní nutnosti, ne pro publikum. Ticho jako nejvyšší introspektivní stav.',
+      figury:[
+        {nazev:'Vnitřní hlas',  ukazka:'"Ne pro ostatní. Pro vodu."',              misto:'Střed', co:'Tvorba bez publika — čistě vnitřní motivace.'},
+        {nazev:'Sebereflexe',   ukazka:'"Ne kvůli slávě. Kvůli přesnosti."',       misto:'Střed', co:'Vlastní pohnutky reflektovány bez omluv.'},
+        {nazev:'Ticho',         ukazka:'"aby se ticho konečně dostalo nad hladinu"',misto:'Závěr', co:'Ticho jako vytoužený cíl, ne prázdnota.'},
+      ],
+      vyuziti:'Osobní eseje, deníky, introspektivní literatura. Vnitřní monolog přibližuje postavu.',
+      ukol:'Napiš vnitřní monolog ryby, která právě začala rapovat pod vodou. Co cítí? Proč to dělá? Je to pro ni důležité, nebo jen hra?',
+      prot:30
+    },
+    { st:240, nazev:'Ironický', sub:'Kontrast, zesměšnění, skryté sdělení',
+      co:'Vidí ironický komentář — to co je obdivované (ptačí zpěv) je shazováno, to co je neviditelné (rybí rap) má větší hodnotu. Ironie jako způsob komentáře.',
+      figury:[
+        {nazev:'Ironie',  ukazka:'"Ptačí zpěv? Křikot je to."',    misto:'Pasáž o ptácích', co:'Zesměšnění obdivovaného — obrat hodnot.'},
+        {nazev:'Kontrast',ukazka:'ryby × ptáci, ticho × hluk',     misto:'Celý text',       co:'Ironický kontrast skrytého a viditelného.'},
+        {nazev:'Paradox', ukazka:'"ticho dostalo nad hladinu"',     misto:'Závěr',           co:'Paradox jako ironické zakončení.'},
+      ],
+      vyuziti:'Satirické texty, reklamní obraty, pointy. Kontrast pro zdůraznění výhod.',
+      ukol:'Napiš text kde ironicky shodíš něco všeobecně uznávané — slavnou píseň, módní trend, kulturní ikonu. Použij kontrast a ironii. Nepojmenuj to přímo.',
+      prot:60
+    },
+    { st:270, nazev:'Groteskní', sub:'Absurdní obrazy, přehánění, galerie',
+      co:'Vidí groteskní galerii — žraloci zpívající gospel, medúzy na triangly, chobotnice a jazz. Absurdní, ale má kouzlo. Celá podvodní kapela jako groteskní obraz.',
+      figury:[
+        {nazev:'Absurdní obraz',ukazka:'Kosatky – chansony, žraloci – gospel', misto:'Výčet', co:'Každé přiřazení je absurdní — dohromady groteskní galerie.'},
+        {nazev:'Fragment',      ukazka:'"Řev, ryk, krákot, jekot."',           misto:'Ptáci', co:'Výčet evokující chaos a disharmonii.'},
+      ],
+      vyuziti:'Satirická literatura, absurdní humor, karikatura. Přehánění jako způsob odhalení pravdy.',
+      ukol:'Vytvoř svou absurdní kapelu — co nejšílenější kombinace zvířat a hudebních stylů. Hroši hrající death metal, žížaly zpívající operu. Popiš je a nech je hrát dohromady.',
+      prot:90
+    },
+    { st:300, nazev:'Absurdní', sub:'Nesmysl, paradox, nelogické premisy',
+      co:'Vidí absurdní premisu — proč by ryby měly rapovat? Proč by to mělo ovlivňovat vodní vlastnosti? Nic to nedává smysl, ale v pohádce to funguje.',
+      figury:[
+        {nazev:'Paradox',         ukazka:'"ticho se dostalo nad hladinu"', misto:'Závěr', co:'Ticho je abstraktní, ale pohybuje se.'},
+        {nazev:'Nelogické spojení',ukazka:'Ryby rapují, ovlivňují vodu',   misto:'Celý text', co:'Absurdní kauzalita jako základ pohádky.'},
+        {nazev:'Aposiopeze',       ukazka:'"..kdy mlčet."',                misto:'Závěr',   co:'Svět je neúplný, nedá se popsat.'},
+      ],
+      vyuziti:'Absurdní divadlo, dadaismus, surrealistické texty. Nelogická premisa jako způsob odhalení skryté logiky.',
+      ukol:'Napiš krátký text postavený na absurdní premise. „Kameny mluví esperantem." „Hodiny se stydí za svůj čas." Drž se jedné absurdní myšlenky a rozvíjej ji jako by byla normální.',
+      prot:120
+    },
+    { st:330, nazev:'Surrealistický', sub:'Snové obrazy, synestezie, prolínání',
+      co:'Vidí surrealistické prolínání — voda odpovídá, kruhy se řetězí, mlha opisuje flow, hudba se stává viditelnými kruhy v obilí. Vše propojeno.',
+      figury:[
+        {nazev:'Synestezie',      ukazka:'"hudba slyšet ne uchem, ale okem, tělem"', misto:'Závěr', co:'Smísení smyslů — hudba se stává viditelnou.'},
+        {nazev:'Snový obraz',     ukazka:'"kruhy v kruzích", "mlha opsala flow"',    misto:'Závěr', co:'Hypnotické řetězení obrazů — voda, vzduch, země propojeny.'},
+        {nazev:'Prolínání realit',ukazka:'Hudba → voda → mlha → obilí',              misto:'Celý závěr', co:'Realita se proplétá, elementy mění role.'},
+      ],
+      vyuziti:'Surrealistická literatura, snová próza, vizuální umění. Synestezie jako způsob překvapení čtenáře.',
+      ukol:'Popiš svůj vlastní sen kde se živly prolínají s hudbou. Nech hudbu, aby byla vidět, a vodu, aby zpívala. Používej synestézii — „ta nota byla modrá a studená".',
+      prot:150
+    },
+  ]
+};
+
+// ═══════════════════════════════════════════════════
+// DIAGNOSTIKA — keywords per úhel
+// ═══════════════════════════════════════════════════
+const DIAG_KEYS = [
+  {st:0,   keys:['analýza','systém','logika','struktura','výčet','přehled','proto','protože','kategorie','přesně']},
+  {st:30,  keys:['kultura','tradice','žánr','společnost','obecně','archetyp','symbol','mýtus','každý']},
+  {st:60,  keys:['smysl','podstata','pravda','proč','existuje','bytí','otázka','absolutní','relativní']},
+  {st:90,  keys:['prostě','jednoduché','hravé','dětské','přímo','konkrétně','hotovo','takto']},
+  {st:120, keys:['slovo','jazyk','zvuk','forma','rytmus','hra','rým','výslovnost','textura']},
+  {st:150, keys:['jako','metafora','obraz','symbol','ztělesňuje','připomíná','představuje']},
+  {st:180, keys:['napadá','připomíná','najednou','asociace','evokuje','volně','přitom','mimochodem']},
+  {st:210, keys:['cítím','prožívám','já','mě','osobně','uvnitř','pocit','vnitřně','sám']},
+  {st:240, keys:['ironie','naopak','paradox','ovšem','samozřejmě','jasně','pochopitelně']},
+  {st:270, keys:['absurdní','přehnané','obrovské','strašně','groteskní','neskutečné','drama']},
+  {st:300, keys:['proč','kdyby','nesmysl','nelogické','absurdita','jiná logika','záhadné']},
+  {st:330, keys:['sen','snový','magické','fantazie','prolínání','metamorfóza','nereálné']},
+];
+const UHLY_META = {
+  0:{n:'Analytický'},30:{n:'Kulturní'},60:{n:'Filozofický'},90:{n:'Naivní'},
+  120:{n:'Jazykový'},150:{n:'Metaforický'},180:{n:'Asociační'},210:{n:'Introspektivní'},
+  240:{n:'Ironický'},270:{n:'Groteskní'},300:{n:'Absurdní'},330:{n:'Surrealistický'}
+};
+
+// ═══════════════════════════════════════════════════
+// VSTUP — VARIANTY
+// ═══════════════════════════════════════════════════
+function setVar(v, btn) {
+  document.querySelectorAll('.var-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  const popis = {
+    A:'Zavřete oči, ťukněte prstem na obrazovku — a jděte na ten úhel, který vybere prst.',
+    B:'Projděte si záhlaví všech 12 úhlů níže. Vyberte ten, který vás teď nejvíc přitahuje — nebo odpuzuje.',
+    C:'Odpovězte na tři otázky níže. Systém vám nabídne úhel na základě vašich odpovědí.'
+  };
+  document.getElementById('var-popis').textContent = popis[v];
+  if(v==='C') document.getElementById('diagnostika').scrollIntoView({behavior:'smooth'});
+  if(v==='A') {
+    const idx = Math.floor(Math.random()*KARTA.uhly.length);
+    setTimeout(()=>openUhel(idx), 300);
+    document.getElementById('uhly').scrollIntoView({behavior:'smooth'});
+  }
+}
+
+// ═══════════════════════════════════════════════════
+// FIGURY — HIGHLIGHT
+// ═══════════════════════════════════════════════════
+let activeFigs = new Set();
+let allOn = false;
+
+function buildFigList() {
+  const container = document.getElementById('fig-list');
+  container.innerHTML = KARTA.figury.map((f,i) =>
+    `<div class="fig-row" id="figrow-${f.id}" onclick="toggleFig('${f.id}')">
+      <span class="fig-row-name">${f.nazev}</span>
+      <span class="fig-row-n">${String(i+1).padStart(2,'0')}</span>
+    </div>`
+  ).join('');
+}
+
+function toggleFig(id) {
+  if(activeFigs.has(id)) activeFigs.delete(id);
+  else activeFigs.add(id);
+  applyHighlights();
+}
+
+function toggleAllFig() {
+  allOn = !allOn;
+  if(allOn) KARTA.figury.forEach(f=>activeFigs.add(f.id));
+  else activeFigs.clear();
+  applyHighlights();
+}
+
+function applyHighlights() {
+  document.querySelectorAll('#pohadka-text [data-fig]').forEach(el => {
+    const ids = el.getAttribute('data-fig').split(' ');
+    const hit = ids.some(id => activeFigs.has(id));
+    el.classList.toggle('hl', hit);
+  });
+  document.querySelectorAll('.fig-row').forEach(row => {
+    const id = row.id.replace('figrow-','');
+    row.classList.toggle('hl', activeFigs.has(id));
+  });
+}
+
+buildFigList();
+
+// ═══════════════════════════════════════════════════
+// DIAGNOSTIKA
+// ═══════════════════════════════════════════════════
+function escapeReg(s){return s.replace(/[-\/\\^$*+?.()|[\]{}]/g,'\\$&');}
+
+function runDiag() {
+  const text = [document.getElementById('q1').value, document.getElementById('q2').value, document.getElementById('q3').value].join(' ');
+  if(!text.trim()) return;
+  const scores = {};
+  DIAG_KEYS.forEach(u => {
+    scores[u.st] = 0;
+    u.keys.forEach(k => {
+      const re = new RegExp(`(?<![a-záčďéěíňóřšťůúýž])${escapeReg(k)}(?![a-záčďéěíňóřšťůúýž])`,'gi');
+      scores[u.st] += (text.match(re)||[]).length;
+    });
+  });
+  // bonusy
+  const jaCount = (text.match(/\bjá\b|\bjsem\b|\bmi\b|\bmě\b/gi)||[]).length;
+  scores[210] += jaCount;
+  const qCount = (text.match(/\?/g)||[]).length;
+  scores[60] += qCount;
+  const sents = text.split(/[.!?]+/).filter(s=>s.trim().length>2);
+  if(sents.length>=3) {
+    const lens = sents.map(s=>s.trim().split(/\s+/).length);
+    const avg = lens.reduce((a,b)=>a+b,0)/lens.length;
+    if(avg>15) scores[60]+=2;
+    const variance = lens.map(l=>(l-avg)**2).reduce((a,b)=>a+b,0)/lens.length;
+    if(Math.sqrt(variance)>3) scores[270]+=2;
+  }
+  const sorted = Object.entries(scores).sort((a,b)=>b[1]-a[1]);
+  const domSt = parseInt(sorted[0][0]);
+  const domU = KARTA.uhly.find(u=>u.st===domSt);
+  const protU = KARTA.uhly.find(u=>u.st===domU.prot);
+  const el = document.getElementById('diag-vysledek');
+  el.style.display = 'block';
+  document.getElementById('diag-nazev').innerHTML = `<span style="color:var(--a)">${domSt}° ${domU.nazev}</span>`;
+  document.getElementById('diag-popis').textContent = domU.sub + ' — ' + domU.co.slice(0,120)+'…';
+  document.getElementById('diag-navrhy').innerHTML =
+    `<p style="font-size:.72rem;color:var(--dim);margin-bottom:8px">Otevřít úhly:</p>
+     <button class="navrh-btn" onclick="openUhelScroll(${KARTA.uhly.indexOf(domU)})">→ ${domSt}° ${domU.nazev} (váš dominantní)</button>
+     <button class="navrh-btn" onclick="openUhelScroll(${KARTA.uhly.indexOf(protU)})">→ ${protU.st}° ${protU.nazev} (protilehlý — rozšíření)</button>`;
+  el.scrollIntoView({behavior:'smooth'});
+}
+
+// ═══════════════════════════════════════════════════
+// ÚHLY — ACCORDIONY
+// ═══════════════════════════════════════════════════
+let openDlazdice = {}; // uhel_index -> index dlazdice
+
+function buildUhly() {
+  const list = document.getElementById('uhly-list');
+  KARTA.uhly.forEach((u, i) => {
+    const protU = KARTA.uhly.find(x=>x.st===u.prot);
+    const figuryHTML = u.figury.map(f =>
+      `<tr><td>${f.nazev}</td><td><em>${f.ukazka}</em></td><td>${f.misto}</td><td>${f.co}</td></tr>`
+    ).join('');
+
+    const div = document.createElement('div');
+    div.className = 'uhel';
+    div.id = 'u'+i;
+    div.innerHTML = `
+      <div class="uhel-h" onclick="toggleUhel(${i})">
+        <span class="u-num">${String(i+1).padStart(2,'0')}</span>
+        <div>
+          <div class="uhel-nazev">${u.nazev}</div>
+          <div class="uhel-sub">${u.sub}</div>
+        </div>
+        <span class="u-deg">${u.st}°</span>
+        <span class="u-tog" style="margin-left:8px">▾</span>
+      </div>
+      <div class="uhel-body" id="b${i}">
+        <div style="font-size:.76rem;color:var(--dim);margin-bottom:14px;line-height:1.8">${u.co}</div>
+
+        <div class="dlazdice-grid">
+          <div class="dlazdice" onclick="toggleDl(${i},0)">
+            <div class="dl-icon">📖</div>
+            <div class="dl-label">Figury v pohádce</div>
+            <div class="dl-text">Co tento úhel vidí v textu</div>
+            <div class="dl-arrow">▾</div>
+          </div>
+          <div class="dlazdice" onclick="toggleDl(${i},1)">
+            <div class="dl-icon">✏️</div>
+            <div class="dl-label">Kreativní úkol</div>
+            <div class="dl-text">20minutové cvičení</div>
+            <div class="dl-arrow">▾</div>
+          </div>
+          <div class="dlazdice" onclick="toggleDl(${i},2)">
+            <div class="dl-icon">🔗</div>
+            <div class="dl-label">Protilehlý úhel</div>
+            <div class="dl-text">${protU.st}° ${protU.nazev}</div>
+            <div class="dl-arrow">▾</div>
+          </div>
+          <div class="dlazdice" onclick="openLaborator(${i})">
+            <div class="dl-icon">🧪</div>
+            <div class="dl-label">Laboratoř</div>
+            <div class="dl-text">Uložit, analyzovat, mapovat</div>
+            <div class="dl-arrow">↗</div>
+          </div>
+        </div>
+
+        <div class="dl-detail" id="dl${i}_0">
+          <div class="dl-detail-label">Co tento úhel vidí</div>
+          <div class="dl-detail-text">${u.co}</div>
+          <div class="dl-detail-label" style="margin-top:14px">Figury s citacemi</div>
+          <div class="tbl-wrap">
+            <table>
+              <thead><tr><th>Figura</th><th>Ukázka</th><th>Místo</th><th>Co dělá</th></tr></thead>
+              <tbody>${figuryHTML}</tbody>
+            </table>
+          </div>
+          <div class="dl-detail-label" style="margin-top:14px">Využití v praxi</div>
+          <div class="dl-detail-text">${u.vyuziti}</div>
+          <div class="btn-row">
+            <a class="btn btn-g" href="../nastroje/knihovna_figur.html" target="_blank">Knihovna figur ↗</a>
+          </div>
+        </div>
+
+        <div class="dl-detail" id="dl${i}_1">
+          <div class="dl-detail-label">Kreativní úkol · 20 minut</div>
+          <div class="dl-detail-text">${u.ukol}</div>
+          <div class="btn-row">
+            <button class="btn btn-p" onclick="openLaborator(${i})">Otevřít v laboratoři →</button>
+          </div>
+        </div>
+
+        <div class="dl-detail" id="dl${i}_2">
+          <div class="dl-detail-label">Protilehlý úhel — prostor pro rozvoj</div>
+          <div class="dl-detail-text"><em>${protU.st}° ${protU.nazev}</em> — ${protU.sub}</div>
+          <div class="dl-detail-text" style="margin-top:8px">${protU.co}</div>
+          <div class="btn-row">
+            <button class="btn btn-g" onclick="openUhelScroll(${KARTA.uhly.indexOf(protU)})">Přejít na ${protU.nazev} →</button>
+          </div>
+        </div>
+
+      </div>`;
+    list.appendChild(div);
+  });
+}
+
+function toggleUhel(i) {
+  const body = document.getElementById('b'+i);
+  const el = document.getElementById('u'+i);
+  el.classList.toggle('open');
+  body.classList.toggle('open');
+}
+
+function openUhel(i) {
+  const body = document.getElementById('b'+i);
+  const el = document.getElementById('u'+i);
+  el.classList.add('open');
+  body.classList.add('open');
+}
+
+function openUhelScroll(i) {
+  openUhel(i);
+  document.getElementById('u'+i).scrollIntoView({behavior:'smooth'});
+}
+
+function toggleDl(i, j) {
+  const el = document.getElementById(`dl${i}_${j}`);
+  const dls = document.querySelectorAll(`#b${i} .dl-detail`);
+  const dlazdice = document.querySelectorAll(`#b${i} .dlazdice`);
+  const wasOpen = el.classList.contains('open');
+  dls.forEach(d=>d.classList.remove('open'));
+  dlazdice.forEach(d=>d.classList.remove('open'));
+  if(!wasOpen) {
+    el.classList.add('open');
+    dlazdice[j].classList.add('open');
+  }
+}
+
+function openLaborator(i) {
+  const u = KARTA.uhly[i];
+  const params = `?karta=${encodeURIComponent(KARTA.nazev)}&uhel=${u.st}&nazev=${encodeURIComponent(u.nazev)}&ukol=${encodeURIComponent(u.ukol.slice(0,100))}`;
+  window.location.href = '../nastroje/kogmapa.html' + params;
+}
+
+buildUhly();
+</script>
+</body>
+</html>
