@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Slon — Fyzika jazyka · Chceš myš?</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --bg:#0f0d0a;--s:#171410;--s2:#1e1a14;
+      --cream:#e8e0d0;--dim:rgba(232,224,208,.42);--dim2:rgba(232,224,208,.2);
+      --a:#c8903a;--a2:#8a6020;--ab:rgba(200,144,58,.1);--ab2:rgba(200,144,58,.2);
+      --border:rgba(200,144,58,.15);--border-hi:rgba(200,144,58,.32);
+      --serif:'Cormorant Garamond',Georgia,serif;--mono:'DM Mono',monospace;
+    }
+    html{scroll-behavior:smooth}
+    body{background:var(--bg);color:var(--cream);font-family:var(--mono);font-size:13px;line-height:1.8;-webkit-font-smoothing:antialiased}
+    a{color:inherit;text-decoration:none}
+    .wrap{max-width:780px;margin:0 auto;padding:0 24px}
+    nav{position:sticky;top:0;z-index:100;border-bottom:1px solid var(--border);background:rgba(15,13,10,.94);backdrop-filter:blur(14px);padding:12px 24px;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+    .nav-back{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);transition:color .2s}
+    .nav-back:hover{color:var(--cream)}
+    .nav-links{display:flex;gap:4px;flex-wrap:wrap}
+    .nav-link{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);padding:4px 9px;border:1px solid transparent;transition:all .12s}
+    .nav-link:hover{color:var(--cream);border-color:var(--border)}
+    .nav-link.active{color:var(--a);border-color:var(--border-hi)}
+    .hero{padding:0 0 52px;border-bottom:1px solid var(--border)}
+    .hero-img{width:100%;max-height:340px;overflow:hidden;margin-bottom:36px;position:relative}
+    .hero-img img{width:100%;height:340px;object-fit:cover;object-position:center 40%;filter:grayscale(100%) contrast(1.1);display:block}
+    .hero-img-cap{position:absolute;bottom:10px;right:14px;font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:rgba(232,224,208,.25)}
+    .hero-label{font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--a);margin-bottom:16px}
+    h1{font-family:var(--serif);font-size:clamp(2.8rem,7vw,5rem);font-weight:300;line-height:1.0;margin-bottom:8px}
+    h1 em{font-style:italic;color:var(--a)}
+    .hero-veta{font-family:var(--serif);font-size:clamp(.9rem,2vw,1.15rem);font-style:italic;color:var(--dim);border-left:1px solid var(--a);padding-left:18px;max-width:480px;margin:18px 0 28px;line-height:1.9}
+    .fenomen-box{border:1px solid var(--a);padding:18px 20px;margin-bottom:28px;background:var(--ab)}
+    .fenomen-label{font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--a);margin-bottom:8px}
+    .fenomen-text{font-size:12px;color:rgba(232,224,208,.7);line-height:1.85}
+    .var-bar{display:flex;gap:1px;background:var(--border);border:1px solid var(--border)}
+    .var-btn{flex:1;padding:12px 8px;background:var(--s);border:none;cursor:pointer;font-family:var(--mono);font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--dim);transition:all .12s;text-align:center}
+    .var-btn:hover{background:var(--s2);color:var(--cream)}
+    .var-btn.active{background:var(--a);color:var(--bg)}
+    .var-popis{padding:10px 14px;font-size:.76rem;color:var(--dim);border:1px solid var(--border);border-top:none;background:var(--s)}
+    .sekce{padding:48px 0;border-bottom:1px solid var(--border)}
+    .sekce-label{font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--a);margin-bottom:14px}
+    h2{font-family:var(--serif);font-size:clamp(1.4rem,3.5vw,2.2rem);font-weight:300;margin-bottom:16px}
+    h2 em{font-style:italic;color:var(--a)}
+    .pohadka-layout{display:grid;grid-template-columns:1fr 240px;gap:28px;align-items:start}
+    @media(max-width:640px){.pohadka-layout{grid-template-columns:1fr}}
+    .pohadka-text{font-family:var(--serif);font-size:.95rem;line-height:2;color:rgba(232,224,208,.85)}
+    .pohadka-text p{margin-bottom:.8em}
+    .pohadka-text [data-fig]{transition:all .15s;border-radius:2px;padding:0 1px}
+    .pohadka-text [data-fig].hl{background:var(--ab2);color:var(--a);border-bottom:1px solid var(--a)}
+    .fig-panel{position:sticky;top:58px}
+    @media(max-width:640px){.fig-panel{position:static}}
+    .fig-panel-label{font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--a);margin-bottom:8px}
+    .fig-row{padding:7px 10px;cursor:pointer;border-bottom:1px solid var(--border);font-size:.72rem;display:flex;justify-content:space-between;align-items:center;transition:background .1s}
+    .fig-row:hover{background:var(--s)}
+    .fig-row.hl{background:var(--ab);border-left:2px solid var(--a);color:var(--a)}
+    .fig-row-name{font-weight:500}
+    .fig-row-n{font-size:.6rem;color:var(--dim2)}
+    .fig-toggle-all{margin-top:6px;padding:5px 10px;font-family:var(--mono);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;background:transparent;border:1px solid var(--border);color:var(--dim);cursor:pointer;width:100%;transition:all .12s}
+    .fig-toggle-all:hover{border-color:var(--a);color:var(--a)}
+    .diag-sec{padding:48px 0;border-bottom:1px solid var(--border)}
+    .otazky{border-top:1px solid var(--border)}
+    .otazka{padding:18px 0;border-bottom:1px solid var(--border)}
+    .q-label{font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:var(--a);margin-bottom:6px}
+    .q-text{font-size:.92rem;margin-bottom:6px;color:var(--cream)}
+    textarea{width:100%;background:var(--s);border:1px solid var(--border);color:var(--cream);padding:10px 12px;font-family:var(--mono);font-size:.82rem;line-height:1.7;resize:vertical;min-height:64px}
+    textarea:focus{outline:1px solid var(--a)}
+    textarea::placeholder{color:rgba(232,224,208,.18)}
+    .btn-diag{margin-top:16px;padding:11px 24px;font-size:10px;letter-spacing:.12em;text-transform:uppercase;background:var(--a);color:var(--bg);border:none;cursor:pointer;font-family:var(--mono);transition:background .15s}
+    .btn-diag:hover{background:#daa050}
+    .diag-vysledek{display:none;border:1px solid var(--a);padding:20px;margin-top:16px;background:var(--s)}
+    .diag-vysledek h3{font-family:var(--serif);font-size:1rem;font-weight:400;margin-bottom:8px}
+    .navrh-btn{display:block;width:100%;padding:10px 14px;margin-bottom:4px;background:transparent;border:1px solid var(--border);color:var(--cream);font-family:var(--mono);font-size:.78rem;text-align:left;cursor:pointer;transition:all .12s}
+    .navrh-btn:hover{background:var(--a);border-color:var(--a);color:var(--bg)}
+    .uhel{border-bottom:1px solid var(--border)}
+    .uhel-h{display:grid;grid-template-columns:48px 1fr auto auto;padding:16px 0;cursor:pointer;align-items:center;gap:8px}
+    .uhel-h:hover .uhel-nazev{color:var(--a)}
+    .u-num{font-family:var(--serif);font-size:1.6rem;font-weight:300;color:rgba(200,144,58,.15);line-height:1}
+    .uhel.open .u-num{color:rgba(200,144,58,.4)}
+    .uhel-nazev{font-size:.86rem;color:var(--cream)}
+    .uhel-sub{font-size:.7rem;color:var(--dim);margin-top:2px;font-style:italic;font-family:var(--serif)}
+    .u-deg{font-size:.62rem;color:var(--a);font-family:var(--mono)}
+    .u-tog{font-size:.68rem;color:var(--dim);transition:transform .2s}
+    .uhel.open .u-tog{transform:rotate(180deg)}
+    .uhel-body{display:none;padding:0 0 24px 48px}
+    .uhel-body.open{display:block}
+    .uhel-co{font-size:.76rem;color:var(--dim);margin-bottom:14px;line-height:1.8}
+    .dlazdice-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);margin-bottom:2px}
+    @media(max-width:480px){.dlazdice-grid{grid-template-columns:1fr}}
+    .dlazdice{background:var(--s);padding:14px 16px;cursor:pointer;transition:background .1s}
+    .dlazdice:hover,.dlazdice.open{background:var(--s2)}
+    .dl-icon{font-size:1rem;margin-bottom:5px}
+    .dl-label{font-size:.64rem;letter-spacing:.14em;text-transform:uppercase;color:var(--a);margin-bottom:3px}
+    .dl-text{font-size:.72rem;color:var(--dim);line-height:1.5}
+    .dl-detail{display:none;background:var(--s2);border:1px solid var(--border);border-top:none;padding:16px 18px;margin-bottom:2px}
+    .dl-detail.open{display:block}
+    .dl-detail-label{font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:var(--a);margin-bottom:6px;margin-top:12px}
+    .dl-detail-label:first-child{margin-top:0}
+    .dl-detail-text{font-size:.8rem;color:rgba(232,224,208,.68);line-height:1.8}
+    .dl-detail-text em{font-style:italic;color:var(--cream)}
+    .tbl-wrap{overflow-x:auto;margin:10px 0}
+    table{width:100%;border-collapse:collapse;font-size:.72rem}
+    thead tr{border-bottom:1px solid var(--border)}
+    thead th{padding:8px 10px;text-align:left;font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:var(--a);font-weight:400}
+    tbody tr{border-bottom:1px solid rgba(200,144,58,.06)}
+    tbody td{padding:8px 10px;color:rgba(232,224,208,.6);vertical-align:top}
+    tbody td:first-child{color:var(--a);font-size:.7rem;white-space:nowrap}
+    .btn{padding:8px 18px;font-family:var(--mono);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;border:none;cursor:pointer;transition:all .12s;display:inline-block}
+    .btn-p{background:var(--a);color:var(--bg)}
+    .btn-p:hover{background:#daa050}
+    .btn-g{background:transparent;color:var(--dim);border:1px solid var(--border)}
+    .btn-g:hover{color:var(--cream);border-color:var(--border-hi)}
+    .btn-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+    footer{padding:24px 0;border-top:1px solid var(--border);display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-top:8px}
+    footer p{font-size:.7rem;color:var(--dim2)}
+    footer a{color:var(--a)}
+
+    .cviceni-ta{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--cream);padding:10px 14px;font-family:var(--serif);font-size:.9rem;line-height:1.85;resize:none;min-height:60px;transition:min-height .2s;margin-top:8px;display:block}
+    .cviceni-ta:focus{outline:none;border-color:var(--a);min-height:220px}
+    .cviceni-ta::placeholder{color:var(--dim2);font-style:italic}
+    .jazyk-zam{background:rgba(200,144,58,.06);border-left:2px solid var(--a2);padding:9px 12px;margin:10px 0;font-size:.78rem;color:rgba(232,224,208,.65);line-height:1.8}
+    .akce-row{display:flex;gap:4px;flex-wrap:wrap;margin-top:8px}
+    .akce-btn{padding:7px 13px;font-family:var(--mono);font-size:.64rem;letter-spacing:.09em;text-transform:uppercase;background:transparent;border:1px solid var(--border);color:var(--dim);cursor:pointer;transition:all .12s}
+    .akce-btn:hover{color:var(--cream);border-color:var(--border-hi)}
+    .akce-btn.prim{background:var(--a);color:var(--bg);border-color:var(--a)}
+    .share-wrap{position:relative;display:inline-block}
+    .share-menu{display:none;position:absolute;z-index:50;background:var(--s2);border:1px solid var(--border-hi);padding:4px 0;min-width:160px;bottom:100%;left:0}
+    .share-menu.open{display:block}
+    .share-item{display:block;width:100%;padding:7px 14px;font-family:var(--mono);font-size:.64rem;background:transparent;border:none;color:var(--dim);cursor:pointer;text-align:left}
+    .share-item:hover{background:var(--ab);color:var(--cream)}
+    .az-out{display:none;margin-top:8px}
+    .az-header{background:var(--ab);border:1px solid var(--border-hi);padding:8px 12px;font-size:.72rem;margin-bottom:2px;display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap}
+    .az-item{border:1px solid var(--border);padding:6px 10px;margin-bottom:2px;display:flex;gap:7px;align-items:flex-start;font-size:.7rem}
+    .az-item.hit{border-color:var(--border-hi);background:var(--ab)}
+    .az-n{color:rgba(200,144,58,.25);min-width:18px}
+    .az-item.hit .az-n{color:var(--a)}
+    .az-nazev{color:rgba(232,224,208,.3);flex:1}
+    .az-item.hit .az-nazev{color:var(--cream)}
+    .az-tags{display:flex;flex-wrap:wrap;gap:2px;margin-top:2px}
+    .az-tag{font-size:.6rem;color:var(--a);padding:1px 4px;background:var(--ab);border:1px solid var(--border-hi)}
+    .az-hit{color:var(--a);font-size:.66rem}
+    .az-miss{color:rgba(232,224,208,.18);font-size:.66rem}
+    .az-note{font-size:.66rem;color:var(--dim);font-style:italic;margin-top:6px;padding:7px 10px;border-left:1px solid var(--border-hi);line-height:1.7}
+  </style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-back" href="../../../index.html">← Všechna zvířata</a>
+  <div class="nav-links">
+    <a class="nav-link active" href="slon_pohadka.html">Pohádka</a>
+    <a class="nav-link" href="../nastroje/knihovna_figur.html">Figury ↗</a>
+    <a class="nav-link" href="../nastroje/kogmapa.html">Laboratoř ↗</a>
+    <a class="nav-link" href="../nastroje/analyzer.html">Analyzátor ↗</a>
+  </div>
+</nav>
+
+<div class="wrap">
+
+<section class="hero">
+  <div class="hero-img">
+    <img src="../../ilustrace/slon.jpg" alt="Slon" onerror="this.parentElement.style.display='none'">
+    <span class="hero-img-cap">ilustrace · slon</span>
+  </div>
+  <p class="hero-label">Fyzika jazyka · Karta Slon</p>
+  <h1>Slon</h1>
+  <p class="hero-veta">„jednu třešeň ti dám slone, když mě dohoníš"</p>
+  <div class="fenomen-box">
+    <div class="fenomen-label">Fenomén Slona — Síla, která běží za maličkostí / smysl je v pohybu, ne v cíli</div>
+    <p class="fenomen-text">Slon nese paměť krajin, které už neexistují. Když šel, země se chvěla. Když stál, čas se zpomalil. A přesto — běží za jedinou třešní, kterou nikdy nedostane. Pohádka o Slonovi zkoumá, proč velké věci potřebují malé cíle. A co by zbylo, kdyby ten cíl dosáhly.</p>
+  </div>
+  <div class="var-bar">
+    <button class="var-btn active" onclick="setVar('A',this)">🎲 Náhodně</button>
+    <button class="var-btn" onclick="setVar('B',this)">🧭 Podle nálady</button>
+    <button class="var-btn" onclick="setVar('C',this)">🔍 Diagnosticky</button>
+  </div>
+  <div class="var-popis" id="var-popis">Zavřete oči, ťukněte prstem na obrazovku — a jděte na ten úhel, který vybere prst.</div>
+</section>
+
+<!-- POHÁDKA -->
+<section class="sekce" id="pohadka">
+  <p class="sekce-label">Pohádka · čtěte pomalu</p>
+  <h2>O slonovi, <em>který běžel za třešní.</em></h2>
+  <p style="font-size:.76rem;color:var(--dim);margin-bottom:20px">Sledujte kde vás text zastaví. Kliknutím na figuru vpravo se označí příslušná místa.</p>
+
+  <div class="pohadka-layout">
+    <div class="pohadka-text" id="pohadka-text">
+      <p><span data-fig="elipsa">Slon byl velký.<br>Těžký.<br>Rozvážný.</span><br>
+      <span data-fig="fyzikalizace">Nosil v sobě paměť krajin, které už neexistují.</span><br>
+      <span data-fig="hyperbola">Když šel, země se chvěla.<br>Když stál, čas se zpomalil.</span></p>
+
+      <p>A pak přišla ona.<br>
+      <span data-fig="elipsa2">Malá.<br>Rychlá.<br>Neuchopitelná.<br>Možná myš.<br>Možná vítr.<br>Možná jen hlas.</span></p>
+
+      <p><span data-fig="prima-rec">„Jednu třešeň ti dám, slone," řekla,<br>„když mě dohoníš."</span></p>
+
+      <p>Slon se podíval na své nohy.<br>
+      <span data-fig="fragment">Na zem.<br>Na horizont.</span><br>
+      A pak se rozběhl.<br>
+      <span data-fig="fragment">Ne rychle.<br>Ale srdcem.</span></p>
+
+      <p><span data-fig="elipsa3">Třešeň byla jedna.<br>A byla malá.<br>Byla červená.<br>Lesklá.<br>Nedosažitelná.</span><br>
+      A slon běžel.<br>
+      <span data-fig="fragment2">Za chutí.<br>Za slibem.<br>Za něčím, co možná ani neexistuje.</span></p>
+
+      <p><span data-fig="personifikace">Cestou míjel stromy, které si ho pamatovaly.<br>Řeky, které ho kdysi chladily.<br>Kamínky, které kdysi se mu smály.</span><br>
+      Ale on běžel dál.<br>
+      Přestože třešeň byla jenom ovoce.</p>
+
+      <p><span data-fig="paradox">Protože třešeň byla víc než ovoce.</span><br>
+      <span data-fig="anafora">Byla výzva.<br>Byla hra.<br>Byla touha být lehčí.<br>Byla touha být silnější.</span></p>
+
+      <p>„Jednu třešeň ti dám, slone," znělo pořád.<br>
+      Ale nikdy ji nedostal.<br>
+      A právě proto běžel.<br>
+      <span data-fig="paradox">Aby nemohl zastavit.</span></p>
+
+      <p><span data-fig="otazka">Protože kdyby ji dostal,<br>co by zbylo?</span></p>
+
+      <p>A tak se začalo říkat, že kdesi po krajině běží slon.<br>
+      Za jedinou třešní, kterou nikdy nedohoní.<br>
+      A že dokud se za ní požene, <span data-fig="ironie">nikdy se neuhoní</span>.</p>
+
+      <p><span data-fig="aforismus">A že stačí běžet za něčím malým.<br>A věřit, že to má velký smysl.</span></p>
+    </div>
+
+    <div class="fig-panel">
+      <div class="fig-panel-label">Figury v textu</div>
+      <div id="fig-list"></div>
+      <button class="fig-toggle-all" onclick="toggleAllFig()">Zobrazit vše / skrýt</button>
+    </div>
+  </div>
+</section>
+
+<!-- DIAGNOSTIKA -->
+<section class="diag-sec" id="diagnostika">
+  <p class="sekce-label">Diagnostika · Tři otázky k pohádce</p>
+  <h2>Co příběh říká <em>vám.</em></h2>
+  <p style="font-size:.78rem;color:var(--dim);margin-bottom:16px">Odpovězte rychle, bez opravování. Hledáme váš přirozený úhel pohledu.</p>
+  <div class="otazky">
+    <div class="otazka">
+      <div class="q-label">Smysl</div>
+      <div class="q-text">Co je podle vás hlavní pointa pohádky? O čem je?</div>
+      <textarea id="q1" placeholder="Pište první co vás napadne…"></textarea>
+    </div>
+    <div class="otazka">
+      <div class="q-label">Zaujetí</div>
+      <div class="q-text">Která věta nebo obraz vás nejvíc zaujal — a proč?</div>
+      <textarea id="q2" placeholder="Konkrétní věta nebo moment…"></textarea>
+    </div>
+    <div class="otazka">
+      <div class="q-label">Aplikace</div>
+      <div class="q-text">Kdyby pohádka byla radou do vašeho života, co by vám říkala?</div>
+      <textarea id="q3" placeholder="Konkrétní situace nebo protiargument…"></textarea>
+    </div>
+  </div>
+  <button class="btn-diag" onclick="runDiag()">Zjistit můj úhel →</button>
+  <div class="diag-vysledek" id="diag-vysledek">
+    <h3 id="diag-nazev"></h3>
+    <p style="font-size:.78rem;color:var(--dim);margin-bottom:12px" id="diag-popis"></p>
+    <div id="diag-navrhy"></div>
+  </div>
+</section>
+
+<!-- 12 ÚHLŮ -->
+<section class="sekce" id="uhly">
+  <p class="sekce-label">12 úhlů fenoménu Slona</p>
+  <h2>Váš úhel — nebo nechte <em>vybrat příběh.</em></h2>
+  <div id="uhly-list"></div>
+</section>
+
+<footer>
+  <p>Karta Slon · Fyzika jazyka · Chceš myš? · © 2026 Michaela Nováková</p>
+  <p><a href="/cdn-cgi/l/email-protection#c6a5aea5a3b5abbfb586a1aba7afaae8a5a9ab"><span class="__cf_email__" data-cfemail="6f0c070c0a1c02161c2f08020e0603410c0002">[email&#160;protected]</span></a></p>
+</footer>
+</div>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+const KARTA = {
+  nazev: 'Slon',
+  figury: [
+    {id:'elipsa',      nazev:'Elipsa — slon',     popis:'„Velký. Těžký. Rozvážný." — tři vlastnosti bez sloves, každá stojí sama jako fakt.'},
+    {id:'elipsa2',     nazev:'Elipsa — ona',       popis:'„Malá. Rychlá. Neuchopitelná." — kontrast ke slonovi, stejná struktura.'},
+    {id:'elipsa3',     nazev:'Elipsa — třešeň',    popis:'„Červená. Lesklá. Nedosažitelná." — třešeň popsána stejně jako živá bytost.'},
+    {id:'fragment',    nazev:'Fragment',            popis:'„Na zem. Na horizont." a „Ne rychle. Ale srdcem." — myšlení ve skocích.'},
+    {id:'fragment2',   nazev:'Fragment — důvod',   popis:'„Za chutí. Za slibem. Za něčím, co možná ani neexistuje." — nehmotné cíle.'},
+    {id:'anafora',     nazev:'Anafora',             popis:'„Byla výzva. Byla hra. Byla touha…" — každé opakování přidává nový rozměr třešně.'},
+    {id:'personifikace',nazev:'Personifikace',      popis:'Stromy si pamatují, řeky chladí, kamínky se smějí — svět kolem slona ožívá.'},
+    {id:'hyperbola',   nazev:'Hyperbola',           popis:'„Země se chvěla. Čas se zpomalil." — slonova přítomnost mění fyzikální zákony.'},
+    {id:'fyzikalizace',nazev:'Fyzikalizace',        popis:'„Nosil v sobě paměť krajin." — paměť jako hmotný předmět, který se dá nést.'},
+    {id:'paradox',     nazev:'Paradox',             popis:'„Třešeň byla víc než ovoce." a „Aby nemohl zastavit." — cíl je v nedosažení cíle.'},
+    {id:'otazka',      nazev:'Rétorická otázka',    popis:'„Kdyby ji dostal, co by zbylo?" — otázka bez odpovědi, ale s jasnou implikací.'},
+    {id:'aforismus',   nazev:'Aforismus',           popis:'„Stačí běžet za něčím malým a věřit, že to má velký smysl." — pointa pohádky.'},
+    {id:'ironie',      nazev:'Ironie',              popis:'„Nikdy se neuhoní" — slovní hříčka uhoní/dohoní, ironický nadhled.'},
+    {id:'prima-rec',   nazev:'Přímá řeč',           popis:'„Jednu třešeň ti dám, slone, když mě dohoníš." — výzva která vše spustí.'},
+  ],
+
+  uhly: [
+    {st:0, nazev:'Analytický', sub:'Fakta, výčty, struktury',
+     co:'Hledá fakta a opakující se struktury. Vidí sérii elips která buduje rytmus, anaforu jako definici třešně, kontrast velký × malý jako organizační princip celého textu.',
+     figury:[
+       {nazev:'Elipsa',  ukazka:'"Velký. Těžký. Rozvážný."',           misto:'Popis slona',  co:'Tři vlastnosti bez sloves — každá stojí sama jako fakt.'},
+       {nazev:'Anafora', ukazka:'"Byla výzva. Byla hra. Byla touha…"',  misto:'Třešeň',       co:'Opakování „byla" zdůrazňuje, čím vším třešeň pro slona je.'},
+       {nazev:'Kontrast',ukazka:'velký × malý, těžký × lehký',          misto:'Celý text',    co:'Hlavní hybatel příběhu — kontrast velikosti a důležitosti.'},
+       {nazev:'Fragment', ukazka:'"Na zem. Na horizont."',               misto:'Rozhodnutí',   co:'Slon se dívá postupně — fragmenty ukazují proces myšlení.'},
+     ],
+     vyuziti:'Elipsa pro vědecký styl, anafora pro definice, kontrast pro zdůraznění.',
+     ukol:'Popiš nějakou osobu nebo věc pomocí série krátkých eliptických vět. Každá vlastnost ať stojí samostatně. Přidej výčet tří věcí které ji obklopují a jednu anaforu.',
+     prot:180},
+    {st:30, nazev:'Kulturní', sub:'Archetypy, mýty, intertextualita',
+     co:'Vidí motiv pronásledování z kultur celého světa — Achilles a želva, závod zajíce se želvou. Slon jako symbol moudrosti a paměti, třešeň jako symbol pomíjivého pokušení.',
+     figury:[
+       {nazev:'Intertextualita', ukazka:'Motiv závodu — kdo koho dohoní',             misto:'Celý text',  co:'Kulturně známý motiv, zde obrácený — slon pronásleduje malé.'},
+       {nazev:'Archetyp',        ukazka:'Slon = síla, moudrost. Třešeň = pokušení.',  misto:'Celý text',  co:'Archetypální symboly rezonující napříč kulturami.'},
+       {nazev:'Archetyp',        ukazka:'"Možná myš. Možná vítr. Možná jen hlas."',  misto:'Ona',        co:'Tajemná průvodkyně — archetyp bytosti dávající úkol.'},
+     ],
+     vyuziti:'Práce s kulturním očekáváním, archetypy v brandingu a literatuře.',
+     ukol:'Vymysli vlastní verzi závodního příběhu s jinými zvířaty a jiným cílem. Napiš krátký text kde se ten motiv objeví. Použij alespoň jeden archetyp.',
+     prot:210},
+    {st:60, nazev:'Filozofický', sub:'Smysl, cíl, paradox existence',
+     co:'Vidí filozofické jádro pohádky — smysl není v cíli ale v cestě. Otázka „co by zbylo?" je čistá filozofie. Paradox: běží za něčím, co možná není, a právě to dává smysl.',
+     figury:[
+       {nazev:'Otázka',  ukazka:'"Kdyby ji dostal, co by zbylo?"',              misto:'Závěr',  co:'Řečnická otázka bez odpovědi — nutí k přemýšlení o smyslu.'},
+       {nazev:'Paradox', ukazka:'"Aby nemohl zastavit."',                        misto:'Motiv',  co:'Cílem běhu je, aby neustal — paradoxní, ale pravdivé.'},
+       {nazev:'Aforismus',ukazka:'"Stačí běžet za něčím malým…"',               misto:'Závěr',  co:'Zhutněná moudrost — malé cíle mají velký smysl.'},
+     ],
+     vyuziti:'Aforismy v sloganech, paradoxy jako zastavení čtenáře, otázky bez odpovědí.',
+     ukol:'Napiš krátkou úvahu: „Co je důležitější — cíl, nebo cesta?" Použij alespoň jeden paradox a jeden aforismus. Inspiruj se slonem.',
+     prot:240},
+    {st:90, nazev:'Naivní', sub:'Jednoduchost, přímočarost, dětský svět',
+     co:'Vidí jednoduchý pohádkový příběh — velký slon, malá třešeň, on se snaží ji chytit. Stromy a kamínky jsou živé, příběh má jasnou linku, opakování vytváří dětský rytmus.',
+     figury:[
+       {nazev:'Personifikace', ukazka:'"Stromy, které si ho pamatovaly. Kamínky, které se mu smály."', misto:'Cesta',     co:'Svět kolem slona ožívá — dětský animismus.'},
+       {nazev:'Přímá řeč',     ukazka:'"Jednu třešeň ti dám, slone, když mě dohoníš."',                misto:'Výzva',     co:'Přímá řeč oživuje text, vtahuje do děje.'},
+       {nazev:'Anafora',       ukazka:'"Byla výzva. Byla hra. Byla touha…"',                            misto:'Třešeň',    co:'Dětské opakování — rytmus jako v říkance.'},
+     ],
+     vyuziti:'Pohádky pro děti, přátelský marketing, přímé oslovení čtenáře.',
+     ukol:'Převyprávěj pohádku jako bys ji vyprávěl pětiletému dítěti. Jednoduché věty, hodně přímé řeči, živé stromy a kamínky. Přidej jasné ponaučení.',
+     prot:270},
+    {st:120, nazev:'Jazykový', sub:'Fyzikalizace, paměť jako předmět',
+     co:'Vidí kde jazyk zhmotňuje abstraktní — paměť se nosí jako batoh, země se chvěje, čas se zpomaluje. Slova se stávají hmotou.',
+     figury:[
+       {nazev:'Fyzikalizace', ukazka:'"Nosil v sobě paměť krajin."',     misto:'Úvod', co:'Paměť jako hmotný předmět — hmatatelná, přenosná.'},
+       {nazev:'Fyzikalizace', ukazka:'"Když šel, země se chvěla."',      misto:'Úvod', co:'Země reaguje fyzicky — je skoro živá.'},
+       {nazev:'Fyzikalizace', ukazka:'"Když stál, čas se zpomalil."',    misto:'Úvod', co:'Čas jako stroj, který lze ovlivnit přítomností.'},
+     ],
+     vyuziti:'Fyzikalizace dělá abstraktní benefity hmatatelnými. Jazyk jako tělesný zážitek.',
+     ukol:'Vymysli tři věty kde se abstraktní pojem (vzpomínka, radost, čas) chová jako fyzický předmět. „Radost se rozlévala jako med." „Vzpomínky mu ležely na ramenou."',
+     prot:300},
+    {st:150, nazev:'Metaforický', sub:'Symboly, obrazy, přenosy',
+     co:'Vidí celý příběh jako metaforu — slon je člověk hledající smysl, třešeň je nedosažitelný cíl. Každý prvek má symbolický přesah.',
+     figury:[
+       {nazev:'Metafora', ukazka:'Slon jako člověk hledající smysl',   misto:'Celý text', co:'Slon není jen zvíře — je to každý z nás.'},
+       {nazev:'Symbol',   ukazka:'Třešeň — pomíjivost, nedosažitelnost', misto:'Celý text', co:'Třešeň symbolizuje vše po čem toužíme.'},
+       {nazev:'Symbol',   ukazka:'Slon — síla, paměť, těžkopádnost',   misto:'Celý text', co:'Slon symbolizuje sílu která se snaží dohnat lehkost.'},
+     ],
+     vyuziti:'Symboly v brandingu, metafory jako základ poezie a literatury.',
+     ukol:'Vezmi svůj vlastní cíl a popiš ho jako třešeň. Sebe popiš jako slona. Napiš krátký text kde metaforicky vyprávíš o svém úsilí.',
+     prot:330},
+    {st:180, nazev:'Asociační', sub:'Volné asociace, proud, odskoky',
+     co:'Vidí volné řetězení — třešeň je výzva, hra, touha být lehčí, touha být silnější — pojmy na sebe asociativně navazují bez logiky. Fragmenty skoků myšlení.',
+     figury:[
+       {nazev:'Fragment',         ukazka:'"Na zem. Na horizont."',        misto:'Rozhodnutí', co:'Dva fragmenty — slon přemýšlí ve skocích.'},
+       {nazev:'Volné asociace',   ukazka:'výzva, hra, touha být lehčí…',  misto:'Třešeň',     co:'Pojmy se řetězí asociativně, ne logicky.'},
+       {nazev:'Anafora',          ukazka:'"Byla… Byla… Byla…"',           misto:'Třešeň',     co:'Opakování jako proud — jeden obraz vyvolá další.'},
+     ],
+     vyuziti:'Brainstorming, free writing, proud vědomí v literatuře.',
+     ukol:'Napiš proud vědomí na téma „třešeň". 5 minut bez přemýšlení — od třešně k létu, od léta k prázdninám, od prázdnin k moři…',
+     prot:0},
+    {st:210, nazev:'Introspektivní', sub:'Vnitřní hlas, pochybnosti, motivace',
+     co:'Hledá vnitřní svět slona. „Ne rychle. Ale srdcem." — vnitřní pohon. Pochybnost o smyslu cíle. Otázka „co by zbylo?" — sebereflexe na konci.',
+     figury:[
+       {nazev:'Sebereflexe', ukazka:'"A právě proto běžel. Aby nemohl zastavit."', misto:'Motiv', co:'Uvědomění si vlastní motivace — pohyb jako záchrana.'},
+       {nazev:'Pochybnost',  ukazka:'"Za něčím, co možná ani neexistuje."',         misto:'Motiv', co:'Slon si je vědom, že cíl může být iluzorní.'},
+       {nazev:'Otázka',      ukazka:'"Kdyby ji dostal, co by zbylo?"',              misto:'Závěr', co:'Otázka namířená k sobě — co by se stalo bez cíle.'},
+     ],
+     vyuziti:'Vnitřní monolog, osobní eseje, introspektivní literatura.',
+     ukol:'Napiš vnitřní monolog slona ve chvíli, kdy běží a uvědomuje si, že třešeň možná není skutečná. Co si myslí? Proč běží dál?',
+     prot:30},
+    {st:240, nazev:'Ironický', sub:'Kontrast, ironie osudu, nadhled',
+     co:'Vidí ironii — obrovský slon běží za malou třešní. Ta třešeň je „jenom ovoce" a zároveň „víc než ovoce". A běží, aby ji nikdy nedostal. Ironie osudu.',
+     figury:[
+       {nazev:'Ironie',   ukazka:'"Nikdy se neuhoní."',                                   misto:'Závěr',  co:'Slovní hříčka uhoní/dohoní — ironický nadhled.'},
+       {nazev:'Kontrast', ukazka:'velký slon × malá třešeň',                              misto:'Celý',   co:'Kontrast velikosti a důležitosti jako hlavní ironie.'},
+       {nazev:'Paradox',  ukazka:'"Přestože třešeň byla jen ovoce. Protože nebyla."',    misto:'Střed',  co:'Tvrzení si odporují — obě jsou pravdivá.'},
+     ],
+     vyuziti:'Satira, ironické obraty v reklamě, kontrast pro zdůraznění.',
+     ukol:'Napiš ironický text o někom kdo se žene za naprosto nedůležitou věcí, ale pro něj je to vším. Použij kontrast a paradox.',
+     prot:60},
+    {st:270, nazev:'Groteskní', sub:'Přehánění, absurdní obrazy, komika',
+     co:'Vidí groteskní galerii — obrovský slon, země se chvěje, čas se zpomaluje. Kamínky se smějí. Celá situace je absurdní a komická zároveň.',
+     figury:[
+       {nazev:'Hyperbola',       ukazka:'"Země se chvěla. Čas se zpomalil."', misto:'Úvod',  co:'Přehnané obrazy zdůrazňující slonovu velikost.'},
+       {nazev:'Absurdní obraz',  ukazka:'"Kamínky, které se mu smály."',       misto:'Cesta', co:'Kamínky se smějí — absurdní a komické zároveň.'},
+     ],
+     vyuziti:'Satirická literatura, absurdní humor, přehánění jako odhalení pravdy.',
+     ukol:'Popiš obyčejnou situaci (cestu do obchodu, snídani) tak, aby působila co nejgroteskněji. Použij hyperbolu a absurdní detaily.',
+     prot:90},
+    {st:300, nazev:'Absurdní', sub:'Paradox, nelogická premisa, nesmysl',
+     co:'Vidí absurdní logiku — slon běží, aby nedosáhl. Smysl běhu je v nedosažení. Odpověď na „co by zbylo?" je „nic" — a to je absurdní pointa.',
+     figury:[
+       {nazev:'Paradox',          ukazka:'"Aby nemohl zastavit."',                   misto:'Motiv', co:'Cílem pohybu je pohyb sám — absurdní logika.'},
+       {nazev:'Nelogické spojení',ukazka:'"Malé věci mají velký smysl."',            misto:'Závěr', co:'Na první pohled nelogické, ale v pohádce funguje.'},
+       {nazev:'Otázka',           ukazka:'"Kdyby ji dostal, co by zbylo?"',          misto:'Závěr', co:'Odpověď je „nic" — absurdní prázdnota jako pravda.'},
+     ],
+     vyuziti:'Absurdní divadlo, existenciální literatura, paradox jako způsob odhalení skryté pravdy.',
+     ukol:'Napiš krátký text postavený na paradoxu. „Běžel, aby nezastavil. Kdyby zastavil, ztratil by smysl běhu. A tak běží dál a je mu dobře." Drž se jedné absurdní myšlenky.',
+     prot:120},
+    {st:330, nazev:'Surrealistický', sub:'Snové obrazy, prolínání, metamorfóza',
+     co:'Vidí surrealistické prolínání — zaniklé krajiny v paměti slona, čas jako hmota, kamínky se smějí, třešeň se proměňuje v abstraktní pojmy. Realita a sen splývají.',
+     figury:[
+       {nazev:'Snový obraz',    ukazka:'"Paměť krajin, které už neexistují."', misto:'Úvod',  co:'Zaniklé světy žijí dál uvnitř slona — magická přítomnost minulého.'},
+       {nazev:'Snový obraz',    ukazka:'"Čas se zpomalil."',                   misto:'Úvod',  co:'Čas jako hmota — surrealistický zásah do fyziky.'},
+       {nazev:'Metamorfóza',    ukazka:'Třešeň → výzva → hra → touha',        misto:'Střed', co:'Třešeň se proměňuje z ovoce v abstraktní pojmy.'},
+       {nazev:'Prolínání',      ukazka:'Příroda + paměť + přítomnost + sen',  misto:'Celý',  co:'Vše propojeno — minulost, přítomnost, živé a neživé.'},
+     ],
+     vyuziti:'Surrealistická próza, magický realismus, snové vizuály v umění.',
+     ukol:'Popiš svůj vlastní sen kde věci ožívají a čas plyne jinak. Inspiruj se slonem a jeho pamětí. „Zdálo se mi, že jdu po cestě a kameny mi vyprávěly příběhy…"',
+     prot:150},
+  ]
+};
+
+const DIAG_KEYS = [
+  {st:0,   keys:['analýza','systém','logika','struktura','výčet','přehled','proto','protože','přesně','fakta']},
+  {st:30,  keys:['kultura','tradice','archetyp','symbol','mýtus','společnost','obecně','každý','historicky']},
+  {st:60,  keys:['smysl','podstata','pravda','proč','existuje','bytí','otázka','paradox','filozofie','cesta']},
+  {st:90,  keys:['prostě','jednoduché','hravé','přímo','konkrétně','hotovo','dětské','pohádka','milé']},
+  {st:120, keys:['slovo','jazyk','zvuk','forma','rytmus','hra','fyzika','hmota','tělesný','hmatatelný']},
+  {st:150, keys:['jako','metafora','obraz','symbol','ztělesňuje','připomíná','znamená','sen','obraz']},
+  {st:180, keys:['napadá','připomíná','najednou','asociace','evokuje','volně','přitom','mimochodem','proud']},
+  {st:210, keys:['cítím','prožívám','já','mě','osobně','uvnitř','pocit','vnitřně','sám','motivace']},
+  {st:240, keys:['ironie','naopak','paradox','ovšem','samozřejmě','jasně','pochopitelně','kontrast']},
+  {st:270, keys:['absurdní','přehnané','obrovské','strašně','groteskní','komické','nadsázka','drama']},
+  {st:300, keys:['proč','kdyby','nesmysl','nelogické','absurdita','jiná logika','záhadné','paradox']},
+  {st:330, keys:['sen','snový','magické','fantazie','prolínání','metamorfóza','nereálné','paměť']},
+];
+
+// ── VSTUP ──
+function setVar(v, btn) {
+  document.querySelectorAll('.var-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  const p = {
+    A:'Zavřete oči, ťukněte prstem na obrazovku — a jděte na ten úhel, který vybere prst.',
+    B:'Projděte si záhlaví všech 12 úhlů níže a vyberte ten, který vás teď nejvíc přitahuje.',
+    C:'Odpovězte na tři otázky níže. Systém vám nabídne úhel na základě vašich odpovědí.'
+  };
+  document.getElementById('var-popis').textContent = p[v];
+  if(v==='C') document.getElementById('diagnostika').scrollIntoView({behavior:'smooth'});
+  if(v==='A') {
+    const idx = Math.floor(Math.random()*KARTA.uhly.length);
+    setTimeout(()=>openUhelScroll(idx), 200);
+    document.getElementById('uhly').scrollIntoView({behavior:'smooth'});
+  }
+}
+
+// ── FIGURY ──
+let activeFigs = new Set();
+let allOn = false;
+
+function buildFigList() {
+  document.getElementById('fig-list').innerHTML = KARTA.figury.map((f,i)=>
+    `<div class="fig-row" id="figrow-${f.id}" onclick="toggleFig('${f.id}')">
+      <span class="fig-row-name">${f.nazev}</span>
+      <span class="fig-row-n">${String(i+1).padStart(2,'0')}</span>
+    </div>`
+  ).join('');
+}
+
+function toggleFig(id) {
+  if(activeFigs.has(id)) activeFigs.delete(id); else activeFigs.add(id);
+  applyHighlights();
+}
+
+function toggleAllFig() {
+  allOn = !allOn;
+  if(allOn) KARTA.figury.forEach(f=>activeFigs.add(f.id)); else activeFigs.clear();
+  applyHighlights();
+}
+
+function applyHighlights() {
+  document.querySelectorAll('#pohadka-text [data-fig]').forEach(el=>{
+    el.classList.toggle('hl', activeFigs.has(el.getAttribute('data-fig')));
+  });
+  document.querySelectorAll('.fig-row').forEach(r=>{
+    r.classList.toggle('hl', activeFigs.has(r.id.replace('figrow-','')));
+  });
+}
+
+buildFigList();
+
+// ── DIAGNOSTIKA ──
+function escapeReg(s){return s.replace(/[-\/\\^$*+?.()|[\]{}]/g,'\\$&');}
+
+function runDiag() {
+  const text = [document.getElementById('q1').value,document.getElementById('q2').value,document.getElementById('q3').value].join(' ');
+  if(!text.trim()) return;
+  const scores = {};
+  DIAG_KEYS.forEach(u=>{ scores[u.st]=0; u.keys.forEach(k=>{ const re=new RegExp(`(?<![a-záčďéěíňóřšťůúýž])${escapeReg(k)}(?![a-záčďéěíňóřšťůúýž])`,'gi'); scores[u.st]+=(text.match(re)||[]).length; }); });
+  scores[210]+=(text.match(/\bjá\b|\bjsem\b|\bmi\b|\bmě\b/gi)||[]).length;
+  scores[60]+=(text.match(/\?/g)||[]).length;
+  const sorted=Object.entries(scores).sort((a,b)=>b[1]-a[1]);
+  const domSt=parseInt(sorted[0][0]);
+  const domU=KARTA.uhly.find(u=>u.st===domSt);
+  const protU=KARTA.uhly.find(u=>u.st===domU.prot);
+  const el=document.getElementById('diag-vysledek');
+  el.style.display='block';
+  document.getElementById('diag-nazev').innerHTML=`<span style="color:var(--a)">${domSt}° ${domU.nazev}</span>`;
+  document.getElementById('diag-popis').textContent=domU.sub+' — '+domU.co.slice(0,120)+'…';
+  document.getElementById('diag-navrhy').innerHTML=
+    `<p style="font-size:.72rem;color:var(--dim);margin-bottom:8px">Otevřít úhly:</p>
+     <button class="navrh-btn" onclick="openUhelScroll(${KARTA.uhly.indexOf(domU)})">→ ${domSt}° ${domU.nazev} (váš dominantní)</button>
+     <button class="navrh-btn" onclick="openUhelScroll(${KARTA.uhly.indexOf(protU)})">→ ${protU.st}° ${protU.nazev} (protilehlý)</button>`;
+  el.scrollIntoView({behavior:'smooth'});
+}
+
+// ── ÚHLY ──
+function buildUhly() {
+  const list=document.getElementById('uhly-list');
+  KARTA.uhly.forEach((u,i)=>{
+    const protU=KARTA.uhly.find(x=>x.st===u.prot);
+    const figHTML=u.figury.map(f=>`<tr><td>${f.nazev}</td><td><em>${f.ukazka}</em></td><td>${f.misto}</td><td>${f.co}</td></tr>`).join('');
+    const div=document.createElement('div');
+    div.className='uhel'; div.id='u'+i;
+    div.innerHTML=`
+      <div class="uhel-h" onclick="toggleUhel(${i})">
+        <span class="u-num">${String(i+1).padStart(2,'0')}</span>
+        <div><div class="uhel-nazev">${u.nazev}</div><div class="uhel-sub">${u.sub}</div></div>
+        <span class="u-deg">${u.st}°</span>
+        <span class="u-tog">▾</span>
+      </div>
+      <div class="uhel-body" id="b${i}">
+        <div class="uhel-co">${u.co}</div>
+        <div class="dlazdice-grid">
+          <div class="dlazdice" onclick="toggleDl(${i},0)"><div class="dl-icon">📖</div><div class="dl-label">Figury v pohádce</div><div class="dl-text">Co tento úhel vidí v textu</div></div>
+          <div class="dlazdice" onclick="toggleDl(${i},1)"><div class="dl-icon">✏️</div><div class="dl-label">Kreativní úkol</div><div class="dl-text">20minutové cvičení</div></div>
+          <div class="dlazdice" onclick="toggleDl(${i},2)"><div class="dl-icon">🔗</div><div class="dl-label">Protilehlý úhel</div><div class="dl-text">${protU.st}° ${protU.nazev}</div></div>
+          <div class="dlazdice" onclick="toggleDl(${i},3)"><div class="dl-icon">🐭</div><div class="dl-label">Jak to čte Myš</div><div class="dl-text">Klíče k úhlům</div></div>
+          <div class="dlazdice" onclick="toggleDl(${i},4)"><div class="dl-icon">📓</div><div class="dl-label">Zápisník</div><div class="dl-text">Uložit · mapovat</div></div>
+        </div>
+        <div class="dl-detail" id="dl${i}_0">
+          <div class="dl-detail-label">Figury s citacemi</div>
+          <div class="tbl-wrap"><table><thead><tr><th>Figura</th><th>Ukázka</th><th>Místo</th><th>Co dělá</th></tr></thead><tbody>${figHTML}</tbody></table></div>
+          <div class="dl-detail-label" style="margin-top:14px">Využití v praxi</div>
+          <div class="dl-detail-text">${u.vyuziti}</div>
+          <div class="btn-row"><a class="btn btn-g" href="../nastroje/knihovna_figur.html" target="_blank">Knihovna figur ↗</a></div>
+        </div>
+        <div class="dl-detail" id="dl${i}_1">
+          <div class="dl-detail-label">Kreativní úkol · 20 minut</div>
+          <div class="dl-detail-text">${u.ukol}</div>
+          <div class="dl-detail-label">Váš text</div>
+          <textarea class="cviceni-ta" id="ta${i}" placeholder="Pište sem — bez opravování, bez zastavení…"></textarea>
+          <div class="akce-row">
+            <button class="akce-btn prim" onclick="analyzuj(${i})">Analyzovat →</button>
+            <button class="akce-btn" onclick="ulozit(${i})">💾 Uložit</button>
+            <button class="akce-btn" onclick="stahnout(${i})">↓ Stáhnout</button>
+            <button class="akce-btn" onclick="tisk(${i})">🖨 Tisk</button>
+            <div class="share-wrap">
+              <button class="akce-btn" onclick="toggleShare(${i})">↗ Sdílet</button>
+              <div class="share-menu" id="sm${i}">
+                <button class="share-item" onclick="shareVia('email',${i})">📧 E-mail</button>
+                <button class="share-item" onclick="shareVia('whatsapp',${i})">WhatsApp</button>
+                <button class="share-item" onclick="shareVia('telegram',${i})">Telegram</button>
+                <button class="share-item" onclick="shareVia('copy',${i})">📋 Kopírovat</button>
+              </div>
+            </div>
+            <button class="akce-btn" onclick="document.getElementById('ta${i}').value='';document.getElementById('az${i}').style.display='none'">Smazat</button>
+          </div>
+          <div class="az-out" id="az${i}"></div>
+        </div>
+        <div class="dl-detail" id="dl${i}_3">
+          <div class="dl-detail-label">Jak pohádku čte Myš</div>
+          <div class="dl-detail-text" style="margin-bottom:12px">Klíče k 12 úhlům — co Myš zapisuje do skulin tohoto úhlu pohledu.</div>
+          <a class="btn btn-g" href="../../mys_uhly/slon_uhly.html" target="_blank">Otevřít klíče Myši ↗</a>
+        </div>
+        <div class="dl-detail" id="dl${i}_4">
+          <div class="dl-detail-label">Zápisník mezer</div>
+          <div class="dl-detail-text" style="margin-bottom:10px">Uložte text cvičení — přidá se do vaší kognitivní mapy.</div>
+          <div class="btn-row">
+            <button class="btn btn-p" onclick="ulozit(${i})" style="font-size:.64rem">Uložit do zápisníku →</button>
+            <a class="btn btn-g" href="../nastroje/zapisnik.html" style="font-size:.64rem">Otevřít zápisník ↗</a>
+          </div>
+        </div>
+        <div class="dl-detail" id="dl${i}_2">
+          <div class="dl-detail-label">Protilehlý úhel — prostor pro rozvoj</div>
+          <div class="dl-detail-text"><em>${protU.st}° ${protU.nazev}</em> — ${protU.sub}</div>
+          <div class="dl-detail-text" style="margin-top:8px">${protU.co}</div>
+          <div class="btn-row"><button class="btn btn-g" onclick="openUhelScroll(${KARTA.uhly.indexOf(protU)})">Přejít na ${protU.nazev} →</button></div>
+        </div>
+      </div>`;
+    list.appendChild(div);
+  });
+}
+
+function toggleUhel(i){const b=document.getElementById('b'+i);document.getElementById('u'+i).classList.toggle('open');b.classList.toggle('open');}
+function openUhel(i){document.getElementById('u'+i).classList.add('open');document.getElementById('b'+i).classList.add('open');}
+function openUhelScroll(i){openUhel(i);document.getElementById('u'+i).scrollIntoView({behavior:'smooth'});}
+function toggleDl(i,j){
+  const el=document.getElementById(`dl${i}_${j}`);
+  const wasOpen=el.classList.contains('open');
+  document.querySelectorAll(`#b${i} .dl-detail`).forEach(d=>d.classList.remove('open'));
+  document.querySelectorAll(`#b${i} .dlazdice`).forEach(d=>d.classList.remove('open'));
+  if(!wasOpen){el.classList.add('open');document.querySelectorAll(`#b${i} .dlazdice`)[j].classList.add('open');}
+}
+const DETEKTORY=[
+  {n:'Syčení / zvukomalba',t:'protahování sykavek',fn:t=>{const m=t.match(/s{2,}|z{2,}/gi);return m?m.slice(0,4):[];}},
+  {n:'Trojí negace',t:'definice přes to, čím věc není',fn:t=>{const n=(t.match(/\\bnení\\b|\\bnebylo?\\b|\\bnemá\\b|\\bnic\\b/gi)||[]);return n.length>=3?[n.length+'× negace']:[];}},
+  {n:'Reduplikace stopy',t:'věta odkazuje sama na sebe',fn:t=>{const m=t.match(/(\\b\\w{4,}\\b)[^.!?]*\\1/gi);return m?m.slice(0,2).map(s=>s.slice(0,35)):[];}},
+  {n:'Paradox',t:'dvě neslučitelné věci',fn:t=>{const p=['ale zároveň','přitom','a přesto','a zároveň'];return p.filter(w=>t.toLowerCase().includes(w));}},
+  {n:'Inverze fyziky',t:'věta porušující fyzikální zákon',fn:t=>{const r=[];if(/padá[\\s\\w]*nahoru/i.test(t))r.push('inverze pádu');return r;}},
+  {n:'Rozporné výroky',t:'ano i ne najednou',fn:t=>{const r=[];if(/\\bano\\b.*\\bne\\b|\\bne\\b.*\\bano\\b/i.test(t))r.push('ano i ne');if(/možná|zatím ne/i.test(t))r.push('neurčitý výrok');return r;}},
+  {n:'Otázky bez odpovědi',t:'tázací věty jako prostory',fn:t=>{const m=t.match(/[^.!?]*\\?/g);return m&&m.length>=2?[m.length+' otázky']:[];}},
+  {n:'Šum / zkomolenina',t:'zkomolená slova',fn:t=>{const m=t.match(/\\b\\w*[xqw]\\w*\\b/gi);const r=[];if(m)r.push(...m.slice(0,3));return r;}},
+  {n:'Fragmenty',t:'přeryvná syntax, tři tečky',fn:t=>{const m=t.match(/[^.!?]{3,}\\.\.\\./g);return m?m.slice(0,3).map(s=>s.trim().slice(0,30)):[];}},
+  {n:'Přiznání',t:'bolestná upřímnost',fn:t=>{const r=[];if(/bolí|není snadné|deprimuje/i.test(t))r.push('přiznání obtíží');if(/nevím|neumím/i.test(t))r.push('přiznání mezí');return r;}},
+  {n:'Náznaky',t:'text, který říká méně než ví',fn:t=>{const r=[];if(/možná|snad|asi|třeba/i.test(t))r.push('neurčité výrazy');if(t.split(' ').length<40&&t.length>30)r.push('stručnost jako výběr');return r;}},
+  {n:'Meziprostor',t:'věci bez hranic',fn:t=>{const r=[];if(/mezi|uprostřed|ani.*ani/i.test(t))r.push('meziprostor');return r;}}
+];
+
+function analyzuj(i){
+  const txt=document.getElementById('ta'+i).value.trim();
+  if(!txt){alert('Napište nejprve text.');return;}
+  let nal=0;
+  const items=DETEKTORY.map((d,j)=>{const h=d.fn(txt);if(h.length)nal++;return{d,h,j};});
+  const slov=txt.split(/\s+/).filter(Boolean).length;
+  const vet=txt.split(/[.!?…]+/).filter(s=>s.trim().length>2).length;
+  const avg=vet?Math.round(slov/vet):0;
+  const out=document.getElementById('az'+i);
+  out.innerHTML='<div class="az-header"><span>Nalezené struktury: <strong style=\"color:var(--a)\">'+(nal)+'</strong> z 12</span><span>'+slov+' slov · '+avg+' slov/větu</span></div>'+
+    items.map(function({d,h,j}){return '<div class="az-item'+(h.length?' hit':'')+'"><span class="az-n">'+String(j+1).padStart(2,'0')+'</span><div style="flex:1"><div class="az-nazev">'+d.n+'</div><div style="font-size:.64rem;color:var(--a2);font-style:italic">'+d.t+'</div>'+(h.length?'<div class="az-tags">'+h.map(x=>'<span class="az-tag">'+x+'</span>').join('')+'</div>':'')+'</div><span class="'+(h.length?'az-hit':'az-miss')+'">'+(h.length?'✓':'—')+'</span></div>';}).join('')+
+    '<div class="az-note">Které jazykové struktury přirozeně používáte. Ty co se neobjevily jsou materiálem pro rozšiřování.</div>';
+  out.style.display='block';
+}
+
+function ulozit(i){
+  const txt=document.getElementById('ta'+i).value.trim();
+  if(!txt){alert('Napište nejprve text.');return;}
+  const u=KARTA.uhly[i];
+  const ts=Date.now();
+  try{
+    const key='chcesmys_zapisnik';
+    const data=JSON.parse(localStorage.getItem(key)||'{}');
+    const mapKeys=Object.keys(data);
+    const mapId=mapKeys.length>0?mapKeys[0]:'map_default';
+    if(!data[mapId])data[mapId]={name:'Zápisník mezer',popis:'',entries:[],created:ts};
+    data[mapId].entries.unshift({id:'e_'+ts,ts,karta:KARTA.nazev,uhel:u.st,nazev:u.nazev,text:txt});
+    localStorage.setItem(key,JSON.stringify(data));
+    const az=document.getElementById('az'+i);
+    const potv=document.createElement('div');
+    potv.style.cssText='margin-top:6px;padding:8px 12px;background:rgba(200,144,58,.1);border:1px solid rgba(200,144,58,.3);font-size:.72rem;display:flex;justify-content:space-between;align-items:center;gap:10px';
+    potv.innerHTML='<span style="color:var(--a)">✓ Uloženo do zápisníku mezer</span><a href="../nastroje/zapisnik.html" style="font-size:.64rem;color:var(--a);border:1px solid rgba(200,144,58,.3);padding:3px 8px">Otevřít zápisník →</a>';
+    az.parentNode.insertBefore(potv,az);setTimeout(()=>potv.remove(),6000);
+  }catch(e){alert('Nepodařilo se uložit.');}
+}
+
+function stahnout(i){
+  const txt=document.getElementById('ta'+i).value.trim();if(!txt)return;
+  const u=KARTA.uhly[i];
+  const blob=new Blob([KARTA.nazev+' · '+u.st+'° '+u.nazev+'\n'+new Date().toLocaleDateString('cs-CZ')+'\n\nÚkol: '+u.ukol+'\n\n---\n\n'+txt],{type:'text/plain;charset=utf-8'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='slon_'+u.nazev.toLowerCase().replace(/\s+/g,'_')+'.txt';a.click();
+}
+
+function tisk(i){
+  const txt=document.getElementById('ta'+i).value.trim();if(!txt)return;
+  const u=KARTA.uhly[i];
+  const w=window.open('','_blank');
+  w.document.write('<html><head><title>Slon · '+u.nazev+'</title><style>body{font-family:Georgia,serif;max-width:600px;margin:40px auto;line-height:1.8}h2{font-weight:300}pre{white-space:pre-wrap;font-family:Georgia,serif}</style></head><body><h2>Slon · '+u.st+'° '+u.nazev+'</h2><p>'+new Date().toLocaleDateString('cs-CZ')+'</p><pre>'+txt+'</pre></body></html>');
+  w.document.close();w.print();
+}
+
+function toggleShare(i){
+  document.querySelectorAll('.share-menu').forEach((m,j)=>{if(j!==i)m.classList.remove('open');});
+  document.getElementById('sm'+i).classList.toggle('open');
+}
+
+function shareVia(via,i){
+  const txt=document.getElementById('ta'+i).value.trim();
+  const u=KARTA.uhly[i];
+  const text='Slon · '+u.nazev+'\n\n'+txt;
+  document.getElementById('sm'+i).classList.remove('open');
+  if(via==='copy'){navigator.clipboard&&navigator.clipboard.writeText(text);alert('Zkopírováno.');}
+  else if(via==='email'){window.location.href='mailto:?subject=Slon · '+u.nazev+'&body='+encodeURIComponent(text);}
+  else if(via==='whatsapp'){window.open('https://wa.me/?text='+encodeURIComponent(text));}
+  else if(via==='telegram'){window.open('https://t.me/share/url?url=&text='+encodeURIComponent(text));}
+}
+
+document.addEventListener('click',e=>{if(!e.target.closest('.share-wrap'))document.querySelectorAll('.share-menu.open').forEach(m=>m.classList.remove('open'));});
+</script>
+</body>
+</html>
