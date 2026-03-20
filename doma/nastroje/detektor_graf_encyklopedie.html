@@ -1,0 +1,879 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>detektor úhlů – s encyklopedií figur</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #0a0a0a;
+      color: #e0e0e0;
+      font-family: 'Courier New', monospace;
+      line-height: 1.7;
+      padding: 30px 20px;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+    h1 {
+      font-size: 2.4rem;
+      font-weight: 300;
+      border-bottom: 1px solid #333;
+      padding-bottom: 15px;
+      margin-bottom: 25px;
+    }
+    h1 span {
+      color: #a0a0a0;
+      font-size: 1rem;
+      margin-left: 15px;
+    }
+    textarea {
+      width: 100%;
+      background: #111;
+      border: 1px solid #333;
+      color: #ddd;
+      font-family: 'Courier New', monospace;
+      font-size: 1rem;
+      padding: 18px;
+      margin: 20px 0;
+      border-radius: 0;
+      resize: vertical;
+    }
+    button {
+      background: #1a1a1a;
+      color: #fff;
+      border: 1px solid #444;
+      padding: 14px 28px;
+      font-family: 'Courier New', monospace;
+      font-size: 1.1rem;
+      cursor: pointer;
+      margin-bottom: 30px;
+      transition: all 0.2s;
+    }
+    button:hover {
+      background: #2a2a2a;
+      border-color: #888;
+    }
+    .results {
+      border: 1px solid #333;
+      padding: 25px;
+      background: #0f0f0f;
+      margin-top: 20px;
+    }
+    .chart-container {
+      display: flex;
+      align-items: center;
+      gap: 40px;
+      flex-wrap: wrap;
+      margin: 30px 0;
+    }
+    .pie-chart {
+      width: 200px;
+      height: 200px;
+      border-radius: 50%;
+      background: conic-gradient(
+        from 0deg,
+        #ff6b6b 0deg 0deg,
+        #4ecdc4 0deg 0deg,
+        #45b7d1 0deg 0deg,
+        #96ceb4 0deg 0deg,
+        #ffeead 0deg 0deg,
+        #ffcc5c 0deg 0deg,
+        #ff6f69 0deg 0deg,
+        #88d8b0 0deg 0deg,
+        #b5e7a0 0deg 0deg,
+        #d4a5a5 0deg 0deg,
+        #9b59b6 0deg 0deg,
+        #3498db 0deg 0deg
+      );
+      box-shadow: 0 0 10px rgba(0,0,0,0.5);
+      margin-right: 20px;
+    }
+    .legend {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      padding: 4px 8px;
+      border-radius: 4px;
+      transition: background 0.2s;
+    }
+    .legend-item:hover {
+      background: #2a2a2a;
+    }
+    .color-box {
+      width: 20px;
+      height: 20px;
+      border-radius: 3px;
+    }
+    .two-column {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+      margin-top: 30px;
+    }
+    .figures-panel {
+      border: 1px solid #333;
+      background: #111;
+      padding: 20px;
+      max-height: 500px;
+      overflow-y: auto;
+    }
+    .figures-panel h3 {
+      margin-bottom: 15px;
+      color: #d4b48c;
+      border-bottom: 1px solid #333;
+      padding-bottom: 8px;
+    }
+    .figure-item {
+      border-left: 3px solid;
+      padding: 10px 15px;
+      margin-bottom: 10px;
+      background: #1a1a1a;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .figure-item:hover {
+      background: #252525;
+    }
+    .figure-item.active {
+      background: #2a3a2a;
+    }
+    .figure-count {
+      float: right;
+      color: #8a6d3b;
+      font-weight: bold;
+    }
+    .encyclopedia-panel {
+      border: 1px solid #333;
+      background: #111;
+      padding: 20px;
+      max-height: 500px;
+      overflow-y: auto;
+    }
+    .encyclopedia-panel h3 {
+      margin-bottom: 15px;
+      color: #d4b48c;
+      border-bottom: 1px solid #333;
+      padding-bottom: 8px;
+    }
+    .encyclopedia-content {
+      line-height: 1.8;
+    }
+    .encyclopedia-content h4 {
+      color: #8a6d3b;
+      margin: 15px 0 5px 0;
+    }
+    .encyclopedia-content p {
+      margin-bottom: 10px;
+      color: #ccc;
+    }
+    .encyclopedia-content .example {
+      font-style: italic;
+      color: #aaa;
+      border-left: 2px solid #8a6d3b;
+      padding-left: 15px;
+      margin: 10px 0;
+    }
+    .back-link {
+      color: #8a6d3b;
+      cursor: pointer;
+      margin-bottom: 10px;
+      display: inline-block;
+    }
+    .back-link:hover {
+      text-decoration: underline;
+    }
+    .occurrence-list {
+      max-height: 200px;
+      overflow-y: auto;
+      border: 1px solid #333;
+      background: #0a0a0a;
+      margin-top: 10px;
+    }
+    .occurrence-item {
+      padding: 8px 12px;
+      border-bottom: 1px solid #222;
+      cursor: pointer;
+      font-size: 0.85rem;
+    }
+    .occurrence-item:hover {
+      background: #1a2a1a;
+    }
+    .note {
+      color: #888;
+      font-style: italic;
+      margin-top: 15px;
+    }
+    footer {
+      margin-top: 50px;
+      color: #444;
+      font-size: 0.8rem;
+      text-align: right;
+    }
+  </style>
+</head>
+<body>
+  <h1>detektor úhlů <span>s encyklopedií figur</span></h1>
+  <p style="color:#aaa; max-width:700px; margin-bottom:20px;">
+    Vlož text, získej procentuální zastoupení všech 12 úhlů. Klikni na úhel – zobrazí se figury,
+    které ho tvoří. Klikni na figuru – uvidíš, kde přesně v textu je, a otevře se její encyklopedie.
+  </p>
+
+  <textarea id="inputText" rows="8" placeholder="Sem vlož libovolný text..."></textarea>
+  <button id="analyzeBtn">analyzovat</button>
+
+  <div id="results" class="results" style="display: none;"></div>
+  <div id="detailPanel" style="display: none;"></div>
+
+  <footer>
+    detektor úhlů s encyklopedií · projekt Chceš myš? · © Michaela Nováková 2026
+  </footer>
+
+  <script>
+    // ============================================================
+    // 1. DETEKTORY FIGUR (zkrácené, ale funkční)
+    // ============================================================
+    function detekujElipsy(text) {
+      const vety = text.split(/[.!?…]+/).map(v => v.trim()).filter(v => v.length > 0);
+      const nalezy = [];
+      vety.forEach((veta, idx) => {
+        const slova = veta.split(/\s+/);
+        if (slova.length <= 3) {
+          const posledni = slova[slova.length-1].toLowerCase();
+          if (!posledni.match(/(l|la|lo|li|ly|t)$/)) {
+            nalezy.push({ veta, index: idx, kontext: veta.substring(0, 40) });
+          }
+        }
+      });
+      return nalezy;
+    }
+
+    function detekujAnaforu(text) {
+      const vety = text.split(/[.!?…]+/).map(v => v.trim()).filter(v => v.length > 0);
+      const nalezy = [];
+      for (let i = 0; i < vety.length-1; i++) {
+        const prvni1 = vety[i].split(/\s+/)[0] || '';
+        const prvni2 = vety[i+1].split(/\s+/)[0] || '';
+        if (prvni1 && prvni2 && prvni1.toLowerCase() === prvni2.toLowerCase()) {
+          nalezy.push({ veta: vety[i] + ' … ' + vety[i+1], index: i, kontext: prvni1 });
+        }
+      }
+      return nalezy;
+    }
+
+    function detekujRepetici(text) {
+      const vety = text.split(/[.!?…]+/).map(v => v.trim()).filter(v => v.length > 0);
+      const nalezy = [];
+      vety.forEach((veta, idx) => {
+        const slova = veta.toLowerCase().split(/\s+/);
+        const frekvence = {};
+        slova.forEach(s => { if (s.length>2) frekvence[s] = (frekvence[s]||0)+1; });
+        for (let f in frekvence) {
+          if (frekvence[f] >= 3) {
+            nalezy.push({ veta, index: idx, kontext: `opakování "${f}"` });
+            break;
+          }
+        }
+      });
+      return nalezy;
+    }
+
+    function detekujNegaci(text) {
+      const neg = ['ne','není','nejsou','nebyl','nebyla','nebylo','nemá','nikdo','nic','žádný'];
+      const vety = text.split(/[.!?…]+/).map(v => v.trim()).filter(v => v.length > 0);
+      const nalezy = [];
+      vety.forEach((veta, idx) => {
+        let found = false;
+        neg.forEach(n => { if (veta.toLowerCase().includes(n)) found = true; });
+        if (found) nalezy.push({ veta, index: idx, kontext: 'obsahuje negaci' });
+      });
+      return nalezy;
+    }
+
+    function detekujFragment(text) {
+      const vety = text.split(/[.!?…]+/).map(v => v.trim()).filter(v => v.length > 0);
+      const nalezy = [];
+      vety.forEach((veta, idx) => {
+        const slova = veta.split(/\s+/);
+        if (slova.length <= 2 && veta.length>0) {
+          nalezy.push({ veta, index: idx, kontext: 'krátký fragment' });
+        }
+      });
+      return nalezy;
+    }
+
+    function detekujGradaci(text) {
+      const vety = text.split(/[.!?…]+/).map(v => v.trim()).filter(v => v.length > 0);
+      const nalezy = [];
+      vety.forEach((veta, idx) => {
+        const match = veta.match(/\b(\w+)(ější|ější|ější|ší|ší|ější|ější|ejší|ejší)\b/gi);
+        if (match && match.length >= 2) {
+          nalezy.push({ veta, index: idx, kontext: 'gradace: ' + match.join(', ') });
+        }
+      });
+      return nalezy;
+    }
+
+    function detekujMetaforu(text) {
+      const vety = text.split(/[.!?…]+/).map(v => v.trim()).filter(v => v.length > 0);
+      const nalezy = [];
+      vety.forEach((veta, idx) => {
+        const match = veta.match(/\b(\w+(?:\s+\w+)?)\s+(je|jsou|byl|byla|byli|byly)\s+(\w+(?:\s+\w+)?)\b/i);
+        if (match) nalezy.push({ veta, index: idx, kontext: match[0] });
+      });
+      return nalezy;
+    }
+
+    function detekujPersonifikaci(text) {
+      const lidskaSlovesa = ['mluví','řekl','říká','zeptala','odpověděla','přemýšlí','myslí','cítí','směje','pláče','zapisuje','počítá','chodí','běží','sedí','stojí','leží','spí','vstává'];
+      const nezive = ['čas','den','noc','tma','světlo','stín','voda','vítr','oheň','země','nebe','strom','kámen','řeka','město','dům','les','pole','slunce','měsíc','hvězda'];
+      const vety = text.split(/[.!?…]+/).map(v => v.trim()).filter(v => v.length > 0);
+      const nalezy = [];
+      vety.forEach((veta, idx) => {
+        nezive.forEach(n => {
+          const regex = new RegExp('\\b'+n+'\\s+(\\w+)','gi');
+          const match = regex.exec(veta);
+          if (match && lidskaSlovesa.includes(match[1].toLowerCase())) {
+            nalezy.push({ veta, index: idx, kontext: `${n} ${match[1]}` });
+          }
+        });
+      });
+      return nalezy;
+    }
+
+    function detekujFyzikalizaci(text) {
+      const abstrakt = ['slovo','věta','řeč','jazyk','myšlenka','otázka','odpověď','význam','smysl','láska','strach','smutek','radost','naděje','paměť','vzpomínka','sen','příběh'];
+      const fyzSlovesa = ['padá','letí','teče','visí','stoupá','klesá','tuhne','tvrdne','měkne','spolkl','krká','polyká','teče','kapá','hoří','doutná'];
+      const vety = text.split(/[.!?…]+/).map(v => v.trim()).filter(v => v.length > 0);
+      const nalezy = [];
+      vety.forEach((veta, idx) => {
+        abstrakt.forEach(a => {
+          fyzSlovesa.forEach(f => {
+            const regex = new RegExp('\\b'+a+'\\s+'+f+'\\b|\\b'+f+'\\s+'+a+'\\b','gi');
+            if (regex.test(veta)) nalezy.push({ veta, index: idx, kontext: `${a} / ${f}` });
+          });
+        });
+      });
+      return nalezy;
+    }
+
+    function detekujParadox(text) {
+      const vzorce = [
+        /\b(\w+)\s+(a přesto|a přece|ale přesto|ale stejně)\s+(ne-?\w+)/gi,
+        /\b(živý|živá|živé)\s+(mrtvola|mrtvý|neživý)\b/gi,
+        /\b(tma|temnota)\s+(světlo|záře|jas)\b|\b(světlo)\s+(tma|temnota)\b/gi
+      ];
+      const vety = text.split(/[.!?…]+/).map(v => v.trim()).filter(v => v.length > 0);
+      const nalezy = [];
+      vety.forEach((veta, idx) => {
+        vzorce.forEach(v => {
+          if (v.test(veta)) nalezy.push({ veta, index: idx, kontext: 'paradox' });
+        });
+      });
+      return nalezy;
+    }
+
+    function detekujIronii(text) {
+      const ironSlova = ['samozřejmě','jasně','jistě','ovšem','pochopitelně','jako by ne'];
+      const vety = text.split(/[.!?…]+/).map(v => v.trim()).filter(v => v.length > 0);
+      const nalezy = [];
+      vety.forEach((veta, idx) => {
+        ironSlova.forEach(i => {
+          if (veta.toLowerCase().includes(i)) nalezy.push({ veta, index: idx, kontext: i });
+        });
+      });
+      return nalezy;
+    }
+
+    function detekujHyperbolu(text) {
+      const slova = ['všechno','nikdo','nikdy','vždycky','absolutně','nekonečný','obrovský','neskutečný','věčný','donekonečna'];
+      const vety = text.split(/[.!?…]+/).map(v => v.trim()).filter(v => v.length > 0);
+      const nalezy = [];
+      vety.forEach((veta, idx) => {
+        slova.forEach(h => {
+          if (veta.toLowerCase().includes(h)) nalezy.push({ veta, index: idx, kontext: h });
+        });
+      });
+      return nalezy;
+    }
+
+    function detekujApoziopezi(text) {
+      const nalezy = [];
+      const segmenty = text.split(/(?<=[.!?…])\s+/);
+      segmenty.forEach((seg, idx) => {
+        if (seg.includes('…') || seg.includes('...') || seg.includes('–')) {
+          nalezy.push({ veta: seg, index: idx, kontext: 'přerušení' });
+        }
+      });
+      return nalezy;
+    }
+
+    function detekujApostrofu(text) {
+      const osloveni = ['představte si','představ si','věřte mi','věř mi','poslouchejte','poslouchej','podívejte se','podívej se','dovedete si','dokážeš si'];
+      const vety = text.split(/[.!?…]+/).map(v => v.trim()).filter(v => v.length > 0);
+      const nalezy = [];
+      vety.forEach((veta, idx) => {
+        osloveni.forEach(o => {
+          if (veta.toLowerCase().includes(o)) nalezy.push({ veta, index: idx, kontext: o });
+        });
+      });
+      return nalezy;
+    }
+
+    function detekujKontrast(text) {
+      const antonyma = [
+        ['malý','velký'], ['malá','velká'], ['malé','velké'],
+        ['těžký','lehký'], ['rychlý','pomalý'], ['rychle','pomalu'],
+        ['černá','bílá'], ['světlo','tma'], ['den','noc'],
+        ['nahoře','dole'], ['nahoru','dolů'], ['vpřed','vzad'],
+        ['život','smrt'], ['láska','nenávist'], ['radost','smutek']
+      ];
+      const vety = text.split(/[.!?…]+/).map(v => v.trim()).filter(v => v.length > 0);
+      const nalezy = [];
+      vety.forEach((veta, idx) => {
+        const vetaLower = veta.toLowerCase();
+        antonyma.forEach(([a,b]) => {
+          if (vetaLower.includes(a) && vetaLower.includes(b)) {
+            nalezy.push({ veta, index: idx, kontext: `${a} × ${b}` });
+          }
+        });
+        if (vetaLower.includes('ale') || vetaLower.includes('naopak') || vetaLower.includes('zatímco')) {
+          nalezy.push({ veta, index: idx, kontext: 'kontrastní spojka' });
+        }
+      });
+      return nalezy;
+    }
+
+    // ============================================================
+    // 2. MAPA DETEKTORŮ
+    // ============================================================
+    const detektory = {
+      elipsa: detekujElipsy,
+      anafora: detekujAnaforu,
+      repetice: detekujRepetici,
+      negace: detekujNegaci,
+      fragment: detekujFragment,
+      gradace: detekujGradaci,
+      metafora: detekujMetaforu,
+      personifikace: detekujPersonifikaci,
+      fyzikalizace: detekujFyzikalizaci,
+      paradox: detekujParadox,
+      ironie: detekujIronii,
+      hyperbola: detekujHyperbolu,
+      apoziopeze: detekujApoziopezi,
+      apostrofa: detekujApostrofu,
+      kontrast: detekujKontrast
+    };
+
+    // ============================================================
+    // 3. PROFILY ÚHLŮ
+    // ============================================================
+    const angleProfiles = {
+      '0° analytický': ['elipsa', 'gradace', 'kontrast', 'anafora', 'negace', 'fragment'],
+      '30° kulturní': [],
+      '60° filozofický': ['paradox', 'kontrast'],
+      '90° naivní': ['apostrofa', 'personifikace'],
+      '120° jazykový': ['fyzikalizace', 'apoziopeze', 'elipsa'],
+      '150° metaforický': ['metafora', 'personifikace'],
+      '180° asociační': ['fragment', 'apoziopeze'],
+      '210° introspektivní': [],
+      '240° ironický': ['ironie', 'kontrast', 'paradox'],
+      '270° groteskní': ['hyperbola'],
+      '300° absurdní': ['fragment', 'paradox', 'elipsa'],
+      '330° surrealistický': []
+    };
+
+    // ============================================================
+    // 4. ENCYKLOPEDIE FIGUR
+    // ============================================================
+    const encyklopedie = {
+      elipsa: {
+        nazev: 'Elipsa',
+        definice: 'Vynechání části věty (nejčastěji slovesa). Vytváří napětí, zkratkovitost, nutí čtenáře domýšlet.',
+        psychologie: 'Časté elipsy můžou signalizovat úzkost, vyčerpání, nebo naopak snahu o maximální úspornost myšlení. V depresivních stavech se objevují nedokončené myšlenky.',
+        forenzni: 'Ve výpovědích můžou být známkou toho, že mluvčí něco zamlčuje, nebo že je v takovém stresu, že není schopen tvořit plné věty.',
+        marketing: 'Krátké, eliptické věty působí dynamicky a úderně. Často se používají v sloganech a výzvách k akci.',
+        kreativita: 'Elipsa dává čtenáři prostor k domyšlení, zapojuje ho do tvorby významu.',
+        priklad: '„Do ticha. Do koutů. Do skulin.“ (O myši)'
+      },
+      anafora: {
+        nazev: 'Anafora',
+        definice: 'Opakování stejného slova na začátku po sobě jdoucích vět. Vytváří rytmus a zdůrazňuje myšlenku.',
+        psychologie: 'Opakování může signalizovat fixaci na určité téma, důraz na to, co se opakuje.',
+        forenzni: 'Může být charakteristickým rysem autora, jeho stylistickým podpisem.',
+        marketing: 'Vytváří rytmus, zapamatovatelnost, zdůrazňuje klíčové sdělení.',
+        kreativita: 'Anafora zakládá rytmus básně, písně, zdůrazňuje motiv.',
+        priklad: '„Nebyla nijak zvlášť rychlá… Nebyla hloupá…“ (O myši)'
+      },
+      repetice: {
+        nazev: 'Repetice',
+        definice: 'Opakování stejného slova v krátkém úseku. Zvyšuje důraz, může signalizovat fixaci.',
+        psychologie: 'Může být známkou úzkostného ulpívání na tématu, nebo naopak záměrného zdůraznění.',
+        forenzni: 'Časté opakování může být stopou k identifikaci autora.',
+        marketing: 'Opakování zvyšuje zapamatovatelnost a důraz.',
+        kreativita: 'Vytváří rytmus a naléhavost.',
+        priklad: '„přesně… přesně… přesně“ (O kocourovi)'
+      },
+      negace: {
+        nazev: 'Negace',
+        definice: 'Použití záporu (ne, není, nikdo). Vymezuje, co věc není, často přesnější než pozitivní definice.',
+        psychologie: 'Negativní vymezení může být známkou nejistoty, obrany, nebo naopak snahy o přesnost.',
+        forenzni: 'Negace můžou být důležité pro pochopení, co autor popírá.',
+        marketing: 'Negace se používají k vymezení vůči konkurenci („Není to další prací prášek, je to…“).',
+        kreativita: 'Negace vytváří prostor pro domyšlení, definuje tím, co věc není.',
+        priklad: '„Nebyla statečnější, nebyla chytřejší, nebyla rychlejší.“ (O zaječici)'
+      },
+      fragment: {
+        nazev: 'Fragment',
+        definice: 'Krátký, izolovaný úsek, který není úplnou větou. Vytváří dojem rozpadu, naléhavosti, nedourčenosti.',
+        psychologie: 'Fragmentární myšlení může být známkou úzkosti, chaosu, nebo naopak kreativního proudu.',
+        forenzni: 'Fragmenty můžou být stopou k nedokončenému textu, nebo k tomu, že autor píše pod tlakem.',
+        marketing: 'Fragmenty můžou působit moderně, dynamicky, ale můžou být i matoucí.',
+        kreativita: 'Fragment je způsob, jak naznačit, že realita je neúplná, že celek je třeba domyslet.',
+        priklad: '„Prostě… tak nějak.“ (O myši)'
+      },
+      gradace: {
+        nazev: 'Gradace',
+        definice: 'Stupňování – řazení výrazů od nejslabšího po nejsilnější (nebo naopak). Vytváří napětí a dynamiku.',
+        psychologie: 'Gradace ukazuje na schopnost hierarchického myšlení, na vnímání intenzity.',
+        forenzni: 'Může být rysem autorova stylu, zvlášť pokud se opakuje.',
+        marketing: 'Gradace se používá k budování napětí („nejdřív to, pak ono, a nakonec…“).',
+        kreativita: 'Gradace je způsob, jak vést čtenáře k pointě.',
+        priklad: '„Hlubší. Širší. Pomalejší.“ (O rybě)'
+      },
+      metafora: {
+        nazev: 'Metafora',
+        definice: 'Přenos významu na základě vnější podobnosti. Často ve tvaru "X je Y".',
+        psychologie: 'Metafory strukturují naše myšlení, pomáhají nám chápat abstraktní pojmy skrz konkrétní.',
+        forenzni: 'Metafory můžou prozradit, jak autor vnímá realitu.',
+        marketing: 'Metafory jsou základem brandingu („Auto jako váš druhý domov“).',
+        kreativita: 'Bez metafory není poezie.',
+        priklad: '„Byl to klíč. A pádlo. A past.“ (O myši)'
+      },
+      personifikace: {
+        nazev: 'Personifikace',
+        definice: 'Přiřazení lidských vlastností neživým věcem nebo zvířatům.',
+        psychologie: 'Personifikace je přirozená pro děti – oživují svět. U dospělých může být známkou kreativity.',
+        forenzni: 'Může být součástí stylu, zvlášť v pohádkách.',
+        marketing: 'Personifikace oživuje značku, dělá ji bližší.',
+        kreativita: 'Personifikace je základní prostředek animismu v literatuře.',
+        priklad: '„stromy, které si ho pamatovaly“ (O slonovi)'
+      },
+      fyzikalizace: {
+        nazev: 'Fyzikalizace',
+        definice: 'Abstraktní pojmy se chovají jako hmotné objekty (padají, visí, tečou).',
+        psychologie: 'Když abstraktní pojmy zhmotníme, může to být známka básnické obraznosti, ale i konkrétního myšlení.',
+        forenzni: 'Může být stopou k autorovi, který má rád hravé metafory.',
+        marketing: 'Fyzikalizace dělá abstraktní benefity hmatatelnějšími („Energie, kterou cítíš v každém doušku“).',
+        kreativita: 'Je způsob, jak udělat jazyk tělesným, jak ho zbavit abstraktnosti.',
+        priklad: '„Riff kape, flow teče.“ (O rybě)'
+      },
+      paradox: {
+        nazev: 'Paradox',
+        definice: 'Zdánlivě nesmyslné tvrzení, které může obsahovat pravdu; logický rozpor.',
+        psychologie: 'Paradoxní myšlení může být známkou kreativity, ale i vnitřního konfliktu.',
+        forenzni: 'Paradoxy můžou být použity k matení, nebo k vyjádření hluboké pravdy.',
+        marketing: 'Paradoxy upoutají pozornost („Čím víc utrácíš, tím víc šetříš“).',
+        kreativita: 'Paradoxy jsou základem existenciální literatury.',
+        priklad: '„Skončil větu a pak skončil krkat.“ (O kocourovi)'
+      },
+      ironie: {
+        nazev: 'Ironie',
+        definice: 'Vyjádření opaku toho, co se myslí.',
+        psychologie: 'Ironie je známkou nadhledu, schopnosti vidět věci z odstupu.',
+        forenzni: 'Ironie se těžko dokazuje, ale je rozpoznatelná podle kontextu.',
+        marketing: 'Ironické reklamy oslovují chytřejší publikum.',
+        kreativita: 'Ironie je základní nástroj kritiky.',
+        priklad: '„Ptačí zpěv? Křikot je to.“ (O rybě)'
+      },
+      hyperbola: {
+        nazev: 'Hyperbola',
+        definice: 'Záměrné přehánění – nadsázka.',
+        psychologie: 'Hyperbola může být známkou přehnaného vnímání, nebo naopak snahy o zdůraznění.',
+        forenzni: 'Může být součástí stylu, zvlášť u vypravěčů, kteří rádi přehánějí.',
+        marketing: 'Hyperbola je základem reklamního sdělení („Největší sleva v historii!“).',
+        kreativita: 'Hyperbola vytváří groteskní efekty.',
+        priklad: '„zem se slehla“ (O kocourovi)'
+      },
+      apoziopeze: {
+        nazev: 'Apoziopeze',
+        definice: 'Náhlé přerušení výpovědi, nedokončená věta (tři tečky, pomlčka).',
+        psychologie: 'Nedokončená výpověď může signalizovat váhání, nejistotu, nebo naopak snahu otevřít prostor pro fantazii.',
+        forenzni: 'Tři tečky můžou být známkou toho, že autor něco zamlčuje.',
+        marketing: 'V reklamě se tři tečky používají k vytvoření napětí.',
+        kreativita: 'Apoziopeze je způsob, jak nechat význam otevřený.',
+        priklad: '„A ta přesná matika..“ (O kocourovi)'
+      },
+      apostrofa: {
+        nazev: 'Apostrofa',
+        definice: 'Oslovení nepřítomné osoby, abstraktní entity nebo čtenáře.',
+        psychologie: 'Oslovení čtenáře vytváří pocit blízkosti, vtahuje do děje.',
+        forenzni: 'Může být známkou snahy o manipulaci, nebo naopak o upřímný kontakt.',
+        marketing: 'Apostrofa je základní nástroj („Představte si, že…“).',
+        kreativita: 'Oslovení čtenáře bourá čtvrtou zeď.',
+        priklad: '„Představte si to:“ (O kocourovi)'
+      },
+      kontrast: {
+        nazev: 'Kontrast',
+        definice: 'Stavění protikladů vedle sebe (malý × velký, ale, naopak).',
+        psychologie: 'Kontrastní myšlení je základem kognitivní flexibility.',
+        forenzni: 'Kontrasty můžou odhalit, co autor považuje za důležité.',
+        marketing: 'Kontrast se používá k zdůraznění výhod produktu.',
+        kreativita: 'Kontrast je základním dramatickým principem.',
+        priklad: '„ostatní běželi kupředu, ona skočila do plamenů“ (O zaječici)'
+      }
+    };
+
+    // ============================================================
+    // 5. BARVY PRO ÚHLY
+    // ============================================================
+    const barvy = [
+      '#ff6b6b', '#4ecdc4', '#45b7d1', '#96ceb4', '#ffeead', '#ffcc5c',
+      '#ff6f69', '#88d8b0', '#b5e7a0', '#d4a5a5', '#9b59b6', '#3498db'
+    ];
+
+    // ============================================================
+    // 6. HLAVNÍ PROMĚNNÉ
+    // ============================================================
+    let posledniText = '';
+    let posledniNalezy = {};
+
+    // ============================================================
+    // 7. FUNKCE PRO ZOBRAZENÍ ENCYKLOPEDIE
+    // ============================================================
+    function zobrazEncyklopedii(figura) {
+      const panel = document.getElementById('detailPanel');
+      const data = encyklopedie[figura] || { nazev: figura, definice: 'Popis zatím není k dispozici.' };
+      
+      let html = `
+        <div style="margin-top:20px; border-top:1px solid #333; padding-top:20px;">
+          <h3 style="color:#d4b48c;">${data.nazev}</h3>
+          <p><strong>Definice:</strong> ${data.definice}</p>
+          <p><strong>Příklad z pohádky:</strong> <span style="color:#aaa;">${data.priklad || 'neuveden'}</span></p>
+          <h4 style="color:#8a6d3b; margin-top:15px;">V psychologii</h4>
+          <p>${data.psychologie || '—'}</p>
+          <h4 style="color:#8a6d3b;">Ve forenzní lingvistice</h4>
+          <p>${data.forenzni || '—'}</p>
+          <h4 style="color:#8a6d3b;">V marketingu a reklamě</h4>
+          <p>${data.marketing || '—'}</p>
+          <h4 style="color:#8a6d3b;">V kreativitě a umění</h4>
+          <p>${data.kreativita || '—'}</p>
+          <div style="margin-top:15px;">
+            <span class="back-link" onclick="document.getElementById('detailPanel').innerHTML=''; document.getElementById('detailPanel').style.display='none';">← zavřít</span>
+          </div>
+        </div>
+      `;
+      
+      panel.innerHTML = html;
+      panel.style.display = 'block';
+    }
+
+    // ============================================================
+    // 8. HLAVNÍ ANALÝZA
+    // ============================================================
+    document.getElementById('analyzeBtn').addEventListener('click', function() {
+      const text = document.getElementById('inputText').value.trim();
+      if (!text) { alert('Vlož text.'); return; }
+      
+      posledniText = text;
+      
+      // Detekce figur
+      const figCounts = {};
+      posledniNalezy = {};
+      
+      for (let [figname, detektor] of Object.entries(detektory)) {
+        const nalezy = detektor(text);
+        posledniNalezy[figname] = nalezy;
+        figCounts[figname] = nalezy.length;
+      }
+
+      // Výpočet skóre pro úhly
+      const angleScores = {};
+      for (let [angle, figList] of Object.entries(angleProfiles)) {
+        let score = 0;
+        figList.forEach(fig => {
+          if (figCounts[fig]) score += figCounts[fig];
+        });
+        angleScores[angle] = score;
+      }
+
+      // Procenta
+      const totalScore = Object.values(angleScores).reduce((a, b) => a + b, 0);
+      const anglePercents = {};
+      if (totalScore === 0) {
+        for (let angle in angleScores) anglePercents[angle] = 0;
+      } else {
+        for (let [angle, score] of Object.entries(angleScores)) {
+          anglePercents[angle] = (score / totalScore * 100).toFixed(1);
+        }
+      }
+
+      const sortedAngles = Object.entries(anglePercents).sort((a, b) => b[1] - a[1]);
+      const nonZero = sortedAngles.filter(([_, p]) => parseFloat(p) > 0);
+      const grafData = nonZero.length > 0 ? nonZero : [['žádný úhel', 100]];
+
+      // Gradient pro graf
+      let startAngle = 0;
+      const gradientParts = [];
+      grafData.forEach(([angle, percent], index) => {
+        const endAngle = startAngle + (parseFloat(percent) / 100 * 360);
+        gradientParts.push(`${barvy[index % barvy.length]} ${startAngle}deg ${endAngle}deg`);
+        startAngle = endAngle;
+      });
+      const gradientStyle = `conic-gradient(from 0deg, ${gradientParts.join(', ')})`;
+
+      // Sestavení HTML
+      let html = '<h2 style="margin-top:0;">📊 zastoupení úhlů</h2>';
+
+      if (totalScore === 0) {
+        html += '<p style="color:#888;">V textu nebyly nalezeny žádné výrazné figury. Zkus delší nebo výraznější text.</p>';
+        html += '</div>';
+        document.getElementById('results').innerHTML = html;
+        document.getElementById('results').style.display = 'block';
+        return;
+      }
+
+      // Graf a legenda
+      html += '<div class="chart-container">';
+      html += `<div class="pie-chart" style="background: ${gradientStyle};"></div>`;
+      html += '<div class="legend">';
+      grafData.forEach(([angle, percent], index) => {
+        html += `
+          <div class="legend-item" onclick="zobrazFiguryProUhel('${angle}')">
+            <div class="color-box" style="background: ${barvy[index % barvy.length]};"></div>
+            <span>${angle}: <strong>${percent}%</strong></span>
+          </div>
+        `;
+      });
+      html += '</div></div>';
+
+      // Dvousloupcový panel – figury a encyklopedie
+      html += '<div class="two-column">';
+      html += '<div class="figures-panel" id="figuresPanel">';
+      html += '<h3>📋 klikni na úhel v legendě</h3>';
+      html += '<p style="color:#666;">Vyber úhel, zobrazí se jeho figury.</p>';
+      html += '</div>';
+      html += '<div class="encyclopedia-panel" id="encyclopediaPanel">';
+      html += '<h3>📖 encyklopedie figur</h3>';
+      html += '<p style="color:#666;">Klikni na figuru v levém panelu.</p>';
+      html += '</div>';
+      html += '</div>';
+
+      // Poznámka
+      html += '<p class="note">Kliknutím na úhel v legendě zobrazíš figury. Kliknutím na figuru zobrazíš její encyklopedii a místa v textu.</p>';
+
+      document.getElementById('results').innerHTML = html;
+      document.getElementById('results').style.display = 'block';
+      document.getElementById('detailPanel').style.display = 'none';
+
+      // Uložení dat pro pozdější použití
+      window.posledniAnglePercents = anglePercents;
+      window.posledniFigCounts = figCounts;
+      window.posledniNalezy = posledniNalezy;
+    });
+
+    // ============================================================
+    // 9. FUNKCE PRO ZOBRAZENÍ FIGUR PRO ÚHEL
+    // ============================================================
+    window.zobrazFiguryProUhel = function(angle) {
+      const figList = angleProfiles[angle] || [];
+      const figCounts = window.posledniFigCounts || {};
+      const figuresPanel = document.getElementById('figuresPanel');
+      
+      let html = `<h3>📋 figury pro ${angle}</h3>`;
+      
+      if (figList.length === 0) {
+        html += '<p style="color:#666;">Pro tento úhel nemáme definované žádné figury.</p>';
+      } else {
+        figList.forEach(fig => {
+          const count = figCounts[fig] || 0;
+          const barva = count > 0 ? '#8a6d3b' : '#444';
+          html += `
+            <div class="figure-item" style="border-left-color: ${barva};" onclick="zobrazDetailFigury('${fig}')">
+              <span class="figure-count">${count}</span>
+              <strong>${encyklopedie[fig]?.nazev || fig}</strong><br>
+              <small style="color:#888;">${encyklopedie[fig]?.definice?.substring(0, 60) || ''}…</small>
+            </div>
+          `;
+        });
+      }
+      
+      figuresPanel.innerHTML = html;
+    };
+
+    // ============================================================
+    // 10. FUNKCE PRO ZOBRAZENÍ DETAILU FIGURY
+    // ============================================================
+    window.zobrazDetailFigury = function(figura) {
+      const data = encyklopedie[figura] || { nazev: figura, definice: 'Popis není k dispozici.' };
+      const nalezy = window.posledniNalezy[figura] || [];
+      const encyclopediaPanel = document.getElementById('encyclopediaPanel');
+      
+      let html = `<h3>📖 ${data.nazev}</h3>`;
+      html += `<p><strong>Definice:</strong> ${data.definice}</p>`;
+      
+      if (data.priklad) {
+        html += `<p><strong>Příklad:</strong> <span style="color:#aaa;">${data.priklad}</span></p>`;
+      }
+      
+      // Výskyty v textu
+      if (nalezy.length > 0) {
+        html += `<p><strong>Výskyty v textu (${nalezy.length}):</strong></p>`;
+        html += '<div class="occurrence-list">';
+        nalezy.forEach((n, idx) => {
+          const vetaZkracena = n.veta.length > 60 ? n.veta.substring(0,60)+'…' : n.veta;
+          html += `
+            <div class="occurrence-item" onclick="zvýrazniVTextu('${figura}', ${idx})">
+              ${vetaZkracena}
+            </div>
+          `;
+        });
+        html += '</div>';
+      } else {
+        html += '<p style="color:#666;">V textu se tato figura nevyskytuje.</p>';
+      }
+      
+      // Sekce encyklopedie
+      html += '<div style="margin-top:15px;">';
+      if (data.psychologie) html += `<p><strong>Psychologie:</strong> ${data.psychologie}</p>`;
+      if (data.forenzni) html += `<p><strong>Forenzní:</strong> ${data.forenzni}</p>`;
+      if (data.marketing) html += `<p><strong>Marketing:</strong> ${data.marketing}</p>`;
+      if (data.kreativita) html += `<p><strong>Kreativita:</strong> ${data.kreativita}</p>`;
+      html += '</div>';
+      
+      encyclopediaPanel.innerHTML = html;
+    };
+
+    // ============================================================
+    // 11. FUNKCE PRO ZVÝRAZNĚNÍ V TEXTU
+    // ============================================================
+    window.zvýrazniVTextu = function(figura, idx) {
+      const nalezy = window.posledniNalezy[figura];
+      if (!nalezy || !nalezy[idx]) return;
+      
+      const veta = nalezy[idx].veta;
+      const textarea = document.getElementById('inputText');
+      const text = textarea.value;
+      
+      // Najdeme přibližnou pozici (prvních 30 znaků věty)
+      const hledany = veta.substring(0, 30);
+      const pos = text.indexOf(hledany);
+      
+      if (pos >= 0) {
+        textarea.focus();
+        textarea.setSelectionRange(pos, pos + veta.length);
+        alert(`Výskyt nalezen (přibližně na pozici ${pos}). Text je označen.`);
+      } else {
+        alert('Výskyt se nepodařilo přesně najít.');
+      }
+    };
+  </script>
+</body>
+</html>
