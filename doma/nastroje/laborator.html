@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laboratoř – Chceš myš?</title>
+    <style>
+        /* --- ČERNOBÍLÝ STYL --- */
+        html { filter: grayscale(1); }
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: #fff;
+            color: #000;
+            line-height: 1.7;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+        h1, h2, h3 {
+            font-weight: normal;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 0.3em;
+        }
+        .blocks-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1em;
+            margin: 2em 0;
+        }
+        .block-card {
+            border: 1px solid #000;
+            background: #f9f9f9;
+            padding: 1em;
+            width: 200px;
+            cursor: pointer;
+            transition: 0.1s;
+        }
+        .block-card.selected {
+            background: #ddd;
+            border: 2px solid #000;
+        }
+        .block-text {
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+        .controls {
+            margin: 2em 0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1em;
+            align-items: flex-end;
+        }
+        .control-group {
+            display: flex;
+            flex-direction: column;
+        }
+        .control-group label {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        select, button {
+            background: #fff;
+            border: 1px solid #000;
+            padding: 0.5em 1em;
+            font-family: inherit;
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #ddd;
+        }
+        .output {
+            border: 1px solid #000;
+            padding: 2em;
+            background: #f9f9f9;
+            margin: 2em 0;
+        }
+        .output pre {
+            white-space: pre-wrap;
+            font-family: inherit;
+            margin: 1em 0;
+        }
+        .note-area {
+            margin-top: 2em;
+            border-top: 1px solid #ccc;
+            padding-top: 2em;
+        }
+        .note-area textarea {
+            width: 100%;
+            border: 1px solid #000;
+            padding: 1em;
+            font-family: inherit;
+            background: #fff;
+        }
+        .saved-notes {
+            margin-top: 1em;
+        }
+        .note-item {
+            border-bottom: 1px solid #ccc;
+            padding: 0.5em 0;
+            font-size: 0.9rem;
+        }
+        .footer {
+            margin-top: 3em;
+            text-align: center;
+            font-size: 0.9rem;
+            border-top: 1px solid #ccc;
+            padding-top: 1.5em;
+        }
+    </style>
+</head>
+<body>
+
+<h1>🧪 Laboratoř mezer</h1>
+<p><em>Kombinuj bloky, přepínej obory, vznikají nové světy.</em></p>
+
+<!-- Výběr bloků -->
+<div class="blocks-container" id="blocksContainer"></div>
+
+<!-- Ovládací panel -->
+<div class="controls">
+    <div class="control-group">
+        <label>🎭 Obor / doména</label>
+        <select id="domainSelect">
+            <option value="science">🔬 Věda / teorie</option>
+            <option value="film">🎬 Film / scénář</option>
+            <option value="theater">🎭 Divadlo / postavy</option>
+            <option value="visual">🎨 Vizuální umění</option>
+            <option value="choreo">💃 Choreografie</option>
+            <option value="game">🎮 Herní design</option>
+            <option value="performance">✨ Performativní umění</option>
+        </select>
+    </div>
+    <div class="control-group">
+        <label>🔧 Akce</label>
+        <button id="generateBtn">Generovat</button>
+    </div>
+    <div class="control-group">
+        <label>📓 Zápisník</label>
+        <button id="saveNoteBtn">Uložit výsledek</button>
+    </div>
+</div>
+
+<!-- Výstup -->
+<div class="output" id="outputArea">
+    <div id="outputContent">Zde se objeví vygenerovaný výstup.</div>
+</div>
+
+<!-- Zápisník (jednoduchý) -->
+<div class="note-area">
+    <h3>📝 Můj zápisník</h3>
+    <textarea id="noteText" rows="3" placeholder="Napiš vlastní poznámku nebo sem ulož výstup..."></textarea>
+    <button id="addCustomNoteBtn">Uložit poznámku</button>
+    <div id="savedNotes" class="saved-notes"></div>
+</div>
+
+<div class="footer">
+    Laboratoř – Chceš myš? · Kombinuj bloky, generuj nápady, ukládej do zápisníku.<br>
+    <a href="mailto:chcesmys@gmail.com">chcesmys@gmail.com</a>
+</div>
+
+<script>
+// --------------------------------------------------------------
+// DATA: ukázka 15 bloků (nahraď vlastními)
+// --------------------------------------------------------------
+const blocks = [
+    { id: 1, text: "archiv ticha místo děje" },
+    { id: 2, text: "mezery mezi slovy jako dokument" },
+    { id: 3, text: "nejmenší bytost jako svědek všeho" },
+    { id: 4, text: "skutečnost je to, co uniká výkladu" },
+    { id: 5, text: "zvířata nesou poruchy významu" },
+    { id: 6, text: "přežití jako navigační chyba" },
+    { id: 7, text: "omyl přeložený jako zázrak" },
+    { id: 8, text: "panika jako strategie" },
+    { id: 9, text: "pravda je méně stabilní než příběh" },
+    { id: 10, text: "oheň čte znamení v srsti" },
+    { id: 11, text: "motivace skrze nedosažitelnost" },
+    { id: 12, text: "třešeň jako vzpomínka na něco malého" },
+    { id: 13, text: "smysl vzniká z pohybu ne z cíle" },
+    { id: 14, text: "velikost která honí maličkost" },
+    { id: 15, text: "běžím pomalu ale poprvé někam" }
+];
+
+// Stav – vybrané bloky (až 2)
+let selectedBlocks = [];
+
+// --------------------------------------------------------------
+// Vykreslení bloků
+// --------------------------------------------------------------
+const container = document.getElementById('blocksContainer');
+blocks.forEach(block => {
+    const card = document.createElement('div');
+    card.className = 'block-card';
+    card.setAttribute('data-id', block.id);
+    card.innerHTML = `<div class="block-text">“${block.text}”</div>`;
+    card.addEventListener('click', () => {
+        // Pokud je už vybrán, odstraníme; jinak přidáme (max 2)
+        const idx = selectedBlocks.findIndex(b => b.id === block.id);
+        if (idx !== -1) {
+            selectedBlocks.splice(idx, 1);
+            card.classList.remove('selected');
+        } else {
+            if (selectedBlocks.length < 2) {
+                selectedBlocks.push(block);
+                card.classList.add('selected');
+            } else {
+                alert('Můžeš vybrat maximálně dva bloky. Zruš výběr nějakého.');
+            }
+        }
+    });
+    container.appendChild(card);
+});
+
+// --------------------------------------------------------------
+// Generování podle oboru
+// --------------------------------------------------------------
+function generateOutput(block1, block2, domain) {
+    const templates = {
+        science: `🧠 Vědecká hypotéza:
+Kombinací fenoménu „${block1.text}“ a fenoménu „${block2.text}“ vzniká nový teoretický rámec: Vztah mezi oběma naznačuje, že [doplň vlastní odvození]. Tato hypotéza může být testována v rámci kognitivní vědy nebo teorie informace.`,
+        film: `🎬 Filmový scénář:
+Otevřená scéna:
+Prostředí: ... 
+Postava A ztělesňuje „${block1.text}“.
+Postava B ztělesňuje „${block2.text}“.
+Konflikt: ... (inspirace z napětí mezi oběma bloky)
+Námět: Napiš krátký dialog, kde se tyto dva světy střetnou.`,
+        theater: `🎭 Divadelní postavy:
+Postava 1: „${block1.text}“ – jak by mluvila, jak by se pohybovala?
+Postava 2: „${block2.text}“ – co je jejím tajným přáním?
+Scéna: Napiš monolog pro jednu z postav, kde reflektuje svou podstatu.`,
+        visual: `🎨 Vizuální umění:
+Kombinace: „${block1.text}“ + „${block2.text}“.
+Doporučená technika: koláž, malba, digitální ilustrace.
+Kompozice: Zobraz napětí mezi oběma koncepty. Popiš barvy, tvary, symboly.`,
+        choreo: `💃 Choreografie:
+Pohybová sekvence založená na kontrastu „${block1.text}“ a „${block2.text}“.
+Popis pohybů: (např. pomalé ztuhnutí vs. plynulý tok)
+Hudba: rytmus, který reflektuje napětí.`,
+        game: `🎮 Herní design:
+Mechanika: „${block1.text}“ jako herní pravidlo.
+Cíl: „${block2.text}“ jako podmínka vítězství.
+Popiš jednoduchou hru (deskovou, karetní, digitální) pro 2 hráče, která tyto prvky propojuje.`,
+        performance: `✨ Performativní umění:
+Intervence / akce: Spoj „${block1.text}“ s „${block2.text}“ do živého vystoupení.
+Místo: ... 
+Role účastníků: ... 
+Jak publikum vnímá vznikající význam?`
+    };
+    return templates[domain] || templates.science;
+}
+
+document.getElementById('generateBtn').addEventListener('click', () => {
+    if (selectedBlocks.length !== 2) {
+        alert('Vyber přesně dva bloky.');
+        return;
+    }
+    const domain = document.getElementById('domainSelect').value;
+    const output = generateOutput(selectedBlocks[0], selectedBlocks[1], domain);
+    document.getElementById('outputContent').innerHTML = `<pre>${output}</pre>`;
+});
+
+// --------------------------------------------------------------
+// Zápisník (ukládání do localStorage)
+// --------------------------------------------------------------
+let savedNotes = [];
+
+function loadNotes() {
+    const stored = localStorage.getItem('laboratory_notes');
+    if (stored) {
+        savedNotes = JSON.parse(stored);
+    } else {
+        savedNotes = [];
+    }
+    renderNotes();
+}
+
+function saveNotes() {
+    localStorage.setItem('laboratory_notes', JSON.stringify(savedNotes));
+    renderNotes();
+}
+
+function renderNotes() {
+    const container = document.getElementById('savedNotes');
+    if (savedNotes.length === 0) {
+        container.innerHTML = '<p>Zatím žádné poznámky.</p>';
+        return;
+    }
+    container.innerHTML = '';
+    savedNotes.forEach((note, index) => {
+        const div = document.createElement('div');
+        div.className = 'note-item';
+        div.innerHTML = `
+            <div>${note.content}</div>
+            <small>${new Date(note.timestamp).toLocaleString()}</small>
+            <button data-index="${index}" class="delete-note">🗑</button>
+        `;
+        container.appendChild(div);
+    });
+    // Pověsit eventy na mazání
+    document.querySelectorAll('.delete-note').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const idx = parseInt(btn.getAttribute('data-index'));
+            savedNotes.splice(idx, 1);
+            saveNotes();
+        });
+    });
+}
+
+// Uložit vygenerovaný výstup
+document.getElementById('saveNoteBtn').addEventListener('click', () => {
+    const outputDiv = document.getElementById('outputContent');
+    const outputText = outputDiv.innerText.trim();
+    if (!outputText || outputText === 'Zde se objeví vygenerovaný výstup.') {
+        alert('Nejprve něco vygeneruj.');
+        return;
+    }
+    savedNotes.unshift({
+        content: outputText,
+        timestamp: new Date().toISOString()
+    });
+    saveNotes();
+    alert('Uloženo do zápisníku.');
+});
+
+// Uložit vlastní text z textarea
+document.getElementById('addCustomNoteBtn').addEventListener('click', () => {
+    const customText = document.getElementById('noteText').value.trim();
+    if (!customText) return;
+    savedNotes.unshift({
+        content: customText,
+        timestamp: new Date().toISOString()
+    });
+    saveNotes();
+    document.getElementById('noteText').value = '';
+    alert('Poznámka uložena.');
+});
+
+// Načíst poznámky při startu
+loadNotes();
+
+// Bonus: možnost zrušit výběr bloků kliknutím mimo (není nutné)
+</script>
+
+</body>
+</html>
