@@ -1,0 +1,900 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laboratoř · Chceš myš?</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --bg: #0f0d0a;
+            --s: #171410;
+            --s2: #1e1a14;
+            --cream: #e8e0d0;
+            --dim: rgba(232, 224, 208, 0.42);
+            --dim2: rgba(232, 224, 208, 0.2);
+            --accent: #a89880;
+            --accent2: #786858;
+            --border: rgba(168, 152, 128, 0.14);
+            --border-hi: rgba(168, 152, 128, 0.3);
+            --serif: 'Cormorant Garamond', Georgia, serif;
+            --mono: 'DM Mono', monospace;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--cream);
+            font-family: var(--mono);
+            font-size: 13px;
+            line-height: 1.8;
+            padding: 30px 20px;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .wrap {
+            max-width: 1300px;
+            margin: 0 auto;
+        }
+
+        /* Navigace */
+        nav {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid var(--border);
+            background: rgba(15, 13, 10, 0.94);
+            backdrop-filter: blur(14px);
+            padding: 11px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        .nav-brand {
+            font-family: var(--serif);
+            font-size: 0.88rem;
+            font-weight: 300;
+        }
+
+        .nav-brand em {
+            font-style: italic;
+            color: var(--accent);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 4px;
+            flex-wrap: wrap;
+        }
+
+        .nav-link {
+            font-size: 10px;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--dim);
+            padding: 4px 9px;
+            border: 1px solid transparent;
+            transition: all 0.12s;
+        }
+
+        .nav-link:hover {
+            color: var(--cream);
+            border-color: var(--border);
+        }
+
+        /* Tabulka */
+        .tabs {
+            display: flex;
+            gap: 1px;
+            background: var(--border);
+            margin-bottom: 20px;
+            border: 1px solid var(--border);
+        }
+
+        .tab {
+            flex: 1;
+            background: var(--s);
+            padding: 12px;
+            text-align: center;
+            cursor: pointer;
+            font-size: 0.8rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            transition: 0.12s;
+        }
+
+        .tab.active {
+            background: var(--accent);
+            color: var(--bg);
+        }
+
+        .tab:not(.active):hover {
+            background: var(--s2);
+        }
+
+        .panel {
+            display: none;
+        }
+
+        .panel.active {
+            display: block;
+        }
+
+        /* Bloky (karty) */
+        .blocks-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin: 20px 0;
+            max-height: 500px;
+            overflow-y: auto;
+            padding: 4px;
+        }
+
+        .block-card {
+            background: var(--s);
+            border: 1px solid var(--border);
+            padding: 12px;
+            width: 240px;
+            cursor: pointer;
+            transition: 0.1s;
+            font-size: 0.8rem;
+            line-height: 1.5;
+        }
+
+        .block-card.selected {
+            background: var(--s2);
+            border-color: var(--accent);
+            box-shadow: 0 0 0 1px var(--accent);
+        }
+
+        .block-text {
+            font-family: var(--serif);
+            font-size: 0.9rem;
+        }
+
+        .block-meta {
+            font-size: 0.6rem;
+            color: var(--dim);
+            margin-top: 8px;
+            display: flex;
+            gap: 8px;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+
+        /* Filtry */
+        .filter-bar {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            margin: 10px 0;
+            align-items: center;
+        }
+
+        .filter-btn {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--dim);
+            padding: 4px 8px;
+            font-family: var(--mono);
+            font-size: 0.65rem;
+            cursor: pointer;
+            transition: 0.1s;
+        }
+
+        .filter-btn.active {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        /* Ovládací panel */
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            align-items: flex-end;
+            margin: 20px 0;
+        }
+
+        .ctrl-group {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .ctrl-group label {
+            font-size: 0.65rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--dim);
+        }
+
+        select,
+        button {
+            background: var(--s);
+            border: 1px solid var(--border);
+            color: var(--cream);
+            padding: 8px 16px;
+            font-family: var(--mono);
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: 0.12s;
+        }
+
+        select:hover,
+        button:hover {
+            border-color: var(--accent);
+        }
+
+        button.primary {
+            background: var(--accent);
+            color: var(--bg);
+            border-color: var(--accent);
+        }
+
+        button.primary:hover {
+            background: var(--accent2);
+        }
+
+        /* Výstup */
+        .output-area {
+            background: var(--s);
+            border: 1px solid var(--border);
+            padding: 20px;
+            margin: 20px 0;
+            white-space: pre-wrap;
+            font-family: var(--serif);
+            font-size: 0.9rem;
+            line-height: 1.8;
+        }
+
+        /* Vizuální inspirace (ilustrace) */
+        .visual-inspiration {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin: 20px 0;
+            padding: 12px;
+            background: var(--s2);
+            border: 1px solid var(--border);
+        }
+
+        .visual-inspiration img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border: 1px solid var(--border);
+            filter: grayscale(1);
+        }
+
+        /* Zápisník v laboratoři (jednoduchý seznam) */
+        .notebook-entries {
+            margin-top: 30px;
+            border-top: 1px solid var(--border);
+            padding-top: 20px;
+        }
+
+        .entry-item {
+            background: var(--s);
+            border: 1px solid var(--border);
+            margin-bottom: 8px;
+            padding: 12px;
+        }
+
+        .entry-meta {
+            font-size: 0.6rem;
+            color: var(--dim);
+            margin-bottom: 6px;
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .entry-text {
+            font-family: var(--serif);
+            font-size: 0.8rem;
+            line-height: 1.6;
+        }
+
+        .entry-actions {
+            margin-top: 8px;
+            display: flex;
+            gap: 8px;
+        }
+
+        /* Vytvoření bloku */
+        .create-block-form {
+            background: var(--s2);
+            border: 1px solid var(--border);
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .form-row {
+            margin-bottom: 12px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .form-row label {
+            width: 100px;
+            font-size: 0.75rem;
+            letter-spacing: 0.1em;
+        }
+
+        .form-row input,
+        .form-row select,
+        .form-row textarea {
+            flex: 1;
+            background: var(--s);
+            border: 1px solid var(--border);
+            color: var(--cream);
+            padding: 6px 10px;
+            font-family: var(--mono);
+            font-size: 0.75rem;
+        }
+
+        .form-row textarea {
+            resize: vertical;
+        }
+
+        footer {
+            margin-top: 60px;
+            border-top: 1px solid var(--border);
+            padding-top: 20px;
+            font-size: 0.7rem;
+            color: var(--dim2);
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<div class="wrap">
+    <nav>
+        <span class="nav-brand"><em>Chceš myš?</em> — laboratoř</span>
+        <div class="nav-links">
+            <a class="nav-link" href="generator_demo.html">⚙️ Demo generátor</a>
+            <a class="nav-link" href="generator_multi.html">🔄 Multi generátor</a>
+            <a class="nav-link" href="zapisnik.html">📓 Zápisník</a>
+            <a class="nav-link" href="uhlomer.html">📐 Úhloměr</a>
+        </div>
+    </nav>
+
+    <!-- Tabs -->
+    <div class="tabs">
+        <div class="tab active" data-tab="combine">🔮 Kombinace</div>
+        <div class="tab" data-tab="create">✍️ Vytvoř blok</div>
+        <div class="tab" data-tab="notebook">📓 Zápisník</div>
+    </div>
+
+    <!-- Panel 1: Kombinace -->
+    <div id="combine-panel" class="panel active">
+        <div class="visual-inspiration" id="visualInspiration"></div>
+
+        <div class="filter-bar" id="filterBar"></div>
+        <div class="blocks-grid" id="blocksGrid"></div>
+
+        <div class="controls">
+            <div class="ctrl-group">
+                <label>🎭 Doména</label>
+                <select id="domainSelect">
+                    <option value="science">🔬 Věda / teorie</option>
+                    <option value="film">🎬 Film / scénář</option>
+                    <option value="theater">🎭 Divadlo / postavy</option>
+                    <option value="visual">🎨 Vizuální umění</option>
+                    <option value="choreo">💃 Choreografie</option>
+                    <option value="game">🎮 Herní design</option>
+                    <option value="performance">✨ Performativní umění</option>
+                </select>
+            </div>
+            <div class="ctrl-group">
+                <label> </label>
+                <button id="generateBtn" class="primary">Generovat</button>
+            </div>
+        </div>
+
+        <div class="output-area" id="outputArea">
+            Zde se objeví vygenerovaný výstup.
+        </div>
+
+        <div class="controls">
+            <button id="saveToNotebookBtn">📥 Uložit do zápisníku</button>
+        </div>
+    </div>
+
+    <!-- Panel 2: Vytvoř blok -->
+    <div id="create-panel" class="panel">
+        <div class="create-block-form">
+            <h3 style="font-family:var(--serif); margin-bottom:16px;">Vytvoř vlastní blok</h3>
+            <div class="form-row">
+                <label>Text bloku</label>
+                <textarea id="newBlockText" rows="2" placeholder="např. „archiv ticha místo děje“"></textarea>
+            </div>
+            <div class="form-row">
+                <label>Typ</label>
+                <input type="text" id="newBlockType" placeholder="např. kulturně-symbolický">
+            </div>
+            <div class="form-row">
+                <label>Funkce</label>
+                <input type="text" id="newBlockFunction" placeholder="zkoumá estetické posuny...">
+            </div>
+            <div class="form-row">
+                <label>Pole (fields)</label>
+                <input type="text" id="newBlockFields" placeholder="legenda, romantika, zahrada (odděl čárkou)">
+            </div>
+            <div class="form-row">
+                <label>Movement</label>
+                <select id="newBlockMovement">
+                    <option value="mýtus → deformace">mýtus → deformace</option>
+                    <option value="sebeobraz → vyprázdnění">sebeobraz → vyprázdnění</option>
+                    <option value="příběh → marketing">příběh → marketing</option>
+                    <option value="zvuk → past">zvuk → past</option>
+                    <option value="dezorientace → kritika">dezorientace → kritika</option>
+                    <option value="stupeň → odhalení">stupeň → odhalení</option>
+                    <option value="pochybnost → potvrzení">pochybnost → potvrzení</option>
+                    <option value="skrytost → odhalení">skrytost → odhalení</option>
+                    <option value="cyklus → přetvoření">cyklus → přetvoření</option>
+                    <option value="dohled → otupění">dohled → otupění</option>
+                    <option value="setrvačnost → odhalení">setrvačnost → odhalení</option>
+                    <option value="potlačení → vyprázdnění">potlačení → vyprázdnění</option>
+                    <option value="tanec → rozpad">tanec → rozpad</option>
+                    <option value="stopa → zranění">stopa → zranění</option>
+                    <option value="napětí → klid">napětí → klid</option>
+                    <option value="hranice → rozpuštění">hranice → rozpuštění</option>
+                    <option value="náraz → nejistota">náraz → nejistota</option>
+                    <option value="hledání → smíření">hledání → smíření</option>
+                    <option value="iluze → zmatek">iluze → zmatek</option>
+                    <option value="zastavení → ozvěna">zastavení → ozvěna</option>
+                </select>
+            </div>
+            <div class="form-row">
+                <label>Intenzita</label>
+                <select id="newBlockIntensity">
+                    <option value="nízká">nízká</option>
+                    <option value="střední">střední</option>
+                    <option value="vysoká">vysoká</option>
+                </select>
+            </div>
+            <div class="form-row">
+                <label>Jazyk</label>
+                <input type="text" id="newBlockLanguage" value="cs" readonly style="background:var(--bg);">
+            </div>
+            <button id="saveBlockBtn" class="primary">Uložit blok</button>
+            <button id="exportUserBlocksBtn">⬇ Exportovat mé bloky</button>
+            <label style="margin-left:12px;">📂 Importovat JSON: <input type="file" id="importBlocksFile" accept=".json"></label>
+        </div>
+        <p style="margin-top:12px; font-size:0.7rem; color:var(--dim);">Uložené bloky se přidají k aktuální sadě a zůstanou v prohlížeči (localStorage). Exportem získáte JSON, který můžete nahrát do složky vlastní.</p>
+    </div>
+
+    <!-- Panel 3: Zápisník -->
+    <div id="notebook-panel" class="panel">
+        <h3 style="font-family:var(--serif); margin-bottom:16px;">📓 Uložené výstupy z laboratoře</h3>
+        <div id="savedEntriesContainer"></div>
+        <div class="controls">
+            <button id="exportNotebookBtn">⬇ Exportovat zápisník (JSON)</button>
+            <button id="importNotebookBtn" style="margin-left:8px;">📂 Importovat zápisník</button>
+            <input type="file" id="importNotebookFile" accept=".json" style="display:none;">
+        </div>
+    </div>
+</div>
+
+<footer>
+    Laboratoř · Chceš myš? · Kombinuj bloky, generuj nové světy, vytvářej vlastní fenomény.
+</footer>
+
+<script>
+    // ------------------------------------------------------------------
+    // 1. NAČTENÍ BLOKŮ Z JSON (podle URL parametru nebo výchozího)
+    // ------------------------------------------------------------------
+    let allBlocks = [];          // všechny bloky (z JSON + uživatelské)
+    let userBlocks = [];        // bloky vytvořené uživatelem (uloženo v localStorage)
+    let selectedBlocks = [];     // aktuálně vybrané bloky pro kombinaci
+    let currentFilterType = null;
+    let lastGeneratedOutput = '';
+    let currentDomain = 'science';
+
+    // Notebook (záznamy) – ukládá se do localStorage samostatně
+    let notebookEntries = [];
+
+    // Funkce pro získání parametru z URL
+    function getUrlParam(name) {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get(name);
+    }
+
+    // Načtení hlavní sady bloků z JSON
+    async function loadBlocks() {
+        let blockset = getUrlParam('blockset');
+        if (!blockset) {
+            // výchozí – free demo
+            blockset = '../dataset/free_20.json';
+        }
+        try {
+            const response = await fetch(blockset);
+            if (!response.ok) throw new Error('Nepodařilo se načíst bloky');
+            const data = await response.json();
+            // data je pole bloků (může být i objekt, ale očekáváme pole)
+            if (Array.isArray(data)) {
+                allBlocks = data;
+            } else if (data.blocks && Array.isArray(data.blocks)) {
+                allBlocks = data.blocks;
+            } else {
+                allBlocks = [];
+            }
+            // Načíst uživatelské bloky z localStorage
+            loadUserBlocks();
+            renderFilterBar();
+            renderBlocks();
+        } catch (err) {
+            console.error(err);
+            allBlocks = [];
+            renderBlocks();
+        }
+    }
+
+    // Uživatelské bloky
+    function loadUserBlocks() {
+        const stored = localStorage.getItem('chcesmys_user_blocks');
+        if (stored) {
+            try {
+                userBlocks = JSON.parse(stored);
+            } catch(e) { userBlocks = []; }
+        } else {
+            userBlocks = [];
+        }
+    }
+
+    function saveUserBlocks() {
+        localStorage.setItem('chcesmys_user_blocks', JSON.stringify(userBlocks));
+    }
+
+    // Přidání nového bloku
+    function addUserBlock(block) {
+        block.id = 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6);
+        block.source = 'user';
+        userBlocks.push(block);
+        saveUserBlocks();
+        // aktualizovat zobrazení
+        renderBlocks();
+    }
+
+    // Export uživatelských bloků
+    function exportUserBlocks() {
+        const dataStr = JSON.stringify(userBlocks, null, 2);
+        const blob = new Blob([dataStr], {type: 'application/json'});
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `my_blocks_${new Date().toISOString().slice(0,10)}.json`;
+        a.click();
+        URL.revokeObjectURL(url);
+    }
+
+    // Import uživatelských bloků
+    function importUserBlocks(file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            try {
+                const imported = JSON.parse(e.target.result);
+                if (Array.isArray(imported)) {
+                    userBlocks = imported;
+                    saveUserBlocks();
+                    renderBlocks();
+                    alert(`Načteno ${imported.length} bloků.`);
+                } else {
+                    alert('Soubor neobsahuje pole bloků.');
+                }
+            } catch(err) {
+                alert('Chyba při načítání JSON.');
+            }
+        };
+        reader.readAsText(file);
+    }
+
+    // ------------------------------------------------------------------
+    // 2. FILTRY A ZOBRAZENÍ BLOKŮ
+    // ------------------------------------------------------------------
+    function renderFilterBar() {
+        const types = [...new Set(allBlocks.concat(userBlocks).map(b => b.type).filter(t => t))];
+        const container = document.getElementById('filterBar');
+        container.innerHTML = `<button class="filter-btn ${!currentFilterType ? 'active' : ''}" data-type="">Vše</button>`;
+        types.forEach(type => {
+            const btn = document.createElement('button');
+            btn.className = `filter-btn ${currentFilterType === type ? 'active' : ''}`;
+            btn.textContent = type;
+            btn.dataset.type = type;
+            btn.addEventListener('click', () => {
+                currentFilterType = currentFilterType === type ? null : type;
+                renderFilterBar();
+                renderBlocks();
+            });
+            container.appendChild(btn);
+        });
+    }
+
+    function renderBlocks() {
+        const container = document.getElementById('blocksGrid');
+        let blocksToShow = [...allBlocks, ...userBlocks];
+        if (currentFilterType) {
+            blocksToShow = blocksToShow.filter(b => b.type === currentFilterType);
+        }
+        if (blocksToShow.length === 0) {
+            container.innerHTML = '<p style="color:var(--dim);">Žádné bloky k zobrazení.</p>';
+            return;
+        }
+        container.innerHTML = '';
+        blocksToShow.forEach(block => {
+            const card = document.createElement('div');
+            card.className = 'block-card';
+            if (selectedBlocks.includes(block)) card.classList.add('selected');
+            card.innerHTML = `
+                <div class="block-text">“${escapeHtml(block.text)}”</div>
+                <div class="block-meta">
+                    <span>${block.type || '?'}</span>
+                    <span>${block.fields ? block.fields.slice(0,2).join(', ') : ''}</span>
+                </div>
+            `;
+            card.addEventListener('click', () => {
+                const idx = selectedBlocks.indexOf(block);
+                if (idx !== -1) {
+                    selectedBlocks.splice(idx, 1);
+                    card.classList.remove('selected');
+                } else {
+                    if (selectedBlocks.length >= 2) {
+                        alert('Můžeš vybrat maximálně dva bloky.');
+                        return;
+                    }
+                    selectedBlocks.push(block);
+                    card.classList.add('selected');
+                }
+            });
+            container.appendChild(card);
+        });
+    }
+
+    // ------------------------------------------------------------------
+    // 3. GENEROVÁNÍ KOMBINACÍ
+    // ------------------------------------------------------------------
+    const templates = {
+        science: (b1, b2) => `Hypotéza: Kombinace fenoménu „${b1.text}“ a fenoménu „${b2.text}“ naznačuje nový vztah mezi ${(b1.fields && b1.fields[0]) || 'prvním'} a ${(b2.fields && b2.fields[0]) || 'druhým'}. Navrhuji výzkum zaměřený na...`,
+        film: (b1, b2) => `Scénář: Otevřená scéna. Postava A ztělesňuje „${b1.text}“. Postava B ztělesňuje „${b2.text}“. Konflikt vzniká, když se tyto dva světy střetnou. Námět: ...`,
+        theater: (b1, b2) => `Divadelní postavy: Postava 1: „${b1.text}“ – jak mluví, jak se pohybuje? Postava 2: „${b2.text}“ – co je jejím tajným přáním? Monolog jedné z nich: ...`,
+        visual: (b1, b2) => `Vizuální umění: Kombinace „${b1.text}“ + „${b2.text}“. Doporučená technika: koláž. Popis barev, tvarů, symbolů: ...`,
+        choreo: (b1, b2) => `Choreografie: Kontrast pohybů vycházejících z „${b1.text}“ a plynulosti „${b2.text}“. Popis pohybů, hudba, rytmus.`,
+        game: (b1, b2) => `Herní design: Mechanika: „${b1.text}“ jako pravidlo. Cíl: „${b2.text}“ jako podmínka vítězství. Popiš jednoduchou hru pro 2 hráče.`,
+        performance: (b1, b2) => `Performativní umění: Intervence spojující „${b1.text}“ s „${b2.text}“. Místo, role účastníků, jak publikum vnímá vznikající význam.`
+    };
+
+    document.getElementById('generateBtn').addEventListener('click', () => {
+        if (selectedBlocks.length !== 2) {
+            alert('Vyber přesně dva bloky.');
+            return;
+        }
+        currentDomain = document.getElementById('domainSelect').value;
+        const template = templates[currentDomain] || templates.science;
+        lastGeneratedOutput = template(selectedBlocks[0], selectedBlocks[1]);
+        document.getElementById('outputArea').innerHTML = lastGeneratedOutput;
+    });
+
+    // ------------------------------------------------------------------
+    // 4. ZÁPISNÍK (ukládání výstupů)
+    // ------------------------------------------------------------------
+    function loadNotebook() {
+        const stored = localStorage.getItem('chcesmys_lab_notebook');
+        if (stored) {
+            try {
+                notebookEntries = JSON.parse(stored);
+            } catch(e) { notebookEntries = []; }
+        } else {
+            notebookEntries = [];
+        }
+        renderNotebook();
+    }
+
+    function saveNotebook() {
+        localStorage.setItem('chcesmys_lab_notebook', JSON.stringify(notebookEntries));
+        renderNotebook();
+    }
+
+    function renderNotebook() {
+        const container = document.getElementById('savedEntriesContainer');
+        if (!container) return;
+        if (notebookEntries.length === 0) {
+            container.innerHTML = '<p style="color:var(--dim2);">Zatím žádné záznamy. Vygeneruj něco a ulož.</p>';
+            return;
+        }
+        container.innerHTML = '';
+        notebookEntries.forEach((entry, idx) => {
+            const div = document.createElement('div');
+            div.className = 'entry-item';
+            div.innerHTML = `
+                <div class="entry-meta">
+                    <span>🎭 ${entry.domainLabel || entry.domain}</span>
+                    <span>📅 ${new Date(entry.timestamp).toLocaleString('cs-CZ')}</span>
+                </div>
+                <div class="entry-text">${escapeHtml(entry.content)}</div>
+                <div class="entry-actions">
+                    <button class="copy-entry" data-content="${escapeHtml(entry.content)}">📋 Kopírovat</button>
+                    <button class="delete-entry" data-idx="${idx}">🗑 Smazat</button>
+                </div>
+            `;
+            container.appendChild(div);
+        });
+        document.querySelectorAll('.copy-entry').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const text = btn.getAttribute('data-content');
+                navigator.clipboard.writeText(text);
+                alert('Zkopírováno');
+            });
+        });
+        document.querySelectorAll('.delete-entry').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const idx = parseInt(btn.getAttribute('data-idx'));
+                notebookEntries.splice(idx, 1);
+                saveNotebook();
+            });
+        });
+    }
+
+    document.getElementById('saveToNotebookBtn').addEventListener('click', () => {
+        if (!lastGeneratedOutput) {
+            alert('Nejprve něco vygeneruj.');
+            return;
+        }
+        const domainLabel = document.getElementById('domainSelect').options[document.getElementById('domainSelect').selectedIndex].text;
+        notebookEntries.unshift({
+            id: 'lab_' + Date.now(),
+            timestamp: Date.now(),
+            content: lastGeneratedOutput,
+            domain: currentDomain,
+            domainLabel: domainLabel,
+            source: 'generator'
+        });
+        saveNotebook();
+        alert('Uloženo do zápisníku.');
+    });
+
+    document.getElementById('exportNotebookBtn').addEventListener('click', () => {
+        const dataStr = JSON.stringify(notebookEntries, null, 2);
+        const blob = new Blob([dataStr], {type: 'application/json'});
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `notebook_${new Date().toISOString().slice(0,10)}.json`;
+        a.click();
+        URL.revokeObjectURL(url);
+    });
+    document.getElementById('importNotebookBtn').addEventListener('click', () => {
+        document.getElementById('importNotebookFile').click();
+    });
+    document.getElementById('importNotebookFile').addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+            try {
+                const imported = JSON.parse(ev.target.result);
+                if (Array.isArray(imported)) {
+                    notebookEntries = imported;
+                    saveNotebook();
+                    alert(`Načteno ${imported.length} záznamů.`);
+                } else {
+                    alert('Soubor neobsahuje pole záznamů.');
+                }
+            } catch(err) {
+                alert('Chyba při načítání JSON.');
+            }
+            e.target.value = '';
+        };
+        reader.readAsText(file);
+    });
+
+    // ------------------------------------------------------------------
+    // 5. VIZUÁLNÍ INSPIRACE – 3 náhodné ilustrace
+    // ------------------------------------------------------------------
+    const animalImages = [
+        'mys.jpg', 'kocour.jpg', 'ryba.jpg', 'zajic.jpg', 'slon.jpg',
+        'cap.jpg', 'pav.jpg', 'vrabec.jpg', 'drak.jpg', 'motyl.jpg'
+    ]; // doplň podle skutečných souborů
+
+    function renderVisualInspiration() {
+        const container = document.getElementById('visualInspiration');
+        if (!container) return;
+        // náhodně vyber 3 obrázky (mohou se opakovat, ale nevadí)
+        const shuffled = [...animalImages].sort(() => 0.5 - Math.random());
+        const selected = shuffled.slice(0, 3);
+        container.innerHTML = selected.map(img => `<img src="../doma/ilustrace/${img}" alt="ilustrace" onerror="this.style.display='none'">`).join('');
+    }
+
+    // ------------------------------------------------------------------
+    // 6. VYTVOŘENÍ VLASTNÍHO BLOKU
+    // ------------------------------------------------------------------
+    document.getElementById('saveBlockBtn').addEventListener('click', () => {
+        const text = document.getElementById('newBlockText').value.trim();
+        if (!text) { alert('Zadej text bloku.'); return; }
+        const type = document.getElementById('newBlockType').value.trim();
+        const functionDesc = document.getElementById('newBlockFunction').value.trim();
+        const fieldsRaw = document.getElementById('newBlockFields').value.trim();
+        const fields = fieldsRaw ? fieldsRaw.split(',').map(f => f.trim()) : [];
+        const movement = document.getElementById('newBlockMovement').value;
+        const intensity = document.getElementById('newBlockIntensity').value;
+        const language = document.getElementById('newBlockLanguage').value;
+
+        const newBlock = {
+            text,
+            type: type || 'vlastní',
+            function: functionDesc || '',
+            fields: fields,
+            movement: movement,
+            intensity: intensity,
+            language: language,
+            created: new Date().toISOString()
+        };
+        addUserBlock(newBlock);
+        alert('Blok uložen do tvé knihovny.');
+        // vyčistit formulář
+        document.getElementById('newBlockText').value = '';
+        document.getElementById('newBlockType').value = '';
+        document.getElementById('newBlockFunction').value = '';
+        document.getElementById('newBlockFields').value = '';
+        // ostatní zůstanou default
+    });
+
+    document.getElementById('exportUserBlocksBtn').addEventListener('click', exportUserBlocks);
+    document.getElementById('importBlocksFile').addEventListener('change', (e) => {
+        if (e.target.files.length) importUserBlocks(e.target.files[0]);
+        e.target.value = '';
+    });
+
+    // ------------------------------------------------------------------
+    // 7. PŘEPÍNÁNÍ TABŮ
+    // ------------------------------------------------------------------
+    const tabs = document.querySelectorAll('.tab');
+    const panels = {
+        combine: document.getElementById('combine-panel'),
+        create: document.getElementById('create-panel'),
+        notebook: document.getElementById('notebook-panel')
+    };
+    tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            const target = tab.getAttribute('data-tab');
+            tabs.forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+            Object.values(panels).forEach(p => p.classList.remove('active'));
+            panels[target].classList.add('active');
+            if (target === 'notebook') renderNotebook();
+        });
+    });
+
+    // ------------------------------------------------------------------
+    // 8. POMOCNÉ FUNKCE
+    // ------------------------------------------------------------------
+    function escapeHtml(str) {
+        if (!str) return '';
+        return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
+
+    // ------------------------------------------------------------------
+    // 9. START
+    // ------------------------------------------------------------------
+    loadBlocks();
+    loadNotebook();
+    renderVisualInspiration();
+</script>
+</body>
+</html>
