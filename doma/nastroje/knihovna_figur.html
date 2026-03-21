@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Knihovna figur — Fyzika jazyka · Chceš myš?</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0f0d0a;--s:#171410;--s2:#1e1a14;
+  --cream:#e8e0d0;--dim:rgba(232,224,208,.42);--dim2:rgba(232,224,208,.2);
+  --a:#a89060;--a2:#786040;--ab:rgba(168,144,96,.1);
+  --border:rgba(168,144,96,.14);--border-hi:rgba(168,144,96,.3);
+  --serif:'Cormorant Garamond',Georgia,serif;--mono:'DM Mono',monospace;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--cream);font-family:var(--mono);font-size:13px;line-height:1.8;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+.wrap{max-width:1000px;margin:0 auto;padding:0 24px}
+
+nav{position:sticky;top:0;z-index:100;border-bottom:1px solid var(--border);background:rgba(15,13,10,.94);backdrop-filter:blur(14px);padding:12px 24px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.nav-brand{font-family:var(--serif);font-size:.88rem;font-weight:300;letter-spacing:.04em}
+.nav-brand em{font-style:italic;color:var(--a)}
+.nav-links{display:flex;gap:16px;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)}
+.nav-links a:hover{color:var(--cream)}
+
+.hero{padding:44px 0 32px;border-bottom:1px solid var(--border)}
+.hero-label{font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--a);margin-bottom:14px}
+h1{font-family:var(--serif);font-size:clamp(2rem,5vw,3.2rem);font-weight:300;line-height:1.05;margin-bottom:8px}
+h1 em{font-style:italic;color:var(--a)}
+.hero-desc{font-size:.78rem;color:var(--dim);max-width:540px;line-height:1.9;margin-top:10px}
+
+/* VIZUÁLNÍ STYLY FIGUR — jednotné napříč kartami */
+.f-elipsa-demo{border-bottom:2px dashed rgba(168,144,96,.65)}
+.f-anafora-demo{border-bottom:1px dotted rgba(168,144,96,.8)}
+.f-personifikace-demo{border-bottom:1px solid rgba(168,144,96,.55)}
+.f-hyperbola-demo{background:rgba(168,144,96,.15);padding:0 3px}
+.f-fyzikalizace-demo{text-decoration:underline wavy rgba(168,144,96,.7)}
+.f-paradox-demo{text-decoration:line-through;text-decoration-color:rgba(168,144,96,.6)}
+.f-aforismus-demo{border-bottom:2px dotted rgba(168,144,96,.75);border-top:1px dotted rgba(168,144,96,.35);padding-top:1px}
+.f-ironie-demo{background:rgba(168,144,96,.22);padding:0 3px}
+.f-otazka-demo{border-bottom:3px solid rgba(168,144,96,.5)}
+.f-fragment-demo{border-bottom:1px dotted rgba(168,144,96,.55);letter-spacing:.03em}
+.f-primaRec-demo{font-style:italic;border:1px solid rgba(168,144,96,.38);padding:0 3px}
+.f-metafora-demo{border-bottom:2px solid rgba(168,144,96,.45)}
+
+/* MÓD */
+.mod-bar{display:flex;gap:1px;background:var(--border);border:1px solid var(--border);margin:28px 0 0}
+.mod-btn{flex:1;padding:12px 10px;background:var(--s);border:none;cursor:pointer;font-family:var(--mono);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);transition:all .12s;text-align:center}
+.mod-btn:hover{background:var(--s2);color:var(--cream)}
+.mod-btn.active{background:var(--a);color:var(--bg)}
+.mod-popis{padding:9px 14px;font-size:.76rem;color:var(--dim);background:var(--s);border:1px solid var(--border);border-top:none;margin-bottom:24px}
+
+/* FILTRY */
+.filtry{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px;align-items:center}
+.f-label{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--dim2);margin-right:2px}
+.f-btn{padding:5px 11px;font-family:var(--mono);font-size:.66rem;letter-spacing:.08em;text-transform:uppercase;background:transparent;border:1px solid var(--border);color:var(--dim);cursor:pointer;transition:all .1s}
+.f-btn:hover,.f-btn.active{border-color:var(--a);color:var(--a)}
+.hledat{flex:1;min-width:180px;max-width:300px;background:var(--s);border:1px solid var(--border);color:var(--cream);padding:6px 12px;font-family:var(--mono);font-size:.76rem}
+.hledat:focus{outline:1px solid var(--a)}.hledat::placeholder{color:var(--dim2)}
+.pocet{font-size:.68rem;color:var(--dim2);margin-bottom:10px}
+
+/* GRID */
+.figury-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1px;background:var(--border)}
+.figura{background:var(--s);padding:17px 20px;cursor:pointer;transition:background .1s;position:relative}
+.figura:hover{background:var(--s2)}.figura.open{background:var(--s2)}
+.f-head{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:5px}
+.f-nazev{font-family:var(--serif);font-size:1.05rem;font-weight:300}
+.f-typ{font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--a);padding:2px 6px;border:1px solid var(--border);white-space:nowrap}
+.f-def{font-size:.74rem;color:var(--dim);line-height:1.7;margin-bottom:6px}
+.f-vizual{font-size:.8rem;color:var(--cream);background:var(--bg);padding:7px 10px;margin-bottom:6px;font-family:var(--serif);font-style:italic;line-height:1.8}
+.f-karty{display:flex;flex-wrap:wrap;gap:3px}
+.f-karta-tag{font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:var(--dim2);padding:1px 6px;border:1px solid var(--border)}
+.f-tog{font-size:.6rem;color:var(--dim);transition:transform .2s;margin-left:auto;flex-shrink:0;padding-top:3px}
+.figura.open .f-tog{transform:rotate(180deg)}
+.f-detail{display:none;margin-top:10px;padding-top:10px;border-top:1px solid var(--border)}
+.figura.open .f-detail{display:block}
+.f-d-label{font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:var(--a);margin-bottom:4px;margin-top:10px}
+.f-d-label:first-child{margin-top:0}
+.f-d-text{font-size:.76rem;color:rgba(232,224,208,.65);line-height:1.8}
+.f-d-priklad{font-family:var(--serif);font-style:italic;font-size:.82rem;color:rgba(232,224,208,.78);line-height:1.8;padding:8px 12px;border-left:2px solid var(--border-hi);margin:6px 0}
+.f-cviceni{background:var(--ab);border-left:2px solid var(--a2);padding:9px 12px;font-size:.76rem;color:rgba(232,224,208,.65);line-height:1.8;margin-top:8px}
+.f-cviceni strong{color:var(--a);font-weight:400}
+.f-efekt{font-size:.72rem;color:var(--dim);font-style:italic;margin-top:6px;line-height:1.7}
+
+/* QUIZ */
+.quiz-panel{display:none;background:var(--s);border:1px solid var(--border);padding:22px;margin-top:4px}
+.quiz-panel.show{display:block}
+.quiz-label{font-size:.64rem;letter-spacing:.16em;text-transform:uppercase;color:var(--a);margin-bottom:10px}
+.quiz-text{font-family:var(--serif);font-style:italic;font-size:.95rem;color:var(--cream);line-height:2;padding:12px 16px;border-left:2px solid var(--border-hi);margin-bottom:14px}
+.quiz-choices{display:flex;flex-direction:column;gap:4px;margin-bottom:10px}
+.quiz-choice{padding:9px 14px;background:var(--s2);border:1px solid var(--border);font-family:var(--mono);font-size:.76rem;cursor:pointer;text-align:left;color:var(--cream);transition:all .1s}
+.quiz-choice:hover{border-color:var(--a);color:var(--a)}
+.quiz-choice.ok{border-color:#6a9e5a;background:rgba(106,158,90,.1);color:#8ac07a}
+.quiz-choice.wrong{border-color:rgba(184,96,122,.5);background:rgba(184,96,122,.08);color:rgba(184,96,122,.8)}
+.quiz-feedback{font-size:.76rem;color:var(--dim);padding:8px 0;line-height:1.7;display:none}
+.quiz-feedback.show{display:block}
+.quiz-nav{display:flex;justify-content:space-between;align-items:center;margin-top:10px}
+.quiz-score{font-size:.7rem;color:var(--dim)}
+.btn-quiz{padding:7px 16px;font-family:var(--mono);font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;background:var(--a);color:var(--bg);border:none;cursor:pointer;transition:all .12s}
+.btn-quiz:hover{background:#c0a870}
+
+/* VIZUÁLNÍ PŘEHLED — 3. mód */
+.vizual-panel{display:none}
+.vizual-panel.show{display:block}
+.v-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1px;background:var(--border);margin-top:4px}
+.v-item{background:var(--s);padding:14px 16px}
+.v-nazev{font-family:var(--serif);font-size:.88rem;margin-bottom:5px}
+.v-ukazka{font-size:.82rem;font-family:var(--serif);font-style:italic;margin-bottom:5px}
+.v-desc{font-size:.66rem;color:var(--dim);line-height:1.6}
+
+footer{padding:20px 0;border-top:1px solid var(--border);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-top:24px}
+footer p{font-size:.68rem;color:var(--dim2)}footer a{color:var(--a)}
+</style>
+</head>
+<body>
+<nav>
+  <div class="nav-brand"><em>Fyzika jazyka</em> · Chceš myš?</div>
+  <div class="nav-links">
+    <a href="../../../index.html">← Všechna zvířata</a>
+    <a href="zapisnik.html">Zápisník</a>
+    <a href="analyzer.html">Analyzátor</a>
+  </div>
+</nav>
+
+<div class="wrap">
+<div class="hero">
+  <p class="hero-label">Nástroj · Referenční knihovna</p>
+  <h1>Knihovna <em>figur</em></h1>
+  <p class="hero-desc">Jazykové figury jsou nástroje pro vědomou práci s textem. Každá figura má svůj vizuální styl v pohádkách — tečkovaně, přerušovaně, vlnkování, podtržení. Tady je jejich kompletní přehled.</p>
+  <div class="mod-bar">
+    <button class="mod-btn active" onclick="setMod('ucit',this)">📖 Učit se</button>
+    <button class="mod-btn" onclick="setMod('vizual',this)">👁 Vizuální přehled</button>
+    <button class="mod-btn" onclick="setMod('quiz',this)">🎯 Quiz</button>
+  </div>
+  <div class="mod-popis" id="mod-popis">Procházejte figury, čtěte definice a příklady z pohádek. Kliknutím otevřete detail s cvičením.</div>
+</div>
+
+<div id="panel-ucit">
+  <div style="margin-top:20px" class="filtry">
+    <span class="f-label">Typ:</span>
+    <button class="f-btn active" onclick="setFilter('typ','vse',this)">Vše</button>
+    <button class="f-btn" onclick="setFilter('typ','struktura',this)">Struktura</button>
+    <button class="f-btn" onclick="setFilter('typ','smysl',this)">Smysl</button>
+    <button class="f-btn" onclick="setFilter('typ','zvuk',this)">Zvuk</button>
+    <button class="f-btn" onclick="setFilter('typ','osoba',this)">Osoba</button>
+  </div>
+  <div class="filtry">
+    <span class="f-label">Karta:</span>
+    <button class="f-btn active" onclick="setFilter('karta','vse',this)">Vše</button>
+    <button class="f-btn" onclick="setFilter('karta','Ryba',this)">🐟 Ryba</button>
+    <button class="f-btn" onclick="setFilter('karta','Slon',this)">🐘 Slon</button>
+    <button class="f-btn" onclick="setFilter('karta','Prasátko',this)">🐷 Prasátko</button>
+    <button class="f-btn" onclick="setFilter('karta','Netopýr',this)">🦇 Netopýr</button>
+    <button class="f-btn" onclick="setFilter('karta','Husy',this)">🪿 Husy</button>
+    <input class="hledat" id="hledat" placeholder="Hledat figuru…" oninput="render()" style="margin-left:auto">
+  </div>
+  <p class="pocet" id="pocet"></p>
+  <div class="figury-grid" id="grid"></div>
+</div>
+
+<div class="vizual-panel" id="panel-vizual">
+  <p style="font-size:.74rem;color:var(--dim);margin:16px 0 8px">Každá figura má svůj pevný vizuální styl v textu pohádky — platný napříč všemi kartami.</p>
+  <div class="v-grid" id="vizual-grid"></div>
+</div>
+
+<div class="quiz-panel" id="panel-quiz">
+  <div class="quiz-label">Quiz — uhádněte figuru</div>
+  <div id="quiz-inner"></div>
+</div>
+
+<footer>
+  <p>Fyzika jazyka · Knihovna figur · © 2026 Michaela Nováková</p>
+  <p><a href="mailto:chcesmys@gmail.com">chcesmys@gmail.com</a></p>
+</footer>
+</div>
+
+<script>
+// ═══════════════════════════════════════════
+// DATA FIGUR
+// ═══════════════════════════════════════════
+const FIGURY = [
+  {id:'elipsa', nazev:'Elipsa', typ:'struktura',
+   vizualCls:'f-elipsa-demo', vizualPopis:'přerušovaně ──',
+   def:'Vypuštění slov, která by gramaticky patřila do věty. Věta stojí sama bez slovesa nebo podmětu.',
+   priklad:'"Velký. Těžký. Rozvážný." — Slon · "Velkých. Bílých. Obyčejných." — Husy · "Bolí. Ale připomínají, že jsme žili." — Netopýr',
+   karty:['Slon','Netopýr','Husy','Ryba','Prasátko'],
+   cviceni:'Napište pět vět tak, aby každá říkala co nejvíc s co nejméně slovy. Zkuste zredukovat každou na maximum tří slov.',
+   efekt:'Vytváří rytmus a váhu. Každé slovo stojí samo — jako fakt. Čtenář doplňuje mezery sám.',
+   ukazka:'"Velký. Těžký. Rozvážný."'},
+  {id:'anafora', nazev:'Anafora', typ:'struktura',
+   vizualCls:'f-anafora-demo', vizualPopis:'tečkovaně ──',
+   def:'Opakování stejného slova nebo fráze na začátku po sobě jdoucích vět nebo klauzulí.',
+   priklad:'"Byla výzva. Byla hra. Byla touha být lehčí." — Slon · "Tohle jsem neřekl. Tohle jsem necítil. Tohle jsem nebyl." — Netopýr · "Já. Já. Já. Já." — Husy',
+   karty:['Slon','Netopýr','Husy','Ryba'],
+   cviceni:'Napište čtyři věty začínající stejným slovem. Každá musí říkat něco jiného — opakování tvar, ne obsah.',
+   efekt:'Buduje napětí a očekávání. Čtenář ví, že přijde variace — a čeká, jaká.',
+   ukazka:'"Byla výzva. Byla hra. Byla touha."'},
+  {id:'personifikace', nazev:'Personifikace', typ:'smysl',
+   vizualCls:'f-personifikace-demo', vizualPopis:'plně ──',
+   def:'Přisouzení lidských vlastností, pocitů nebo jednání nelidským bytostem, předmětům nebo jevům.',
+   priklad:'"Stromy, které si ho pamatovaly. Řeky, které ho kdysi chladily. Kamínky, které se mu smály." — Slon · "Ticho, co se tváří, že neslyšelo." — Prasátko',
+   karty:['Slon','Prasátko','Netopýr','Husy'],
+   cviceni:'Napište text, ve kterém tři neživé věci mají vztah k hlavní postavě. Každá má jinou emoci nebo paměť.',
+   efekt:'Oživuje svět. Nic není pasivní — vše má vztah, paměť, záměr.',
+   ukazka:'"Stromy, které si ho pamatovaly."'},
+  {id:'hyperbola', nazev:'Hyperbola', typ:'smysl',
+   vizualCls:'f-hyperbola-demo', vizualPopis:'světlý podklad',
+   def:'Záměrné přehánění pro zdůraznění účinku — bez doslova pravdivosti.',
+   priklad:'"Když šel, země se chvěla. Když stál, čas se zpomalil." — Slon · "zásoby mínění bez dna" — Husy',
+   karty:['Slon','Husy'],
+   cviceni:'Popište každodenní situaci (ranní vstávání, vaření kávy) pomocí záměrného přehánění. Každá věta ať zveličuje fyzický dopad.',
+   efekt:'Přenáší fyzický dopad na metaforu. Zveličení jako způsob, jak ukázat sílu přítomnosti.',
+   ukazka:'"Když šel, země se chvěla."'},
+  {id:'fyzikalizace', nazev:'Fyzikalizace', typ:'smysl',
+   vizualCls:'f-fyzikalizace-demo', vizualPopis:'vlnkování',
+   def:'Přenesení abstraktního pojmu do fyzické, hmatatelné podoby — abstrakt se stává hmotou.',
+   priklad:'"Nosil v sobě paměť krajin, které už neexistují." — Slon · "slova se třpytila jako sliby" — Netopýr',
+   karty:['Slon','Netopýr'],
+   cviceni:'Vyberte abstraktní pojem (smutek, čas, touha). Napište větu, kde se dá nosit, vážit, nebo zlomit.',
+   efekt:'Abstraktu dává tělo. Čtenář pocítí, co by jinak jen pochopil.',
+   ukazka:'"Nosil v sobě paměť krajin."'},
+  {id:'paradox', nazev:'Paradox', typ:'smysl',
+   vizualCls:'f-paradox-demo', vizualPopis:'přeškrtnutí',
+   def:'Zdánlivě rozporné tvrzení, které při bližším pohledu odhaluje skrytou pravdu.',
+   priklad:'"Všechno bylo trochu nepravdivé – ale o dost pravdivější." — Netopýr · "Protože třešeň byla víc než ovoce." — Slon · "Aby nemohl zastavit." — Slon',
+   karty:['Slon','Netopýr','Prasátko'],
+   cviceni:'Napište tři paradoxní tvrzení. Každé musí být zdánlivě nesmysl, ale po chvíli dávat smysl.',
+   efekt:'Nutí čtenáře zastavit se. Logická bariéra, která se rozpadá — a tím sděluje víc.',
+   ukazka:'"Nepravdivé – ale pravdivější."'},
+  {id:'aforismus', nazev:'Aforismus', typ:'smysl',
+   vizualCls:'f-aforismus-demo', vizualPopis:'dvojité tečky',
+   def:'Krátká, zhutněná moudrost — věta, která uzavírá a zároveň otevírá.',
+   priklad:'"Stačí běžet za něčím malým a věřit, že to má velký smysl." — Slon · "Noc není lež. Je to jiný jazyk." — Netopýr · "Husy totiž nejsou hloupé. Jsou jen hlasité pokusy o sebe-klam." — Husy',
+   karty:['Slon','Netopýr','Husy','Ryba','Prasátko'],
+   cviceni:'Napište tři aforismy o tématu, které znáte. Každý musí být kratší než 15 slov a nesmí obsahovat slovo "je důležité".',
+   efekt:'Uzavírá příběh, ale zároveň ho otevírá. Čtenář si ho odnese.',
+   ukazka:'"Noc není lež. Je to jiný jazyk."'},
+  {id:'ironie', nazev:'Ironie', typ:'smysl',
+   vizualCls:'f-ironie-demo', vizualPopis:'tmavý podklad',
+   def:'Záměrný rozdíl mezi tím, co se říká a co se myslí — nebo co se zdá a co je.',
+   priklad:'"Lidé byli krásní, protože nebyli vidět." — Netopýr · "kolektivní singular" (oxymóron) — Husy · "Tohle jsem nebyl." — Netopýr',
+   karty:['Netopýr','Husy','Prasátko'],
+   cviceni:'Popište nějakou situaci tak, jak ji vnímají druzí — a pak jak ji vidíte vy. Propast mezi těmito pohledy je ironie.',
+   efekt:'Vytváří nadhled. Čtenář vidí obě roviny najednou.',
+   ukazka:'"Krásní, protože nebyli vidět."'},
+  {id:'primaRec', nazev:'Přímá řeč', typ:'osoba',
+   vizualCls:'f-primaRec-demo', vizualPopis:'kurzíva + rámeček',
+   def:'Doslova citovaný hlas postavy — s uvozovkami nebo bez.',
+   priklad:'"Jednu třešeň ti dám, slone, když mě dohoníš." — Slon · "Tady není záchod?" — Prasátko · "V noci krása, co ráno už se nehodí," šeptal si. — Netopýr',
+   karty:['Slon','Prasátko','Netopýr','Ryba'],
+   cviceni:'Napište krátký dialog mezi dvěma postavami kde jedna z vět je výzva, jedna je odmítnutí a jedna je otázka bez odpovědi.',
+   efekt:'Přivádí postavu přímo k čtenáři. Hlas dostane konkrétní tvar.',
+   ukazka:'"Jednu třešeň ti dám, slone."'},
+  {id:'fragment', nazev:'Fragment', typ:'struktura',
+   vizualCls:'f-fragment-demo', vizualPopis:'tečky + mezery',
+   def:'Neúplná věta — bez podmětu, bez slovesa, nebo záměrně přerušená.',
+   priklad:'"Ne rychle. Ale srdcem." — Slon · "Základníci. Barmani. Ztracenci. Zamilovaní." — Netopýr · "Reflex. Instinkt. Možná soucit. Možná zvědavost." — Prasátko',
+   karty:['Slon','Netopýr','Prasátko','Husy'],
+   cviceni:'Popište cestu do práce jen pomocí fragmentů — žádná kompletní věta. Maximálně tři slova na fragment.',
+   efekt:'Přeryvný rytmus napodobuje myšlení ve skocích. Čtenář cítí rychlost nebo náraz.',
+   ukazka:'"Reflex. Instinkt. Možná soucit."'},
+  {id:'metafora', nazev:'Metafora', typ:'smysl',
+   vizualCls:'f-metafora-demo', vizualPopis:'dvojitá plná ──',
+   def:'Přímý přenos pojmenování z jedné oblasti do druhé — bez "jako".',
+   priklad:'"světla se třpytila jako sliby" — Netopýr · "pohádky jsou jako kocovina" — Netopýr · "zásoby mínění bez dna" — Husy',
+   karty:['Netopýr','Husy','Slon'],
+   cviceni:'Vyberte abstraktní stav (únava, naděje, strach). Přiřaďte mu konkrétní předmět nebo místo — bez slova "jako". Napište tři takové metafory.',
+   efekt:'Přenáší neviditelné do viditelného. Pojmenovává, co jinak nelze uchopit.',
+   ukazka:'"Světla se třpytila jako sliby."'},
+  {id:'retOtazka', nazev:'Rétorická otázka', typ:'osoba',
+   vizualCls:'f-otazka-demo', vizualPopis:'silná spodní ──',
+   def:'Otázka, na kterou se neočekává odpověď — nebo na kterou je odpověď zjevná.',
+   priklad:'"Protože kdyby ji dostal, co by zbylo?" — Slon · "A záchod? Ten se možná nikde nenajde." — Prasátko',
+   karty:['Slon','Prasátko'],
+   cviceni:'Napište text, který se skládá pouze z otázek. Žádná nesmí mít přímou odpověď. Zakončete otázkou, na kterou neexistuje odpověď.',
+   efekt:'Aktivuje čtenáře. Přenáší odpovědnost na toho, kdo čte.',
+   ukazka:'"Kdyby ji dostal, co by zbylo?"'},
+  {id:'katalog', nazev:'Katalog reakcí', typ:'struktura',
+   vizualCls:'f-metafora-demo', vizualPopis:'dvojitá plná ──',
+   def:'Výčet různých reakcí různých postav na tutéž situaci — každá jiná, ale stejně zasažená.',
+   priklad:'"Páv se zarazil v půli věty. Zebra přestala přežvykovat svůj vlastní vzor. Opice ztuhla v pohybu." — Prasátko · "Jedni si mysleli, že je to zpěv. Druzí, že je to porucha." — Husy',
+   karty:['Prasátko','Husy'],
+   cviceni:'Popište jednu situaci očima tří různých postav. Každá z nich si všimne něčeho jiného. Žádná nemá pravdu úplně.',
+   efekt:'Ukazuje, že jeden jev má vždy více čtení. Žádná reakce není jediná správná.',
+   ukazka:'"Jedni zpěv. Druzí porucha."'},
+  {id:'gradace', nazev:'Gradace', typ:'struktura',
+   vizualCls:'f-fragment-demo', vizualPopis:'tečky + mezery',
+   def:'Stupňování — věty nebo obrazy se postupně zesilují nebo rozkládají.',
+   priklad:'"já → jaja → jajaja → jaja ja → nevím, kdo jsem" — Husy · "Já. Já. Já. Já. Já. Já. Já ja jajaja jaja ja." — Husy',
+   karty:['Husy','Netopýr'],
+   cviceni:'Napište šest vět, kde každá je intenzivnější nebo složitější než předchozí — nebo naopak, kde se každá zjednodušuje až k tichu.',
+   efekt:'Vytváří pohyb — buď eskalaci nebo rozpad. Čtenář cítí, kam text míří.',
+   ukazka:'"já → jaja → jajaja → nevím"'},
+  {id:'neologismus', nazev:'Neologismus', typ:'smysl',
+   vizualCls:'f-primaRec-demo', vizualPopis:'kurzíva + rámeček',
+   def:'Nové nebo kombinované slovo, které přesněji pojmenovává to, pro co starý jazyk nemá výraz.',
+   priklad:'"sebe-klam" — Husy · "zaradovalo se" (radost + uvolnění) — Prasátko · "polopopletení" — Husy',
+   karty:['Husy','Prasátko'],
+   cviceni:'Vymyslete tři nová slova pro pocity nebo stavy, pro které čeština nemá přesný výraz. Ke každému napište definici a větu s použitím.',
+   efekt:'Pojmenovává mezery v jazyce. Čtenář cítí, že konečně má slovo pro něco, co znal.',
+   ukazka:'"Jsou jen hlasité pokusy o sebe-klam."'},
+  {id:'prirovnani', nazev:'Přirovnání', typ:'smysl',
+   vizualCls:'f-fyzikalizace-demo', vizualPopis:'vlnkování',
+   def:'Srovnání dvou jevů pomocí "jako" nebo "jako by" — explicitní přenos.',
+   priklad:'"pohádky jsou jako kocovina. Bolí." — Netopýr · "světla se třpytila jako sliby" — Netopýr · "Opice ztuhla v pohybu, jako by jí někdo zmrazil banán v ruce." — Prasátko',
+   karty:['Netopýr','Prasátko','Slon'],
+   cviceni:'Napište deset přirovnání pro jedno slovo (například "ticho"). Každé přirovnání musí říkat něco jiného o tichu.',
+   efekt:'Zpřesňuje obraz. "Jako" říká: znáš to, ale jinak — a takhle to je přesněji.',
+   ukazka:'"Jako by jí někdo zmrazil banán."'},
+  {id:'aposiopeze', nazev:'Aposiopeze', typ:'struktura',
+   vizualCls:'f-fragment-demo', vizualPopis:'tečky + mezery',
+   def:'Záměrné přerušení věty — tři tečky nebo pomlčka, kde měla věta pokračovat.',
+   priklad:'"Já jen… jsem plné." — Prasátko · "Jenže.." — Husy · "– ale o dost pravdivější." — Netopýr',
+   karty:['Prasátko','Husy','Netopýr'],
+   cviceni:'Napište monolog, kde každá třetí věta zůstane nedokončená. Nedokončené věty říkají víc než ty dokončené.',
+   efekt:'Váhání jako výpověď. Co není řečeno je součást sdělení.',
+   ukazka:'"Já jen… jsem plné."'},
+  {id:'onomatopoeia', nazev:'Onomatopeia', typ:'zvuk',
+   vizualCls:'f-fyzikalizace-demo', vizualPopis:'vlnkování',
+   def:'Slovo, které napodobuje zvuk, který označuje.',
+   priklad:'"cinklo to. Ne moc. Tak decentně." — Prasátko · "Já ja jajaja jaja ja!" — Husy',
+   karty:['Prasátko','Husy'],
+   cviceni:'Popište zvukové prostředí jednoho místa pomocí slov, která zní jako to, co popisují. Minimálně osm onomatopoií.',
+   efekt:'Text začne znít. Čtenář slyší místo čtení.',
+   ukazka:'"Cinklo to. Tak decentně."'},
+  {id:'manifest', nazev:'Manifest', typ:'smysl',
+   vizualCls:'f-aforismus-demo', vizualPopis:'dvojité tečky',
+   def:'Prohlášení o podstatě věci nebo identity — věta, která dává chaosu status programu.',
+   priklad:'"ale ve skutečnosti to byl — manifest identity v rozkladu." — Husy',
+   karty:['Husy'],
+   cviceni:'Napište manifest jedné věty pro každodenní chaos, který prožíváte. Chaos musí dostat název a status.',
+   efekt:'Chaos dostává záměr. Rozpad se stává programem.',
+   ukazka:'"Manifest identity v rozkladu."'},
+  {id:'inverzeGeometrie', nazev:'Inverze geometrie', typ:'smysl',
+   vizualCls:'f-paradox-demo', vizualPopis:'přeškrtnutí',
+   def:'Geometrický kontrast jako metafora myšlení — klín (vpřed) vs. kruh (uzavřenost).',
+   priklad:'"A tak husy nelétaly v klínu. Létaly v kruhu." — Husy',
+   karty:['Husy'],
+   cviceni:'Popište stav mysli nebo situaci prostorovou metaforou. Pohybujete se vpřed, v kruhu, spirálou, nebo do hloubky?',
+   efekt:'Prostorová metafora zviditelní abstraktní stav. Čtenář ihned chápe.',
+   ukazka:'"Nelétaly v klínu. Létaly v kruhu."'},
+  {id:'krajina-jako-cinitel', nazev:'Krajina jako činitel', typ:'smysl',
+   vizualCls:'f-personifikace-demo', vizualPopis:'plně ──',
+   def:'Prostředí aktivně ovlivňuje jazyk a příběh — není kulisou, ale spoluautorem.',
+   priklad:'"Na severu, kde se slova lámou o vítr a příběhy se rodí z mlhy" — Husy',
+   karty:['Husy'],
+   cviceni:'Napište scénu, kde počasí nebo místo přímo zasáhne do toho, co postava může nebo nemůže říct.',
+   efekt:'Prostředí má moc nad jazykem. Kde jsme ovlivňuje co říkáme.',
+   ukazka:'"Slova lámou o vítr, příběhy se rodí z mlhy."'},
+  {id:'retezova-definice', nazev:'Řetězová definice', typ:'struktura',
+   vizualCls:'f-primaRec-demo', vizualPopis:'kurzíva + rámeček',
+   def:'Definice, která se rozrůstá přidáváním podmínek — identita jako proces, ne stav.',
+   priklad:'"Já jsem já, ale jen když já slyšíš. Když já neslyšíš, jsem jen jaja…" — Husy',
+   karty:['Husy'],
+   cviceni:'Definujte sebe pomocí řetězce podmínek. "Jsem já, ale jen když… Když ne, jsem…" Pokračujte, dokud se definice nerozpadne.',
+   efekt:'Identita dostane strukturu procesu. Ukazuje, že já závisí na druhém.',
+   ukazka:'"Jsem já, ale jen když já slyšíš."'},
+  {id:'intertextualita', nazev:'Intertextualita', typ:'smysl',
+   vizualCls:'f-metafora-demo', vizualPopis:'dvojitá plná ──',
+   def:'Odkaz na jiný text, tradici nebo kulturní sdílenou zkušenost — vědomý nebo nevědomý.',
+   priklad:'"manifest identity v rozkladu" — Husy (odkaz na moderní umění) · kulturní přiřazení netopýra — Netopýr',
+   karty:['Husy','Netopýr'],
+   cviceni:'Napište větu, která odkazuje na pohádku nebo přísloví — ale tak, aby fungovala i bez znalosti zdroje.',
+   efekt:'Přidává vrstvu pro zasvěcené. Ale text funguje i bez ní.',
+   ukazka:'"Manifest identity v rozkladu."'},
+  {id:'oxymóron', nazev:'Oxymóron', typ:'smysl',
+   vizualCls:'f-ironie-demo', vizualPopis:'tmavý podklad',
+   def:'Spojení dvou zdánlivě neslučitelných pojmů do jednoho výrazu.',
+   priklad:'"kolektivní singular" — Husy · "tichý výkřik" · "sladká bolest" — Netopýr',
+   karty:['Husy','Netopýr'],
+   cviceni:'Vymyslete pět oxymóronů pro stavy, které jsou skutečné — ale jazykově neslučitelné.',
+   efekt:'Pojmenovává paradoxní stavy. Dva pojmy se vzájemně osvětlují.',
+   ukazka:'"Kolektivní singular."'},
+  {id:'fyzikalna-pamet', nazev:'Fyzikální paměť', typ:'smysl',
+   vizualCls:'f-fyzikalizace-demo', vizualPopis:'vlnkování',
+   def:'Vzpomínka nebo emoce uložená v těle — nese se fyzicky, váží, tíží.',
+   priklad:'"Nosil v sobě paměť krajin, které už neexistují." — Slon',
+   karty:['Slon'],
+   cviceni:'Napište o vzpomínce, která má váhu. Kde v těle ji cítíte? Jak by vypadala, kdyby ji šlo vidět?',
+   efekt:'Abstraktní paměť dostává fyzické tělo. Stává se hmatatelnou.',
+   ukazka:'"Nosil v sobě paměť krajin."'},
+  {id:'vnitrni-hlas', nazev:'Vnitřní hlas', typ:'osoba',
+   vizualCls:'f-primaRec-demo', vizualPopis:'kurzíva + rámeček',
+   def:'Přímá řeč postavy určená sobě — monolog, mantra, šepot.',
+   priklad:'"V noci krása, co ráno už se nehodí," šeptal si. — Netopýr',
+   karty:['Netopýr'],
+   cviceni:'Napište mantru — větu, kterou si postava opakuje, aby přežila situaci. Musí být kratší než deset slov a mluvit o tom, co je jinak nepojmenovatelné.',
+   efekt:'Slyšíme pravdu postavy přímo. Bez filtrování.',
+   ukazka:'"V noci krása, co ráno se nehodí."'},
+  {id:'sebereflexe', nazev:'Sebereflexe', typ:'osoba',
+   vizualCls:'f-ironie-demo', vizualPopis:'tmavý podklad',
+   def:'Postava si je vědoma svého stavu — ví, i když ostatní nevědí.',
+   priklad:'"Ale netopýr věděl, že byl." — Netopýr · "Husty totiž nejsou hloupé." — Husy',
+   karty:['Netopýr','Husy'],
+   cviceni:'Napište monolog postavy, která přesně ví, co si o ní ostatní myslí — a ví, že to není celá pravda.',
+   efekt:'Postava překračuje rámec příběhu. Vidí sebe z venku.',
+   ukazka:'"Netopýr věděl, že byl."'},
+];
+
+// ═══════════════════════════════════════════
+// VIZUÁLNÍ PŘEHLED
+// ═══════════════════════════════════════════
+const VIZUAL = [
+  {nazev:'Elipsa', cls:'f-elipsa-demo', ukazka:'Velký. Těžký. Rozvážný.', desc:'přerušovaně — podtržení'},
+  {nazev:'Anafora', cls:'f-anafora-demo', ukazka:'Byla hra. Byla touha.', desc:'tečkovaně — podtržení'},
+  {nazev:'Personifikace', cls:'f-personifikace-demo', ukazka:'Stromy si ho pamatovaly.', desc:'plná linka — podtržení'},
+  {nazev:'Hyperbola', cls:'f-hyperbola-demo', ukazka:'zásoby mínění bez dna', desc:'světlý podklad'},
+  {nazev:'Fyzikalizace', cls:'f-fyzikalizace-demo', ukazka:'nosil v sobě paměť', desc:'vlnkování — podtržení'},
+  {nazev:'Paradox', cls:'f-paradox-demo', ukazka:'nepravdivé – ale pravdivější', desc:'přeškrtnutí'},
+  {nazev:'Aforismus', cls:'f-aforismus-demo', ukazka:'noc není lež. je to jiný jazyk.', desc:'dvojité tečky (nahoře + dole)'},
+  {nazev:'Ironie/Oxymóron', cls:'f-ironie-demo', ukazka:'kolektivní singular', desc:'tmavý podklad'},
+  {nazev:'Rétorická otázka', cls:'f-otazka-demo', ukazka:'kdyby ji dostal, co by zbylo?', desc:'silná linka — podtržení'},
+  {nazev:'Fragment', cls:'f-fragment-demo', ukazka:'Reflex. Instinkt.', desc:'tečky + rozšířené mezery'},
+  {nazev:'Přímá řeč', cls:'f-primaRec-demo', ukazka:'„jednu třešeň ti dám"', desc:'kurzíva + rámeček'},
+  {nazev:'Metafora', cls:'f-metafora-demo', ukazka:'světla jako sliby', desc:'dvojitá plná linka'},
+];
+
+// ═══════════════════════════════════════════
+// STAV
+// ═══════════════════════════════════════════
+let mod = 'ucit';
+let filterTyp = 'vse';
+let filterKarta = 'vse';
+let openFigura = null;
+let quizIndex = 0;
+let quizScore = {ok:0, total:0};
+let quizOrder = [];
+let quizAnswered = false;
+
+// ═══════════════════════════════════════════
+// FILTRY
+// ═══════════════════════════════════════════
+function setFilter(klic, hodnota, btn) {
+  if(klic==='typ') filterTyp=hodnota;
+  else filterKarta=hodnota;
+  document.querySelectorAll(`.f-btn[onclick*="${klic}"]`).forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  render();
+}
+
+function getFiltered() {
+  const q = (document.getElementById('hledat')||{value:''}).value.toLowerCase().trim();
+  return FIGURY.filter(f => {
+    if(filterTyp!=='vse' && f.typ!==filterTyp) return false;
+    if(filterKarta!=='vse' && !f.karty.includes(filterKarta)) return false;
+    if(q && !f.nazev.toLowerCase().includes(q) && !f.def.toLowerCase().includes(q) && !f.priklad.toLowerCase().includes(q)) return false;
+    return true;
+  });
+}
+
+// ═══════════════════════════════════════════
+// MÓD
+// ═══════════════════════════════════════════
+const MOD_POPIS = {
+  ucit: 'Procházejte figury, čtěte definice a příklady z pohádek. Kliknutím otevřete detail s cvičením.',
+  vizual: 'Přehled vizuálních stylů — jak každá figura vypadá v textu pohádky.',
+  quiz: 'Otestujte se — přečtěte úryvek z pohádky a uhodněte jakou figuru použil.'
+};
+
+function setMod(m, btn) {
+  mod = m;
+  document.querySelectorAll('.mod-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('mod-popis').textContent = MOD_POPIS[m];
+  document.getElementById('panel-ucit').style.display = m==='ucit'?'block':'none';
+  document.getElementById('panel-vizual').className = m==='vizual'?'vizual-panel show':'vizual-panel';
+  document.getElementById('panel-quiz').className = m==='quiz'?'quiz-panel show':'quiz-panel';
+  if(m==='quiz' && quizOrder.length===0) initQuiz();
+  if(m==='vizual') renderVizual();
+}
+
+// ═══════════════════════════════════════════
+// RENDER GRID
+// ═══════════════════════════════════════════
+function render() {
+  const ff = getFiltered();
+  document.getElementById('pocet').textContent = ff.length + ' ' + (ff.length===1?'figura':'figur');
+  const g = document.getElementById('grid');
+  g.innerHTML = ff.map(f => `
+    <div class="figura${openFigura===f.id?' open':''}" onclick="toggleFigura('${f.id}',this)">
+      <div class="f-head">
+        <span class="f-nazev">${f.nazev}</span>
+        <span class="f-typ">${f.typ}</span>
+        <span class="f-tog">▾</span>
+      </div>
+      <div class="f-def">${f.def}</div>
+      <div class="f-vizual"><span class="${f.vizualCls}">${f.ukazka}</span></div>
+      <div class="f-karty">${f.karty.map(k=>`<span class="f-karta-tag">${k}</span>`).join('')}</div>
+      <div class="f-detail">
+        <div class="f-d-label">Příklady z pohádek</div>
+        <div class="f-d-priklad">${f.priklad}</div>
+        <div class="f-d-label">Efekt</div>
+        <div class="f-d-text">${f.efekt}</div>
+        <div class="f-d-label">Cvičení</div>
+        <div class="f-cviceni"><strong>20 minut:</strong> ${f.cviceni}</div>
+      </div>
+    </div>`).join('');
+}
+
+function toggleFigura(id, el) {
+  if(openFigura===id){openFigura=null;el.classList.remove('open');}
+  else{
+    document.querySelectorAll('.figura.open').forEach(e=>e.classList.remove('open'));
+    openFigura=id;el.classList.add('open');
+  }
+}
+
+// ═══════════════════════════════════════════
+// VIZUÁLNÍ PŘEHLED
+// ═══════════════════════════════════════════
+function renderVizual() {
+  const g = document.getElementById('vizual-grid');
+  g.innerHTML = VIZUAL.map(v=>`
+    <div class="v-item">
+      <div class="v-nazev">${v.nazev}</div>
+      <div class="v-ukazka"><span class="${v.cls}">${v.ukazka}</span></div>
+      <div class="v-desc">${v.desc}</div>
+    </div>`).join('');
+}
+
+// ═══════════════════════════════════════════
+// QUIZ
+// ═══════════════════════════════════════════
+const QUIZ_OTAZKY = [
+  {text:'"Velký. Těžký. Rozvážný."', spravna:'Elipsa', moznosti:['Elipsa','Anafora','Fragment','Gradace']},
+  {text:'"Byla výzva. Byla hra. Byla touha být lehčí."', spravna:'Anafora', moznosti:['Anafora','Elipsa','Aforismus','Gradace']},
+  {text:'"Nosil v sobě paměť krajin, které už neexistují."', spravna:'Fyzikalizace', moznosti:['Fyzikalizace','Metafora','Personifikace','Hyperbola']},
+  {text:'"Všechno bylo trochu nepravdivé – ale o dost pravdivější."', spravna:'Paradox', moznosti:['Paradox','Ironie','Aforismus','Oxymóron']},
+  {text:'"Stačí běžet za něčím malým a věřit, že to má velký smysl."', spravna:'Aforismus', moznosti:['Aforismus','Paradox','Přirovnání','Metafora']},
+  {text:'"Lidé byli krásní, protože nebyli vidět."', spravna:'Ironie', moznosti:['Ironie','Paradox','Aforismus','Oxymóron']},
+  {text:'"Reflex. Instinkt. Možná soucit. Možná zvědavost."', spravna:'Fragment', moznosti:['Fragment','Elipsa','Gradace','Aposiopeze']},
+  {text:'"Stromy, které si ho pamatovaly. Řeky, které ho kdysi chladily."', spravna:'Personifikace', moznosti:['Personifikace','Metafora','Fyzikalizace','Intertextualita']},
+  {text:'"Noc není lež. Je to jiný jazyk. Jiný smysl."', spravna:'Aforismus', moznosti:['Aforismus','Gradace','Fragment','Anafora']},
+  {text:'"Kolektivní singular."', spravna:'Oxymóron', moznosti:['Oxymóron','Paradox','Ironie','Neologismus']},
+  {text:'"Já ja jajaja jaja ja!"', spravna:'Gradace', moznosti:['Gradace','Anafora','Fragment','Onomatopeia']},
+  {text:'"světla se třpytila jako sliby"', spravna:'Přirovnání', moznosti:['Přirovnání','Metafora','Fyzikalizace','Hyperbola']},
+  {text:'"Jsou jen hlasité pokusy o sebe-klam."', spravna:'Neologismus', moznosti:['Neologismus','Aforismus','Paradox','Ironie']},
+  {text:'"Když šel, země se chvěla. Když stál, čas se zpomalil."', spravna:'Hyperbola', moznosti:['Hyperbola','Fyzikalizace','Personifikace','Paradox']},
+  {text:'"Tady není záchod?"', spravna:'Přímá řeč', moznosti:['Přímá řeč','Rétorická otázka','Fragment','Aforismus']},
+];
+
+function initQuiz() {
+  quizOrder = [...Array(QUIZ_OTAZKY.length).keys()].sort(()=>Math.random()-.5);
+  quizIndex = 0; quizScore = {ok:0,total:0}; quizAnswered=false;
+  renderQuiz();
+}
+
+function renderQuiz() {
+  if(quizIndex>=quizOrder.length){
+    document.getElementById('quiz-inner').innerHTML=`
+      <div class="quiz-label">Výsledek</div>
+      <div style="font-family:var(--serif);font-size:1.4rem;font-weight:300;margin:12px 0;color:var(--cream)">${quizScore.ok} / ${quizScore.total}</div>
+      <div style="font-size:.78rem;color:var(--dim);margin-bottom:14px">${quizScore.ok>=quizScore.total*.8?'Výborně! Figury ovládáte.':quizScore.ok>=quizScore.total*.5?'Dobrý základ. Procvičte slabší figury.':'Zkuste znovu — přečtěte definice v Učit se.'}</div>
+      <button class="btn-quiz" onclick="initQuiz()">Znovu →</button>`;
+    return;
+  }
+  const q = QUIZ_OTAZKY[quizOrder[quizIndex]];
+  quizAnswered=false;
+  document.getElementById('quiz-inner').innerHTML=`
+    <div class="quiz-label">Otázka ${quizIndex+1} / ${QUIZ_OTAZKY.length}</div>
+    <div class="quiz-text">${q.text}</div>
+    <div class="quiz-choices">${q.moznosti.map(m=>`<button class="quiz-choice" onclick="answerQuiz('${m}','${q.spravna}',this)">${m}</button>`).join('')}</div>
+    <div class="quiz-feedback" id="qfb"></div>
+    <div class="quiz-nav"><span class="quiz-score">✓ ${quizScore.ok} správně</span></div>`;
+}
+
+function answerQuiz(volba, spravna, btn) {
+  if(quizAnswered) return;
+  quizAnswered=true;
+  quizScore.total++;
+  const fb = document.getElementById('qfb');
+  if(volba===spravna){
+    btn.classList.add('ok');
+    quizScore.ok++;
+    fb.textContent='✓ Správně!';
+    fb.style.color='#8ac07a';
+  } else {
+    btn.classList.add('wrong');
+    document.querySelectorAll('.quiz-choice').forEach(b=>{if(b.textContent===spravna)b.classList.add('ok');});
+    fb.textContent='Správně: '+spravna;
+    fb.style.color='rgba(232,224,208,.5)';
+  }
+  fb.classList.add('show');
+  const nav = document.querySelector('.quiz-nav');
+  const nextBtn = document.createElement('button');
+  nextBtn.className='btn-quiz';
+  nextBtn.textContent=quizIndex+1<QUIZ_OTAZKY.length?'Další →':'Výsledek →';
+  nextBtn.onclick=()=>{quizIndex++;renderQuiz();};
+  nav.appendChild(nextBtn);
+}
+
+// ═══════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════
+render();
+</script>
+</body>
+</html>
