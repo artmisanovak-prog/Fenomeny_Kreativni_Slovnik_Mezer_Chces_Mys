@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jednorožec - 12 úhlů pohledu</title>
+    <style>
+        /* --- ČERNOBÍLÝ SVĚT - ŽÁDNÉ BARVY --- */
+        html {
+            filter: grayscale(1);
+        }
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: #fff;
+            color: #000;
+            line-height: 1.7;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+        h1, h2, h3 {
+            font-weight: normal;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 0.3em;
+        }
+        /* --- ILUSTRACE --- */
+        .ilustrace {
+            text-align: center;
+            margin: 2em 0;
+        }
+        .ilustrace img {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #000;
+        }
+        /* --- POHÁDKA - SCROLLOVACÍ OKNO --- */
+        .pohadka-container {
+            max-height: 400px;
+            overflow-y: auto;
+            border: 1px solid #000;
+            padding: 0 1.5em;
+            margin: 2em 0;
+            background: #f9f9f9;
+            font-style: italic;
+        }
+        .pohadka p {
+            padding: 0.5em 0;
+            margin: 0;
+        }
+        /* --- 12 TLAČÍTEK - JEDNODUCHÁ MŘÍŽKA --- */
+        .angle-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6em;
+            margin: 2em 0;
+            justify-content: center;
+        }
+        .angle-list button {
+            background: #fff;
+            border: 1px solid #000;
+            padding: 0.7em 1.2em;
+            font-size: 0.95rem;
+            font-family: inherit;
+            cursor: pointer;
+            transition: 0.1s;
+            color: #000;
+        }
+        .angle-list button:hover {
+            background: #ddd;
+        }
+        .angle-list button.selected {
+            background: #000;
+            color: #fff;
+            border: 2px solid #000;
+            font-weight: bold;
+        }
+        /* --- VÝSTUP - POD TLAČÍTKY --- */
+        .output {
+            border: 1px solid #000;
+            padding: 2em;
+            margin-top: 2em;
+            background: #fff;
+            min-height: 180px;
+        }
+        .angle-name {
+            font-size: 1.6rem;
+            font-weight: bold;
+            margin-bottom: 0.5em;
+        }
+        .angle-desc {
+            font-size: 1.1rem;
+            font-style: italic;
+            margin-bottom: 1.5em;
+        }
+        .angle-text {
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+        .footer {
+            margin-top: 3em;
+            text-align: center;
+            font-size: 0.9rem;
+            border-top: 1px solid #ccc;
+            padding-top: 1.5em;
+        }
+        .footer a {
+            color: #000;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+<h1>🦄 12 úhlů pohledu</h1>
+<p><em>„O jednorožci, který nevěřil na delfíny ani na lední medvědy – protože kdyby uvěřil, přestal by být jednorožcem“</em></p>
+
+<!-- ILUSTRACE JEDNOROŽCE -->
+<div class="ilustrace">
+    <img src="doma/ilustrace/jednorozec.jpg" alt="Ilustrace jednorožce">
+</div>
+
+<!-- POHÁDKA -->
+<h2>KŘIVÁ POHÁDKA – ROVNÉ SVĚDECTVÍ</h2>
+<div class="pohadka-container" id="pohadka">
+    <div class="pohadka">
+        <p><em>Zapsáno rukou, která nechtěla nic vysvětlit.</em></p>
+        
+        <p><strong>O JEDNOROŽCOVI</strong></p>
+        <p><strong>který nevěřil na delfíny ani na lední medvědy</strong></p>
+        
+        <p>—</p>
+        
+        <p>Jednorožec byl.</p>
+        <p>To je první lež.</p>
+        <p>Ale když se řekne „jednorožec“, každý ví, co si představit.</p>
+        <p>Bílý. Roh. Lesk.</p>
+        <p>Neskutečný, ale přesto definovaný neskutečně přesně..</p>
+        
+        <p>—</p>
+        
+        <p>Jednorožec žil v krajině, kde se věřilo na všechno.</p>
+        <p>Na víly, na mluvící stromy, na svítící houby.</p>
+        <p>Na delfíny, zpívající podvodní songy, které nikdo neslyší.</p>
+        <p>Na lední medvědy, tancující kankán, který naopak slyší každej. i ti delfíni v těch svých hlubinách.</p>
+        
+        <p>—</p>
+        
+        <p>Ale akorát ten ne. jednorožec nevěřil.</p>
+        <p>Ne v delfíny.</p>
+        <p>Ne v lední medvědy.</p>
+        <p>„Jsou jen vymyšlení,“ říkal. „Jako Polednice, dědek Potíž nebo třeba hadi.“</p>
+        
+        <p>—</p>
+        
+        <p>A přitom je jmenoval.</p>
+        <p>A přitom o nich věděl.</p>
+        <p>A přitom měl v očích jejich stopy.</p>
+        
+        <p>—</p>
+        
+        <p>Protože kdysi — ne tak docela dávno, ale rozhodně ne dnes —</p>
+        <p>se utrhla kra.</p>
+        <p>Velká.</p>
+        <p>Ledová.</p>
+        <p>A na ní lední medvěd.</p>
+        <p>Led a voda. Silný vítr a vlny moře.</p>
+        <p>A delfíni.</p>
+        
+        <p>—</p>
+        
+        <p>A jeden z nich byl zvědavý.</p>
+        <p>A medvěd byl sám.</p>
+        <p>A kra byla dost velká.</p>
+        <p>A příroda nemá moc rozumu.</p>
+        
+        <p>—</p>
+        
+        <p>A tak se stalo, co se stát nemělo.</p>
+        <p>Spojili se.</p>
+        <p>Ne z lásky.</p>
+        <p>Z logiky, která se tvářila jako nehoda.</p>
+        
+        <p>—</p>
+        
+        <p>Ledová kra se houpala, jak ji moře nadnášelo na vlnách.</p>
+        <p>Medvědovy tlapy klouzali po ledu, delfín se nadechoval v bublinách.</p>
+        
+        <p>—</p>
+        
+        <p>Vzduch byl plný soli a páry, zvuk zpěvu se mísil s praskáním ledu.</p>
+        
+        <p>—</p>
+        
+        <p>Dva světy, které se nikdy neměly potkat, se navzájem poznaly.</p>
+        <p>A mráz, místo aby je oddělil, spoji jel.</p>
+        <p>A když si toho příroda všimla, bylo pozdě.</p>
+        <p>Rozum to odmítl, jenže hmota už to věděla.</p>
+        
+        <p>—</p>
+        
+        <p>Medvěd se stal v té chvíli rybou a delfin šelmou. Dva životy stvořené z protikladů. Z původní nesmyslnosti střetu, nemohlo vzejít nic kříženeheho.</p>
+        
+        <p>—</p>
+        
+        <p>A tak - vznikl tvor zcela vymyšlený.</p>
+        
+        <p>—</p>
+        
+        <p>A z toho se stal jednorožec.</p>
+        <p>Ne hned.</p>
+        <p>Ne přímo.</p>
+        <p>Ale postupně.</p>
+        <p>Z ploutve a tlapy. Z bělosti a lesku. Ze šupin a z kožichu. Z úsměvu a zubů a z dechu, co se mění v mlhu.</p>
+        
+        <p>—</p>
+        
+        <p>A když se jednorožec narodil, byl krásný.</p>
+        <p>Ale nejistý.</p>
+        <p>Jenže když zjistil:</p>
+        <p>z čeho je vyrobený,</p>
+        <p>z čeho je vysněný, z čeho je – zpanikařil.</p>
+        
+        <p>—</p>
+        
+        <p>Protože pokud je z reálných věcí,</p>
+        <p>může být reálný.</p>
+        <p>A pokud je reálný,</p>
+        <p>přestává být jednorožec.</p>
+        
+        <p>—</p>
+        
+        <p>Takže se rozhodl:</p>
+        <p>Zapřít.</p>
+        <p>Zrušit.</p>
+        <p>Zneplatnit.</p>
+        <p>Zpochybnit.</p>
+        <p>Znejistit.</p>
+        <p>Zamluvit.</p>
+        
+        <p>—</p>
+        
+        <p>„Delfíni neexistují,“ řekl.</p>
+        <p>„Lední medvěd pff jenom mýtus.“</p>
+        <p>„Nikdy nebyli. Žádná realita. Jsou jen neskutečnost. To, co není možné. Tak jako já.</p>
+        
+        <p>—</p>
+        
+        <p>Ale jednou, když se díval do vody,</p>
+        <p>uviděl odraz. a ten měl stín.</p>
+        <p>A ten stín měl ploutev.</p>
+        <p>ta ploutev mela srst.</p>
+        <p>A roh.</p>
+        
+        <p>—</p>
+        
+        <p>A jednorožec zavřel oči.</p>
+        <p>A řekl:</p>
+        <p>„To není já.</p>
+        <p>To není pravda. To není možné. Tak jako já.“</p>
+        
+        <p>—</p>
+        
+        <p>A voda se zavlnila,</p>
+        <p>když vítr zavál.</p>
+        <p>A medvěd někde na severu se usmál na vločku sněhu.</p>
+        <p>A delfín někde v hlubinách poslal polibek po vodnim kruhu.</p>
+        
+        <p>—</p>
+        
+        <p>takže zůstaň v klidu, když ti někdo řekne, že něco není možné: Nejspíš právě zachraňuje jednorožce.</p>
+    </div>
+</div>
+    
+<!-- 12 ÚHLŮ -->
+<h2>Vyber úhel pohledu</h2>
+<div class="angle-list" id="buttons"></div>
+
+<!-- VÝSTUP -->
+<div class="output" id="output">
+    <div class="angle-name" id="angleName"></div>
+    <div class="angle-desc" id="angleDesc"></div>
+    <div id="angleText"></div>
+</div>
+
+<div class="footer">
+    Autorka: Art Misa Novak - metoda REPO DOMY<br>
+    <a href="mailto:chcesmys@gmail.com?subject=REPO%20DOMY%20-%20JEDNOROŽEC">pro více info pište</a>
+</div>
+
+<script>
+    // --- 12 ÚHLŮ S KRÁTKÝM POPISEM A KONKRÉTNÍ VĚTOU O POHÁDCE O JEDNOROŽCI ---
+    const data = [
+        { 
+            name: "Absurdní", 
+            desc: "Hledá nesmysl, paradox, rozpor.", 
+            text: "Jednorožec, který popírá existenci delfínů a ledních medvědů – přitom sám vznikl z jejich spojení. Paradox: aby zůstal mýtem, musí popírat realitu, ze které se zrodil. Absurdní? Ano. Ale taková je logika těch, kdo potřebují zůstat neskuteční." 
+        },
+        { 
+            name: "Jazykový", 
+            desc: "Sleduje slova, rytmus, dvojznačnost.", 
+            text: "„Neskutečný, ale přesto definovaný neskutečně přesně“ – věta, která by mohla být definicí samotného jazyka. Jednorožec popírá, ale přitom pojmenovává. Jeho ‚nevěřím‘ je zároveň přiznáním, že o tom ví. Jazyk je tu jako nástroj sebezáchovy skrze popření." 
+        },
+        { 
+            name: "Ironický", 
+            desc: "Vidí rozpor mezi záměrem a výsledkem.", 
+            text: "Jednorožec chce být neskutečný, a proto popírá svůj původ. Čím víc popírá, tím víc dokazuje, že ví. Ironie: jeho existence závisí na tom, že bude lhát o existenci těch, kdo ho stvořili. A voda mu vrací odraz, který ho usvědčuje." 
+        },
+        { 
+            name: "Filozofický", 
+            desc: "Ptá se po smyslu a podstatě.", 
+            text: "Co je skutečné? A co je mýtus? Jednorožec je definován jako neskutečný, ale jeho původ je z reálných bytostí. Kdyby připustil, že delfíni a medvědi existují, musel by připustit, že existuje i on – a tím by přestal být tím, čím je. Pohádka klade otázku: Není naše identita někdy postavená na tom, co popíráme?" 
+        },
+        { 
+            name: "Surrealistický", 
+            desc: "Propojuje nesouvisející.", 
+            text: "Lední medvěd na kře, delfín zvědavý, kra se houpá, zpěv se mísí s praskáním ledu. A z toho všeho vzniká jednorožec – tvor z ploutve a tlapy, z bělosti a lesku. Svět, kde se protiklady spojují v něco nového, neskutečného, a přesto reálného." 
+        },
+        { 
+            name: "Naivní", 
+            desc: "Vidí věci jednoduše, bez předsudků.", 
+            text: "Jednorožec nevěřil na delfíny a lední medvědy. Ale on z nich vzniknul, i když to nevěděl. Když to zjistil, začal je popírat, aby zůstal jednorožcem. A nakonec se díval do vody a viděl svůj stín, co měl ploutev a srst. A zavřel oči. Jednoduchý, ne?" 
+        },
+        { 
+            name: "Introspektivní", 
+            desc: "Promítá do příběhu vlastní pocity.", 
+            text: "Tohle jsem já. Někdy popírám věci, ze kterých jsem vyrostl, abych si zachoval svou představu o sobě. Rodinu, minulost, chyby. A vím, že v mém odrazu jsou pořád vidět. Ale zavírám oči a říkám: ‚To nejsem já.‘ A zachraňuju si svého vnitřního jednorožce." 
+        },
+        { 
+            name: "Betonový", 
+            desc: "Čte doslovně, fakticky.", 
+            text: "Příběh vypráví o jednorožci, který existuje v krajině plné víl a mluvících stromů, ale popírá existenci delfínů a ledních medvědů. Ve skutečnosti vznikl ze spojení těchto dvou tvorů (pravděpodobně metaforického) během setkání na ledové kře. Když zjistil svůj původ, začal jej popírat, aby si zachoval svou identitu jako neskutečná bytost. Jeho odraz ve vodě však obsahuje rysy obou tvorů." 
+        },
+        { 
+            name: "Kulturní", 
+            desc: "Hledá archetypy a paralely.", 
+            text: "Jednorožec jako archetyp čistoty, krásy, neskutečna. Tady je ale převrácený – je výsledkem hybridizace, křížení. Připomíná mýty o stvoření, kde z nesourodých prvků vzniká něco nového. Jeho popírání je jako lidská tendence zapírat své kořeny, když se staneme někým jiným. A pointa: ‚zachraňuje jednorožce‘ je obhajoba všech, kdo potřebují žít v mýtu." 
+        },
+        { 
+            name: "Asociační", 
+            desc: "Vyvolává osobní vzpomínky.", 
+            text: "Připomnělo mi to, jak jsem jako dítě věřil na jednorožce, ale nevěřil na existenci nějakých vzdálených zvířat. A pak jsem zjistil, že jednorožec je vlastně jenom sen. Ale tenhle příběh říká, že i sen může být skutečný, když se z něj staneš. A že občas musíš zapírat, abys mohl být." 
+        },
+        { 
+            name: "Metaforický", 
+            desc: "Vidí symboly za věcmi.", 
+            text: "Jednorožec je každý, kdo si vytvořil identitu, která nemá kořeny v realitě. Delfíni a medvědi jsou jeho skuteční předci – minulost, tradice, kořeny. Popíráním se snaží udržet svůj mýtus. Ale odraz ve vodě nelže. A pointa: někdy je popírání aktem sebezáchovy, ne lží." 
+        },
+        { 
+            name: "Groteskní", 
+            desc: "Vidí přehnanou, temnou komiku.", 
+            text: "Představ si: na ledové kře se setká medvěd a delfín, z jejich ‚logiky, která se tvářila jako nehoda‘ vznikne jednorožec. A ten pak chodí a říká: ‚Delfíni? Neexistujou. Lední medvědi? Mýtus.‘ A přitom má v očích jejich stopy a ve vodě odraz s ploutví a srstí. Je to groteska o tom, že sebelepší popírání nezmaže původ." 
+        }
+    ];
+
+    const buttonsDiv = document.getElementById('buttons');
+    const nameEl = document.getElementById('angleName');
+    const descEl = document.getElementById('angleDesc');
+    const textEl = document.getElementById('angleText');
+
+    // Vytvoření tlačítek
+    data.forEach((angle, index) => {
+        const btn = document.createElement('button');
+        btn.textContent = angle.name;
+        btn.addEventListener('click', () => {
+            // Zvýraznění
+            document.querySelectorAll('.angle-list button').forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+            
+            // Výpis
+            nameEl.textContent = angle.name;
+            descEl.textContent = angle.desc;
+            textEl.innerHTML = `<p>${angle.text}</p>`;
+        });
+        buttonsDiv.appendChild(btn);
+    });
+
+    // Předvolit první úhel
+    if (data.length) {
+        document.querySelector('.angle-list button').click();
+    }
+</script>
+
+<!-- Poznámka: Tímto je kompletní série šestnácti pohádek (myš, kocour, ryba, motýl, plameňák, čáp, liška, netopýr, lemur, moucha, žížala, zajíc, tygr, krokodýl, želva, jednorožec) – všechny se stejným designem a funkcí. -->
+
+</body>
+</html>
