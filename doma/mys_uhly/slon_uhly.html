@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Slon - 12 úhlů pohledu</title>
+    <style>
+        /* --- ČERNOBÍLÝ SVĚT - ŽÁDNÉ BARVY --- */
+        html {
+            filter: grayscale(1);
+        }
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: #fff;
+            color: #000;
+            line-height: 1.7;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+        h1, h2, h3 {
+            font-weight: normal;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 0.3em;
+        }
+        .ilustrace {
+            text-align: center;
+            margin: 2em 0;
+        }
+        .ilustrace img {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #000;
+        }
+        .pohadka-container {
+            max-height: 400px;
+            overflow-y: auto;
+            border: 1px solid #000;
+            padding: 0 1.5em;
+            margin: 2em 0;
+            background: #f9f9f9;
+            font-style: italic;
+        }
+        .pohadka p {
+            padding: 0.5em 0;
+            margin: 0;
+        }
+        .angle-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6em;
+            margin: 2em 0;
+            justify-content: center;
+        }
+        .angle-list button {
+            background: #fff;
+            border: 1px solid #000;
+            padding: 0.7em 1.2em;
+            font-size: 0.95rem;
+            font-family: inherit;
+            cursor: pointer;
+            transition: 0.1s;
+            color: #000;
+        }
+        .angle-list button:hover {
+            background: #ddd;
+        }
+        .angle-list button.selected {
+            background: #000;
+            color: #fff;
+            border: 2px solid #000;
+            font-weight: bold;
+        }
+        .output {
+            border: 1px solid #000;
+            padding: 2em;
+            margin-top: 2em;
+            background: #fff;
+            min-height: 180px;
+        }
+        .angle-name {
+            font-size: 1.6rem;
+            font-weight: bold;
+            margin-bottom: 0.5em;
+        }
+        .angle-desc {
+            font-size: 1.1rem;
+            font-style: italic;
+            margin-bottom: 1.5em;
+        }
+        .angle-text {
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+        /* --- NOVÝ BLOK PRO GENERATIVNÍ VĚTU --- */
+        .generative-block {
+            margin-top: 2em;
+            padding: 1.2em;
+            border: 1px solid #000;
+            background: #f3f3f3;
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+        .generative-label {
+            font-weight: bold;
+            margin-bottom: 0.5em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.8rem;
+        }
+        .generative-sentence {
+            font-family: 'Courier New', monospace;
+            margin-bottom: 1em;
+        }
+        .generator-link {
+            display: inline-block;
+            margin-top: 0.5em;
+            padding: 0.5em 1em;
+            border: 1px solid #000;
+            background: #fff;
+            color: #000;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: 0.1s;
+        }
+        .generator-link:hover {
+            background: #000;
+            color: #fff;
+        }
+        .footer {
+            margin-top: 3em;
+            text-align: center;
+            font-size: 0.9rem;
+            border-top: 1px solid #ccc;
+            padding-top: 1.5em;
+        }
+        .footer a {
+            color: #000;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+<h1>🐘 12 úhlů pohledu</h1>
+<p><em>„O slonovi, který běžel za třešní – protože někdy je důležitější honba než cíl a malá věc může hýbat velkým srdcem“</em></p>
+
+<div class="ilustrace">
+    <img src="doma/ilustrace/slon.jpg" alt="Ilustrace slona">
+</div>
+
+<h2>KŘIVÁ POHÁDKA – ROVNÉ SVĚDECTVÍ</h2>
+<div class="pohadka-container" id="pohadka">
+    <div class="pohadka">
+        <p><em>Zapsáno rukou, která nechtěla nic vysvětlit.</em></p>
+        <p><strong>O SLONOVI</strong></p>
+        <p><strong>který běžel za třešní</strong></p>
+        <p>—</p>
+        <p>Slon byl velký.</p>
+        <p>Těžký.</p>
+        <p>Rozvážný.</p>
+        <p>Nosil v sobě paměť krajin, které už neexistují.</p>
+        <p>Když šel, země se chvěla.</p>
+        <p>Když stál, čas se zpomalil.</p>
+        <p>—</p>
+        <p>A pak přišla ona.</p>
+        <p>Malá.</p>
+        <p>Rychlá.</p>
+        <p>Neuchopitelná.</p>
+        <p>Možná myš.</p>
+        <p>Možná vítr.</p>
+        <p>Možná jen hlas.</p>
+        <p>—</p>
+        <p>„Jednu třešeň ti dám, slone,“ řekla,</p>
+        <p>„když mě dohoníš.“</p>
+        <p>—</p>
+        <p>Slon se podíval na své nohy.</p>
+        <p>Na zem.</p>
+        <p>Na horizont.</p>
+        <p>A pak se rozběhl.</p>
+        <p>Ne rychle.</p>
+        <p>Ale srdcem.</p>
+        <p>—</p>
+        <p>Třešeň byla červená.</p>
+        <p>Lesklá.</p>
+        <p>Nedosažitelná.</p>
+        <p>A slon běžel.</p>
+        <p>Za chutí.</p>
+        <p>Za slibem.</p>
+        <p>Za něčím, co možná ani neexistuje.</p>
+        <p>—</p>
+        <p>Cestou míjel stromy, které si ho pamatovaly.</p>
+        <p>Řeky, které ho kdysi chladily.</p>
+        <p>Kamínky, které kdysi se mu smály.</p>
+        <p>Ale on běžel dál.</p>
+        <p>Přestože třešeň byla jenom ovoce.</p>
+        <p>—</p>
+        <p>Protože třešeň byla víc než ovoce.</p>
+        <p>Byla výzva.</p>
+        <p>Byla hra.</p>
+        <p>Byla touha být lehký.</p>
+        <p>Byla touha být silnější.</p>
+        <p>—</p>
+        <p>„Jednu třešeň ti dám, slone,“ znělo pořád.</p>
+        <p>Ale nikdy ji nedostal.</p>
+        <p>A právě proto běžel.</p>
+        <p>Aby nemohl zastavit.</p>
+        <p>—</p>
+        <p>Protože kdyby ji dostal,</p>
+        <p>co by zbylo?</p>
+        <p>—</p>
+        <p>A tak se začalo říkat, že někde v krajině běží slon.</p>
+        <p>Za třešní, kterou nikdy nedohoní.</p>
+        <p>A že dokud se za ní požene, nikdy se nehoní.</p>
+        <p>A že stačí běžet za něčím malým.</p>
+        <p>A věřit, že to má velký smysl</p>
+    </div>
+</div>
+    
+<h2>Vyber úhel pohledu</h2>
+<div class="angle-list" id="buttons"></div>
+
+<div class="output" id="output">
+    <div class="angle-name" id="angleName"></div>
+    <div class="angle-desc" id="angleDesc"></div>
+    <div id="angleText"></div>
+    <!-- Nový blok pro generativní větu -->
+    <div id="generativeBlock" class="generative-block" style="display: none;">
+        <div class="generative-label">🎲 GENERATIVNÍ VĚTA (KLÍČ MYŠI)</div>
+        <div class="generative-sentence" id="generativeSentence"></div>
+        <a href="#" id="generatorLink" class="generator-link" target="_blank">🔗 Otevřít v generátoru</a>
+    </div>
+</div>
+
+<div class="footer">
+    Autorka: Art Misa Novak - metoda REPO DOMY<br>
+    <a href="mailto:chcesmys@gmail.com?subject=REPO%20DOMY%20-%20SLON">pro více info pište</a>
+</div>
+
+<script>
+    // --- 12 ÚHLŮ S POPISEM, TEXTEM A GENERATIVNÍ VĚTOU (KLÍČEM) ---
+    const data = [
+        { 
+            name: "Analytický",
+            desc: "Hledá struktury, vztahy, příčiny.",
+            text: "Motivace skrze nedosažitelnost: slon běží za třešní, kterou nikdy nedostane, a právě ta nedosažitelnost ho udržuje v pohybu. Mechanismus, který pohání mnoho lidských činností – cíl je záminka, důležitý je běh.",
+            key: "motivace skrze nedosažitelnost"
+        },
+        { 
+            name: "Asociační",
+            desc: "Vyvolává osobní vzpomínky a volné souvislosti.",
+            text: "Třešeň jako vzpomínka na něco malého a ztraceného. Možná na dětskou touhu, na první sladkost, na něco, co už nikdy nepřijde, ale co stále běžíme dohánět.",
+            key: "třešeň jako vzpomínka na něco malého a ztraceného"
+        },
+        { 
+            name: "Kulturní",
+            desc: "Hledá archetypy a paralely v kultuře.",
+            text: "Mýtus o velkém těle toužícím po lehkosti – slon jako symbol síly, který se touží stát lehkým jako třešeň. Podobné motivy najdeme v příbězích o obrech, kteří se zamilují do víl.",
+            key: "mýtus o velkém těle toužícím po lehkosti"
+        },
+        { 
+            name: "Filozofický",
+            desc: "Ptá se po smyslu a podstatě.",
+            text: "Smysl vzniká z pohybu, ne z cíle. Kdyby slon třešeň dostal, ztratil by důvod k běhu. Život je stejný – není o dosažení, ale o cestě.",
+            key: "smysl vzniká z pohybu ne z cíle"
+        },
+        { 
+            name: "Ironický",
+            desc: "Vidí rozpor mezi záměrem a výsledkem.",
+            text: "Velikost která honí maličkost. Slon, který drtí zem pod nohama, se žene za něčím, co by mu ve chobotu ani neucítil. Ironie: čím větší síla, tím menší cíl.",
+            key: "velikost která honí maličkost"
+        },
+        { 
+            name: "Introspektivní",
+            desc: "Promítá do příběhu vlastní pocity.",
+            text: "Běžím pomalu, ale poprvé někam. Uvědomění, že rychlost není důležitá – důležité je, že se pohnu. Každý velký krok začíná malou touhou.",
+            key: "běžím pomalu ale poprvé někam"
+        },
+        { 
+            name: "Jazykový",
+            desc: "Sleduje slova, rytmus, dvojznačnost.",
+            text: "Slib jako motor věty – „Jednu třešeň ti dám, slone“ je performativní výrok, který vytváří realitu. Bez něj by slon stál. Jazyk je to, co nás rozezpívá do pohybu.",
+            key: "slib jako motor věty"
+        },
+        { 
+            name: "Absurdní",
+            desc: "Hledá nesmysl, paradox, rozpor.",
+            text: "Slon závodí s něčím, co možná ani není. Hlas, co slibuje, může být pouhý vítr, třešeň jen červená skvrna v oku. Absurdní? Ale absurdita často odkrývá skrytou logiku.",
+            key: "slon závodí s něčím co možná ani není"
+        },
+        { 
+            name: "Surrealistický",
+            desc: "Propojuje nesouvisející.",
+            text: "Krajina si pamatuje slona víc než slon cíl. Stromy, řeky, kamínky – všechno je svědkem běhu, který nemá konce. Svět se stává pamětí pohybu.",
+            key: "krajina si pamatuje slona víc než slon cíl"
+        },
+        { 
+            name: "Metaforický",
+            desc: "Vidí symboly za věcmi.",
+            text: "Třešeň jako chuť být jiný. Slon touží po lehkosti, po tom, co nemá. Třešeň je metaforou pro proměnu – běžíme za tím, čím se chceme stát.",
+            key: "třešeň jako chuť být jiný"
+        },
+        { 
+            name: "Naivní",
+            desc: "Vidí věci jednoduše, bez předsudků.",
+            text: "Když poběžím dost dlouho, určitě ji dostanu. Dětská víra v to, že stačí vytrvat. Naivní, ale možná právě tahle víra drží svět v pohybu.",
+            key: "když poběžím dost dlouho určitě ji dostanu"
+        },
+        { 
+            name: "Groteskní",
+            desc: "Vidí přehnanou, temnou komiku.",
+            text: "Těžkopádná honba za lehkostí. Obr, který se plazí za kuličkou, každým krokem otřásá krajinou, ale nikdy se nepřiblíží. Deformace pohybu, která je zároveň směšná i dojemná.",
+            key: "těžkopádná honba za lehkostí"
+        }
+    ];
+
+    const buttonsDiv = document.getElementById('buttons');
+    const nameEl = document.getElementById('angleName');
+    const descEl = document.getElementById('angleDesc');
+    const textEl = document.getElementById('angleText');
+    const generativeBlock = document.getElementById('generativeBlock');
+    const generativeSentenceEl = document.getElementById('generativeSentence');
+    const generatorLink = document.getElementById('generatorLink');
+
+    // Funkce pro aktualizaci odkazu do generátoru
+    function updateGeneratorLink(angleName, key) {
+        const encodedKey = encodeURIComponent(key);
+        const encodedAngle = encodeURIComponent(angleName);
+        const url = `generator.html?zvir=Slon&uhel=${encodedAngle}&klic=${encodedKey}`;
+        generatorLink.href = url;
+    }
+
+    // Vytvoření tlačítek
+    data.forEach((angle, index) => {
+        const btn = document.createElement('button');
+        btn.textContent = angle.name;
+        btn.addEventListener('click', () => {
+            // Zvýraznění
+            document.querySelectorAll('.angle-list button').forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+            
+            // Výpis
+            nameEl.textContent = angle.name;
+            descEl.textContent = angle.desc;
+            textEl.innerHTML = `<p>${angle.text}</p>`;
+            
+            // Zobrazíme generativní blok a naplníme ho
+            if (angle.key) {
+                generativeSentenceEl.textContent = angle.key;
+                generativeBlock.style.display = 'block';
+                updateGeneratorLink(angle.name, angle.key);
+            } else {
+                generativeBlock.style.display = 'none';
+            }
+        });
+        buttonsDiv.appendChild(btn);
+    });
+
+    // Předvolit první úhel (Analytický)
+    if (data.length) {
+        document.querySelector('.angle-list button').click();
+    }
+</script>
+
+</body>
+</html>
