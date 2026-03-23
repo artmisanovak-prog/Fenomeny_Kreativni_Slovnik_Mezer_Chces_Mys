@@ -73,7 +73,6 @@ h2 em{font-style:italic;color:var(--a)}
 .f-fragment.hl{border-bottom:1px dotted var(--a)!important;letter-spacing:.03em;cursor:help}
 .f-primaRec.hl{font-style:italic!important;border:1px solid rgba(224,142,154,.35)!important;padding:0 3px;cursor:help}
 .f-gradace.hl{background:linear-gradient(90deg, rgba(224,142,154,0.2) 0%, rgba(224,142,154,0.4) 100%)!important;cursor:help}
-.f-intertext.hl{border-left:3px solid var(--a);border-right:3px solid var(--a);background:var(--ab)!important;cursor:help}
 [data-fig].hl:hover{opacity:.85}
 
 .legenda-row{margin-top:6px;padding:7px 12px;background:var(--s);border:1px solid var(--border);font-size:.62rem;color:var(--dim);display:flex;flex-wrap:wrap;gap:3px 14px;line-height:2}
@@ -202,9 +201,9 @@ footer a{color:var(--a)}
   </div>
   <a class="audio-link" href="https://youtube.com/shorts/Ub9jlugrUvk?is=e2RbyHyhcfOgdt3n" target="_blank" rel="noopener">▶ Poslechnout pohádku ↗</a>
   <div class="var-bar">
-    <button class="var-btn active" onclick="setVar('A',this)">🌬️ Náhodně</button>
-    <button class="var-btn" onclick="setVar('B',this)">🛝 Podle nálady</button>
-    <button class="var-btn" onclick="setVar('C',this)">🧪 Diagnosticky</button>
+    <button class="var-btn active" onclick="setVar('A',this)">🎲 Náhodně</button>
+    <button class="var-btn" onclick="setVar('B',this)">🧭 Podle nálady</button>
+    <button class="var-btn" onclick="setVar('C',this)">🔍 Diagnosticky</button>
   </div>
   <div class="var-popis" id="var-popis">Zavřete oči, ťukněte prstem — a jděte na úhel, který vybere prst.</div>
 </section>
@@ -493,7 +492,7 @@ function runDiag(){
 }
 
 // ═══════════════════════════════════════════
-// PLNÝ ANALYZÁTOR (12 detektorů, stejný jako u slona)
+// PLNÝ ANALYZÁTOR (12 detektorů)
 // ═══════════════════════════════════════════
 const DET = [
   {n:'Negace',t:'definice přes to, čím věc není',fn:t=>{const m=(t.match(/\bnení\b|\bnebylo?\b|\bnemá\b|\bnic\b/gi)||[]);return m.length>=3?[m.length+'× negace']:[];}},
@@ -536,22 +535,42 @@ function analyzuj(i){
   out.style.display='block';
 }
 
+// Ukládání do zápisníku pomocí globální funkce
 function ulozit(i){
   const txt=document.getElementById('ta'+i).value.trim();
   if(!txt){alert('Napište nejprve text.');return;}
   const u=U[i]; const ts=Date.now();
   try{
-    const key='chcesmys_zapisnik';
-    const data=JSON.parse(localStorage.getItem(key)||'{}');
-    const mk=Object.keys(data); const mid=mk.length>0?mk[0]:'map_default';
-    if(!data[mid]) data[mid]={name:'Zápisník mezer',popis:'',entries:[],created:ts};
-    data[mid].entries.unshift({id:'e_'+ts,ts,karta:'Plameňák',uhel:u.st,nazev:u.n,poeticky:u.n,text:txt});
-    localStorage.setItem(key,JSON.stringify(data));
-    const az=document.getElementById('az'+i);
-    const p=document.createElement('div');
-    p.style.cssText='margin-top:6px;padding:8px 12px;background:rgba(224,142,154,.1);border:1px solid rgba(224,142,154,.3);font-size:.72rem;display:flex;justify-content:space-between;align-items:center;gap:10px';
-    p.innerHTML='<span style="color:var(--a)">✓ Uloženo do zápisníku mezer</span><a href="../nastroje/zapisnik.html" style="font-size:.62rem;color:var(--a);border:1px solid rgba(224,142,154,.3);padding:3px 8px">Otevřít zápisník →</a>';
-    az.parentNode.insertBefore(p,az); setTimeout(()=>p.remove(),6000);
+    const zaznam = {
+      karta: 'Plameňák',
+      uhel: u.st,
+      nazev: u.n,
+      poeticky: u.n,
+      text: txt,
+      ts: ts
+    };
+    // Pokud existuje globální funkce z notebooku, použij ji
+    if(typeof window.kogMapaUlozit === 'function'){
+      window.kogMapaUlozit(zaznam);
+      const az=document.getElementById('az'+i);
+      const p=document.createElement('div');
+      p.style.cssText='margin-top:6px;padding:8px 12px;background:rgba(224,142,154,.1);border:1px solid rgba(224,142,154,.3);font-size:.72rem;display:flex;justify-content:space-between;align-items:center;gap:10px';
+      p.innerHTML='<span style="color:var(--a)">✓ Uloženo do zápisníku mezer</span><a href="../nastroje/zapisnik.html" style="font-size:.62rem;color:var(--a);border:1px solid rgba(224,142,154,.3);padding:3px 8px">Otevřít zápisník →</a>';
+      az.parentNode.insertBefore(p,az); setTimeout(()=>p.remove(),6000);
+    } else {
+      // Fallback – uložení do localStorage přímo (pro případ, že notebook není načten)
+      const key='chcesmys_zapisnik';
+      const data=JSON.parse(localStorage.getItem(key)||'{}');
+      const mk=Object.keys(data); const mid=mk.length>0?mk[0]:'map_default';
+      if(!data[mid]) data[mid]={name:'Zápisník mezer',popis:'',entries:[],created:ts};
+      data[mid].entries.unshift({id:'e_'+ts,ts:ts,karta:'Plameňák',uhel:u.st,nazev:u.n,poeticky:u.n,text:txt});
+      localStorage.setItem(key,JSON.stringify(data));
+      const az=document.getElementById('az'+i);
+      const p=document.createElement('div');
+      p.style.cssText='margin-top:6px;padding:8px 12px;background:rgba(224,142,154,.1);border:1px solid rgba(224,142,154,.3);font-size:.72rem;display:flex;justify-content:space-between;align-items:center;gap:10px';
+      p.innerHTML='<span style="color:var(--a)">✓ Uloženo do zápisníku mezer</span><a href="../nastroje/zapisnik.html" style="font-size:.62rem;color:var(--a);border:1px solid rgba(224,142,154,.3);padding:3px 8px">Otevřít zápisník →</a>';
+      az.parentNode.insertBefore(p,az); setTimeout(()=>p.remove(),6000);
+    }
   }catch(e){alert('Nepodařilo se uložit.');}
 }
 
