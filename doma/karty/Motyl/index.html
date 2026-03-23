@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Motýl — Fyzika jazyka · Chceš myš?</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0f0d0a;--s:#171410;--s2:#1e1a14;
+  --cream:#e8e0d0;--dim:rgba(232,224,208,.42);--dim2:rgba(232,224,208,.2);
+  --a:#d6a87a;--a2:#b87a4a;--ab:rgba(214,168,122,.1);--ab2:rgba(214,168,122,.22);
+  --border:rgba(214,168,122,.15);--border-hi:rgba(214,168,122,.32);
+  --serif:'Cormorant Garamond',Georgia,serif;--mono:'DM Mono',monospace;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--cream);font-family:var(--mono);font-size:13px;line-height:1.8;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+.wrap{max-width:780px;margin:0 auto;padding:0 24px}
+
+nav{position:sticky;top:0;z-index:100;border-bottom:1px solid var(--border);background:rgba(15,13,10,.94);backdrop-filter:blur(14px);padding:11px 24px;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.nav-back{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);transition:color .2s}
+.nav-back:hover{color:var(--cream)}
+.nav-links{display:flex;gap:4px;flex-wrap:wrap}
+.nav-link{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);padding:4px 9px;border:1px solid transparent;transition:all .12s}
+.nav-link:hover{color:var(--cream);border-color:var(--border)}
+.nav-link.active{color:var(--a);border-color:var(--border-hi)}
+
+.hero{padding:0 0 44px;border-bottom:1px solid var(--border)}
+.hero-img{width:100%;max-height:460px;overflow:hidden;margin-bottom:28px;position:relative}
+.hero-img img{width:100%;height:460px;object-fit:cover;object-position:center 35%;filter:grayscale(100%) contrast(1.1);display:block}
+.hero-img-cap{position:absolute;bottom:8px;right:12px;font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:rgba(232,224,208,.22)}
+.hero-label{font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--a);margin-bottom:12px}
+h1{font-family:var(--serif);font-size:clamp(2.8rem,7vw,5rem);font-weight:300;line-height:1.0;margin-bottom:6px}
+h1 em{font-style:italic;color:var(--a)}
+.hero-veta{font-family:var(--serif);font-size:clamp(.88rem,2vw,1.1rem);font-style:italic;color:var(--dim);border-left:1px solid var(--a);padding-left:16px;max-width:460px;margin:14px 0 20px;line-height:1.9}
+.fenomen-box{border:1px solid var(--a);padding:14px 18px;margin-bottom:12px;background:var(--ab)}
+.fenomen-label{font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--a);margin-bottom:6px}
+.fenomen-text{font-size:12px;color:rgba(232,224,208,.7);line-height:1.85}
+.audio-link{display:inline-flex;align-items:center;gap:8px;padding:7px 14px;border:1px solid var(--border);color:var(--dim);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;transition:all .15s;margin-bottom:16px}
+.audio-link:hover{border-color:var(--a);color:var(--a)}
+.var-bar{display:flex;gap:1px;background:var(--border);border:1px solid var(--border)}
+.var-btn{flex:1;padding:11px 6px;background:var(--s);border:none;cursor:pointer;font-family:var(--mono);font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:var(--dim);transition:all .12s;text-align:center}
+.var-btn:hover{background:var(--s2);color:var(--cream)}
+.var-btn.active{background:var(--a);color:var(--bg)}
+.var-popis{padding:9px 12px;font-size:.74rem;color:var(--dim);border:1px solid var(--border);border-top:none;background:var(--s)}
+
+.sekce{padding:40px 0;border-bottom:1px solid var(--border)}
+.sekce-label{font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--a);margin-bottom:12px}
+h2{font-family:var(--serif);font-size:clamp(1.3rem,3.5vw,2rem);font-weight:300;margin-bottom:12px}
+h2 em{font-style:italic;color:var(--a)}
+
+.scroll-box{max-height:380px;overflow-y:auto;border:1px solid var(--border);background:var(--s);padding:18px 22px;font-family:var(--serif);font-size:1rem;line-height:2.1;color:rgba(232,224,208,.85)}
+.scroll-box::-webkit-scrollbar{width:2px}
+.scroll-box::-webkit-scrollbar-thumb{background:var(--a2)}
+.pd{display:block;padding:.12em 0}
+.pd.br{padding:.4em 0}
+.pd.i{font-style:italic}
+
+/* vizuální styly figur */
+[data-fig]{
+  cursor:help;
+  transition:all .1s;
+}
+.f-elipsa.hl{border-bottom:2px dashed var(--a)!important;}
+.f-fragment.hl{border-bottom:1px dotted var(--a)!important;letter-spacing:.03em;}
+.f-gradace.hl{background:linear-gradient(90deg, rgba(214,168,122,0.2) 0%, rgba(214,168,122,0.4) 100%)!important;}
+.f-paradox.hl{text-decoration:line-through!important;text-decoration-color:var(--a)!important;}
+.f-nelogicke.hl{background:rgba(214,168,122,.1);border-left:3px solid var(--a);}
+.f-fyzikalizace.hl{text-decoration:underline wavy var(--a)!important;}
+.f-neologismus.hl{background:rgba(214,168,122,.1);border-radius:2px;padding:0 2px;}
+.f-homonym.hl{background:rgba(214,168,122,.1);font-style:italic;}
+.f-deformace.hl{background:rgba(214,168,122,.08);border-bottom:1px dotted var(--a);}
+.f-ironie.hl{background:rgba(214,168,122,.22)!important;padding:0 2px;}
+.f-kontrast.hl{background:rgba(214,168,122,.1);border-left:3px solid var(--a);}
+.f-otazka.hl{border-bottom:3px solid rgba(214,168,122,.45)!important;}
+.f-aforismus.hl{border-bottom:2px dotted var(--a)!important;border-top:1px dotted rgba(214,168,122,.3)!important;padding-top:1px;}
+.f-snovy.hl{background:rgba(214,168,122,.05);border-left:2px solid var(--a);}
+.f-metamorfoza.hl{background:rgba(214,168,122,.1);border:1px dotted var(--a);}
+.f-prolinani.hl{background:rgba(214,168,122,.05);border-left:3px solid var(--a);}
+.f-personifikace.hl{border-bottom:1px solid var(--a)!important;}
+.f-jednoduche.hl{font-family:var(--mono);font-size:.9rem;}
+.f-primaRec.hl{font-style:italic!important;border:1px solid rgba(214,168,122,.35)!important;padding:0 3px;}
+.f-opakovani.hl{background:rgba(214,168,122,.1);padding:0 2px;}
+.f-vnitrni-hlas.hl{background:rgba(214,168,122,.05);border-left:2px solid var(--a);}
+.f-myslenky.hl{font-style:italic;color:var(--a);}
+.f-sebereflexe.hl{background:rgba(214,168,122,.05);border-right:2px solid var(--a);}
+.f-konkretni.hl{font-family:var(--mono);}
+.f-kulturni.hl{background:rgba(214,168,122,.08);border-bottom:1px dotted var(--a);}
+.f-intertext.hl{border-left:3px solid var(--a);border-right:3px solid var(--a);background:var(--ab);}
+.f-asociace.hl{background:rgba(214,168,122,.05);}
+.f-retezeni.hl{background:rgba(214,168,122,.05);border-bottom:1px dotted var(--a);}
+.f-metafora.hl{background:rgba(214,168,122,.08);border-bottom:1px dotted var(--a);}
+.f-symbol.hl{background:rgba(214,168,122,.05);border-radius:2px;}
+.f-groteskni.hl{background:rgba(214,168,122,.1);border:1px dotted var(--a);}
+.f-absurdni.hl{background:rgba(214,168,122,.1);border-left:2px solid var(--a);}
+[data-fig].hl:hover{opacity:.85}
+
+.fig-tbl{margin-top:8px;border:1px solid var(--border)}
+.fig-tbl-hdr{font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--a);padding:7px 12px;border-bottom:1px solid var(--border);background:var(--s);display:flex;justify-content:space-between;align-items:center}
+.fig-vse-btn{font-family:var(--mono);font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;background:transparent;border:1px solid var(--border);color:var(--dim);cursor:pointer;padding:3px 8px}
+.fig-vse-btn:hover,.fig-vse-btn.active{border-color:var(--a);color:var(--a)}
+.fig-r{display:grid;grid-template-columns:28px 1fr 28px;gap:6px;padding:7px 12px;cursor:pointer;border-bottom:1px solid var(--border);align-items:center;transition:background .1s;font-size:.72rem}
+.fig-r:last-child{border-bottom:none}
+.fig-r:hover{background:var(--s2)}
+.fig-r.hl{background:var(--ab);color:var(--a)}
+.fig-r-mark{text-align:center;font-size:.7rem;width:24px}
+.fig-r-cnt{font-size:.58rem;color:var(--dim2);text-align:right}
+
+.diag-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.78);z-index:200;align-items:center;justify-content:center;padding:20px}
+.diag-modal.open{display:flex}
+.diag-box{background:var(--s);border:1px solid var(--border-hi);max-width:540px;width:100%;padding:22px;max-height:88vh;overflow-y:auto}
+.diag-close{float:right;background:none;border:1px solid var(--border);color:var(--dim);font-family:var(--mono);font-size:.6rem;padding:3px 8px;cursor:pointer}
+.diag-close:hover{color:var(--cream);border-color:var(--border-hi)}
+.q-lbl{font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;color:var(--a);margin-bottom:4px;margin-top:14px}
+.q-text{font-size:.86rem;margin-bottom:5px}
+.diag-ta{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--cream);padding:9px 12px;font-family:var(--mono);font-size:.8rem;line-height:1.7;resize:vertical}
+.navrh-btn{display:block;width:100%;padding:9px 14px;margin-top:4px;background:transparent;border:1px solid var(--border);color:var(--cream);font-family:var(--mono);font-size:.76rem;text-align:left;cursor:pointer}
+.navrh-btn:hover{background:var(--a);border-color:var(--a);color:var(--bg)}
+
+.uhel{border-bottom:1px solid var(--border)}
+.uhel-h{display:grid;grid-template-columns:44px 1fr auto auto;padding:14px 0;cursor:pointer;align-items:center;gap:6px}
+.uhel-h:hover .uhel-nazev{color:var(--a)}
+.u-num{font-family:var(--serif);font-size:1.5rem;font-weight:300;color:rgba(214,168,122,.14);line-height:1}
+.uhel.open .u-num{color:rgba(214,168,122,.38)}
+.uhel-nazev{font-size:.84rem;color:var(--cream)}
+.uhel-poet{font-family:var(--serif);font-style:italic;font-size:.72rem;color:var(--a);display:block;margin-top:1px}
+.u-deg{font-size:.6rem;color:var(--a);font-family:var(--mono)}
+.u-tog{font-size:.64rem;color:var(--dim);transition:transform .2s}
+.uhel.open .u-tog{transform:rotate(180deg)}
+.uhel-body{display:none;padding:0 0 20px 44px}
+.uhel-body.open{display:block}
+.uhel-co{font-size:.74rem;color:var(--dim);margin-bottom:12px;line-height:1.8}
+
+.dl-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);margin-bottom:2px}
+@media(max-width:460px){.dl-grid{grid-template-columns:1fr}}
+.dl{background:var(--s);padding:12px 14px;cursor:pointer;transition:background .1s}
+.dl:hover,.dl.open{background:var(--s2)}
+.dl-icon{font-size:1rem;margin-bottom:4px}
+.dl-label{font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:var(--a);margin-bottom:2px}
+.dl-text{font-size:.68rem;color:var(--dim);line-height:1.45}
+.dl-detail{display:none;background:var(--s2);border:1px solid var(--border);border-top:none;padding:14px 16px;margin-bottom:2px}
+.dl-detail.open{display:block}
+.dl-lbl{font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:var(--a);margin-bottom:5px;margin-top:10px}
+.dl-lbl:first-child{margin-top:0}
+.dl-txt{font-size:.78rem;color:rgba(232,224,208,.67);line-height:1.8}
+.praxe-table{width:100%;border-collapse:collapse;font-size:.72rem;margin-top:6px}
+.praxe-table th{text-align:left;font-weight:400;color:var(--a);padding:4px 6px 2px 0}
+.praxe-table td{padding:4px 6px 2px 0;color:var(--dim);vertical-align:top}
+.jazyk-blok{background:var(--ab);border-left:2px solid var(--a2);padding:9px 12px;margin:10px 0;font-size:.76rem;color:rgba(232,224,208,.65);line-height:1.8}
+.jazyk-blok strong{color:var(--a);font-weight:400}
+.cviceni-ta{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--cream);padding:10px 14px;font-family:var(--serif);font-size:.9rem;line-height:1.85;resize:none;min-height:60px;transition:min-height .2s;margin-top:8px}
+.cviceni-ta:focus{outline:none;border-color:var(--a);min-height:220px}
+.akce-row{display:flex;gap:4px;flex-wrap:wrap;margin-top:8px}
+.akce-btn{padding:7px 12px;font-family:var(--mono);font-size:.62rem;letter-spacing:.09em;text-transform:uppercase;background:transparent;border:1px solid var(--border);color:var(--dim);cursor:pointer}
+.akce-btn:hover{color:var(--cream);border-color:var(--border-hi)}
+.akce-btn.prim{background:var(--a);color:var(--bg);border-color:var(--a)}
+.akce-btn.prim:hover{background:#e8bc94}
+.share-wrap{position:relative;display:inline-block}
+.share-menu{display:none;position:absolute;z-index:50;background:var(--s2);border:1px solid var(--border-hi);padding:4px 0;min-width:150px;bottom:100%;left:0}
+.share-menu.open{display:block}
+.share-item{display:block;width:100%;padding:6px 12px;font-family:var(--mono);font-size:.62rem;background:transparent;border:none;color:var(--dim);cursor:pointer;text-align:left}
+.share-item:hover{background:var(--ab);color:var(--cream)}
+
+.az-out{display:none;margin-top:8px}
+.az-header{background:var(--ab);border:1px solid var(--border-hi);padding:8px 12px;font-size:.7rem;margin-bottom:2px;display:flex;justify-content:space-between}
+.az-item{border:1px solid var(--border);padding:6px 10px;margin-bottom:2px;display:flex;gap:7px;align-items:flex-start;font-size:.68rem}
+.az-item.hit{border-color:var(--border-hi);background:var(--ab)}
+.az-n{color:rgba(214,168,122,.22);min-width:18px}
+.az-item.hit .az-n{color:var(--a)}
+.az-nazev{color:rgba(232,224,208,.28);flex:1}
+.az-item.hit .az-nazev{color:var(--cream)}
+.az-tags{display:flex;flex-wrap:wrap;gap:2px;margin-top:2px}
+.az-tag{font-size:.58rem;color:var(--a);padding:1px 4px;background:var(--ab);border:1px solid var(--border-hi)}
+.az-hit{color:var(--a);font-size:.64rem}
+.az-miss{color:rgba(232,224,208,.16);font-size:.64rem}
+.az-note{font-size:.64rem;color:var(--dim);font-style:italic;margin-top:6px;padding:7px 10px;border-left:1px solid var(--border-hi)}
+
+.btn{padding:8px 16px;font-family:var(--mono);font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;border:none;cursor:pointer;display:inline-block}
+.btn-p{background:var(--a);color:var(--bg)}
+.btn-p:hover{background:#e8bc94}
+.btn-g{background:transparent;color:var(--dim);border:1px solid var(--border)}
+.btn-g:hover{color:var(--cream);border-color:var(--border-hi)}
+.btn-row{display:flex;gap:5px;flex-wrap:wrap;margin-top:8px}
+
+footer{padding:20px 0;border-top:1px solid var(--border);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-top:6px}
+footer p{font-size:.68rem;color:var(--dim2)}
+footer a{color:var(--a)}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-back" href="../../../index.html">← Všechna zvířata</a>
+  <div class="nav-links">
+    <a class="nav-link active" href="index.html">Pohádka</a>
+    <a class="nav-link" href="../../nastroje/knihovna_figur.html">Figury ↗</a>
+    <a class="nav-link" href="../../nastroje/zapisnik.html">Zápisník ↗</a>
+    <a class="nav-link" href="../../nastroje/analyzer.html">Analyzátor ↗</a>
+  </div>
+</nav>
+
+<div class="wrap">
+
+<section class="hero">
+  <div class="hero-img">
+    <img src="../../../ilustrace/motyl.jpg" alt="Motýl" onerror="this.parentElement.style.display='none'">
+    <span class="hero-img-cap">ilustrace · motýl</span>
+  </div>
+  <p class="hero-label">Fyzika jazyka · Karta Motýl</p>
+  <h1>Motýl</h1>
+  <p class="hero-veta">„motýlů v břiše se nenajíš“</p>
+  <div class="fenomen-box">
+    <div class="fenomen-label">Fenomén Motýla — když krása nezasytí</div>
+    <p class="fenomen-text">Dva lidé, dialog o hladu. Ona má hlad, on jí podá tři motýly. Jeden modrý, jeden žlutý, jeden rozmazaný. Ten třetí se jmenuje Horac. Ona nechce koukat, chce jíst. Motýli jsou lehcí, nezatíží žaludek. Ona chce, aby jí žaludek zpíval, ne šeptal básničky. Pohádka o tom, že ne všechno, co je hezké, se dá sníst – a že láska bez přílohy nestačí.</p>
+  </div>
+  <a class="audio-link" href="https://youtube.com/shorts/C9aNsatIg_M?is=Vdtyo5qKWy5CSYQR" target="_blank" rel="noopener">▶ Poslechnout pohádku ↗</a>
+  <div class="var-bar">
+    <button class="var-btn" onclick="setVar('A',this)">🎲 Náhodně</button>
+    <button class="var-btn active" onclick="setVar('B',this)">🧭 Podle nálady</button>
+    <button class="var-btn" onclick="setVar('C',this)">🔍 Diagnosticky</button>
+  </div>
+  <div class="var-popis" id="var-popis">Projděte si úhly níže a vyberte ten, který vás osloví.</div>
+</section>
+
+<!-- POHÁDKA O MOTÝLECH -->
+<section class="sekce" id="pohadka">
+  <p class="sekce-label">Pohádka · čtěte pomalu</p>
+  <h2>O motýlech, <em>kterých se nenajíš.</em></h2>
+  <p style="font-size:.72rem;color:var(--dim);margin-bottom:12px">Přejeďte myší přes podtržené místo pro popis figury. Kliknutím na figuru v tabulce se označí v textu.</p>
+  <div class="scroll-box" id="poh-text">
+    <span class="pd i">O motýlech, kterých se nenajíš.</span><span class="pd br"></span>
+    <span class="pd">„<span class="f-opakovani f-vnitrni-hlas" data-fig="opak1,vnitr1" title="Opakování + vnitřní hlas – důraz na hlad">Já mám hlad</span>,“ řekla.</span>
+    <span class="pd">„Tak tady máš,“ řekl.</span>
+    <span class="pd">A podal jí motýly.</span>
+    <span class="pd"><span class="f-fragment f-elipsa" data-fig="frag1,el1" title="Fragment + elipsa – tři motýli, tři slova">Tři.</span><br><span class="f-konkretni" data-fig="konk1" title="Konkrétní popis">Jeden modrý, jeden žlutý, jeden trochu rozmazaný.</span><br>Ten třetí se jmenoval Horac, ale to se dozvěděli až později.</span>
+    <span class="pd br"></span>
+    <span class="pd">„To se nedá sníst,“ řekla.<br>„Ale dá se na to koukat,“ řekl.<br>„Já nechci koukat. Já chci jíst.“<br><span class="f-ironie f-paradox" data-fig="ir1,par1" title="Ironie + paradox – lehcí motýli vs. plný žaludek">„Motýli jsou lehcí. Nezatíží ti žaludek.“</span><br><span class="f-fyzikalizace" data-fig="fyz1" title="Fyzikalizace – žaludek zpívá, šeptá básničky">„Ale já chci, aby mi žaludek zpíval, ne aby si šeptal básničky.“</span></span>
+    <span class="pd br"></span>
+    <span class="pd"><span class="f-personifikace" data-fig="pers1" title="Personifikace – motýli se rozhlížejí">Motýli se zatím rozhlíželi.</span><br><span class="f-groteskni" data-fig="grot1" title="Groteskní obraz – motýl v polívce">Jeden si lehl do polívky.</span><br><span class="f-groteskni" data-fig="grot2" title="Groteskní obraz – motýl pod rohlíkem">Druhý se schoval pod rohlík.</span><br><span class="f-personifikace" data-fig="pers2" title="Personifikace – Horac se snaží otevřít ledničku">Třetí Horac se snažil otevřít ledničku, ale neměl palce.</span></span>
+    <span class="pd br"></span>
+    <span class="pd">„<span class="f-opakovani" data-fig="opak2">Já mám hlad</span>,“ řekla znovu.<br>„A ty mi dáváš křídla.“<br>„Křídla jsou taky něco,“ řekl.<br>„Ale nejsou chleba,“ řekla.<br>„To je pravda,“ řekl.<br>„Ale chleba neumí lítat.“<br><span class="f-neologismus f-kulturni" data-fig="neo1,kult1" title="Neologismus + kulturní reference – emo chleba">“A ještě je chleba nejvic emo," řekl polohlasem.</span><br>" Jakto?“ řekla.<br><span class="f-homonym" data-fig="hom1" title="Homonymní hra – řeže se, má patky">“Řeže se a má dvě patky." řekl.</span><br><span class="f-fragment" data-fig="frag2">"aha” uzavřela.</span></span>
+    <span class="pd br"></span>
+    <span class="pd">Chvíli bylo ticho.<br><span class="f-personifikace" data-fig="pers3" title="Personifikace – motýli se tváří, že rozumí">Motýli se tvářili, že rozumí.</span><br>Ale nerozuměli.<br><span class="f-metamorfoza" data-fig="meta1" title="Metamorfóza – motýl se pokouší být salátem">Jeden se pokusil být salát.</span><br><span class="f-metamorfoza" data-fig="meta2" title="Metamorfóza – motýl se schoulí do knedlíku">Druhý se schoulil do tvaru knedlíku.</span><br><span class="f-metamorfoza" data-fig="meta3" title="Metamorfóza – Horac se převlékne za banán, změní jméno">Horác se převlékl za banán.</span><br>A začal si říkat Florián.</span>
+    <span class="pd br"></span>
+    <span class="pd">„Tohle je divný,“ řekla.<br>„To je umění,“ řekl.<br>„<span class="f-kontrast" data-fig="kont1" title="Kontrast – hlad vs. umění">To je hlad</span>,“ řekla.<br>„To je interpretace,“ řekl.<br>„To je nesmysl,“ řekla.<br>„To je možné,“ řekl.</span>
+    <span class="pd br"></span>
+    <span class="pd">Nakonec si sedla na zem.<br><span class="f-snovy" data-fig="snov1" title="Snový obraz – motýli krouží, dělají vír v myšlenkách">Motýli jí kroužili kolem hlavy.<br>Dělal vír a i víry v myšlenkách.</span><br>A jeden jí přistál na nose.<br>„Já tě nesním,“ řekla mu.<br>„To je dobře,“ řekl <span class="f-metamorfoza" data-fig="meta4" title="Metamorfóza – Florián mluví">Florián</span>.<br>„<span class="f-aforismus f-paradox" data-fig="af1,par2" title="Aforismus + paradox – chutná jako neděle">Já bych stejně chutnal jako neděle.</span>“</span>
+    <span class="pd br"></span>
+    <span class="pd">A tak si vzala rohlík.<br><span class="f-elipsa" data-fig="el2" title="Elipsa – výčet bez sloves">Bez motýlů.<br>Bez klišé.<br>Bez chutí.</span></span>
+    <span class="pd br"></span>
+    <span class="pd"><span class="f-myslenky f-deformace" data-fig="mysl1,def1" title="Myšlenky + deformovaná frazeologie – motýlů v břiše se nenajíš">Ale v hlavě jí drnčela věta:<br>„Motýlů v břiše se nenajíš.“</span></span>
+    <span class="pd br"></span>
+    <span class="pd">A pokaždé, když jí někdo<br>chtěl nakrmit láskou,<br>zeptala se:<br><span class="f-otazka f-aforismus" data-fig="ot1,af2" title="Rétorická otázka + aforismus – máš k tomu přílohu?">„A máš k tomu i přílohu?“</span></span>
+  </div>
+
+  <!-- TABULKA FIGUR -->
+  <div class="fig-tbl">
+    <div class="fig-tbl-hdr">
+      <span>Figury v pohádce · kliknutím označíte v textu</span>
+      <button class="fig-vse-btn" id="btn-vse" onclick="toggleVse()">Zobrazit vše</button>
+    </div>
+    <div class="fig-r" onclick="togFig('opak1','opak2')"><span class="fig-r-mark"><span class="f-opakovani hl">↻</span></span><span>Opakování</span><span class="fig-r-cnt">2×</span></div>
+    <div class="fig-r" onclick="togFig('vnitr1')"><span class="fig-r-mark"><span class="f-vnitrni-hlas hl">💭</span></span><span>Vnitřní hlas</span><span class="fig-r-cnt">1×</span></div>
+    <div class="fig-r" onclick="togFig('frag1','frag2')"><span class="fig-r-mark"><span class="f-fragment hl">…</span></span><span>Fragment</span><span class="fig-r-cnt">2×</span></div>
+    <div class="fig-r" onclick="togFig('el1','el2')"><span class="fig-r-mark"><span class="f-elipsa hl">──</span></span><span>Elipsa</span><span class="fig-r-cnt">2×</span></div>
+    <div class="fig-r" onclick="togFig('konk1')"><span class="fig-r-mark"><span class="f-konkretni hl">🎨</span></span><span>Konkrétní popis</span><span class="fig-r-cnt">1×</span></div>
+    <div class="fig-r" onclick="togFig('ir1')"><span class="fig-r-mark"><span class="f-ironie hl">😏</span></span><span>Ironie</span><span class="fig-r-cnt">1×</span></div>
+    <div class="fig-r" onclick="togFig('par1','par2')"><span class="fig-r-mark"><span class="f-paradox hl">⌐</span></span><span>Paradox</span><span class="fig-r-cnt">2×</span></div>
+    <div class="fig-r" onclick="togFig('fyz1')"><span class="fig-r-mark"><span class="f-fyzikalizace hl">≈</span></span><span>Fyzikalizace</span><span class="fig-r-cnt">1×</span></div>
+    <div class="fig-r" onclick="togFig('pers1','pers2','pers3')"><span class="fig-r-mark"><span class="f-personifikace hl">──</span></span><span>Personifikace</span><span class="fig-r-cnt">3×</span></div>
+    <div class="fig-r" onclick="togFig('grot1','grot2')"><span class="fig-r-mark"><span class="f-groteskni hl">🤡</span></span><span>Groteskní obraz</span><span class="fig-r-cnt">2×</span></div>
+    <div class="fig-r" onclick="togFig('neo1')"><span class="fig-r-mark"><span class="f-neologismus hl">✨</span></span><span>Neologismus</span><span class="fig-r-cnt">1×</span></div>
+    <div class="fig-r" onclick="togFig('kult1')"><span class="fig-r-mark"><span class="f-kulturni hl">📀</span></span><span>Kulturní reference</span><span class="fig-r-cnt">1×</span></div>
+    <div class="fig-r" onclick="togFig('hom1')"><span class="fig-r-mark"><span class="f-homonym hl">🔤</span></span><span>Homonymní hra</span><span class="fig-r-cnt">1×</span></div>
+    <div class="fig-r" onclick="togFig('meta1','meta2','meta3','meta4')"><span class="fig-r-mark"><span class="f-metamorfoza hl">🦋</span></span><span>Metamorfóza</span><span class="fig-r-cnt">4×</span></div>
+    <div class="fig-r" onclick="togFig('kont1')"><span class="fig-r-mark"><span class="f-kontrast hl">⇄</span></span><span>Kontrast</span><span class="fig-r-cnt">1×</span></div>
+    <div class="fig-r" onclick="togFig('snov1')"><span class="fig-r-mark"><span class="f-snovy hl">🌙</span></span><span>Snový obraz</span><span class="fig-r-cnt">1×</span></div>
+    <div class="fig-r" onclick="togFig('af1','af2')"><span class="fig-r-mark"><span class="f-aforismus hl">〓</span></span><span>Aforismus</span><span class="fig-r-cnt">2×</span></div>
+    <div class="fig-r" onclick="togFig('mysl1')"><span class="fig-r-mark"><span class="f-myslenky hl">💡</span></span><span>Myšlenky</span><span class="fig-r-cnt">1×</span></div>
+    <div class="fig-r" onclick="togFig('def1')"><span class="fig-r-mark"><span class="f-deformace hl">⚠️</span></span><span>Deformovaná frazeologie</span><span class="fig-r-cnt">1×</span></div>
+    <div class="fig-r" onclick="togFig('ot1')"><span class="fig-r-mark"><span class="f-otazka hl">?</span></span><span>Rétorická otázka</span><span class="fig-r-cnt">1×</span></div>
+  </div>
+</section>
+
+<!-- 12 ÚHLŮ POHLEDU (s protilehlými úkoly a figurami v praxi) -->
+<section class="sekce" id="uhly">
+  <p class="sekce-label">12 úhlů pohledu</p>
+  <h2>Vyberte úhel pohledu</h2>
+  <div id="uhly-list"></div>
+</section>
+
+<footer>
+  <p>Karta Motýl · Fyzika jazyka · Chceš myš? · © 2026 Michaela Nováková</p>
+  <p><a href="mailto:chcesmys@gmail.com">chcesmys@gmail.com</a></p>
+</footer>
+</div>
+
+<!-- DIAGNOSTIKA MODAL -->
+<div class="diag-modal" id="diag-modal">
+  <div class="diag-box">
+    <button class="diag-close" onclick="closeDiag()">✕ zavřít</button>
+    <div style="font-family:var(--serif);font-size:1.1rem;font-weight:300;margin-bottom:14px;padding-right:60px">Tři otázky k pohádce</div>
+    <p style="font-size:.74rem;color:var(--dim);margin-bottom:14px;line-height:1.8">Odpovězte rychle, bez opravování. Hledáme váš přirozený úhel pohledu.</p>
+    <div class="q-lbl">Smysl</div>
+    <div class="q-text">Co je podle vás hlavní pointa nebo sdělení tohoto příběhu?</div>
+    <textarea class="diag-ta" id="q1" placeholder="Pište první co vás napadne…"></textarea>
+    <div class="q-lbl">Zaujetí</div>
+    <div class="q-text">Která konkrétní věta, obraz nebo moment vás nejvíc zaujal — a proč?</div>
+    <textarea class="diag-ta" id="q2" placeholder="Konkrétní věta nebo moment…"></textarea>
+    <div class="q-lbl">Aplikace</div>
+    <div class="q-text">Kdyby tento příběh byl zadáním pro vaši tvorbu, co by vám radil dělat (nebo nedělat)?</div>
+    <textarea class="diag-ta" id="q3" placeholder="Konkrétní situace nebo protiargument…"></textarea>
+    <div style="display:flex;gap:6px;margin-top:12px">
+      <button class="btn btn-p" onclick="runDiag()">Zjistit úhel →</button>
+      <button class="btn btn-g" onclick="closeDiag()">Zrušit</button>
+    </div>
+    <div id="diag-res" style="display:none;margin-top:14px;border:1px solid var(--a);padding:14px;background:var(--bg)">
+      <div style="font-size:.7rem;color:var(--a);margin-bottom:4px">Váš dominantní úhel</div>
+      <div style="font-family:var(--serif);font-size:1.1rem;font-weight:300;margin-bottom:4px" id="d-nazev"></div>
+      <div style="font-size:.72rem;color:var(--dim);margin-bottom:10px" id="d-sub"></div>
+      <div id="d-btns"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+// =====================================================
+// DATA – 12 ÚHLŮ MOTÝLA (podle dodaného materiálu)
+// =====================================================
+const U = [
+  {i:0, st:0,   n:'Absurdní',            pod:'nesmysl, který dává smysl',
+   co:'Motýli jako jídlo? Copak se motýli dají jíst? A proč by měli být v polívce, pod rohlíkem, v ledničce? Motýl, který se převléká za banán a říká si Florián? A tvrdí, že chutná jako neděle? Celá tahle situace je jeden velký nesmysl – a právě proto je pravdivá.',
+   praxe: [
+     {oblast:'Psychologie',text:'Absurdní myšlení může být známkou kreativity, ale i vnitřního rozporu.'},
+     {oblast:'Forenzní lingvistika',text:'Absurdita může signalizovat psychický stav, záměrné matení nebo osobitý styl.'},
+     {oblast:'Reklama a marketing',text:'Absurdní reklamy jsou zapamatovatelné, překračují očekávání.'},
+     {oblast:'Umění a kreativita',text:'Absurdita je základním kamenem surrealismu a absurdního dramatu.'}
+   ],
+   ukol:'Napiš krátký dialog (10–12 replik), ve kterém se dva lidé baví o naprosto obyčejné věci (např. co budou dělat odpoledne), ale každá jejich odpověď bude paradoxní nebo absurdní. Použij alespoň jednu elipsu a jeden paradox.',
+   jazyk:'Paradox, elipsa, nelogická spojení.',
+   prot:6},
+  {i:1, st:30,  n:'Jazykový',            pod:'jazyk jako hra, materiál',
+   co:'Tahle pohádka není o hladu. Je o jazyce. O tom, jak slova ztrácejí svůj význam, když je oddělíme od věcí, které označují. „Motýli“ přestávají být motýly a stávají se symbolem něčeho krásného, ale nepoživatelného. „Žaludek“ dostává hlas – zpívá, šeptá básničky. „Chleba“ je najednou „emo“ a má „patky“. Jazyk se tady stává hrou, materiálem, který lze ohýbat.',
+   praxe: [
+     {oblast:'Psychologie',text:'Fyzikalizace abstraktních pojmů může být známkou somatizace nebo básnické obraznosti.'},
+     {oblast:'Forenzní lingvistika',text:'Neologismy a slovní hříčky mohou být stopou k autorovi s osobitým stylem.'},
+     {oblast:'Reklama a marketing',text:'Neologismy a hra se slovy vytvářejí zapamatovatelné značky a slogany.'},
+     {oblast:'Umění a kreativita',text:'Každý umělec si vytváří svůj vlastní jazyk. Neologismy a deformace jsou jeho součástí.'}
+   ],
+   ukol:'Vymysli pět nových slov (neologismů), která by mohla popisovat běžné pocity nebo situace. Ke každému napiš krátkou definici a pak je použij v jedné větě. Např. „motýlkovat“ – mít v žaludku motýly, ale ne z lásky, z hladu.',
+   jazyk:'Neologismus, fyzikalizace, homonymní hra.',
+   prot:7},
+  {i:2, st:60,  n:'Ironický',            pod:'nadhled nad krásou a hladem',
+   co:'Ona má hlad, on jí nabídne motýly. To je ironie sama. Nabízí jí krásu místo jídla, umění místo nasycení. A celý ten dialog o tom, co je umění, co je hlad, co je interpretace, co je nesmysl – to je ironická hra na filozofický rozhovor, který ale ve skutečnosti řeší úplně banální věc: že má prostě hlad.',
+   praxe: [
+     {oblast:'Psychologie',text:'Ironie je známkou kognitivní flexibility, schopnosti vidět věci z více stran. Může být obranou před přílišným emocionálním zaujetím.'},
+     {oblast:'Forenzní lingvistika',text:'Ironie se těžko dokazuje, ale opakované používání kontrastů může být indikátorem ironického stylu.'},
+     {oblast:'Reklama a marketing',text:'Ironie se používá k oslovení chytřejšího publika, které ocení nadsázku.'},
+     {oblast:'Umění a kreativita',text:'Ironie je základní nástroj postmoderny. Umožňuje mluvit o vážných věcech s nadhledem.'}
+   ],
+   ukol:'Napiš krátkou reklamu na úplně obyčejnou věc (např. rohlík, vodu, tužku) tak, aby zněla jako reklama na luxusní produkt. Použij ironii a kontrast. Třeba: „Rohlík. Není to chleba. Je to zážitek. Bez motýlů, bez klišé, bez chuti. Jen ty a nekonečno.“',
+   jazyk:'Ironie, kontrast, paradox.',
+   prot:8},
+  {i:3, st:90,  n:'Filozofický',         pod:'co nás skutečně sytí',
+   co:'Co to znamená mít hlad? Je to jen fyzická potřeba, nebo i touha po něčem jiném? A co to znamená „být nasycen“? Když ti někdo dá motýly místo jídla, je to naplnění, nebo výsměch? A ta závěrečná otázka – „A máš k tomu i přílohu?“ – co tím myslí? Ptá se na lásku, nebo na jídlo? Celá pohádka je jedna velká otázka po smyslu, po naplnění, po tom, co vlastně hledáme, když říkáme, že máme hlad.',
+   praxe: [
+     {oblast:'Psychologie',text:'Řečnické otázky mohou být známkou vnitřního dialogu, hledání smyslu. Aforismy slouží jako kognitivní berličky.'},
+     {oblast:'Forenzní lingvistika',text:'Aforismy a řečnické otázky mohou být charakteristické pro autora s filozofickým sklonem.'},
+     {oblast:'Reklama a marketing',text:'Řečnické otázky vtahují zákazníka, aforismy se používají jako slogany.'},
+     {oblast:'Umění a kreativita',text:'Otázka bez odpovědi je silnější než odpověď. Aforismus je zhutněná moudrost.'}
+   ],
+   ukol:'Napiš krátkou úvahu (10–15 vět) na téma: „Co mě opravdu sytí?“ Může to být jídlo, láska, umění, nebo něco úplně jiného. Použij alespoň jednu řečnickou otázku a pokus se na konci formulovat svůj vlastní aforismus.',
+   jazyk:'Otázka, aforismus, paradox.',
+   prot:9},
+  {i:4, st:120, n:'Surrealistický',      pod:'sen, prolínání realit',
+   co:'Motýli v polívce. Motýli pod rohlíkem. Motýli, co se snaží otevřít ledničku. Motýli, co se převlékají za banán a říkají si Florián. A ten Florián pak tvrdí, že chutná jako neděle. Tohle není realita, to je sen. A v tom snu se mísí jídlo, láska, umění, všednost a absurdita do jednoho obrazu, který nedává smysl, a právě proto je tak silný.',
+   praxe: [
+     {oblast:'Psychologie',text:'Snové obrazy jsou přímou cestou do nevědomí. Odrážejí naše touhy, strachy, nezpracované zážitky.'},
+     {oblast:'Forenzní lingvistika',text:'Popis snů může být důležitý při analýze výpovědí, ale těžko se ověřuje.'},
+     {oblast:'Reklama a marketing',text:'Surrealistické obrazy se používají k upoutání pozornosti, k vytvoření nezapomenutelné atmosféry.'},
+     {oblast:'Umění a kreativita',text:'Surrealismus je o uvolnění fantazie, o prolomení hranic reality.'}
+   ],
+   ukol:'Popiš svůj vlastní sen, ale udělej to tak, jako bys popisoval realitu. Žádné „zdálo se mi“, prostě to, co se děje. Nech v tom snu vystupovat tři postavy nebo věci, které by se v realitě nemohly potkat (třeba motýl, rohlík a neděle).',
+   jazyk:'Snový obraz, metamorfóza, prolínání realit, synestezie.',
+   prot:10},
+  {i:5, st:150, n:'Naivní',              pod:'dětský, hravý, jednoduchý',
+   co:'Holka má hlad. Kluk jí dá tři motýly. Ona je nechce jíst, protože motýli se přece nejedí. On říká, že jsou lehcí a že se na ně dá koukat. Motýli jsou zvědaví, lezou do polívky, pod rohlík, do ledničky. Jeden se dokonce převlékne za banán. Holka se nakonec naštve a vezme si radši rohlík. Jednoduchá pohádka o tom, že ne všechno, co je hezké, se dá sníst.',
+   praxe: [
+     {oblast:'Psychologie',text:'Personifikace je přirozená pro děti. Jednoduché věty jsou srozumitelné.'},
+     {oblast:'Forenzní lingvistika',text:'Personifikace a jednoduché věty mohou být součástí stylu autora, zvlášť pokud píše pro děti.'},
+     {oblast:'Reklama a marketing',text:'Personifikace oživuje značku, jednoduché věty jsou základem úspěšné reklamy.'},
+     {oblast:'Umění a kreativita',text:'Oživení neživého je základní princip pohádek. Jednoduchost může být nejsilnější.'}
+   ],
+   ukol:'Převyprávěj celou pohádku O motýlech, jako bys ji vyprávěl pětiletému dítěti. Používej co nejjednodušší věty, hodně přímé řeči a nech motýly, aby se chovali jako malé děti.',
+   jazyk:'Personifikace, jednoduché věty, přímá řeč.',
+   prot:11},
+  {i:6, st:180, n:'Introspektivní',      pod:'vnitřní hlas, co chce a nechce',
+   co:'Co se děje v hlavě té dívky? Má hlad, ale ten hlad není jen fyzický. Je to možná i touha po něčem víc – po lásce, po kráse, po umění. On jí dává motýly, ale ona v nich vidí prázdnotu. Její žaludek nezpívá, nešeptá básničky. Je prázdný. A ta věta, která jí drnčí v hlavě – „Motýlů v břiše se nenajíš“ – je to, co si uvědomuje celou dobu. A ta otázka na konci? „A máš k tomu i přílohu?“ – ptá se sama sebe, jestli to, co jí nabízí, je vůbec k jídlu.',
+   praxe: [
+     {oblast:'Psychologie',text:'Vnitřní hlas je naše vědomí, náš dialog se sebou samým. Jeho analýza může odhalit naše skutečné pocity.'},
+     {oblast:'Forenzní lingvistika',text:'Záznam vnitřního hlasu (deník, poznámky) je cenný důkazní materiál.'},
+     {oblast:'Reklama a marketing',text:'Reklamy často pracují s vnitřním hlasem zákazníka („Copak si o mně pomyslí?“).'},
+     {oblast:'Umění a kreativita',text:'Vnitřní monolog je způsob, jak čtenáři přiblížit postavu.'}
+   ],
+   ukol:'Napiš vnitřní monolog dívky z pohádky. Co si myslí, když jí on podává motýly? Co cítí, když se motýli převlékají za jídlo? A co se jí honí hlavou, když si nakonec bere ten rohlík?',
+   jazyk:'Vnitřní hlas, myšlenky, sebereflexe.',
+   prot:0},
+  {i:7, st:210, n:'Betonový',            pod:'holá fakta, co se skutečně děje',
+   co:'Tři motýli. Modrý, žlutý, rozmazaný. Ten třetí se jmenuje Horac. Ona řekne, že má hlad. On jí dá motýly. Ona řekne, že se nedají jíst. On řekne, že se na ně dá koukat. Motýli si lehnou do polívky, schovají se pod rohlík, snaží se otevřít ledničku. Ona znovu řekne, že má hlad. On řekne, že křídla jsou taky něco. Ona řekne, že nejsou chleba. On řekne, že chleba neumí lítat. Ona se zeptá, jak to, že je chleba emo. On řekne, že se řeže a má dvě patky. Motýli se tváří, že rozumí, ale nerozumí. Jeden se snaží být salát, druhý knedlík, třetí banán. Ona řekne, že je to divný. On řekne, že je to umění. Ona řekne, že je to hlad. On řekne, že je to interpretace. Ona řekne, že je to nesmysl. On řekne, že je to možné. Motýli jí krouží kolem hlavy, jeden jí přistane na nose. Ona řekne, že ho nesní. On řekne, že je to dobře, protože by chutnal jako neděle. Ona si vezme rohlík. V hlavě jí drnčí věta: „Motýlů v břiše se nenajíš.“ A pokaždé, když ji někdo chce nakrmit láskou, zeptá se: „A máš k tomu i přílohu?“',
+   praxe: [
+     {oblast:'Psychologie',text:'Konkrétní popis reality může být známkou zaměření na fakta, potřeby jasnosti.'},
+     {oblast:'Forenzní lingvistika',text:'Doslovný popis událostí bez příkras je ceněný pro svou přesnost.'},
+     {oblast:'Reklama a marketing',text:'Fakta a konkrétní údaje budují důvěru, ale mohou působit stroze.'},
+     {oblast:'Umění a kreativita',text:'Minimalismus a doslovnost může být silným uměleckým stylem.'}
+   ],
+   ukol:'Převyprávěj pohádku, ale vynech všechna přirovnání, metafory a slovní hříčky. Popiš jen to, co se skutečně děje, tak, jak by to viděla kamera. Žádné „jako“, žádné „možná“, jen holá fakta.',
+   jazyk:'Konkrétní popis, fakta, doslovné čtení.',
+   prot:1},
+  {i:8, st:240, n:'Kulturní',            pod:'klišé a jejich převracení',
+   co:'Motýli v břiše – to přece známe. To je, když jsme zamilovaní. A tady se ten krásný obraz obrací: motýli v břiše tě nezasytí, nenakrmí. Je to ironie na kulturní klišé o lásce a motýlech. A ten chleba, co je „emo“ a má „patky“ – to je zase narážka na subkultury a na to, jak se běžné věci můžou stát symbolem. Tahle pohádka mluví o tom, jak kultura formuje naše touhy a jak se ty touhy pak míjejí účinkem.',
+   praxe: [
+     {oblast:'Psychologie',text:'Kulturní reference ukazují, jak jedinec zapadá do společnosti, jaké hodnoty a vzorce sdílí.'},
+     {oblast:'Forenzní lingvistika',text:'Mohou pomoci identifikovat dobu vzniku textu nebo sociální skupinu autora.'},
+     {oblast:'Reklama a marketing',text:'Reklamy naplno využívají kulturní reference, aby se ztotožnily s cílovou skupinou.'},
+     {oblast:'Umění a kreativita',text:'Umění kulturní reference buď potvrzuje, nebo zpochybňuje.'}
+   ],
+   ukol:'Vezmi nějaké známé kulturní klišé nebo frazém (např. „láska prochází žaludkem“, „láska je slepá“) a napiš krátký text, ve kterém toto klišé obrátíš naruby, podobně jako je tady obrácený „motýli v břiše“.',
+   jazyk:'Kulturní reference, intertextualita, deformovaná frazeologie.',
+   prot:2},
+  {i:9, st:270, n:'Asociační',           pod:'proud myšlenek, řetězení',
+   co:'Hlad. Motýli. Modrá. Žlutá. Rozmazaná. Horac. Polívka. Rohlík. Lednička. Palce. Křídla. Chleba. Emo. Patky. Salát. Knedlík. Banán. Florián. Divný. Umění. Hlad. Interpretace. Nesmysl. Možné. Zem. Vír. Myšlenky. Nos. Neděle. Rohlík. Klišé. Chuť. Věta. Láska. Příloha. Každé slovo vyvolává další, řetězí se, odskakuje. Není to logický příběh, je to proud asociací, který plyne, kam ho slova zanesou.',
+   praxe: [
+     {oblast:'Psychologie',text:'Volné asociace jsou základem psychoanalýzy. Umožňují přístup k nevědomí.'},
+     {oblast:'Forenzní lingvistika',text:'Analýza asociací může odhalit skryté souvislosti v mysli pachatele nebo svědka.'},
+     {oblast:'Reklama a marketing',text:'Asociace se používají k propojení produktu s pozitivními pocity.'},
+     {oblast:'Umění a kreativita',text:'Asociační proud je základem surrealismu a moderní poezie.'}
+   ],
+   ukol:'Napiš proud vědomí na téma „hlad“. Piš 5 minut bez přemýšlení, bez korektur, jen to, co tě napadá. Nech slova, aby se řetězila sama. Potom si text přečti a podtrhni místa, která tě překvapila.',
+   jazyk:'Volné asociace, fragmenty, řetězení.',
+   prot:3},
+  {i:10, st:300, n:'Metaforický',         pod:'motýli jako symbol touhy',
+   co:'Motýli nejsou motýli. Jsou to sny, touhy, krása, láska. Ona má hlad – ne po jídle, ale po něčem, co ji naplní. On jí dává motýly – dává jí krásu, umění, interpretaci. Ale ona potřebuje chleba – potřebuje něco skutečného, hmatatelného, co zažene její hlad. A ten rohlík na konci – to není rohlík, to je rezignace, smíření se s tím, že motýly se nenajíš. Celá pohádka je jedna velká metafora pro to, jak se míjíme s tím, co skutečně potřebujeme.',
+   praxe: [
+     {oblast:'Psychologie',text:'Metafory nám pomáhají pochopit abstraktní pojmy skrze konkrétní zkušenost. „Hlad“ jako metafora pro nenaplněnou touhu je velmi silná.'},
+     {oblast:'Forenzní lingvistika',text:'Analýza metafor může odhalit, jak autor vnímá svět, co je pro něj důležité.'},
+     {oblast:'Reklama a marketing',text:'Metafory jsou základem přesvědčivé komunikace („Auto jako divoké zvíře“).'},
+     {oblast:'Umění a kreativita',text:'Bez metafory není umění.'}
+   ],
+   ukol:'Vezmi si nějakou svou vlastní zkušenost (třeba, že ses cítil/a osaměle, nebo že jsi měl/a radost) a popiš ji, aniž bys použil/a jediné slovo, které by tu zkušenost pojmenovávalo přímo. Používej jen metafory. Např. místo „byl jsem smutný“ napiš „v mém pokoji zhasla všechna světla a okna se proměnila v zrcadla“.',
+   jazyk:'Metafora, symbol.',
+   prot:4},
+  {i:11, st:330, n:'Groteskní',           pod:'komická a děsivá nadsázka',
+   co:'Představ si to: holka má hlad, kluk jí dá tři motýly. A oni jsou fakt tři – jeden modrý, jeden žlutý, jeden rozmazaný, a ten třetí se jmenuje Horac. A ti motýli se pak začnou chovat jako postavy z nějaký šílený grotesky: jeden si lehne do polívky, druhej se schová pod rohlík, třetí se snaží otevřít ledničku. A pak se jeden z nich pokusí bejt salát, druhej knedlík, a Horac se převlíkne za banán a začne si říkat Florián. Je to šílený, je to komický, je to trapný – a je to nádherný.',
+   praxe: [
+     {oblast:'Psychologie',text:'Groteska může být způsob, jak zpracovat úzkost, jak se smát věcem, kterých se bojíme.'},
+     {oblast:'Forenzní lingvistika',text:'Může být součástí stylu autora, který rád nadsazuje a kombinuje neslučitelné.'},
+     {oblast:'Reklama a marketing',text:'Groteskní reklamy se dobře pamatují, ale můžou být kontroverzní.'},
+     {oblast:'Umění a kreativita',text:'Groteska je žánr, který míchá komiku a děs, absurditu a realitu.'}
+   ],
+   ukol:'Napiš krátkou scénku (10–15 vět), ve které se tři naprosto obyčejné věci (např. lžíce, ponožka a lampa) chovají jako lidé a prožívají nějakou absurdní situaci. Můžeš se inspirovat motýly z pohádky.',
+   jazyk:'Groteskní situace, absurdní obraz.',
+   prot:5},
+];
+
+// Figury toggle
+const activeFigs = new Set();
+let vseOn = false;
+
+function togFig(...ids) {
+  const allIds = ids.flatMap(id => id.split(',').map(s=>s.trim())).filter(Boolean);
+  const anyActive = allIds.some(id=>activeFigs.has(id));
+  allIds.forEach(id => {
+    if(anyActive) activeFigs.delete(id);
+    else activeFigs.add(id);
+  });
+  if(allIds.length) {
+    const first = allIds[0];
+    const row = document.querySelector(`.fig-r[onclick*="${first}"]`);
+    if(row) {
+      if(anyActive) row.classList.remove('hl');
+      else row.classList.add('hl');
+    }
+  }
+  applyFig();
+}
+
+function toggleVse() {
+  vseOn = !vseOn;
+  const btn = document.getElementById('btn-vse');
+  btn.classList.toggle('active', vseOn);
+  btn.textContent = vseOn ? 'Skrýt vše' : 'Zobrazit vše';
+  document.querySelectorAll('#poh-text [data-fig]').forEach(el => {
+    if(vseOn) el.classList.add('hl');
+    else el.classList.remove('hl');
+  });
+  document.querySelectorAll('.fig-r').forEach(r => {
+    if(vseOn) r.classList.add('hl');
+    else r.classList.remove('hl');
+  });
+  if(!vseOn) activeFigs.clear();
+}
+
+function applyFig() {
+  document.querySelectorAll('#poh-text [data-fig]').forEach(el => {
+    const idAttr = el.getAttribute('data-fig');
+    if(!idAttr) return;
+    const ids = idAttr.split(',');
+    const shouldHighlight = ids.some(id => activeFigs.has(id));
+    el.classList.toggle('hl', shouldHighlight);
+  });
+}
+
+// Varianty
+function setVar(v,btn) {
+  document.querySelectorAll('.var-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  const p = {
+    A:'Zavřete oči, ťukněte prstem — a jděte na úhel, který vybere prst.',
+    B:'Projděte záhlaví 12 úhlů níže a vyberte ten, který vás teď přitahuje.',
+    C:'Odpovězte na tři otázky — systém nabídne váš úhel.'
+  };
+  document.getElementById('var-popis').textContent = p[v];
+  if(v==='C') { document.getElementById('diag-modal').classList.add('open'); return; }
+  if(v==='A') {
+    const idx = Math.floor(Math.random()*U.length);
+    document.getElementById('uhly').scrollIntoView({behavior:'smooth'});
+    setTimeout(()=>openUhel(idx),500);
+  }
+  // B – nic nedělá
+}
+
+// Diagnostika
+function escR(s){return s.replace(/[-\/\\^$*+?.()|[\]{}]/g,'\\$&');}
+function closeDiag(){document.getElementById('diag-modal').classList.remove('open');}
+document.getElementById('diag-modal').addEventListener('click',e=>{if(e.target===e.currentTarget)closeDiag();});
+function runDiag(){
+  const txt=[document.getElementById('q1').value,document.getElementById('q2').value,document.getElementById('q3').value].join(' ');
+  if(!txt.trim()) return;
+  const sc={}; U.forEach(u=>sc[u.i]=0);
+  const keywords = [
+    {i:0,k:['absurdní','nesmysl','nelogický','paradox','divný']},
+    {i:1,k:['jazyk','slova','hra','neologismus','fyzikalizace']},
+    {i:2,k:['ironie','nadhled','kontrast','výsměch']},
+    {i:3,k:['smysl','hlad','naplnění','aforismus','otázka']},
+    {i:4,k:['sen','snový','surreal','prolínání','motýli']},
+    {i:5,k:['děti','jednoduchý','hra','personifikace','pohádka']},
+    {i:6,k:['vnitřní','cítí','myšlenky','monolog','uvnitř']},
+    {i:7,k:['fakta','konkrétní','popis','doslova','kamera']},
+    {i:8,k:['kultura','klišé','frazém','emo','reference']},
+    {i:9,k:['asociace','proud','volně','řetěz','myšlenka']},
+    {i:10,k:['metafora','symbol','obraz','přenos','touha']},
+    {i:11,k:['groteskní','absurdní','komický','nadsázka','šílený']},
+  ];
+  keywords.forEach(d=>{
+    d.k.forEach(kw=>{
+      const re=new RegExp(`(?<![a-záčďéěíňóřšťůúýž])${escR(kw)}(?![a-záčďéěíňóřšťůúýž])`,'gi');
+      sc[d.i] += (txt.match(re)||[]).length;
+    });
+  });
+  const sorted=Object.entries(sc).sort((a,b)=>b[1]-a[1]);
+  const domI=parseInt(sorted[0][0]);
+  const domU=U[domI];
+  const protU=U[domU.prot];
+  document.getElementById('diag-res').style.display='block';
+  document.getElementById('d-nazev').innerHTML=`<span style="color:var(--a)">${domU.st}° ${domU.n}</span>`;
+  document.getElementById('d-sub').textContent=domU.pod;
+  document.getElementById('d-btns').innerHTML=`
+    <button class="navrh-btn" onclick="closeDiag();openUhel(${domI})">→ Otevřít: ${domU.n}</button>
+    <button class="navrh-btn" onclick="closeDiag();openUhel(${domU.prot})">→ Protilehlý: ${protU.n}</button>`;
+}
+
+// =====================================================
+// PLNÝ ANALYZÁTOR (12 detektorů)
+// =====================================================
+const DET = [
+  {n:'Negace',t:'definice přes to, čím věc není',fn:t=>{const m=(t.match(/\bnení\b|\bnebylo?\b|\bnemá\b|\bnic\b/gi)||[]);return m.length>=3?[m.length+'× negace']:[];}},
+  {n:'Paradox',t:'dvě neslučitelné věci ve stejné větě',fn:t=>['ale zároveň','přitom','a přesto','ačkoli'].filter(w=>t.toLowerCase().includes(w))},
+  {n:'Opakování',t:'anafora nebo repetice',fn:t=>{const m=t.match(/(\b\w{3,}\b)[^.!?]*\1/gi);return m?m.slice(0,3).map(s=>s.slice(0,35)):[];}},
+  {n:'Otázky',t:'tázací věty jako otevřené prostory',fn:t=>{const m=t.match(/[^.!?]*\?/g);return m&&m.length>=2?[m.length+' otázky']:[];}},
+  {n:'Fragmenty',t:'přeryvná syntax, věty bez sloves',fn:t=>{const v=t.split(/[.!?]+/).filter(s=>s.trim().length>1);return v.filter(s=>s.trim().split(/\s+/).length<=3&&s.trim().length>1).slice(0,4).map(s=>s.trim());}},
+  {n:'Fyzikalizace',t:'abstraktní pojmy jako hmotné objekty',fn:t=>{const m=t.match(/\b(paměť|slova?|čas|ticho|strach|radost)\b[^.!?]{0,20}\b(padá|leží|nese|nosí|tíží|teče)\b/gi);return m?m.slice(0,3):[];}},
+  {n:'Personifikace',t:'neživé věci s lidskými vlastnostmi',fn:t=>{const m=t.match(/\b(stromy?|řeka|kamín|voda|čas|svět)\b[^.!?]{0,25}\b(pamatov|mluvil|cítil|smál|řekl)\b/gi);return m?m.slice(0,3):[];}},
+  {n:'Hyperbola',t:'záměrné přehánění',fn:t=>{const m=t.match(/\b(naprosto|totálně|strašně|hrozně|neuvěřitelně|vždy|věčně|nikdy)\b/gi);return m?m.slice(0,4):[];}},
+  {n:'Otevřený konec',t:'text, který nechává věci nedokončené',fn:t=>{const r=[];if(/možná|snad|asi|třeba/i.test(t))r.push('neurčité výrazy');if(t.match(/\.\.\.|\u2026/))r.push('tři tečky');return r;}},
+  {n:'Oxymóron',t:'spojování protikladných pojmů',fn:t=>{const m=t.match(/\b(těžký\s+a\s+lehký|silný\s+a\s+slabý|radostný\s+a\s+smutný|lehký\s+a\s+těžký)\b/gi);return m?m:[]; }},
+  {n:'Aforismus',t:'krátká zhutněná moudrost',fn:t=>{const v=t.split(/[.!?]+/).filter(s=>s.trim().length>5);return v.filter(s=>{const sl=s.trim().split(/\s+/);return sl.length>=4&&sl.length<=10&&/\b(stačí|vždy|nikdy|každý|smysl|důležité)\b/i.test(s);}).map(s=>s.trim().slice(0,50)).slice(0,2);}},
+  {n:'Přímá řeč',t:'hlas postavy v textu',fn:t=>{const m=t.match(/„[^"]*"|"[^"]*"/g);return m?m.slice(0,3).map(s=>s.slice(0,40)):[]; }},
+];
+
+function analyzuj(i){
+  const txt=document.getElementById('ta'+i).value.trim();
+  if(!txt){alert('Napište nejprve text.');return;}
+  let nal=0;
+  const items=DET.map((d,j)=>{const h=d.fn(txt);if(h.length)nal++;return{d,h,j};});
+  const slov=txt.split(/\s+/).filter(Boolean).length;
+  const vet=txt.split(/[.!?…]+/).filter(s=>s.trim().length>2).length;
+  const avg=vet?Math.round(slov/vet):0;
+  const out=document.getElementById('az'+i);
+  out.innerHTML=
+    `<div class="az-header"><span>Nalezené struktury: <strong style="color:var(--a)">${nal}</strong> z 12</span><span>${slov} slov · ${avg} slov/větu</span></div>`+
+    items.map(({d,h,j})=>
+      `<div class="az-item${h.length?' hit':''}">
+        <span class="az-n">${String(j+1).padStart(2,'0')}</span>
+        <div style="flex:1">
+          <div class="az-nazev">${d.n}</div>
+          <div style="font-size:.62rem;color:var(--a2);font-style:italic">${d.t}</div>
+          ${h.length?`<div class="az-tags">${h.map(x=>`<span class="az-tag">${x}</span>`).join('')}</div>`:''}
+        </div>
+        <span class="${h.length?'az-hit':'az-miss'}">${h.length?'✓':'—'}</span>
+      </div>`
+    ).join('')+
+    `<div class="az-note">Výsledek ukazuje, které jazykové struktury přirozeně používáte. Ty které se neobjevily jsou materiálem pro rozšiřování — ne chybějícími vlastnostmi.</div>`;
+  out.style.display='block';
+}
+
+// =====================================================
+// UKLÁDÁNÍ DO ZÁPISNÍKU (mapa 'main')
+// =====================================================
+function ulozit(i){
+  const txt = document.getElementById('ta'+i).value.trim();
+  if(!txt){ alert('Napište nejprve text.'); return; }
+  const u = U[i];
+  const ts = Date.now();
+  const key = 'chcesmys_zapisnik';
+  let data;
+  try {
+    data = JSON.parse(localStorage.getItem(key) || '{}');
+  } catch(e) { data = {}; }
+  
+  const mapId = 'main';
+  if (!data[mapId]) {
+    data[mapId] = {
+      name: 'Zápisník mezer',
+      popis: 'Hlavní mapa – automaticky vytvořená z karet',
+      entries: [],
+      created: ts
+    };
+  }
+  
+  const newEntry = {
+    id: 'e_' + ts,
+    ts: ts,
+    karta: 'Motýl',
+    uhel: u.st,
+    nazev: u.n,
+    poeticky: u.pod,
+    text: txt
+  };
+  data[mapId].entries.unshift(newEntry);
+  localStorage.setItem(key, JSON.stringify(data));
+  
+  const az = document.getElementById('az'+i);
+  const p = document.createElement('div');
+  p.style.cssText = 'margin-top:6px;padding:8px 12px;background:rgba(214,168,122,.1);border:1px solid rgba(214,168,122,.3);font-size:.72rem;display:flex;justify-content:space-between;align-items:center;gap:10px';
+  p.innerHTML = '<span style="color:var(--a)">✓ Uloženo do zápisníku mezer</span><a href="../../nastroje/zapisnik.html" style="font-size:.62rem;color:var(--a);border:1px solid rgba(214,168,122,.3);padding:3px 8px">Otevřít zápisník →</a>';
+  az.parentNode.insertBefore(p, az);
+  setTimeout(() => p.remove(), 6000);
+}
+
+function stahnout(i){
+  const txt=document.getElementById('ta'+i).value.trim(); if(!txt) return;
+  const u=U[i];
+  const blob=new Blob([`Motýl · ${u.st}° ${u.n}\n${new Date().toLocaleDateString('cs-CZ')}\n\nÚkol: ${u.ukol}\n\n---\n\n${txt}`],{type:'text/plain;charset=utf-8'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob);
+  a.download=`motyl_${u.n.toLowerCase().replace(/[\s\/]+/g,'_')}.txt`; a.click();
+}
+
+function tisk(i){
+  const txt=document.getElementById('ta'+i).value.trim(); if(!txt) return;
+  const u=U[i];
+  const w=window.open('','_blank');
+  w.document.write(`<html><head><title>Motýl · ${u.n}</title><style>body{font-family:Georgia,serif;max-width:600px;margin:40px auto;line-height:1.8;color:#111}h2{font-weight:300}pre{white-space:pre-wrap;font-family:Georgia,serif}</style></head><body><h2>Motýl · ${u.st}° ${u.n}</h2><p>${new Date().toLocaleDateString('cs-CZ')}</p><pre>${txt}</pre></body></html>`);
+  w.document.close(); w.print();
+}
+
+function toggleShare(i){
+  document.querySelectorAll('.share-menu').forEach((m,j)=>{if(j!==i)m.classList.remove('open');});
+  document.getElementById('sm'+i).classList.toggle('open');
+}
+function shareVia(via,i){
+  const txt=document.getElementById('ta'+i).value.trim();
+  const u=U[i]; const text=`Motýl · ${u.n}\n\n${txt}`;
+  document.getElementById('sm'+i).classList.remove('open');
+  if(via==='copy'){navigator.clipboard&&navigator.clipboard.writeText(text);alert('Zkopírováno.');}
+  else if(via==='email')window.location.href=`mailto:?subject=Motýl · ${u.n}&body=${encodeURIComponent(text)}`;
+  else if(via==='whatsapp')window.open(`https://wa.me/?text=${encodeURIComponent(text)}`);
+  else if(via==='telegram')window.open(`https://t.me/share/url?url=&text=${encodeURIComponent(text)}`);
+}
+document.addEventListener('click',e=>{if(!e.target.closest('.share-wrap'))document.querySelectorAll('.share-menu.open').forEach(m=>m.classList.remove('open'));});
+
+// =====================================================
+// STAVBA ÚHLŮ
+// =====================================================
+function buildUhly(){
+  const list=document.getElementById('uhly-list');
+  U.forEach((u,i)=>{
+    const protI = u.prot;
+    const pU = U[protI];
+    const praxeHTML = `<table class="praxe-table">${u.praxe.map(p=>`<tr><th>${p.oblast}</th><td>${p.text}</td></tr>`).join('')}</table>`;
+    // Figury v praxi – pro tento úhel jen tabulka (bez konkrétních figur, protože v materiálu jsou obecné)
+    const figPrazdna = `<div class="dl-txt" style="font-style:italic;margin-bottom:6px">Tento úhel využívá figury jako ${u.figury ? u.figury.map(f=>f.n).join(', ') : 'paradox, fragment, elipsa, nelogické spojení, kontrast, otázka, aforismus, personifikace, metafora, groteskní obraz'} – podívejte se na jejich využití v praxi v tabulce níže.</div>`;
+    const div=document.createElement('div');
+    div.className='uhel'; div.id='u'+i;
+    div.innerHTML=`
+      <div class="uhel-h" onclick="toggleUhel(${i})">
+        <span class="u-num">${String(i+1).padStart(2,'0')}</span>
+        <div>
+          <div class="uhel-nazev">${u.n}<span class="uhel-poet">${u.pod}</span></div>
+        </div>
+        <span class="u-deg">${u.st}°</span>
+        <span class="u-tog">▾</span>
+      </div>
+      <div class="uhel-body" id="b${i}">
+        <div class="uhel-co">${u.co}</div>
+        <div class="dl-grid">
+          <div class="dl" onclick="togDl(${i},0)"><div class="dl-icon">🤺</div><div class="dl-label">Figury v praxi</div><div class="dl-text">Využití figur v různých oblastech</div></div>
+          <div class="dl" onclick="togDl(${i},1)"><div class="dl-icon">🧤</div><div class="dl-label">Kreativní úkol</div><div class="dl-text">20 minut · psaní</div></div>
+          <div class="dl" onclick="togDl(${i},2)"><div class="dl-icon">🗝️</div><div class="dl-label">Jak to čte Myš</div><div class="dl-text">Klíče k tomuto úhlu</div></div>
+          <div class="dl" onclick="togDl(${i},3)"><div class="dl-icon">🪬</div><div class="dl-label">Nástroje</div><div class="dl-text">Zápisník · analyzátor</div></div>
+        </div>
+        <div class="dl-detail" id="d${i}_0">
+          <div class="dl-lbl">Využití figur v praxi</div>
+          ${praxeHTML}
+          <div class="btn-row" style="margin-top:6px"><a class="btn btn-g" href="../../nastroje/knihovna_figur.html" target="_blank" style="font-size:.62rem">Knihovna figur ↗</a></div>
+        </div>
+        <div class="dl-detail" id="d${i}_1">
+          <div class="dl-lbl">Kreativní úkol · 20 minut</div>
+          <div class="dl-txt"><span style="color:var(--a); font-style:italic">Úkol z protilehlého úhlu (${pU.n}):</span> ${u.ukol}</div>
+          <div class="jazyk-blok"><strong>Jazykové zaměření:</strong> ${u.jazyk}</div>
+          <div class="dl-lbl">Váš text</div>
+          <textarea class="cviceni-ta" id="ta${i}" placeholder="Pište sem …"></textarea>
+          <div class="akce-row">
+            <button class="akce-btn prim" onclick="analyzuj(${i})">Analyzovat →</button>
+            <button class="akce-btn" onclick="ulozit(${i})">💾 Uložit do zápisníku</button>
+            <a class="akce-btn" href="../../nastroje/zapisnik.html">📓 Otevřít zápisník</a>
+            <button class="akce-btn" onclick="stahnout(${i})">↓ Stáhnout</button>
+            <button class="akce-btn" onclick="tisk(${i})">🖨 Tisk</button>
+            <div class="share-wrap">
+              <button class="akce-btn" onclick="toggleShare(${i})">↗ Sdílet</button>
+              <div class="share-menu" id="sm${i}">
+                <button class="share-item" onclick="shareVia('email',${i})">📧 E-mail</button>
+                <button class="share-item" onclick="shareVia('whatsapp',${i})">WhatsApp</button>
+                <button class="share-item" onclick="shareVia('telegram',${i})">Telegram</button>
+                <button class="share-item" onclick="shareVia('copy',${i})">📋 Kopírovat</button>
+              </div>
+            </div>
+            <button class="akce-btn" onclick="document.getElementById('ta${i}').value='';document.getElementById('az${i}').style.display='none'">Smazat</button>
+          </div>
+          <div class="az-out" id="az${i}"></div>
+        </div>
+        <div class="dl-detail" id="d${i}_2">
+          <div class="dl-lbl">Jak pohádku čte Myš — klíče k tomuto úhlu</div>
+          <div class="dl-txt" style="margin-bottom:10px">Myš, která si zapisuje do skulin mezi slovy, si v téhle pohádce všímá především toho, že se tu jazyk odděluje od svého obvyklého významu. Že se tu věci pojmenovávají, ale zároveň přestávají být tím, čím jsou. Že se tu mluví o hladu, ale jídlo jsou motýli. Že se tu mluví o umění, ale v kontextu hladu. Že se tu motýli tváří, že rozumí, ale nerozumí. Myš zapisuje každý ten posun, každou tu mezeru mezi slovem a jeho významem.</div>
+          <a class="btn btn-g" href="../../../mys_uhly/motyl_uhly.html" target="_blank" style="font-size:.62rem">Otevřít klíče Myši ↗</a>
+        </div>
+        <div class="dl-detail" id="d${i}_3">
+          <div class="dl-lbl">Nástroje pro práci s textem</div>
+          <div class="dl-txt" style="margin-bottom:10px">Otevřete si zápisník pro ukládání textů nebo analyzátor pro detailní pohled na své jazykové struktury.</div>
+          <div class="btn-row">
+            <a class="btn btn-g" href="../../nastroje/zapisnik.html" target="_blank" style="font-size:.62rem">📓 Otevřít zápisník</a>
+            <a class="btn btn-g" href="../../nastroje/analyzer.html" target="_blank" style="font-size:.62rem">🔍 Otevřít analyzátor</a>
+          </div>
+        </div>
+      </div>`;
+    list.appendChild(div);
+  });
+}
+
+function toggleUhel(i){
+  document.getElementById('u'+i).classList.toggle('open');
+  document.getElementById('b'+i).classList.toggle('open');
+}
+function openUhel(i){
+  document.getElementById('u'+i).classList.add('open');
+  document.getElementById('b'+i).classList.add('open');
+  setTimeout(()=>document.getElementById('u'+i).scrollIntoView({behavior:'smooth',block:'start'}),100);
+}
+function togDl(i,j){
+  const el=document.getElementById(`d${i}_${j}`);
+  const wasOpen=el.classList.contains('open');
+  document.querySelectorAll(`#b${i} .dl-detail`).forEach(d=>d.classList.remove('open'));
+  document.querySelectorAll(`#b${i} .dl`).forEach(d=>d.classList.remove('open'));
+  if(!wasOpen){el.classList.add('open'); document.querySelectorAll(`#b${i} .dl`)[j].classList.add('open');}
+}
+
+buildUhly();
+</script>
+</body>
+</html>
