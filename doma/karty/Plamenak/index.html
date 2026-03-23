@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Plameňák — Fyzika jazyka · Chceš myš?</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0f0d0a;--s:#171410;--s2:#1e1a14;
+  --cream:#e8e0d0;--dim:rgba(232,224,208,.42);--dim2:rgba(232,224,208,.2);
+  --a:#e08e9a;--a2:#b6626e;--ab:rgba(224,142,154,.1);--ab2:rgba(224,142,154,.22);
+  --border:rgba(224,142,154,.15);--border-hi:rgba(224,142,154,.32);
+  --serif:'Cormorant Garamond',Georgia,serif;--mono:'DM Mono',monospace;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--cream);font-family:var(--mono);font-size:13px;line-height:1.8;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+.wrap{max-width:780px;margin:0 auto;padding:0 24px}
+
+nav{position:sticky;top:0;z-index:100;border-bottom:1px solid var(--border);background:rgba(15,13,10,.94);backdrop-filter:blur(14px);padding:11px 24px;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.nav-back{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);transition:color .2s}
+.nav-back:hover{color:var(--cream)}
+.nav-links{display:flex;gap:4px;flex-wrap:wrap}
+.nav-link{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);padding:4px 9px;border:1px solid transparent;transition:all .12s}
+.nav-link:hover{color:var(--cream);border-color:var(--border)}
+.nav-link.active{color:var(--a);border-color:var(--border-hi)}
+
+.hero{padding:0 0 44px;border-bottom:1px solid var(--border)}
+.hero-img{width:100%;max-height:460px;overflow:hidden;margin-bottom:28px;position:relative}
+.hero-img img{width:100%;height:460px;object-fit:cover;object-position:center 35%;filter:grayscale(100%) contrast(1.1);display:block}
+.hero-img-cap{position:absolute;bottom:8px;right:12px;font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:rgba(232,224,208,.22)}
+.hero-label{font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--a);margin-bottom:12px}
+h1{font-family:var(--serif);font-size:clamp(2.8rem,7vw,5rem);font-weight:300;line-height:1.0;margin-bottom:6px}
+h1 em{font-style:italic;color:var(--a)}
+.hero-veta{font-family:var(--serif);font-size:clamp(.88rem,2vw,1.1rem);font-style:italic;color:var(--dim);border-left:1px solid var(--a);padding-left:16px;max-width:460px;margin:14px 0 20px;line-height:1.9}
+.fenomen-box{border:1px solid var(--a);padding:14px 18px;margin-bottom:12px;background:var(--ab)}
+.fenomen-label{font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--a);margin-bottom:6px}
+.fenomen-text{font-size:12px;color:rgba(232,224,208,.7);line-height:1.85}
+.audio-link{display:inline-flex;align-items:center;gap:8px;padding:7px 14px;border:1px solid var(--border);color:var(--dim);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;transition:all .15s;margin-bottom:16px}
+.audio-link:hover{border-color:var(--a);color:var(--a)}
+.var-bar{display:flex;gap:1px;background:var(--border);border:1px solid var(--border)}
+.var-btn{flex:1;padding:11px 6px;background:var(--s);border:none;cursor:pointer;font-family:var(--mono);font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:var(--dim);transition:all .12s;text-align:center}
+.var-btn:hover{background:var(--s2);color:var(--cream)}
+.var-btn.active{background:var(--a);color:var(--bg)}
+.var-popis{padding:9px 12px;font-size:.74rem;color:var(--dim);border:1px solid var(--border);border-top:none;background:var(--s)}
+
+.sekce{padding:40px 0;border-bottom:1px solid var(--border)}
+.sekce-label{font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--a);margin-bottom:12px}
+h2{font-family:var(--serif);font-size:clamp(1.3rem,3.5vw,2rem);font-weight:300;margin-bottom:12px}
+h2 em{font-style:italic;color:var(--a)}
+
+.scroll-box{max-height:380px;overflow-y:auto;border:1px solid var(--border);background:var(--s);padding:18px 22px;font-family:var(--serif);font-size:.9rem;line-height:2.05;color:rgba(232,224,208,.82)}
+.scroll-box::-webkit-scrollbar{width:2px}
+.scroll-box::-webkit-scrollbar-thumb{background:var(--a2)}
+.pd{display:block;padding:.12em 0}
+.pd.br{padding:.4em 0}
+.pd.i{font-style:italic}
+
+/* Figury – vizuální styly */
+[data-fig]{}
+.fig-zanr-hybrid.hl{background:rgba(224,142,154,.1);border-left:3px solid var(--a);padding-left:3px}
+.fig-metafora-operacni.hl{border-bottom:2px dotted var(--a)}
+.fig-cislovani.hl{font-family:var(--mono);letter-spacing:0.05em}
+.fig-imperativ.hl{font-weight:bold;color:var(--a)}
+.fig-diagnostika.hl{background:var(--ab);padding:0 2px}
+.fig-paradox.hl{text-decoration:line-through;text-decoration-color:var(--a)}
+.fig-seznam.hl{border-left:2px solid var(--a);padding-left:4px}
+.fig-otazka-procedura.hl{border-bottom:3px solid var(--a);cursor:help}
+.fig-protilehly.hl{background:linear-gradient(90deg, transparent 0%, var(--ab) 100%)}
+.fig-casova-struktura.hl{font-family:var(--mono);background:var(--s2);padding:0 2px}
+.fig-ticho-aktivni.hl{color:var(--a);font-style:italic}
+.fig-otevreny-konec.hl{border-bottom:2px dashed var(--a)}
+/* Starší styly pro kompatibilitu */
+.f-elipsa.hl{border-bottom:2px dashed var(--a)!important;cursor:help}
+.f-anafora.hl{border-bottom:1px dotted var(--a)!important;cursor:help}
+.f-personifikace.hl{border-bottom:1px solid var(--a)!important;cursor:help}
+.f-hyperbola.hl{background:rgba(224,142,154,.14)!important;padding:0 2px;cursor:help}
+.f-fyzikalizace.hl{text-decoration:underline wavy var(--a)!important;cursor:help}
+.f-aforismus.hl{border-bottom:2px dotted var(--a)!important;border-top:1px dotted rgba(224,142,154,.3)!important;padding-top:1px;cursor:help}
+.f-ironie.hl{background:rgba(224,142,154,.22)!important;padding:0 2px;cursor:help}
+.f-otazka.hl{border-bottom:3px solid rgba(224,142,154,.45)!important;cursor:help}
+.f-fragment.hl{border-bottom:1px dotted var(--a)!important;letter-spacing:.03em;cursor:help}
+.f-primaRec.hl{font-style:italic!important;border:1px solid rgba(224,142,154,.35)!important;padding:0 3px;cursor:help}
+.f-gradace.hl{background:linear-gradient(90deg, rgba(224,142,154,0.2) 0%, rgba(224,142,154,0.4) 100%)!important;cursor:help}
+[data-fig].hl:hover{opacity:.85}
+
+.legenda-row{margin-top:6px;padding:7px 12px;background:var(--s);border:1px solid var(--border);font-size:.62rem;color:var(--dim);display:flex;flex-wrap:wrap;gap:3px 14px;line-height:2}
+
+.fig-tbl{margin-top:8px;border:1px solid var(--border)}
+.fig-tbl-hdr{font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--a);padding:7px 12px;border-bottom:1px solid var(--border);background:var(--s);display:flex;justify-content:space-between;align-items:center}
+.fig-vse-btn{font-family:var(--mono);font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;background:transparent;border:1px solid var(--border);color:var(--dim);cursor:pointer;padding:3px 8px}
+.fig-vse-btn:hover,.fig-vse-btn.active{border-color:var(--a);color:var(--a)}
+.fig-r{display:grid;grid-template-columns:28px 1fr 28px;gap:6px;padding:7px 12px;cursor:pointer;border-bottom:1px solid var(--border);align-items:center;transition:background .1s;font-size:.72rem}
+.fig-r:last-child{border-bottom:none}
+.fig-r:hover{background:var(--s2)}
+.fig-r.hl{background:var(--ab);color:var(--a)}
+.fig-r-mark{text-align:center;font-size:.7rem;width:24px}
+.fig-r-cnt{font-size:.58rem;color:var(--dim2);text-align:right}
+
+.diag-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.78);z-index:200;align-items:center;justify-content:center;padding:20px}
+.diag-modal.open{display:flex}
+.diag-box{background:var(--s);border:1px solid var(--border-hi);max-width:540px;width:100%;padding:22px;max-height:88vh;overflow-y:auto}
+.diag-close{float:right;background:none;border:1px solid var(--border);color:var(--dim);font-family:var(--mono);font-size:.6rem;padding:3px 8px;cursor:pointer}
+.diag-close:hover{color:var(--cream);border-color:var(--border-hi)}
+.q-lbl{font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;color:var(--a);margin-bottom:4px;margin-top:14px}
+.q-text{font-size:.86rem;margin-bottom:5px}
+.diag-ta{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--cream);padding:9px 12px;font-family:var(--mono);font-size:.8rem;line-height:1.7;resize:vertical}
+.navrh-btn{display:block;width:100%;padding:9px 14px;margin-top:4px;background:transparent;border:1px solid var(--border);color:var(--cream);font-family:var(--mono);font-size:.76rem;text-align:left;cursor:pointer}
+.navrh-btn:hover{background:var(--a);border-color:var(--a);color:var(--bg)}
+
+.uhel{border-bottom:1px solid var(--border)}
+.uhel-h{display:grid;grid-template-columns:44px 1fr auto auto;padding:14px 0;cursor:pointer;align-items:center;gap:6px}
+.uhel-h:hover .uhel-nazev{color:var(--a)}
+.u-num{font-family:var(--serif);font-size:1.5rem;font-weight:300;color:rgba(224,142,154,.14);line-height:1}
+.uhel.open .u-num{color:rgba(224,142,154,.38)}
+.uhel-nazev{font-size:.84rem;color:var(--cream)}
+.uhel-poet{font-family:var(--serif);font-style:italic;font-size:.76rem;color:var(--a);display:block;margin-top:1px}
+.u-deg{font-size:.6rem;color:var(--a);font-family:var(--mono)}
+.u-tog{font-size:.64rem;color:var(--dim);transition:transform .2s}
+.uhel.open .u-tog{transform:rotate(180deg)}
+.uhel-body{display:none;padding:0 0 20px 44px}
+.uhel-body.open{display:block}
+.uhel-co{font-size:.74rem;color:var(--dim);margin-bottom:12px;line-height:1.8}
+
+.dl-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);margin-bottom:2px}
+@media(max-width:460px){.dl-grid{grid-template-columns:1fr}}
+.dl{background:var(--s);padding:12px 14px;cursor:pointer;transition:background .1s}
+.dl:hover,.dl.open{background:var(--s2)}
+.dl-icon{font-size:1rem;margin-bottom:4px}
+.dl-label{font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:var(--a);margin-bottom:2px}
+.dl-text{font-size:.68rem;color:var(--dim);line-height:1.45}
+.dl-detail{display:none;background:var(--s2);border:1px solid var(--border);border-top:none;padding:14px 16px;margin-bottom:2px}
+.dl-detail.open{display:block}
+.dl-lbl{font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:var(--a);margin-bottom:5px;margin-top:10px}
+.dl-lbl:first-child{margin-top:0}
+.dl-txt{font-size:.78rem;color:rgba(232,224,208,.67);line-height:1.8}
+.fig-uhel-item{padding:9px 0;border-bottom:1px solid var(--border)}
+.fig-uhel-item:last-child{border-bottom:none}
+.fui-nazev{font-size:.72rem;color:var(--a);margin-bottom:3px}
+.fui-ukazka{font-family:var(--serif);font-style:italic;font-size:.82rem;color:rgba(232,224,208,.8);margin-bottom:3px}
+.fui-proc{font-size:.7rem;color:var(--dim);line-height:1.7}
+.fui-uhel{font-size:.62rem;color:var(--a2);font-style:italic}
+
+.jazyk-blok{background:var(--ab);border-left:2px solid var(--a2);padding:9px 12px;margin:10px 0;font-size:.76rem;color:rgba(232,224,208,.65);line-height:1.8}
+.jazyk-blok strong{color:var(--a);font-weight:400}
+.cviceni-ta{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--cream);padding:10px 14px;font-family:var(--serif);font-size:.9rem;line-height:1.85;resize:none;min-height:60px;transition:min-height .2s;margin-top:8px}
+.cviceni-ta:focus{outline:none;border-color:var(--a);min-height:220px}
+.akce-row{display:flex;gap:4px;flex-wrap:wrap;margin-top:8px}
+.akce-btn{padding:7px 12px;font-family:var(--mono);font-size:.62rem;letter-spacing:.09em;text-transform:uppercase;background:transparent;border:1px solid var(--border);color:var(--dim);cursor:pointer}
+.akce-btn:hover{color:var(--cream);border-color:var(--border-hi)}
+.akce-btn.prim{background:var(--a);color:var(--bg);border-color:var(--a)}
+.akce-btn.prim:hover{background:#f0a0ac}
+.share-wrap{position:relative;display:inline-block}
+.share-menu{display:none;position:absolute;z-index:50;background:var(--s2);border:1px solid var(--border-hi);padding:4px 0;min-width:150px;bottom:100%;left:0}
+.share-menu.open{display:block}
+.share-item{display:block;width:100%;padding:6px 12px;font-family:var(--mono);font-size:.62rem;background:transparent;border:none;color:var(--dim);cursor:pointer;text-align:left}
+.share-item:hover{background:var(--ab);color:var(--cream)}
+
+.az-out{display:none;margin-top:8px}
+.az-header{background:var(--ab);border:1px solid var(--border-hi);padding:8px 12px;font-size:.7rem;margin-bottom:2px;display:flex;justify-content:space-between}
+.az-item{border:1px solid var(--border);padding:6px 10px;margin-bottom:2px;display:flex;gap:7px;align-items:flex-start;font-size:.68rem}
+.az-item.hit{border-color:var(--border-hi);background:var(--ab)}
+.az-n{color:rgba(224,142,154,.22);min-width:18px}
+.az-item.hit .az-n{color:var(--a)}
+.az-nazev{color:rgba(232,224,208,.28);flex:1}
+.az-item.hit .az-nazev{color:var(--cream)}
+.az-tags{display:flex;flex-wrap:wrap;gap:2px;margin-top:2px}
+.az-tag{font-size:.58rem;color:var(--a);padding:1px 4px;background:var(--ab);border:1px solid var(--border-hi)}
+.az-hit{color:var(--a);font-size:.64rem}
+.az-miss{color:rgba(232,224,208,.16);font-size:.64rem}
+.az-note{font-size:.64rem;color:var(--dim);font-style:italic;margin-top:6px;padding:7px 10px;border-left:1px solid var(--border-hi)}
+
+.btn{padding:8px 16px;font-family:var(--mono);font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;border:none;cursor:pointer;display:inline-block}
+.btn-p{background:var(--a);color:var(--bg)}
+.btn-p:hover{background:#f0a0ac}
+.btn-g{background:transparent;color:var(--dim);border:1px solid var(--border)}
+.btn-g:hover{color:var(--cream);border-color:var(--border-hi)}
+.btn-row{display:flex;gap:5px;flex-wrap:wrap;margin-top:8px}
+
+footer{padding:20px 0;border-top:1px solid var(--border);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-top:6px}
+footer p{font-size:.68rem;color:var(--dim2)}
+footer a{color:var(--a)}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-back" href="../../../index.html">← Všechna zvířata</a>
+  <div class="nav-links">
+    <a class="nav-link active" href="index.html">Pohádka</a>
+    <a class="nav-link" href="../../nastroje/knihovna_figur.html">Figury ↗</a>
+    <a class="nav-link" href="../../nastroje/zapisnik.html">Zápisník ↗</a>
+    <a class="nav-link" href="../../nastroje/analyzer.html">Analyzátor ↗</a>
+  </div>
+</nav>
+
+<div class="wrap">
+
+<section class="hero">
+  <div class="hero-img">
+    <img src="../../../ilustrace/plamenak.jpg" alt="Plameňák" onerror="this.parentElement.style.display='none'">
+    <span class="hero-img-cap">ilustrace · plameňák</span>
+  </div>
+  <p class="hero-label">Fyzika jazyka · Karta Plameňák</p>
+  <h1>Plameňák</h1>
+  <p class="hero-veta">„lalalá poletíme spolu zřítíme se dolů až na dno vesmíru lalalá budeme na hlavu“</p>
+  <div class="fenomen-box">
+    <div class="fenomen-label">Fenomén Plameňáka — pád jako let, radost bez cíle</div>
+    <p class="fenomen-text">Plameňák letí hlavou dolů, zpívá a padá na dno vesmíru. I když žádné dno neexistuje, stejně ho najde. Pohádka o tom, že směr je důležitější než cíl, že radost může být i v pádu a že když už níž nejde, můžeš si vymyslet nové dno.</p>
+  </div>
+  <a class="audio-link" href="https://youtube.com/shorts/Ub9jlugrUvk?is=e2RbyHyhcfOgdt3n" target="_blank" rel="noopener">▶ Poslechnout pohádku ↗</a>
+  <div class="var-bar">
+    <button class="var-btn active" onclick="setVar('A',this)">🎲 Náhodně</button>
+    <button class="var-btn" onclick="setVar('B',this)">🧭 Podle nálady</button>
+    <button class="var-btn" onclick="setVar('C',this)">🔍 Diagnosticky</button>
+  </div>
+  <div class="var-popis" id="var-popis">Zavřete oči, ťukněte prstem — a jděte na úhel, který vybere prst.</div>
+</section>
+
+<!-- POHÁDKA -->
+<section class="sekce" id="pohadka">
+  <p class="sekce-label">Pohádka · čtěte pomalu</p>
+  <h2>O plameňákovi, <em>který byl na hlavu.</em></h2>
+  <p style="font-size:.72rem;color:var(--dim);margin-bottom:12px">Přejeďte myší přes podtržené místo pro popis figury. Kliknutím na figuru v tabulce se označí v textu.</p>
+  <div class="scroll-box" id="poh-text">
+    <span class="pd i">O plameňákovi, který byl na hlavu.</span><span class="pd br"></span>
+    <span class="pd"><span class="fig-zanr-hybrid" data-fig="zanr-hybrid">Plameňák zpíval. Lalalá.</span></span>
+    <span class="pd"><span class="fig-gradace" data-fig="gradace1">Vysoko, výš než měl.<br>Výš než bylo bezpečné.<br>Výš než bylo rozumné.</span></span>
+    <span class="pd br"></span>
+    <span class="pd"><span class="fig-primaRec" data-fig="primaRec1">„Poletíme spolu!“ křičel.<br>„Zřídíme se dolů! Až na dno vesmíru!“</span><br>A nikdo mu neřekl, že vesmír žádné dno nemá.<br>Protože plameňák měl růžové peří a hlas, co se nedal přerušit.</span>
+    <span class="pd br"></span>
+    <span class="pd">„Lalalá!“ zpíval.<br>„Budeme na hlavu!“<br>A opravdu — <span class="fig-paradox" data-fig="paradox1">letěl hlavou dolů.</span><br>Nohy mu trčely k nebi.<br>Křídla mu vlála jako šály.<br>A oči měl dokořán.</span>
+    <span class="pd br"></span>
+    <span class="pd">„Tohle není let,“ řeklo mu <span class="fig-personifikace" data-fig="personifikace1">klíště.</span><br>„To je pád.“<br>„To je jedno!“ křičel plameňák.<br>„Hlavně že to má směr!“</span>
+    <span class="pd br"></span>
+    <span class="pd">A padal dál.<br>Kolem něj se míhaly hvězdy,<br>mlhoviny i sny a vedle nej se zavlnila <span class="fig-fyzikalizace" data-fig="fyzikalizace1">prádelní šňůra s jednou ponožkou - tou, co ráno nenašel.</span></span>
+    <span class="pd br"></span>
+    <span class="pd"><span class="fig-otazka-procedura" data-fig="otazka-procedura">„Kam letíš?“</span> ptal se <span class="fig-personifikace" data-fig="personifikace2">komár, co se také držel jeho peří.</span><br>„Nevím!“ smál se plameňák.<br>„Ale letí se mi krásně!“</span>
+    <span class="pd br"></span>
+    <span class="pd">A pak —<br><span class="fig-ticho-aktivni" data-fig="ticho-aktivni">ticho.</span><br><span class="fig-elipsa" data-fig="elipsa1">Ticho tak hluboké, že i vesmír zadržel dech.</span><br>Plameňák dopadl.<br>Ne na zem.<br>Na dno.<br>Na dno vesmíru.<br>Kde nikdo nebyl.<br>Kromě něj, komára a klíštěte co měl.<br>A jedné <span class="fig-diagnostika" data-fig="diagnostika">myši, co si zapisovala, co se stalo.</span></span>
+    <span class="pd br"></span>
+    <span class="pd">„Jsi v pořádku?“ zeptala se.<br>„<span class="fig-aforismus" data-fig="aforismus1">Jsem na hlavu,</span>“ řekl plameňák.<br>„Ale jinak výborně.“<br>Myš si poznamenala: <span class="fig-primaRec" data-fig="primaRec2">“Plameňák – padá s grácií. I když neví kam. Hlavně že zpívá.”</span></span>
+    <span class="pd br"></span>
+    <span class="pd">A plameňák se usmál.<br>Z peří mu vypadl omámený komár.<br>A z kapsy mu vypadla <span class="fig-fyzikalizace" data-fig="fyzikalizace2">mapa, co ukazovala jen dolů.</span></span>
+    <span class="pd br"></span>
+    <span class="pd"><span class="fig-casova-struktura" data-fig="casova-struktura">„Příště poletím ještě níž,“</span> řekl.<br>„A co když už níž nejde?“<br>„<span class="fig-aforismus" data-fig="aforismus2">Tak si vymyslím nové dno.</span>“</span>
+    <span class="pd br"></span>
+    <span class="pd">A znovu se vznesl.<br><span class="fig-paradox" data-fig="paradox2">Hlavou dolů.<br>Srdcem vzhůru.</span><br>A zpíval:<br><span class="fig-otevreny-konec" data-fig="otevreny-konec">„Lalaláááááááááááááááááááááááááááááááááááááááááááááááááááááááááááááááááááááááááááááááááááááááááááááááááááááááááá“</span></span>
+    <span class="pd br"></span>
+    <span class="pd"><span class="fig-seznam" data-fig="seznam">KONEC</span></span>
+  </div>
+
+  <div class="legenda-row">
+    <span><span class="fig-zanr-hybrid hl">podklad</span> = žánrový hybrid</span>
+    <span><span class="fig-metafora-operacni hl">tečkovaně</span> = metafora jako operační systém</span>
+    <span><span class="fig-cislovani hl">monospace</span> = číslování jako architektura</span>
+    <span><span class="fig-imperativ hl">tučně</span> = imperativ v poetickém hávu</span>
+    <span><span class="fig-diagnostika hl">podklad</span> = diagnostická matice</span>
+    <span><span class="fig-paradox hl">přeškrtnutí</span> = paradox</span>
+    <span><span class="fig-seznam hl">levý okraj</span> = seznam jako estetický objekt</span>
+    <span><span class="fig-otazka-procedura hl">silná linka</span> = otázky, které nečekají odpověď</span>
+    <span><span class="fig-protilehly hl">gradient</span> = protilehlé úhly</span>
+    <span><span class="fig-casova-struktura hl">monospace+podklad</span> = časová struktura</span>
+    <span><span class="fig-ticho-aktivni hl">růžová kurzíva</span> = ticho jako aktivní prvek</span>
+    <span><span class="fig-otevreny-konec hl">přerušovaně</span> = otevřený konec</span>
+  </div>
+
+  <div class="fig-tbl">
+    <div class="fig-tbl-hdr">
+      <span>Figury v pohádce · kliknutím označíte v textu</span>
+      <button class="fig-vse-btn" id="btn-vse" onclick="toggleVse()">Zobrazit vše</button>
+    </div>
+    <div class="fig-r" onclick="togFig('zanr-hybrid')"><span class="fig-r-mark"><span class="fig-zanr-hybrid hl">📖</span></span><span>Žánrový hybrid</span><span class="fig-r-cnt">1×</span></div>
+    <div class="fig-r" onclick="togFig('gradace1')"><span class="fig-r-mark"><span class="fig-gradace hl">↗</span></span><span>Gradace</span><span class="fig-r-cnt">1×</span></div>
+    <div class="fig-r" onclick="togFig('primaRec1','primaRec2')"><span class="fig-r-mark"><span class="f-primaRec hl">pr</span></span><span>Přímá řeč</span><span class="fig-r-cnt">2×</span></div>
+    <div class="fig-r" onclick="togFig('paradox1','paradox2')"><span class="fig-r-mark"><span class="fig-paradox hl">⌐</span></span><span>Paradox</span><span class="fig-r-cnt">2×</span></div>
+    <div class="fig-r" onclick="togFig('personifikace1','personifikace2')"><span class="fig-r-mark"><span class="f-personifikace hl">──</span></span><span>Personifikace</span><span class="fig-r-cnt">2×</span></div>
+    <div class="fig-r" onclick="togFig('fyzikalizace1','fyzikalizace2')"><span class="fig-r-mark"><span class="f-fyzikalizace hl">≈</span></span><span>Fyzikalizace</span><span class="fig-r-cnt">2×</span></div>
+    <div class="fig-r" onclick="togFig('elipsa1')"><span class="fig-r-mark"><span class="f-elipsa hl">──</span></span><span>Elipsa</span><span class="fig-r-cnt">1×</span></div>
+    <div class="fig-r" onclick="togFig('aforismus1','aforismus2')"><span class="fig-r-mark"><span class="f-aforismus hl">〓</span></span><span>Aforismus</span><span class="fig-r-cnt">2×</span></div>
+    <div class="fig-r" onclick="togFig('otazka-procedura')"><span class="fig-r-mark"><span class="fig-otazka-procedura hl">?</span></span><span>Otázky jako procedura</span><span class="fig-r-cnt">1×</span></div>
+    <div class="fig-r" onclick="togFig('diagnostika')"><span class="fig-r-mark"><span class="fig-diagnostika hl">🧪</span></span><span>Diagnostická matice</span><span class="fig-r-cnt">1×</span></div>
+    <div class="fig-r" onclick="togFig('ticho-aktivni')"><span class="fig-r-mark"><span class="fig-ticho-aktivni hl">🔇</span></span><span>Ticho jako aktivní prvek</span><span class="fig-r-cnt">1×</span></div>
+    <div class="fig-r" onclick="togFig('otevreny-konec')"><span class="fig-r-mark"><span class="fig-otevreny-konec hl">…</span></span><span>Otevřený konec</span><span class="fig-r-cnt">1×</span></div>
+    <div class="fig-r" onclick="togFig('seznam')"><span class="fig-r-mark"><span class="fig-seznam hl">☐</span></span><span>Seznam jako estetický objekt</span><span class="fig-r-cnt">1×</span></div>
+    <div class="fig-r" onclick="togFig('casova-struktura')"><span class="fig-r-mark"><span class="fig-casova-struktura hl">⏱️</span></span><span>Časová struktura</span><span class="fig-r-cnt">1×</span></div>
+  </div>
+</section>
+
+<!-- 12 ÚHLŮ (kreativní workshop) -->
+<section class="sekce" id="uhly">
+  <p class="sekce-label">12 úhlů pohledu · kreativní workshop</p>
+  <h2>Vyberte úhel pohledu</h2>
+  <div id="uhly-list"></div>
+</section>
+
+<footer>
+  <p>Karta Plameňák · Fyzika jazyka · Chceš myš? · © 2026 Michaela Nováková</p>
+  <p><a href="mailto:chcesmys@gmail.com">chcesmys@gmail.com</a></p>
+</footer>
+</div>
+
+<!-- DIAGNOSTIKA MODAL -->
+<div class="diag-modal" id="diag-modal">
+  <div class="diag-box">
+    <button class="diag-close" onclick="closeDiag()">✕ zavřít</button>
+    <div style="font-family:var(--serif);font-size:1.1rem;font-weight:300;margin-bottom:14px;padding-right:60px">Tři otázky k pohádce</div>
+    <p style="font-size:.74rem;color:var(--dim);margin-bottom:14px;line-height:1.8">Odpovězte rychle, bez opravování. Hledáme váš přirozený úhel pohledu.</p>
+    <div class="q-lbl">Smysl</div>
+    <div class="q-text">Co je podle vás hlavní pointa nebo sdělení tohoto příběhu?</div>
+    <textarea class="diag-ta" id="q1" placeholder="Pište první co vás napadne…"></textarea>
+    <div class="q-lbl">Zaujetí</div>
+    <div class="q-text">Která konkrétní věta, obraz nebo moment vás nejvíc zaujal — a proč?</div>
+    <textarea class="diag-ta" id="q2" placeholder="Konkrétní věta nebo moment…"></textarea>
+    <div class="q-lbl">Aplikace</div>
+    <div class="q-text">Kdyby tento příběh byl zadáním pro vaši tvorbu, co by vám radil dělat (nebo nedělat)?</div>
+    <textarea class="diag-ta" id="q3" placeholder="Konkrétní situace nebo protiargument…"></textarea>
+    <div style="display:flex;gap:6px;margin-top:12px">
+      <button class="btn btn-p" onclick="runDiag()">Zjistit úhel →</button>
+      <button class="btn btn-g" onclick="closeDiag()">Zrušit</button>
+    </div>
+    <div id="diag-res" style="display:none;margin-top:14px;border:1px solid var(--a);padding:14px;background:var(--bg)">
+      <div style="font-size:.7rem;color:var(--a);margin-bottom:4px">Váš dominantní úhel</div>
+      <div style="font-family:var(--serif);font-size:1.1rem;font-weight:300;margin-bottom:4px" id="d-nazev"></div>
+      <div style="font-size:.72rem;color:var(--dim);margin-bottom:10px" id="d-sub"></div>
+      <div id="d-btns"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+// =====================================================
+// DATA – 12 ÚHLŮ (kreativní workshop)
+// =====================================================
+const U = [
+  {i:0, st:0,   n:'Letu hlavou dolů',        gen:'obrácená perspektiva',
+   co:'Plameňák letí hlavou dolů. Pro něj je to let, pro ostatní pád. Perspektiva dělá realitu.',
+   ukol:'Vytvoř něco, co je obrácené. Třeba báseň, která začíná od konce. Obrázek malovaný vzhůru nohama. Důležité je, aby to nebyl jen trik, ale nový úhel pohledu.',
+   jazyk:'Inverze, obrácený slovosled, věty začínající tam, kde by normálně končily.',
+   prot:7},
+  {i:1, st:30,  n:'Dna vesmíru',            gen:'cíl, který neexistuje',
+   co:'Plameňák hledá dno vesmíru, i když ví, že žádné není. Když ho nenajde, vymyslí si nové.',
+   ukol:'Vytvoř něco, co hledá neexistující dno. Třeba báseň o konci, který není. Obrázek nekonečna. Píseň, která nikdy neskončí.',
+   jazyk:'Paradoxy, oxymórony. „Tma zářila“, „ticho křičelo“.',
+   prot:9},
+  {i:2, st:60,  n:'Prádelní šňůry s ponožkou', gen:'míchání realit',
+   co:'Mezi hvězdami a mlhovinami se mihne prádelní šňůra s ponožkou. Kosmické a každodenní se prolíná.',
+   ukol:'Vytvoř něco, co míchá velké s malým. Báseň o vesmíru, kde je řeč o ponožkách. Obrázek, kde se hvězdy mísí s každodenními předměty.',
+   jazyk:'Míšení realit, bizarní juxtapozice.',
+   prot:6},
+  {i:3, st:90,  n:'Smrti jako součásti pádu', gen:'radost v pádu',
+   co:'Plameňák padá, ale nesnáší se. Je v tom radost, zpěv, očekávání. Pád není konec, je to cesta.',
+   ukol:'Vytvoř něco, co je o radostném pádu. Báseň o tom, jak něco ztrácíš, a je ti to jedno. Obrázek zachycující pád jako tanec.',
+   jazyk:'Emoční kontrast, protiklad citu a faktu.',
+   prot:7},
+  {i:4, st:120, n:'Myši, která si zapisuje',  gen:'pozorovatel, zapisovatel',
+   co:'Myš si zapisuje, co se stalo. Pozorovatelka, která zaznamenává, aniž by soudila.',
+   ukol:'Staň se na chvíli myší. Pozoruj svou vlastní tvorbu (nebo svůj den) a zapisuj, co vidíš, bez hodnocení. Jen fakta, jen obrazy.',
+   jazyk:'Drobné detaily, přesné postřehy, věcný popis.',
+   prot:8},
+  {i:5, st:150, n:'Komára na peří',         gen:'náhodný spolucestující',
+   co:'Komár se drží plameňákova peří a ptá se: "Kam letíš?" Ptá se na směr, i když je jasné, že žádný není.',
+   ukol:'Vytvoř něco, co se ptá. Báseň složená jen z otázek. Obrázek, který klade otázky. Nech otázky být, neodpovídej na ně.',
+   jazyk:'Vsuvka, odbočka, nečekaný prvek.',
+   prot:2},
+  {i:6, st:180, n:'Ticha po dopadu',         gen:'ticho jako událost',
+   co:'Po pádu přichází ticho. Tak hluboké, že i vesmír zadržel dech. Ticho, ve kterém se děje to podstatné.',
+   ukol:'Vytvoř něco, co je postavené na tichu. Báseň s dlouhými pauzami. Obrázek, který je většinou prázdný. Dovol tichu, aby bylo součástí díla.',
+   jazyk:'Pauzy, prázdná místa, oddech.',
+   prot:0},
+  {i:7, st:210, n:'Kousání',                 gen:'sebeironie, nadhled',
+   co:'"Jsem na hlavu," řekl plameňák. "Ale jinak výborně." Sebeironie, schopnost nesebrat se příliš vážně.',
+   ukol:'Vytvoř něco, co se nebere vážně. Parodii na vlastní styl. Báseň, která se vysmívá sama sobě. Dovol si být "na hlavu, ale jinak výborně".',
+   jazyk:'První osoba, „já jsem“, bez vyhýbání.',
+   prot:4},
+  {i:8, st:240, n:'Mapy, co ukazuje jen dolů', gen:'omezený nástroj',
+   co:'Z kapsy mu vypadla mapa, co ukazovala jen dolů. Jediný směr, který zbývá, je dolů. A on ho přijímá.',
+   ukol:'Vytvoř si mapu jednoho směru. Nakresli cestu, která vede jen dolů. Napiš báseň, která klesá. Pak se po té mapě vydej – aspoň v představách.',
+   jazyk:'Jednosměrná struktura, redukce, jednotvárnost.',
+   prot:1},
+  {i:9, st:270, n:'Nového dna',              gen:'posouvání hranic',
+   co:'"A co když už níž nejde?" "Tak si vymyslím nové dno." Kreativita jako schopnost vytvářet nové hranice tam, kde žádné nejsou.',
+   ukol:'Najdi ve své tvorbě místo, kde jsi narazil na dno. A vymysli nové dno ještě níž. Co se stane, když "spadneš" ještě hlouběji?',
+   jazyk:'Budoucí čas, plánování nemožného jako jistoty.',
+   prot:6},
+  {i:10, st:300, n:'Srdcem vzhůru',          gen:'paradoxní prožitek',
+   co:'"Hlavou dolů. Srdcem vzhůru." Tělo padá, ale srdce míří opačným směrem. Paradox, který dává smysl.',
+   ukol:'Vytvoř něco, co je paradoxní. Báseň o tom, jak něco ztrácíš a zároveň získáváš. Obrázek, kde něco padá a něco stoupá.',
+   jazyk:'Emoční kontrast, protiklad citu a faktu.',
+   prot:0},
+  {i:11, st:330, n:'Lalalá',                 gen:'čistá radost, zpěv bez významu',
+   co:'Celý příběh je rámován zpěvem "lalalá". Zpěv, který přehluší realitu, který je odpovědí na všechno, který pokračuje donekonečna.',
+   ukol:'Vytvoř něco, co je čisté lalalá. Báseň beze slov. Zvukovou nahrávku, kde jen zpíváš bez významu. Dovol si být bez významu, jen s radostí.',
+   jazyk:'Opakování, rytmus, zvukomalba. Vzdání se významu.',
+   prot:4},
+];
+
+// Figury toggle
+const activeFigs = new Set();
+let vseOn = false;
+
+function togFig(...ids) {
+  const allIds = ids.flatMap(id => id.split(',').map(s=>s.trim())).filter(Boolean);
+  const anyActive = allIds.some(id=>activeFigs.has(id));
+  allIds.forEach(id => {
+    if(anyActive) activeFigs.delete(id);
+    else activeFigs.add(id);
+  });
+  // Zvýraznění řádku v tabulce
+  allIds.forEach(id => {
+    const row = document.querySelector(`.fig-r[onclick*="${id}"]`);
+    if(row) {
+      if(anyActive) row.classList.remove('hl');
+      else row.classList.add('hl');
+    }
+  });
+  applyFig();
+}
+
+function toggleVse() {
+  vseOn = !vseOn;
+  const btn = document.getElementById('btn-vse');
+  btn.classList.toggle('active', vseOn);
+  btn.textContent = vseOn ? 'Skrýt vše' : 'Zobrazit vše';
+  document.querySelectorAll('#poh-text [data-fig]').forEach(el => {
+    if(vseOn) el.classList.add('hl');
+    else el.classList.remove('hl');
+  });
+  document.querySelectorAll('.fig-r').forEach(r => {
+    if(vseOn) r.classList.add('hl');
+    else r.classList.remove('hl');
+  });
+  if(!vseOn) activeFigs.clear();
+}
+
+function applyFig() {
+  document.querySelectorAll('#poh-text [data-fig]').forEach(el => {
+    const id = el.getAttribute('data-fig');
+    el.classList.toggle('hl', activeFigs.has(id));
+  });
+}
+
+// Varianty
+function setVar(v,btn) {
+  document.querySelectorAll('.var-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  const p = {
+    A:'Zavřete oči, ťukněte prstem — a jděte na úhel, který vybere prst.',
+    B:'Projděte záhlaví 12 úhlů níže a vyberte ten, který vás teď přitahuje.',
+    C:'Odpovězte na tři otázky — systém nabídne váš úhel.'
+  };
+  document.getElementById('var-popis').textContent = p[v];
+  if(v==='C') { document.getElementById('diag-modal').classList.add('open'); return; }
+  if(v==='B') { document.getElementById('uhly').scrollIntoView({behavior:'smooth'}); return; }
+  if(v==='A') {
+    const idx = Math.floor(Math.random()*U.length);
+    document.getElementById('uhly').scrollIntoView({behavior:'smooth'});
+    setTimeout(()=>openUhel(idx),500);
+  }
+}
+
+// Diagnostika
+function escR(s){return s.replace(/[-\/\\^$*+?.()|[\]{}]/g,'\\$&');}
+function closeDiag(){document.getElementById('diag-modal').classList.remove('open');}
+document.getElementById('diag-modal').addEventListener('click',e=>{if(e.target===e.currentTarget)closeDiag();});
+function runDiag(){
+  const txt=[document.getElementById('q1').value,document.getElementById('q2').value,document.getElementById('q3').value].join(' ');
+  if(!txt.trim()) return;
+  const sc={}; U.forEach(u=>sc[u.i]=0);
+  const keywords = [
+    {i:0,k:['hlavou dolů','obrácený','pád jako let','perspektiva']},
+    {i:1,k:['dno vesmíru','neexistuje','cíl','paradox']},
+    {i:2,k:['prádelní','šňůra','ponožka','míchání','realita']},
+    {i:3,k:['radost','pád','smrt','cesta','zpěv']},
+    {i:4,k:['myš','zapisovat','pozorovat','záznam','detail']},
+    {i:5,k:['komár','ptát se','spolucestující','otázka']},
+    {i:6,k:['ticho','dopad','vesmír','dech','pauza']},
+    {i:7,k:['kousání','nadhled','ironie','smích','vážně']},
+    {i:8,k:['mapa','jen dolů','směr','omezení']},
+    {i:9,k:['nové dno','posouvání','hranice','níž']},
+    {i:10,k:['srdcem vzhůru','paradox','prožitek','rozpor']},
+    {i:11,k:['lalalá','zpívat','radost','bez významu']},
+  ];
+  keywords.forEach(d=>{
+    d.k.forEach(kw=>{
+      const re=new RegExp(`(?<![a-záčďéěíňóřšťůúýž])${escR(kw)}(?![a-záčďéěíňóřšťůúýž])`,'gi');
+      sc[d.i] += (txt.match(re)||[]).length;
+    });
+  });
+  const sorted=Object.entries(sc).sort((a,b)=>b[1]-a[1]);
+  const domI=parseInt(sorted[0][0]);
+  const domU=U[domI];
+  const protU=U[domU.prot];
+  document.getElementById('diag-res').style.display='block';
+  document.getElementById('d-nazev').innerHTML=`<span style="color:var(--a)">${domU.st}° ${domU.n}</span>`;
+  document.getElementById('d-sub').textContent=domU.gen;
+  document.getElementById('d-btns').innerHTML=`
+    <button class="navrh-btn" onclick="closeDiag();openUhel(${domI})">→ Otevřít: ${domU.n}</button>
+    <button class="navrh-btn" onclick="closeDiag();openUhel(${domU.prot})">→ Protilehlý: ${protU.n}</button>`;
+}
+
+// =====================================================
+// PLNÝ ANALYZÁTOR (12 detektorů)
+// =====================================================
+const DET = [
+  {n:'Negace',t:'definice přes to, čím věc není',fn:t=>{const m=(t.match(/\bnení\b|\bnebylo?\b|\bnemá\b|\bnic\b/gi)||[]);return m.length>=3?[m.length+'× negace']:[];}},
+  {n:'Paradox',t:'dvě neslučitelné věci ve stejné větě',fn:t=>['ale zároveň','přitom','a přesto','ačkoli'].filter(w=>t.toLowerCase().includes(w))},
+  {n:'Opakování',t:'anafora nebo repetice',fn:t=>{const m=t.match(/(\b\w{3,}\b)[^.!?]*\1/gi);return m?m.slice(0,3).map(s=>s.slice(0,35)):[];}},
+  {n:'Otázky',t:'tázací věty jako otevřené prostory',fn:t=>{const m=t.match(/[^.!?]*\?/g);return m&&m.length>=2?[m.length+' otázky']:[];}},
+  {n:'Fragmenty',t:'přeryvná syntax, věty bez sloves',fn:t=>{const v=t.split(/[.!?]+/).filter(s=>s.trim().length>1);return v.filter(s=>s.trim().split(/\s+/).length<=3&&s.trim().length>1).slice(0,4).map(s=>s.trim());}},
+  {n:'Fyzikalizace',t:'abstraktní pojmy jako hmotné objekty',fn:t=>{const m=t.match(/\b(paměť|slova?|čas|ticho|strach|radost)\b[^.!?]{0,20}\b(padá|leží|nese|nosí|tíží|teče)\b/gi);return m?m.slice(0,3):[];}},
+  {n:'Personifikace',t:'neživé věci s lidskými vlastnostmi',fn:t=>{const m=t.match(/\b(stromy?|řeka|kamín|voda|čas|svět)\b[^.!?]{0,25}\b(pamatov|mluvil|cítil|smál|řekl)\b/gi);return m?m.slice(0,3):[];}},
+  {n:'Hyperbola',t:'záměrné přehánění',fn:t=>{const m=t.match(/\b(naprosto|totálně|strašně|hrozně|neuvěřitelně|vždy|věčně|nikdy)\b/gi);return m?m.slice(0,4):[];}},
+  {n:'Otevřený konec',t:'text, který nechává věci nedokončené',fn:t=>{const r=[];if(/možná|snad|asi|třeba/i.test(t))r.push('neurčité výrazy');if(t.match(/\.\.\.|\u2026/))r.push('tři tečky');return r;}},
+  {n:'Oxymóron',t:'spojování protikladných pojmů',fn:t=>{const m=t.match(/\b(těžký\s+a\s+lehký|silný\s+a\s+slabý|radostný\s+a\s+smutný|lehký\s+a\s+těžký)\b/gi);return m?m:[]; }},
+  {n:'Aforismus',t:'krátká zhutněná moudrost',fn:t=>{const v=t.split(/[.!?]+/).filter(s=>s.trim().length>5);return v.filter(s=>{const sl=s.trim().split(/\s+/);return sl.length>=4&&sl.length<=10&&/\b(stačí|vždy|nikdy|každý|smysl|důležité)\b/i.test(s);}).map(s=>s.trim().slice(0,50)).slice(0,2);}},
+  {n:'Přímá řeč',t:'hlas postavy v textu',fn:t=>{const m=t.match(/„[^"]*"|"[^"]*"/g);return m?m.slice(0,3).map(s=>s.slice(0,40)):[]; }},
+];
+
+function analyzuj(i){
+  const txt=document.getElementById('ta'+i).value.trim();
+  if(!txt){alert('Napište nejprve text.');return;}
+  let nal=0;
+  const items=DET.map((d,j)=>{const h=d.fn(txt);if(h.length)nal++;return{d,h,j};});
+  const slov=txt.split(/\s+/).filter(Boolean).length;
+  const vet=txt.split(/[.!?…]+/).filter(s=>s.trim().length>2).length;
+  const avg=vet?Math.round(slov/vet):0;
+  const out=document.getElementById('az'+i);
+  out.innerHTML=
+    `<div class="az-header"><span>Nalezené struktury: <strong style="color:var(--a)">${nal}</strong> z 12</span><span>${slov} slov · ${avg} slov/větu</span></div>`+
+    items.map(({d,h,j})=>
+      `<div class="az-item${h.length?' hit':''}">
+        <span class="az-n">${String(j+1).padStart(2,'0')}</span>
+        <div style="flex:1">
+          <div class="az-nazev">${d.n}</div>
+          <div style="font-size:.62rem;color:var(--a2);font-style:italic">${d.t}</div>
+          ${h.length?`<div class="az-tags">${h.map(x=>`<span class="az-tag">${x}</span>`).join('')}</div>`:''}
+        </div>
+        <span class="${h.length?'az-hit':'az-miss'}">${h.length?'✓':'—'}</span>
+      </div>`
+    ).join('')+
+    `<div class="az-note">Výsledek ukazuje, které jazykové struktury přirozeně používáte. Ty které se neobjevily jsou materiálem pro rozšiřování — ne chybějícími vlastnostmi.</div>`;
+  out.style.display='block';
+}
+
+// =====================================================
+// UKLÁDÁNÍ DO ZÁPISNÍKU (mapa 'main')
+// =====================================================
+function ulozit(i){
+  const txt = document.getElementById('ta'+i).value.trim();
+  if(!txt){ alert('Napište nejprve text.'); return; }
+  const u = U[i];
+  const ts = Date.now();
+  const key = 'chcesmys_zapisnik';
+  let data;
+  try {
+    data = JSON.parse(localStorage.getItem(key) || '{}');
+  } catch(e) { data = {}; }
+  
+  const mapId = 'main';
+  if (!data[mapId]) {
+    data[mapId] = {
+      name: 'Zápisník mezer',
+      popis: 'Hlavní mapa – automaticky vytvořená z karet',
+      entries: [],
+      created: ts
+    };
+  }
+  
+  const newEntry = {
+    id: 'e_' + ts,
+    ts: ts,
+    karta: 'Plameňák',
+    uhel: u.st,
+    nazev: u.n,
+    poeticky: u.n,
+    text: txt
+  };
+  data[mapId].entries.unshift(newEntry);
+  localStorage.setItem(key, JSON.stringify(data));
+  
+  const az = document.getElementById('az'+i);
+  const p = document.createElement('div');
+  p.style.cssText = 'margin-top:6px;padding:8px 12px;background:rgba(224,142,154,.1);border:1px solid rgba(224,142,154,.3);font-size:.72rem;display:flex;justify-content:space-between;align-items:center;gap:10px';
+  p.innerHTML = '<span style="color:var(--a)">✓ Uloženo do zápisníku mezer</span><a href="../../nastroje/zapisnik.html" style="font-size:.62rem;color:var(--a);border:1px solid rgba(224,142,154,.3);padding:3px 8px">Otevřít zápisník →</a>';
+  az.parentNode.insertBefore(p, az);
+  setTimeout(() => p.remove(), 6000);
+}
+
+function stahnout(i){
+  const txt=document.getElementById('ta'+i).value.trim(); if(!txt) return;
+  const u=U[i];
+  const blob=new Blob([`Plameňák · ${u.st}° ${u.n}\n${new Date().toLocaleDateString('cs-CZ')}\n\nÚkol: ${u.ukol}\n\n---\n\n${txt}`],{type:'text/plain;charset=utf-8'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob);
+  a.download=`plamenak_${u.n.toLowerCase().replace(/[\s\/]+/g,'_')}.txt`; a.click();
+}
+
+function tisk(i){
+  const txt=document.getElementById('ta'+i).value.trim(); if(!txt) return;
+  const u=U[i];
+  const w=window.open('','_blank');
+  w.document.write(`<html><head><title>Plameňák · ${u.n}</title><style>body{font-family:Georgia,serif;max-width:600px;margin:40px auto;line-height:1.8;color:#111}h2{font-weight:300}pre{white-space:pre-wrap;font-family:Georgia,serif}</style></head><body><h2>Plameňák · ${u.st}° ${u.n}</h2><p>${new Date().toLocaleDateString('cs-CZ')}</p><pre>${txt}</pre></body></html>`);
+  w.document.close(); w.print();
+}
+
+function toggleShare(i){
+  document.querySelectorAll('.share-menu').forEach((m,j)=>{if(j!==i)m.classList.remove('open');});
+  document.getElementById('sm'+i).classList.toggle('open');
+}
+function shareVia(via,i){
+  const txt=document.getElementById('ta'+i).value.trim();
+  const u=U[i]; const text=`Plameňák · ${u.n}\n\n${txt}`;
+  document.getElementById('sm'+i).classList.remove('open');
+  if(via==='copy'){navigator.clipboard&&navigator.clipboard.writeText(text);alert('Zkopírováno.');}
+  else if(via==='email')window.location.href=`mailto:?subject=Plameňák · ${u.n}&body=${encodeURIComponent(text)}`;
+  else if(via==='whatsapp')window.open(`https://wa.me/?text=${encodeURIComponent(text)}`);
+  else if(via==='telegram')window.open(`https://t.me/share/url?url=&text=${encodeURIComponent(text)}`);
+}
+document.addEventListener('click',e=>{if(!e.target.closest('.share-wrap'))document.querySelectorAll('.share-menu.open').forEach(m=>m.classList.remove('open'));});
+
+// =====================================================
+// STAVBA ÚHLŮ
+// =====================================================
+function buildUhly(){
+  const list=document.getElementById('uhly-list');
+  U.forEach((u,i)=>{
+    const pU=U[u.prot];
+    const div=document.createElement('div');
+    div.className='uhel'; div.id='u'+i;
+    div.innerHTML=`
+      <div class="uhel-h" onclick="toggleUhel(${i})">
+        <span class="u-num">${String(i+1).padStart(2,'0')}</span>
+        <div>
+          <div class="uhel-nazev">${u.n}<span class="uhel-poet">${u.gen}</span></div>
+        </div>
+        <span class="u-deg">${u.st}°</span>
+        <span class="u-tog">▾</span>
+      </div>
+      <div class="uhel-body" id="b${i}">
+        <div class="uhel-co">${u.co}</div>
+        <div class="dl-grid">
+          <div class="dl" onclick="togDl(${i},0)"><div class="dl-icon">🤺</div><div class="dl-label">Kreativní úkol</div><div class="dl-text">20 minut · psaní</div></div>
+          <div class="dl" onclick="togDl(${i},1)"><div class="dl-icon">🌪️</div><div class="dl-label">Protilehlý úhel</div><div class="dl-text">${pU.n}</div></div>
+          <div class="dl" onclick="togDl(${i},2)"><div class="dl-icon">🗝️</div><div class="dl-label">Jak to čte Myš</div><div class="dl-text">Klíče k tomuto úhlu</div></div>
+          <div class="dl" onclick="togDl(${i},3)"><div class="dl-icon">🪬</div><div class="dl-label">Nástroje</div><div class="dl-text">Zápisník · analyzátor</div></div>
+        </div>
+        <div class="dl-detail" id="d${i}_0">
+          <div class="dl-lbl">Kreativní úkol · 20 minut</div>
+          <div class="dl-txt">${u.ukol}</div>
+          <div class="jazyk-blok"><strong>Jazykové zaměření:</strong> ${u.jazyk}</div>
+          <div class="dl-lbl">Váš text</div>
+          <textarea class="cviceni-ta" id="ta${i}" placeholder="Pište sem …"></textarea>
+          <div class="akce-row">
+            <button class="akce-btn prim" onclick="analyzuj(${i})">Analyzovat →</button>
+            <button class="akce-btn" onclick="ulozit(${i})">💾 Uložit do zápisníku</button>
+            <a class="akce-btn" href="../../nastroje/zapisnik.html">📓 Otevřít zápisník</a>
+            <button class="akce-btn" onclick="stahnout(${i})">↓ Stáhnout</button>
+            <button class="akce-btn" onclick="tisk(${i})">🖨 Tisk</button>
+            <div class="share-wrap">
+              <button class="akce-btn" onclick="toggleShare(${i})">↗ Sdílet</button>
+              <div class="share-menu" id="sm${i}">
+                <button class="share-item" onclick="shareVia('email',${i})">📧 E-mail</button>
+                <button class="share-item" onclick="shareVia('whatsapp',${i})">WhatsApp</button>
+                <button class="share-item" onclick="shareVia('telegram',${i})">Telegram</button>
+                <button class="share-item" onclick="shareVia('copy',${i})">📋 Kopírovat</button>
+              </div>
+            </div>
+            <button class="akce-btn" onclick="document.getElementById('ta${i}').value='';document.getElementById('az${i}').style.display='none'">Smazat</button>
+          </div>
+          <div class="az-out" id="az${i}"></div>
+        </div>
+        <div class="dl-detail" id="d${i}_1">
+          <div class="dl-lbl">Protilehlý úhel — prostor pro rozvoj</div>
+          <div class="dl-txt"><em>${pU.st}° ${pU.n}</em> — ${pU.gen}</div>
+          <div class="dl-txt" style="margin-top:6px">${pU.co}</div>
+          <div class="btn-row"><button class="btn btn-g" style="font-size:.62rem;margin-top:6px" onclick="openUhel(${u.prot})">Přejít na ${pU.n} →</button></div>
+        </div>
+        <div class="dl-detail" id="d${i}_2">
+          <div class="dl-lbl">Jak pohádku čte Myš — klíče k tomuto úhlu</div>
+          <div class="dl-txt" style="margin-bottom:10px">Myš si zapisuje: „Plameňák – padá s grácií. I když neví kam. Hlavně že zpívá.“ Pro Myš je plameňák příkladem kreativity bez cíle – radost z pohybu je důležitější než smysl.</div>
+          <a class="btn btn-g" href="../../../mys_uhly/plamenak_uhly.html" target="_blank" style="font-size:.62rem">Otevřít klíče Myši ↗</a>
+        </div>
+        <div class="dl-detail" id="d${i}_3">
+          <div class="dl-lbl">Nástroje pro práci s textem</div>
+          <div class="dl-txt" style="margin-bottom:10px">Otevřete si zápisník pro ukládání textů nebo analyzátor pro detailní pohled na své jazykové struktury.</div>
+          <div class="btn-row">
+            <a class="btn btn-g" href="../../nastroje/zapisnik.html" target="_blank" style="font-size:.62rem">📓 Otevřít zápisník</a>
+            <a class="btn btn-g" href="../../nastroje/analyzer.html" target="_blank" style="font-size:.62rem">🔍 Otevřít analyzátor</a>
+          </div>
+        </div>
+      </div>`;
+    list.appendChild(div);
+  });
+}
+
+function toggleUhel(i){
+  document.getElementById('u'+i).classList.toggle('open');
+  document.getElementById('b'+i).classList.toggle('open');
+}
+function openUhel(i){
+  document.getElementById('u'+i).classList.add('open');
+  document.getElementById('b'+i).classList.add('open');
+  setTimeout(()=>document.getElementById('u'+i).scrollIntoView({behavior:'smooth',block:'start'}),100);
+}
+function togDl(i,j){
+  const el=document.getElementById(`d${i}_${j}`);
+  const wasOpen=el.classList.contains('open');
+  document.querySelectorAll(`#b${i} .dl-detail`).forEach(d=>d.classList.remove('open'));
+  document.querySelectorAll(`#b${i} .dl`).forEach(d=>d.classList.remove('open'));
+  if(!wasOpen){el.classList.add('open'); document.querySelectorAll(`#b${i} .dl`)[j].classList.add('open');}
+}
+
+buildUhly();
+</script>
+</body>
+</html>
