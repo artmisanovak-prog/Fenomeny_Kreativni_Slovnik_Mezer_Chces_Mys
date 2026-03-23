@@ -210,9 +210,9 @@ footer a{color:var(--a)}
   <a class="nav-back" href="../../../index.html">← Všechna zvířata</a>
   <div class="nav-links">
     <a class="nav-link active" href="index.html">Pohádka</a>
-    <a class="nav-link" href="doma/nastroje/knihovna_figur.html">Figury ↗</a>
-    <a class="nav-link" href="doma/nastroje/zapisnik.html">Zápisník ↗</a>
-    <a class="nav-link" href="doma/nastroje/analyzer.html">Analyzátor ↗</a>
+    <a class="nav-link" href="https://artmisanovak-prog.github.io/Fenomeny_Kreativni_Slovnik_Mezer_Chces_Mys/doma/nastroje/knihovna_figur.html">Figury ↗</a>
+    <a class="nav-link" href="https://artmisanovak-prog.github.io/Fenomeny_Kreativni_Slovnik_Mezer_Chces_Mys/doma/nastroje/zapisnik.html">Zápisník ↗</a>
+    <a class="nav-link" href="https://artmisanovak-prog.github.io/Fenomeny_Kreativni_Slovnik_Mezer_Chces_Mys/doma/nastroje/analyzer.html">Analyzátor ↗</a>
   </div>
 </nav>
 
@@ -632,7 +632,7 @@ function ulozit(i){
     const az=document.getElementById('az'+i);
     const p=document.createElement('div');
     p.style.cssText='margin-top:6px;padding:8px 12px;background:rgba(200,144,58,.1);border:1px solid rgba(200,144,58,.3);font-size:.72rem;display:flex;justify-content:space-between;align-items:center;gap:10px';
-    p.innerHTML='<span style="color:var(--a)">✓ Uloženo do zápisníku mezer</span><a href="doma/nastroje/zapisnik.html" style="font-size:.62rem;color:var(--a);border:1px solid rgba(200,144,58,.3);padding:3px 8px">Otevřít zápisník →</a>';
+    p.innerHTML='<span style="color:var(--a)">✓ Uloženo do zápisníku mezer</span><a href="https://artmisanovak-prog.github.io/Fenomeny_Kreativni_Slovnik_Mezer_Chces_Mys/doma/nastroje/zapisnik.html" style="font-size:.62rem;color:var(--a);border:1px solid rgba(200,144,58,.3);padding:3px 8px">Otevřít zápisník →</a>';
     az.parentNode.insertBefore(p,az);setTimeout(()=>p.remove(),6000);
   }catch(e){alert('Nepodařilo se uložit.');}
 }
@@ -714,7 +714,7 @@ function buildUhly(){
           <div class="dl-txt">${u.ukol}</div>
           <div class="jazyk-blok"><strong>Jazykové zaměření:</strong> ${u.jazyk}</div>
           <div class="dl-lbl">Váš text</div>
-          <textarea class="cviceni-ta" id="ta${i}" placeholder="Pište sem — bez opravování, bez zastavení…"></textarea>
+          <textarea class="cviceni-ta" id="ta${i}" placeholder="Pište sem …"></textarea>
           <div class="akce-row">
             <button class="akce-btn prim" onclick="analyzuj(${i})">Analyzovat →</button>
             <button class="akce-btn" onclick="ulozit(${i})">💾 Uložit do zápisníku</button>
@@ -753,7 +753,7 @@ function buildUhly(){
           <div class="dl-txt" style="margin-bottom:10px">Uložte text cvičení — automaticky se přidá do vaší kognitivní mapy úhlů.</div>
           <div class="btn-row">
             <button class="btn btn-p" onclick="ulozit(${i})" style="font-size:.62rem">Uložit do zápisníku →</button>
-            <a class="btn btn-g" href="doma/nastroje/zapisnik.html" style="font-size:.62rem">Otevřít zápisník ↗</a>
+            <a class="btn btn-g" href="https://artmisanovak-prog.github.io/Fenomeny_Kreativni_Slovnik_Mezer_Chces_Mys/doma/nastroje/zapisnik.html" style="font-size:.62rem">Otevřít zápisník ↗</a>
           </div>
         </div>
       </div>`;
