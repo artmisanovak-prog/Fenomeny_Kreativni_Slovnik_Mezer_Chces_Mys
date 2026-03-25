@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parohy - 12 úhlů pohledu</title>
+    <style>
+        /* --- ČERNOBÍLÝ SVĚT - ŽÁDNÉ BARVY --- */
+        html {
+            filter: grayscale(1);
+        }
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: #fff;
+            color: #000;
+            line-height: 1.7;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+        h1, h2, h3 {
+            font-weight: normal;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 0.3em;
+        }
+        /* --- ILUSTRACE --- */
+        .ilustrace {
+            text-align: center;
+            margin: 2em 0;
+        }
+        .ilustrace img {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #000;
+        }
+        /* --- POHÁDKA - SCROLLOVACÍ OKNO --- */
+        .pohadka-container {
+            max-height: 400px;
+            overflow-y: auto;
+            border: 1px solid #000;
+            padding: 0 1.5em;
+            margin: 2em 0;
+            background: #f9f9f9;
+            font-style: italic;
+        }
+        .pohadka p {
+            padding: 0.5em 0;
+            margin: 0;
+        }
+        /* --- 12 TLAČÍTEK - JEDNODUCHÁ MŘÍŽKA --- */
+        .angle-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6em;
+            margin: 2em 0;
+            justify-content: center;
+        }
+        .angle-list button {
+            background: #fff;
+            border: 1px solid #000;
+            padding: 0.7em 1.2em;
+            font-size: 0.95rem;
+            font-family: inherit;
+            cursor: pointer;
+            transition: 0.1s;
+            color: #000;
+        }
+        .angle-list button:hover {
+            background: #ddd;
+        }
+        .angle-list button.selected {
+            background: #000;
+            color: #fff;
+            border: 2px solid #000;
+            font-weight: bold;
+        }
+        /* --- VÝSTUP - POD TLAČÍTKY --- */
+        .output {
+            border: 1px solid #000;
+            padding: 2em;
+            margin-top: 2em;
+            background: #fff;
+            min-height: 180px;
+        }
+        .angle-name {
+            font-size: 1.6rem;
+            font-weight: bold;
+            margin-bottom: 0.5em;
+        }
+        .angle-desc {
+            font-size: 1.1rem;
+            font-style: italic;
+            margin-bottom: 1.5em;
+        }
+        .angle-text {
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+        .footer {
+            margin-top: 3em;
+            text-align: center;
+            font-size: 0.9rem;
+            border-top: 1px solid #ccc;
+            padding-top: 1.5em;
+        }
+        .footer a {
+            color: #000;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+<h1>🦌 12 úhlů pohledu</h1>
+<p><em>„O parozích, které sbíraly blesky z foťáků, o paměti, co roste s každým ‚sýýýr‘, a o tom, že největší bouřky jsou ty beze zvuku“</em></p>
+
+<!-- ILUSTRACE PAROHŮ -->
+<div class="ilustrace">
+    <img src="doma/ilustrace/parohy.jpg" alt="Ilustrace parohů">
+</div>
+
+<!-- POHÁDKA -->
+<h2>KŘIVÁ POHÁDKA – ROVNÉ SVĚDECTVÍ</h2>
+<div class="pohadka-container" id="pohadka">
+    <div class="pohadka">
+        <p><em>Zapsáno rukou, která nechtěla nic vysvětlit.</em></p>
+        
+        <p><strong>O PAROZÍCH</strong></p>
+        <p><strong>které sbíraly blesky</strong></p>
+        
+        <p>—</p>
+        
+        <p>Byl jednou jeden člověk. Nebo jelen. Nebo něco mezi.</p>
+        <p>Měla parohy. Ale ne obyčejné.</p>
+        <p>Byly to bleskosběrné parohy.</p>
+        <p>Ne pro počasí.</p>
+        <p>Pro paměť.</p>
+        
+        <p>—</p>
+        
+        <p>Každý den do ni uhodil blesk.</p>
+        <p>Ne z nebe.</p>
+        <p>Z foťáku.</p>
+        <p>Z cvaknutí.</p>
+        <p>Z „sýýýr!“</p>
+        
+        <p>—</p>
+        
+        <p>Tisíckrát.</p>
+        <p>Blesk.</p>
+        <p>Ale nikdy hrom.</p>
+        <p>Žádný déšť.</p>
+        <p>Jen světlo.</p>
+        <p>A úsměv.</p>
+        <p>A paměť, co se nikdy neptá, jestli je pravdivá.</p>
+        
+        <p>—</p>
+        
+        <p>Říkali ji Sýýýr.</p>
+        <p>Jako „sýr“, ale s ozvěnou.</p>
+        <p>Protože když se usmívala, bylo to jako když se slovo snaží být obrazem.</p>
+        <p>A když se neusmívala, stejně se to vyfotilo.</p>
+        
+        <p>—</p>
+        
+        <p>Parohy ji rostly pokaždé, když ji někdo vyfotil.</p>
+        <p>Jedna větev za každou vzpomínku.</p>
+        <p>Jedna zákruta za každé „sýýýr“.</p>
+        <p>A tak se stala živým albem.</p>
+        <p>Chodila po světě a nosila na hlavě všechny momenty, které nikdo už nechtěl pamatovat.</p>
+        
+        <p>—</p>
+        
+        <p>tak chodila tam a sla dal</p>
+        <p>s parohy jako s antenami.</p>
+        <p>Těžka od světla.</p>
+        <p>Lehka od smyslu.</p>
+        <p>A když ji někdo potkal, řekl:</p>
+        <p>„To je ta, co má parohy z paměti. Ta, co nikdy nezmokne. Ta, co se usmívá, i když neví proč.“</p>
+        
+        <p>—</p>
+        
+        <p>pOd té doby se říká, že když tě někdo vyfotí a ty se usměješ,</p>
+        <p>možná se ti právě začíná klubat nový paroh.</p>
+        
+        <p>—</p>
+        
+        <p>A že „sýýýr“ není jen zvuk.</p>
+        <p>Je to stopa řeči v obraze.</p>
+        <p>Je to blesk bez bouřky.</p>
+        <p>Je to paměť, co se tváří jako přítomnost.</p>
+        
+        <p>—</p>
+        
+        <p>KONEC</p>
+    </div>
+</div>
+    
+<!-- 12 ÚHLŮ -->
+<h2>Vyber úhel pohledu</h2>
+<div class="angle-list" id="buttons"></div>
+
+<!-- VÝSTUP -->
+<div class="output" id="output">
+    <div class="angle-name" id="angleName"></div>
+    <div class="angle-desc" id="angleDesc"></div>
+    <div id="angleText"></div>
+</div>
+
+<div class="footer">
+    Autorka: Art Misa Novak - metoda REPO DOMY<br>
+    <a href="mailto:chcesmys@gmail.com?subject=REPO%20DOMY%20-%20PAROHY">pro více info pište</a>
+</div>
+
+<script>
+    // --- 12 ÚHLŮ S KRÁTKÝM POPISEM A KONKRÉTNÍ VĚTOU O POHÁDCE O PAROZÍCH ---
+    const data = [
+        { 
+            name: "Absurdní", 
+            desc: "Hledá nesmysl, paradox, rozpor.", 
+            text: "Bytost napůl člověk, napůl jelen, které rostou parohy pokaždé, když ji někdo vyfotí a řekne „sýýýr“. Tisíce blesků bez hromu, žádný déšť. Parohy jako antény, těžké od světla, lehké od smyslu. Absurdní? Ano. Ale co je absurdnější: sbírat vzpomínky, nebo nechat je zmizet?" 
+        },
+        { 
+            name: "Jazykový", 
+            desc: "Sleduje slova, rytmus, dvojznačnost.", 
+            text: "„Sýýýr“ – slovo s ozvěnou, které se snaží být obrazem. Je to zvuk, který spouští blesk, ale ne hrom. Je to stopa řeči v obraze. Pohádka hraje s jazykem jako s foťákem – cvakne a vznikne vzpomínka. A parohy rostou z každého „sýýýr“, jako když slova zhmotní paměť." 
+        },
+        { 
+            name: "Ironický", 
+            desc: "Vidí rozpor mezi záměrem a výsledkem.", 
+            text: "Fotíme se, abychom zachytili okamžik, ale místo toho nám rostou parohy. Chceme si pamatovat, ale paměť nás tíží. Usmíváme se, i když nevíme proč. Ironie: čím víc vzpomínek, tím těžší hlava. A přesto se usmíváme dál, protože bez těch parohů bychom nebyli tím, kým jsme." 
+        },
+        { 
+            name: "Filozofický", 
+            desc: "Ptá se po smyslu a podstatě.", 
+            text: "Co je to paměť? Je to pravda, nebo jen stopa světla na sítnici? Bytost s parohy z blesků nosí na hlavě všechny momenty, které nikdo nechtěl pamatovat. Ale jsou ty vzpomínky skutečné, nebo jen odlesky? Pohádka klade otázku: Nejsme všichni takoví – nosíme v sobě tisíce okamžiků, které se tváří jako přítomnost, ale jsou to jen blesky bez hromu?" 
+        },
+        { 
+            name: "Surrealistický", 
+            desc: "Propojuje nesouvisející.", 
+            text: "Blesk z foťáku, parohy jako antény, bytost napůl člověk napůl jelen, živé album, které chodí po světě. Slova se mísí s obrazy, světlo s pamětí, úsměv s nevědomím. Svět, kde se realita fotí a vzpomínky rostou jako parohy – to je surrealismus v čisté podobě." 
+        },
+        { 
+            name: "Naivní", 
+            desc: "Vidí věci jednoduše, bez předsudků.", 
+            text: "Byl jednou někdo, kdo měl parohy. Každý den ho někdo fotil a říkal „sýýýr“. Z každý fotky mu narostla nová větev. Nosil na hlavě všechny vzpomínky. Byl těžkej od světla, lehkej od smyslu. A když ho lidi potkali, říkali, že je to ten, co se usmívá, i když neví proč. Jednoduchý, ne?" 
+        },
+        { 
+            name: "Introspektivní", 
+            desc: "Promítá do příběhu vlastní pocity.", 
+            text: "Tohle jsem já. Každá fotka, každý okamžik, každý „sýýýr“ mi přidá další paroh. Nosím v sobě tisíce vzpomínek, který nikdo nechce. Jsem těžkej od světla, lehkej od smyslu. A usmívám se, i když nevím proč. Protože ty parohy jsou moje paměť. A bez nich bych nebyl." 
+        },
+        { 
+            name: "Betonový", 
+            desc: "Čte doslovně, fakticky.", 
+            text: "Příběh vypráví o bytosti (člověk/jelen) s neobvyklými parohy, které fungují jako bleskosvody, ale místo blesků z nebe zachycují záblesky fotoaparátů při fotografování, kdy je vysloveno slovo „sýýýr“. Pokaždé, když k tomu dojde, naroste jí nový výběžek na parozích. Tyto výběžky představují vzpomínky. Stává se tak živým archivem nechtěných momentů. Pohybuje se krajinou, obtěžkána světlem, a lidé ji vnímají jako bytost, která se usmívá bez zjevného důvodu." 
+        },
+        { 
+            name: "Kulturní", 
+            desc: "Hledá archetypy a paralely.", 
+            text: "Postava napůl člověk, napůl jelen připomíná mytologické bytosti jako Kentaury nebo Pana. Tady je ale jejím údělem sbírat vzpomínky – je to jakýsi fotografův patron, mučedník digitálního věku. Parohy jako symbol moudrosti a důstojnosti se stávají symbolem paměti. A „sýýýr“ – to je moderní zaklínadlo, které spouští magii." 
+        },
+        { 
+            name: "Asociační", 
+            desc: "Vyvolává osobní vzpomínky.", 
+            text: "Připomnělo mi to, jak jsme se jako děti fotili a vždycky někdo řekl „sýýýr“. A já si říkal, kam ty úsměvy mizí. Teď vím – rostou nám na hlavě jako parohy. A když se dívám na starý fotky, vidím ty parohy. Jsou těžký, ale bez nich bych nebyl. A ten úsměv? Ten už je taky součástí paměti." 
+        },
+        { 
+            name: "Metaforický", 
+            desc: "Vidí symboly za věcmi.", 
+            text: "Parohy jsou naše vzpomínky. Každý blesk (fotka, okamžik) přidá další větev. Jsme těžcí od světla – od všeho, co jsme prožili. Ale lehcí od smyslu – protože jen my víme, co ty vzpomínky znamenají. A úsměv? To je náš štít proti tomu, aby nás paměť nerozdrtila. Usmíváme se, i když nevíme proč – protože to je jediný způsob, jak unést všechno, co nosíme." 
+        },
+        { 
+            name: "Groteskní", 
+            desc: "Vidí přehnanou, temnou komiku.", 
+            text: "Představ si: bytost s obrovskýma parohama, co jí rostou pokaždý, když ji někdo vyfotí. Chodí po světě, parohy ji vláčej po zemi, ale ona se usmívá. Lidi na ni ukazujou: ‚Hele, to je ta, co má parohy z paměti!‘ A ona jen pokrčí rameny a řekne: ‚Sýýýr.‘ Je to groteska o tom, že jsme všichni přerostlí vlastními vzpomínkami." 
+        }
+    ];
+
+    const buttonsDiv = document.getElementById('buttons');
+    const nameEl = document.getElementById('angleName');
+    const descEl = document.getElementById('angleDesc');
+    const textEl = document.getElementById('angleText');
+
+    // Vytvoření tlačítek
+    data.forEach((angle, index) => {
+        const btn = document.createElement('button');
+        btn.textContent = angle.name;
+        btn.addEventListener('click', () => {
+            // Zvýraznění
+            document.querySelectorAll('.angle-list button').forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+            
+            // Výpis
+            nameEl.textContent = angle.name;
+            descEl.textContent = angle.desc;
+            textEl.innerHTML = `<p>${angle.text}</p>`;
+        });
+        buttonsDiv.appendChild(btn);
+    });
+
+    // Předvolit první úhel
+    if (data.length) {
+        document.querySelector('.angle-list button').click();
+    }
+</script>
+
+<!-- Poznámka: Tímto je kompletní série osmnácti pohádek (myš, kocour, ryba, motýl, plameňák, čáp, liška, netopýr, lemur, moucha, žížala, zajíc, tygr, krokodýl, želva, jednorožec, pavouk, parohy) – všechny se stejným designem a funkcí. -->
+
+</body>
+</html>
