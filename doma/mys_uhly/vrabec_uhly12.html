@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vrabec - 12 úhlů pohledu</title>
+    <style>
+        /* --- ČERNOBÍLÝ SVĚT - ŽÁDNÉ BARVY --- */
+        html {
+            filter: grayscale(1);
+        }
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: #fff;
+            color: #000;
+            line-height: 1.7;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+        h1, h2, h3 {
+            font-weight: normal;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 0.3em;
+        }
+        /* --- ILUSTRACE --- */
+        .ilustrace {
+            text-align: center;
+            margin: 2em 0;
+        }
+        .ilustrace img {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #000;
+        }
+        /* --- POHÁDKA - SCROLLOVACÍ OKNO --- */
+        .pohadka-container {
+            max-height: 400px;
+            overflow-y: auto;
+            border: 1px solid #000;
+            padding: 0 1.5em;
+            margin: 2em 0;
+            background: #f9f9f9;
+            font-style: italic;
+        }
+        .pohadka p {
+            padding: 0.5em 0;
+            margin: 0;
+        }
+        /* --- 12 TLAČÍTEK - JEDNODUCHÁ MŘÍŽKA --- */
+        .angle-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6em;
+            margin: 2em 0;
+            justify-content: center;
+        }
+        .angle-list button {
+            background: #fff;
+            border: 1px solid #000;
+            padding: 0.7em 1.2em;
+            font-size: 0.95rem;
+            font-family: inherit;
+            cursor: pointer;
+            transition: 0.1s;
+            color: #000;
+        }
+        .angle-list button:hover {
+            background: #ddd;
+        }
+        .angle-list button.selected {
+            background: #000;
+            color: #fff;
+            border: 2px solid #000;
+            font-weight: bold;
+        }
+        /* --- VÝSTUP - POD TLAČÍTKY --- */
+        .output {
+            border: 1px solid #000;
+            padding: 2em;
+            margin-top: 2em;
+            background: #fff;
+            min-height: 180px;
+        }
+        .angle-name {
+            font-size: 1.6rem;
+            font-weight: bold;
+            margin-bottom: 0.5em;
+        }
+        .angle-desc {
+            font-size: 1.1rem;
+            font-style: italic;
+            margin-bottom: 1.5em;
+        }
+        .angle-text {
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+        .footer {
+            margin-top: 3em;
+            text-align: center;
+            font-size: 0.9rem;
+            border-top: 1px solid #ccc;
+            padding-top: 1.5em;
+        }
+        .footer a {
+            color: #000;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+<h1>🐦 12 úhlů pohledu</h1>
+<p><em>„O vrabci, který se dostal z hrsti na hlavu, a o tom, že někdy je lepší holub na střeše než vrabčí hnízdo ve vlasech“</em></p>
+
+<!-- ILUSTRACE VRABCE -->
+<div class="ilustrace">
+    <img src="doma/ilustrace/vrabec.jpg" alt="Ilustrace vrabce">
+</div>
+
+<!-- POHÁDKA -->
+<h2>KŘIVÁ POHÁDKA – ROVNÉ SVĚDECTVÍ</h2>
+<div class="pohadka-container" id="pohadka">
+    <div class="pohadka">
+        <p><em>Zapsáno rukou, která nechtěla nic vysvětlit.</em></p>
+        
+        <p><strong>O VRABCOVI</strong></p>
+        <p><strong>🐦 který se dostal z hrsti na hlavu</strong></p>
+        
+        <p>—</p>
+        
+        <p>Byla jednou jedna dáma, co si řekla:</p>
+        <p>„Lepší vrabec v hrsti než holub na střeše.“</p>
+        <p>A tak si jednoho dne chytila vrabce.</p>
+        <p>Malého.</p>
+        <p>Pípajícího.</p>
+        <p>Trochu nervózního.</p>
+        <p>Ale byl její.</p>
+        
+        <p>—</p>
+        
+        <p>Holub seděl dál na střeše.</p>
+        <p>Velký.</p>
+        <p>Důstojný.</p>
+        <p>Nedosažitelný.</p>
+        <p>Ale ona má přece vrabce.</p>
+        <p>V hrsti.</p>
+        <p>Jistotu.</p>
+        
+        <p>—</p>
+        
+        <p>Jenže vrabec se nechtěl držet.</p>
+        <p>Začal se vrtět.</p>
+        <p>Škrábat.</p>
+        <p>Pípat.</p>
+        <p>A nakonec – šup! – vyskočil z hrsti rovnou na hlavu.</p>
+        <p>A tam zůstal.</p>
+        <p>Ne jako trofej.</p>
+        <p>Jako názor.</p>
+        <p>Jako myšlenka, co se nedá setřást.</p>
+        
+        <p>—</p>
+        
+        <p>Seděl jí na temeni.</p>
+        <p>Na čele.</p>
+        <p>Na představách.</p>
+        <p>A nejen to – začal si tam stavět hnízdo.</p>
+        <p>Z peří.</p>
+        <p>Z pochybností.</p>
+        <p>Z ranních vlasů.</p>
+        
+        <p>—</p>
+        
+        <p>A ona chodila po světě s vrabcem na hlavě.</p>
+        <p>Rozcuchaná.</p>
+        <p>Rozladěná.</p>
+        <p>Rozmyšlená.</p>
+        <p>A všichni říkali:</p>
+        <p>„To je vrabčí hnízdo.“</p>
+        
+        <p>—</p>
+        
+        <p>A holub?</p>
+        <p>Ten pořád seděl na střeše.</p>
+        <p>Tichý.</p>
+        <p>Vznešený.</p>
+        <p>Nedotěrný.</p>
+        
+        <p>—</p>
+        
+        <p>A tak si dáma jednoho dne sedla,</p>
+        <p>podívala se nahoru</p>
+        <p>a řekla:</p>
+        <p>„Možná je lepší holub na střeše než vrabec na hlavě.“</p>
+        
+        <p>—</p>
+        
+        <p>A vrabec se jen zavrtěl.</p>
+        <p>A přidal další větvičku.</p>
+    </div>
+</div>
+    
+<!-- 12 ÚHLŮ -->
+<h2>Vyber úhel pohledu</h2>
+<div class="angle-list" id="buttons"></div>
+
+<!-- VÝSTUP -->
+<div class="output" id="output">
+    <div class="angle-name" id="angleName"></div>
+    <div class="angle-desc" id="angleDesc"></div>
+    <div id="angleText"></div>
+</div>
+
+<div class="footer">
+    Autorka: Art Misa Novak - metoda REPO DOMY<br>
+    <a href="mailto:chcesmys@gmail.com?subject=REPO%20DOMY%20-%20VRABEC">pro více info pište</a>
+</div>
+
+<script>
+    // --- 12 ÚHLŮ S KRÁTKÝM POPISEM A KONKRÉTNÍ VĚTOU O POHÁDCE O VRABCI ---
+    const data = [
+        { 
+            name: "Absurdní", 
+            desc: "Hledá nesmysl, paradox, rozpor.", 
+            text: "Dáma si chytí vrabce pro jistotu, ale on jí uteče na hlavu a postaví si tam hnízdo. Holub, kterého nechytila, sedí důstojně na střeše. Paradox: to, co mělo být jistotou, se stane problémem, a to, co bylo nedosažitelné, je najednou žádoucí. A vrabec si jen spokojeně přidá větvičku." 
+        },
+        { 
+            name: "Jazykový", 
+            desc: "Sleduje slova, rytmus, dvojznačnost.", 
+            text: "„Lepší vrabec v hrsti než holub na střeše“ – přísloví, které se tady obrací naruby. Vrabec není v hrsti, ale na hlavě. A není to jen pták, je to názor, myšlenka, hnízdo z pochybností. Jazyk se mění podle toho, kde pták sedí – v hrsti je jistota, na hlavě je problém." 
+        },
+        { 
+            name: "Ironický", 
+            desc: "Vidí rozpor mezi záměrem a výsledkem.", 
+            text: "Chtěla jistotu, a dostala starost. Chtěla vlastnit, a je vlastněna. Vrabec, který měl být v hrsti, sedí na hlavě a staví si hnízdo. Ironie: čím víc se snažíme mít pod kontrolou, tím víc nám to kontroluje život. A holub? Ten se jen dívá." 
+        },
+        { 
+            name: "Filozofický", 
+            desc: "Ptá se po smyslu a podstatě.", 
+            text: "Co je lepší? Jistota, která se dá držet, ale může utéct? Nebo nedosažitelný ideál, který nám nezasahuje do života? Dáma volí vrabce, ale ten se jí usadí na hlavě a změní její svět. Pohádka klade otázku: Neměli bychom si dávat pozor na to, co si přejeme držet? Protože to, co držíme, může začít držet nás." 
+        },
+        { 
+            name: "Surrealistický", 
+            desc: "Propojuje nesouvisející.", 
+            text: "Vrabec, který staví hnízdo z peří, pochybností a ranních vlasů. Dáma s hnízdem na hlavě chodí světem a všichni říkají: „To je vrabčí hnízdo.“ Holub na střeše jako tichý svědek. Svět, kde se realita mísí s metaforou a každodennost s absurditou." 
+        },
+        { 
+            name: "Naivní", 
+            desc: "Vidí věci jednoduše, bez předsudků.", 
+            text: "Dáma si chytila vrabce, aby ho měla. Ale vrabec utek na hlavu a postavil si tam hnízdo. Ona chodila rozcuchaná a lidi říkali, že má hnízdo na hlavě. Holub seděl na střeše. Nakonec si dáma řekla, že asi byl lepší ten holub. A vrabec si přidal větvičku. Jednoduchý, ne?" 
+        },
+        { 
+            name: "Introspektivní", 
+            desc: "Promítá do příběhu vlastní pocity.", 
+            text: "Tohle jsem já. Kolikrát jsem si řekl, že lepší je jistota, něco malýho, co můžu držet. A pak se ta jistota usadila na mé hlavě a začala mi řídit život. Teď chodím s hnízdem plným pochybností a všichni to vidí. A ten holub, co jsem nechal být, ten se jen dívá a možná se usmívá." 
+        },
+        { 
+            name: "Betonový", 
+            desc: "Čte doslovně, fakticky.", 
+            text: "Příběh vypráví o dámě, která se rozhodla chytit vrabce podle přísloví. Vrabce chytila, ale ten jí unikl z ruky a usedl jí na hlavu, kde si začal stavět hnízdo. Dáma s hnízdem na hlavě vzbuzovala pozornost okolí. Holub mezitím setrvával na střeše. Dáma nakonec konstatovala, že původní přísloví by mělo znít opačně. Vrabec pokračoval ve stavbě hnízda." 
+        },
+        { 
+            name: "Kulturní", 
+            desc: "Hledá archetypy a paralely.", 
+            text: "Přísloví jako kulturní kód – tady je rozebráno a obráceno. Vrabec jako symbol obyčejnosti, holub jako symbol nedosažitelnosti. Dáma jako každý z nás, kdo volí jistotu před snem. A pointa: jistota se může stát břemenem. Je to moderní verze mýtu o králi Midasovi – všeho, čeho se dotkneš, se stane problémem." 
+        },
+        { 
+            name: "Asociační", 
+            desc: "Vyvolává osobní vzpomínky.", 
+            text: "Připomnělo mi to, jak jsem si koupil starý dům, protože to byla jistota. A teď mi leží na hlavě – neustálé opravy, starosti, hnízdo problémů. A přitom ten nový dům, co jsem nechal být, ten by byl možná lepší. Ale vrabec si spokojeně přidává další větvičku." 
+        },
+        { 
+            name: "Metaforický", 
+            desc: "Vidí symboly za věcmi.", 
+            text: "Vrabec je každodennost, kterou si chytíme pro jistotu. Hrst je naše iluze kontroly. Hlava je naše vědomí, naše myšlenky. Když se nám vrabec usadí na hlavě, znamená to, že nás každodennost začala ovládat. Staví hnízdo z pochybností a vlasů – z našich vlastních starostí. A holub? To je náš ideál, který zůstal nedotčen." 
+        },
+        { 
+            name: "Groteskní", 
+            desc: "Vidí přehnanou, temnou komiku.", 
+            text: "Představ si: dáma s hnízdem na hlavě chodí po městě. Vrabec jí pípá do ucha a přidává větvičky. Lidi ukazují: „Podívejte, vrabčí hnízdo!“ Ona si sedne, podívá se na holuba na střeše a řekne: „Možná je lepší holub.“ A vrabec si jen tak zavrtí a přidá další větvičku. Je to groteska o tom, že jistota může být horší než nejistota." 
+        }
+    ];
+
+    const buttonsDiv = document.getElementById('buttons');
+    const nameEl = document.getElementById('angleName');
+    const descEl = document.getElementById('angleDesc');
+    const textEl = document.getElementById('angleText');
+
+    // Vytvoření tlačítek
+    data.forEach((angle, index) => {
+        const btn = document.createElement('button');
+        btn.textContent = angle.name;
+        btn.addEventListener('click', () => {
+            // Zvýraznění
+            document.querySelectorAll('.angle-list button').forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+            
+            // Výpis
+            nameEl.textContent = angle.name;
+            descEl.textContent = angle.desc;
+            textEl.innerHTML = `<p>${angle.text}</p>`;
+        });
+        buttonsDiv.appendChild(btn);
+    });
+
+    // Předvolit první úhel
+    if (data.length) {
+        document.querySelector('.angle-list button').click();
+    }
+</script>
+
+<!-- Poznámka: Tímto je kompletní série dvaceti pohádek (myš, kocour, ryba, motýl, plameňák, čáp, liška, netopýr, lemur, moucha, žížala, zajíc, tygr, krokodýl, želva, jednorožec, pavouk, parohy, páv, vrabec) – všechny se stejným designem a funkcí. -->
+
+</body>
+</html>
