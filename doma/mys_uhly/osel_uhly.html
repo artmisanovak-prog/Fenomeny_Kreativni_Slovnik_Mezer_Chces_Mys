@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Osel - 12 úhlů pohledu</title>
+    <style>
+        /* --- ČERNOBÍLÝ SVĚT - ŽÁDNÉ BARVY --- */
+        html {
+            filter: grayscale(1);
+        }
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: #fff;
+            color: #000;
+            line-height: 1.7;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+        h1, h2, h3 {
+            font-weight: normal;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 0.3em;
+        }
+        /* --- ILUSTRACE --- */
+        .ilustrace {
+            text-align: center;
+            margin: 2em 0;
+        }
+        .ilustrace img {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #000;
+        }
+        /* --- POHÁDKA - SCROLLOVACÍ OKNO --- */
+        .pohadka-container {
+            max-height: 400px;
+            overflow-y: auto;
+            border: 1px solid #000;
+            padding: 0 1.5em;
+            margin: 2em 0;
+            background: #f9f9f9;
+            font-style: italic;
+        }
+        .pohadka p {
+            padding: 0.5em 0;
+            margin: 0;
+        }
+        /* --- 12 TLAČÍTEK - JEDNODUCHÁ MŘÍŽKA --- */
+        .angle-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6em;
+            margin: 2em 0;
+            justify-content: center;
+        }
+        .angle-list button {
+            background: #fff;
+            border: 1px solid #000;
+            padding: 0.7em 1.2em;
+            font-size: 0.95rem;
+            font-family: inherit;
+            cursor: pointer;
+            transition: 0.1s;
+            color: #000;
+        }
+        .angle-list button:hover {
+            background: #ddd;
+        }
+        .angle-list button.selected {
+            background: #000;
+            color: #fff;
+            border: 2px solid #000;
+            font-weight: bold;
+        }
+        /* --- VÝSTUP - POD TLAČÍTKY --- */
+        .output {
+            border: 1px solid #000;
+            padding: 2em;
+            margin-top: 2em;
+            background: #fff;
+            min-height: 180px;
+        }
+        .angle-name {
+            font-size: 1.6rem;
+            font-weight: bold;
+            margin-bottom: 0.5em;
+        }
+        .angle-desc {
+            font-size: 1.1rem;
+            font-style: italic;
+            margin-bottom: 1.5em;
+        }
+        .angle-text {
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+        .footer {
+            margin-top: 3em;
+            text-align: center;
+            font-size: 0.9rem;
+            border-top: 1px solid #ccc;
+            padding-top: 1.5em;
+        }
+        .footer a {
+            color: #000;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+<h1>🐴 12 úhlů pohledu</h1>
+<p><em>„O oslovi, který šel vlevo, ale myslel si, že jde vpravo, a o tom, že někdy je moudré jít dál, i když nevíš kam“</em></p>
+
+<!-- ILUSTRACE OSLA -->
+<div class="ilustrace">
+    <img src="doma/ilustrace/osel.jpg" alt="Ilustrace osla">
+</div>
+
+<!-- POHÁDKA -->
+<h2>KŘIVÁ POHÁDKA – ROVNÉ SVĚDECTVÍ</h2>
+<div class="pohadka-container" id="pohadka">
+    <div class="pohadka">
+        <p><em>Zapsáno rukou, která nechtěla nic vysvětlit.</em></p>
+        
+        <p><strong>O OSLOVI</strong></p>
+        <p><strong>který šel vlevo, ale myslel si, že jde vpravo</strong></p>
+        
+        <p><em>levá pravá seno sláma pro jednoho psina pro druhého oslovina jedna dvě raz raz dva</em></p>
+        
+        <p>—</p>
+        
+        <p>Osel se narodil mezi dvěma hromadami.</p>
+        <p>Jedna byla seno.</p>
+        <p>Druhá sláma.</p>
+        <p>A nikdo mu neřekl, která je která.</p>
+        
+        <p>—</p>
+        
+        <p>„Levá,“ řekl někdo.</p>
+        <p>„Pravá,“ řekl jiný.</p>
+        <p>„Seno,“ řekl hlas.</p>
+        <p>„Sláma,“ řekl stín.</p>
+        
+        <p>—</p>
+        
+        <p>Osel se podíval.</p>
+        <p>Obě hromady vypadaly stejně.</p>
+        <p>Jedna trochu měkčí.</p>
+        <p>Jedna trochu hlučnější.</p>
+        <p>Ale jinak? Chaos.</p>
+        
+        <p>—</p>
+        
+        <p>„Pro jednoho psina,“ řekl hlas.</p>
+        <p>„Pro druhého oslovina,“ dodal jiný.</p>
+        <p>A osel se zamyslel:</p>
+        <p>„Kdo jsem já? Psina, nebo oslovina?“</p>
+        
+        <p>—</p>
+        
+        <p>Šel vlevo.</p>
+        <p>Pak se otočil.</p>
+        <p>A šel vpravo.</p>
+        <p>Ale vypadalo to stejně.</p>
+        <p>Země byla země.</p>
+        <p>Hromada byla hromada.</p>
+        <p>A pravidla? Neviditelná.</p>
+        
+        <p>—</p>
+        
+        <p>Potkal myš.</p>
+        <p>Ta si zapisovala, co se děje.</p>
+        <p>„Kam jdeš?“ zeptala se.</p>
+        <p>„Nevím,“ řekl osel.</p>
+        <p>„Levá, pravá, seno, sláma. Všechno se mi míchá.“</p>
+        
+        <p>—</p>
+        
+        <p>Myš si poznamenala:</p>
+        <p>Osel – zmatený, ale důsledný.</p>
+        
+        <p>—</p>
+        
+        <p>„A co hledáš?“</p>
+        <p>„Správnost,“ řekl osel.</p>
+        <p>„A co to je?“</p>
+        <p>„To, co se neřekne nahlas, ale všichni to očekávají.“</p>
+        
+        <p>—</p>
+        
+        <p>Myš se zamyslela.</p>
+        <p>A pak mu podala cedulku.</p>
+        <p>Na jedné straně bylo napsáno „seno“.</p>
+        <p>Na druhé „sláma“.</p>
+        <p>Ale písmo bylo stejné.</p>
+        
+        <p>—</p>
+        
+        <p>Osel si ji pověsil na krk.</p>
+        <p>A šel dál.</p>
+        <p>Levá.</p>
+        <p>Pravá.</p>
+        <p>Seno.</p>
+        <p>Sláma.</p>
+        
+        <p>—</p>
+        
+        <p>A když ho někdo zastavil a zeptal se:</p>
+        <p>„Kam jdeš?“</p>
+        <p>Řekl:</p>
+        <p>„Podle cedulky.“</p>
+        <p>„A co je na ní?“</p>
+        <p>„To, co si myslíš, že tam je.“</p>
+        
+        <p>—</p>
+        
+        <p>A tak se stal průvodcem.</p>
+        <p>Ne tím, co ví.</p>
+        <p>Ale tím, co jde.</p>
+        <p>A když se někdo ztratil,</p>
+        <p>šel za oslem.</p>
+        <p>Protože i když neví,</p>
+        <p>vypadá, že ví.</p>
+        
+        <p>—</p>
+        
+        <p>A když se někdo ptal, co je to „oslovina“,</p>
+        <p>myš řekla:</p>
+        <p>„To je, když jdeš dál, i když nevíš, kam.“</p>
+    </div>
+</div>
+    
+<!-- 12 ÚHLŮ -->
+<h2>Vyber úhel pohledu</h2>
+<div class="angle-list" id="buttons"></div>
+
+<!-- VÝSTUP -->
+<div class="output" id="output">
+    <div class="angle-name" id="angleName"></div>
+    <div class="angle-desc" id="angleDesc"></div>
+    <div id="angleText"></div>
+</div>
+
+<div class="footer">
+    Autorka: Art Misa Novak - metoda REPO DOMY<br>
+    <a href="mailto:chcesmys@gmail.com?subject=REPO%20DOMY%20-%20OSEL">pro více info pište</a>
+</div>
+
+<script>
+    // --- 12 ÚHLŮ S KRÁTKÝM POPISEM A KONKRÉTNÍ VĚTOU O POHÁDCE O OSLOVI ---
+    const data = [
+        { 
+            name: "Absurdní", 
+            desc: "Hledá nesmysl, paradox, rozpor.", 
+            text: "Osel, který se narodí mezi senem a slámou, ale nikdo mu neřekne, která je která. Levá a pravá jsou stejné, psina a oslovina se míchají. A nakonec dostane cedulku, která na obou stranách říká něco jiného, ale písmo je stejné. Absurdní? Ano. Ale co je absurdnější než svět, kde se správnost očekává, ale nikdo ji nevysloví?" 
+        },
+        { 
+            name: "Jazykový", 
+            desc: "Sleduje slova, rytmus, dvojznačnost.", 
+            text: "„Levá pravá seno sláma pro jednoho psina pro druhého oslovina jedna dvě raz raz dva“ – to je rytmus, který se stává mantrou. Jazyk se tady láme: slova ztrácejí význam a stávají se zvuky. Osel hledá správnost, ale slova jsou stejně nerozlišitelná jako seno a sláma. A cedulka? Ta říká to, co si myslíš – jazyk je jen projekce." 
+        },
+        { 
+            name: "Ironický", 
+            desc: "Vidí rozpor mezi záměrem a výsledkem.", 
+            text: "Osel chce najít správnost, ale místo toho dostane cedulku, která je oboustranná. Chce vědět, kam jít, ale zjistí, že levá i pravá jsou stejné. Ironie: stává se průvodcem, protože vypadá, že ví – i když neví. A oslovina? To je, když jdeš dál, i když nevíš kam." 
+        },
+        { 
+            name: "Filozofický", 
+            desc: "Ptá se po smyslu a podstatě.", 
+            text: "Co je to správnost? Je to objektivní realita, nebo jen to, co se očekává? Osel hledá odpověď mezi senem a slámou, mezi levou a pravou. Myš mu dává cedulku, která je prázdným znakem. Pohádka klade otázku: Není nakonec všechno jen o tom, že jdeme dál, i když nevíme? A není to ta největší moudrost?" 
+        },
+        { 
+            name: "Surrealistický", 
+            desc: "Propojuje nesouvisející.", 
+            text: "Hromady sena a slámy, které vypadají stejně. Hlasy, co říkají „levá“ a „pravá“, „seno“ a „sláma“. Myš s cedulkou, kde je napsáno totéž na obou stranách. Osel, který se stává průvodcem, protože jde. Svět, kde se realita rozplývá a jediné, co zbývá, je pohyb." 
+        },
+        { 
+            name: "Naivní", 
+            desc: "Vidí věci jednoduše, bez předsudků.", 
+            text: "Osel se narodil mezi dvěma hromadami. Nevěděl, která je seno a která sláma. Lidi mu říkali levá, pravá, ale jemu to přišlo stejné. Potkal myš, ta mu dala cedulku. Na jedné straně bylo seno, na druhé sláma. Osel si ji pověsil na krk a šel. Když se ho ptali, kam jde, řekl: Podle cedulky. A myš řekla, že oslovina je, když jdeš dál, i když nevíš kam. Jednoduchý, ne?" 
+        },
+        { 
+            name: "Introspektivní", 
+            desc: "Promítá do příběhu vlastní pocity.", 
+            text: "Tohle jsem já. Každý den se rozhoduji mezi levou a pravou, mezi senem a slámou, a nikdy nevím, co je správně. Všichni ode mě něco očekávají, ale nikdo neřekne, co. A tak si taky nosím cedulku, na které je napsáno to, co si myslím, že by tam mělo být. A jdu dál. Protože oslovina je, když jdeš, i když nevíš." 
+        },
+        { 
+            name: "Betonový", 
+            desc: "Čte doslovně, fakticky.", 
+            text: "Příběh vypráví o oslovi, který se narodil mezi dvěma hromadami – senem a slámou – aniž by věděl, která je která. Dostává protichůdné informace o tom, co je levá a pravá. Setkává se s myší, která mu poskytne oboustrannou cedulku s nápisy „seno“ a „sláma“ na každé straně. Osel si cedulku zavěsí na krk a pokračuje v chůzi. Stává se nevědomým průvodcem pro ty, kdo se ztratí. Myš definuje „oslovinu“ jako pokračování v cestě bez znalosti cíle." 
+        },
+        { 
+            name: "Kulturní", 
+            desc: "Hledá archetypy a paralely.", 
+            text: "Osel jako archetyp tvrdohlavosti, ale tady je spíše symbolem ztracenosti v dualitě. Seno a sláma – dva stejné, ale přece jiné světy. Myš jako průvodkyně (opět) dává nástroj, který je prázdný. Je to moderní verze Buridanova osla – jenže tady se nerozhoduje mezi dvěma stejnými, ale zjišťuje, že rozhodnutí není důležité. Důležité je jít." 
+        },
+        { 
+            name: "Asociační", 
+            desc: "Vyvolává osobní vzpomínky.", 
+            text: "Připomnělo mi to, jak jsem si jako dítě nebyl jistý, která bota je pravá a která levá. Máma mi říkala: „Zkus to,“ a já je střídal. A nakonec jsem chodil, jak to vyšlo. Až teď chápu, že to byla oslovina. A že ta cedulka, co nosím na krku, je vlastně to, co si o sobě myslím. A že jdu dál, i když nevím." 
+        },
+        { 
+            name: "Metaforický", 
+            desc: "Vidí symboly za věcmi.", 
+            text: "Osel je člověk v postmoderním světě. Seno a sláma jsou dvě stejně prázdné možnosti. Levá a pravá jsou ideologie, které se neliší. Cedulka je identita, kterou si věšíme na krk – a je jedno, co na ní je, protože lidé čtou to, co chtějí. A oslovina? To je odvaha žít, i když nevíme, co je správně." 
+        },
+        { 
+            name: "Groteskní", 
+            desc: "Vidí přehnanou, temnou komiku.", 
+            text: "Představ si: osel, co se motá mezi dvěma stejnýma hromadama, poslouchá hlasy, co říkají „levá“, „pravá“, „seno“, „sláma“. Přijde myš a dá mu cedulku, na který je na obou stranách něco jinýho. On si ji pověsí na krk a chodí světem a lidi za ním chodí jako za průvodcem. A myš řekne: „Oslovina je, když jdeš dál, i když nevíš kam.“ Je to groteska o tom, že všechno je stejně relativní." 
+        }
+    ];
+
+    const buttonsDiv = document.getElementById('buttons');
+    const nameEl = document.getElementById('angleName');
+    const descEl = document.getElementById('angleDesc');
+    const textEl = document.getElementById('angleText');
+
+    // Vytvoření tlačítek
+    data.forEach((angle, index) => {
+        const btn = document.createElement('button');
+        btn.textContent = angle.name;
+        btn.addEventListener('click', () => {
+            // Zvýraznění
+            document.querySelectorAll('.angle-list button').forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+            
+            // Výpis
+            nameEl.textContent = angle.name;
+            descEl.textContent = angle.desc;
+            textEl.innerHTML = `<p>${angle.text}</p>`;
+        });
+        buttonsDiv.appendChild(btn);
+    });
+
+    // Předvolit první úhel
+    if (data.length) {
+        document.querySelector('.angle-list button').click();
+    }
+</script>
+
+<!-- Poznámka: Tímto je kompletní série dvaceti jedna pohádek (myš, kocour, ryba, motýl, plameňák, čáp, liška, netopýr, lemur, moucha, žížala, zajíc, tygr, krokodýl, želva, jednorožec, pavouk, parohy, páv, vrabec, osel) – všechny se stejným designem a funkcí. -->
+
+</body>
+</html>
