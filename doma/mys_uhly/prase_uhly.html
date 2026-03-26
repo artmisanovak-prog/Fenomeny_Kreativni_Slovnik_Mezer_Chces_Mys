@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prase - 12 úhlů pohledu</title>
+    <style>
+        /* --- ČERNOBÍLÝ SVĚT - ŽÁDNÉ BARVY --- */
+        html {
+            filter: grayscale(1);
+        }
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: #fff;
+            color: #000;
+            line-height: 1.7;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+        h1, h2, h3 {
+            font-weight: normal;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 0.3em;
+        }
+        /* --- ILUSTRACE --- */
+        .ilustrace {
+            text-align: center;
+            margin: 2em 0;
+        }
+        .ilustrace img {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #000;
+        }
+        /* --- POHÁDKA - SCROLLOVACÍ OKNO --- */
+        .pohadka-container {
+            max-height: 400px;
+            overflow-y: auto;
+            border: 1px solid #000;
+            padding: 0 1.5em;
+            margin: 2em 0;
+            background: #f9f9f9;
+            font-style: italic;
+        }
+        .pohadka p {
+            padding: 0.5em 0;
+            margin: 0;
+        }
+        /* --- 12 TLAČÍTEK - JEDNODUCHÁ MŘÍŽKA --- */
+        .angle-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6em;
+            margin: 2em 0;
+            justify-content: center;
+        }
+        .angle-list button {
+            background: #fff;
+            border: 1px solid #000;
+            padding: 0.7em 1.2em;
+            font-size: 0.95rem;
+            font-family: inherit;
+            cursor: pointer;
+            transition: 0.1s;
+            color: #000;
+        }
+        .angle-list button:hover {
+            background: #ddd;
+        }
+        .angle-list button.selected {
+            background: #000;
+            color: #fff;
+            border: 2px solid #000;
+            font-weight: bold;
+        }
+        /* --- VÝSTUP - POD TLAČÍTKY --- */
+        .output {
+            border: 1px solid #000;
+            padding: 2em;
+            margin-top: 2em;
+            background: #fff;
+            min-height: 180px;
+        }
+        .angle-name {
+            font-size: 1.6rem;
+            font-weight: bold;
+            margin-bottom: 0.5em;
+        }
+        .angle-desc {
+            font-size: 1.1rem;
+            font-style: italic;
+            margin-bottom: 1.5em;
+        }
+        .angle-text {
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+        .footer {
+            margin-top: 3em;
+            text-align: center;
+            font-size: 0.9rem;
+            border-top: 1px solid #ccc;
+            padding-top: 1.5em;
+        }
+        .footer a {
+            color: #000;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+<h1>🐷 12 úhlů pohledu</h1>
+<p><em>„O prasátku, které hledalo záchod – o drobných, o potřebě a o tom, že někdy stačí nastavená ruka“</em></p>
+
+<!-- ILUSTRACE PRASÁTKA -->
+<div class="ilustrace">
+    <img src="doma/ilustrace/prase.jpg" alt="Ilustrace prasátka">
+</div>
+
+<!-- POHÁDKA -->
+<h2>KŘIVÁ POHÁDKA – ROVNÉ SVĚDECTVÍ</h2>
+<div class="pohadka-container" id="pohadka">
+    <div class="pohadka">
+        <p><em>Zapsáno rukou, která nechtěla nic vysvětlit.</em></p>
+        
+        <p><strong>O PRASÁTKOVI</strong></p>
+        <p><strong>které hledá záchod</strong></p>
+        <p><em>(miniatura o drobných a drobném nedorozumění)</em></p>
+        
+        <p>—</p>
+        
+        <p>„Tady není záchod?“</p>
+        <p>zeptalo se prasátko.</p>
+        <p>Nahlas.</p>
+        <p>Uprostřed místnosti, kde se zrovna nikdo na nic neptal.</p>
+        <p>A už vůbec ne na tohle.</p>
+        
+        <p>—</p>
+        
+        <p>Páv se zarazil v půli věty.</p>
+        <p>Zebra přestala přežvykovat svůj vlastní vzor.</p>
+        <p>Opice ztuhla v pohybu, jako by jí někdo zmrazil banán v ruce.</p>
+        <p>A někdo v rohu si nervózně odkašlal.</p>
+        
+        <p>—</p>
+        
+        <p>„Promiňte,“ dodalo prasátko.</p>
+        <p>„Já jen… jsem plné.“</p>
+        
+        <p>—</p>
+        
+        <p>Ticho.</p>
+        <p>Ticho, který se dá nakrájet.</p>
+        <p>Takové to ticho, co zadrží dech.</p>
+        <p>Ticho, co se tváří, že neslyšelo, ale všechno slyšelo.</p>
+        
+        <p>—</p>
+        
+        <p>„Záchod?“</p>
+        <p>řekl páv.</p>
+        <p>„To je otázka na dámy.“</p>
+        <p>„Já jsem dáma,“ řeklo prasátko.</p>
+        <p>„Aspoň uvnitř. A možná i zespodu.“</p>
+        
+        <p>—</p>
+        
+        <p>Zebra se naklonila blíž.</p>
+        <p>„A co vlastně jsi?“</p>
+        <p>„Prase?“</p>
+        <p>„Pokladnička?“</p>
+        <p>„Obojí,“ řeklo prasátko.</p>
+        <p>„Plné. Ale nevím, jak tomu říkat, když chci ven.“</p>
+        
+        <p>—</p>
+        
+        <p>„Chceš se vyprázdnit?“</p>
+        <p>zeptala se opice.</p>
+        <p>„To je faupaux.“</p>
+        <p>„To je potřeba,“ řeklo prasátko.</p>
+        <p>„A mám drobný.“</p>
+        
+        <p>—</p>
+        
+        <p>A opravdu — když se pohnulo, cinklo to.</p>
+        <p>Ne moc.</p>
+        <p>Tak decentně.</p>
+        <p>Tak, že se člověk nemohl rozhodnout, jestli je to roztomilý, nebo nebo..nebo spíš není.</p>
+        
+        <p>—</p>
+        
+        <p>„Drobnýma se přece platí za záchod,“ řeklo prasátko.</p>
+        <p>„Ale záchod nikde.“</p>
+        
+        <p>—</p>
+        
+        <p>A tak stálo.</p>
+        <p>Plné.</p>
+        <p>Připravené.</p>
+        <p>S otvorem na hřbetě a výrazem prosícím o pomoc, nebo aspoň pochopení.</p>
+        
+        <p>—</p>
+        
+        <p>A pak se to stalo.</p>
+        <p>Někdo — nikdo neví kdo —</p>
+        <p>nastavil dlaň.</p>
+        <p>Reflex.</p>
+        <p>Instinkt.</p>
+        <p>Možná soucit.</p>
+        <p>Možná zvědavost.</p>
+        
+        <p>—</p>
+        
+        <p>A prasátko se zaradovalo.</p>
+        <p>Jak jen se může zaradovat pokladnička.</p>
+        <p>Zacinkalo.</p>
+        <p>A ulevilo si.</p>
+        <p>Dvě koruny.</p>
+        <p>Jedna padesátka.</p>
+        <p>A něco, co mohlo být knoflík.</p>
+        
+        <p>—</p>
+        
+        <p>„Děkuji,“ řeklo.</p>
+        <p>„Už je to lepší?“</p>
+        <p>“Ano. To velmi pomohlo.</p>
+        <p>Drobné si nechte,“</p>
+        <p>Proneslo ještě vychovaně.</p>
+        
+        <p>—</p>
+        
+        <p>A všichni si oddechli.</p>
+        <p>Ne proto, že by to skončilo.</p>
+        <p>Ale protože nikdo u sebe neměl drobné zpátky.</p>
+        
+        <p>—</p>
+        
+        <p>A pak už se nikdo neptal, jestli to bylo prase, nebo pokladnička.</p>
+        <p>Jestli to bylo čistý, nebo špinavý.</p>
+        <p>Jestli to bylo trapný, nebo normální.</p>
+        
+        <p>—</p>
+        
+        <p>Protože většina faupaux jsou hlavně pravdy.</p>
+        <p>A drobný jsou jen jinej druh přebytku.</p>
+        <p>A záchod?</p>
+        <p>Ten se možná nikde nenajde.</p>
+        <p>Ale nastavená ruka?</p>
+        <p>Ta se najde vždycky</p>
+    </div>
+</div>
+    
+<!-- 12 ÚHLŮ -->
+<h2>Vyber úhel pohledu</h2>
+<div class="angle-list" id="buttons"></div>
+
+<!-- VÝSTUP -->
+<div class="output" id="output">
+    <div class="angle-name" id="angleName"></div>
+    <div class="angle-desc" id="angleDesc"></div>
+    <div id="angleText"></div>
+</div>
+
+<div class="footer">
+    Autorka: Art Misa Novak - metoda REPO DOMY<br>
+    <a href="mailto:chcesmys@gmail.com?subject=REPO%20DOMY%20-%20PRASE">pro více info pište</a>
+</div>
+
+<script>
+    // --- 12 ÚHLŮ S KRÁTKÝM POPISEM A KONKRÉTNÍ VĚTOU O POHÁDCE O PRASÁTKU ---
+    const data = [
+        { 
+            name: "Absurdní", 
+            desc: "Hledá nesmysl, paradox, rozpor.", 
+            text: "Prasátko, které je zároveň pokladnička, hledá záchod, protože je plné. Ptá se nahlas uprostřed místnosti a způsobí šok. Když mu někdo nastaví dlaň, vysype drobné a uleví se mu. Absurdní? Ano. Ale co je absurdnější než potřeba, která neví, jak se pojmenovat?" 
+        },
+        { 
+            name: "Jazykový", 
+            desc: "Sleduje slova, rytmus, dvojznačnost.", 
+            text: "„Faupaux“ – slovo, které je samo o sobě trapné, protože nevíme, jestli je to faux pas nebo francouzština. Prasátko říká: „Jsem plné. Ale nevím, jak tomu říkat, když chci ven.“ Jazyk selhává, když má popsat potřebu, která je zároveň fyzická i metaforická. A drobné jsou jen jiný druh přebytku – i slova jsou přebytek." 
+        },
+        { 
+            name: "Ironický", 
+            desc: "Vidí rozpor mezi záměrem a výsledkem.", 
+            text: "Prasátko hledá záchod, ale místo toho najde nastavenou dlaň. Chce se vyprázdnit, ale vysype peníze. Ironie: jeho potřeba je splněna, ale úplně jinak, než čekalo. A všichni si oddechnou, protože nikdo nemá drobné zpátky – trapnost se mění v úlevu." 
+        },
+        { 
+            name: "Filozofický", 
+            desc: "Ptá se po smyslu a podstatě.", 
+            text: "Co je to potřeba? Je to fyzický stav, nebo společenské tabu? Prasátko potřebuje něco, co neumí pojmenovat. Je plné – čeho? Drobné jsou jen symbol. Pohádka klade otázku: Není každá naše potřeba nakonec jen o tom, najít někoho, kdo nastaví dlaň? A není jedno, jestli je to záchod, nebo ruka?" 
+        },
+        { 
+            name: "Surrealistický", 
+            desc: "Propojuje nesouvisející.", 
+            text: "Páv, zebra, opice a prasátko-pokladnička v jedné místnosti. Zebra přežvykuje svůj vlastní vzor, opice ztuhne s banánem, ticho se dá krájet. A pak někdo nastaví dlaň a z prasátka vypadnou dvě koruny a knoflík. Svět, kde se realita mísí s absurditou a potřeba s trapností." 
+        },
+        { 
+            name: "Naivní", 
+            desc: "Vidí věci jednoduše, bez předsudků.", 
+            text: "Prasátko bylo plné a potřebovalo záchod. Zeptalo se, ale všichni ztuhli. Pak mu někdo nastavil dlaň a ono vysypalo drobný. Bylo to lepší. A všichni si oddechli, protože nikdo neměl drobný zpátky. A pak už nikdo neřešil, jestli to bylo trapný. Jednoduchý, ne?" 
+        },
+        { 
+            name: "Introspektivní", 
+            desc: "Promítá do příběhu vlastní pocity.", 
+            text: "Tohle jsem já. Někdy jsem plný věcí, který potřebuju dát ven – slov, pocitů, potřeb. A nevím, jak to říct, aby to nebylo trapný. A pak najdu někoho, kdo nastaví dlaň – kdo je ochoten poslouchat, přijmout. A uleví se mi. A je jedno, jestli jsem prase nebo pokladnička." 
+        },
+        { 
+            name: "Betonový", 
+            desc: "Čte doslovně, fakticky.", 
+            text: "Příběh vypráví o antropomorfním prasátku, které je zároveň pokladničkou (má otvor na hřbetě a cinká). Vstoupí do místnosti s jinými zvířaty a zeptá se na toaletu. Jeho dotaz vyvolá společenské napětí. Po rozhovoru, v němž se ukáže, že je plné drobných, mu někdo nastaví dlaň, do které prasátko vysype mince. Tím se uleví jeho fyzické potřebě. Všichni přítomní jsou uklidněni, že nemusí vracet drobné." 
+        },
+        { 
+            name: "Kulturní", 
+            desc: "Hledá archetypy a paralely.", 
+            text: "Prasátko-pokladnička jako symbol úspor, ale i prasečího chlívku. Hledání záchodu je archetypální situace – každý to zažil. Zde se mísí s absurditou a společenským faux pas. Je to moderní verze mýtu o hledání úlevy – a pointa: nastavená ruka je víc než záchod. Připomíná to pohádky, kde hrdina dostane pomoc od nečekaného místa." 
+        },
+        { 
+            name: "Asociační", 
+            desc: "Vyvolává osobní vzpomínky.", 
+            text: "Připomnělo mi to, jak jsem jako malá byla na návštěvě a potřebovala jsem na záchod, ale bála jsem se zeptat. A když jsem se konečně odvážila, všichni ztichli jako ti zvířata. A pak mi teta řekla: ‚Tudy, miláčku.‘ A já si oddechla. Přesně jako to prasátko. A ty drobný? Ty byly jako ta úleva." 
+        },
+        { 
+            name: "Metaforický", 
+            desc: "Vidí symboly za věcmi.", 
+            text: "Prasátko je člověk, který nosí v sobě přebytek – peníze, emoce, potřeby. Hledá záchod, ale ve skutečnosti hledá úlevu, vysvobození. Dlaň, která se nastaví, je druhý člověk, který přijme náš přebytek, aniž by se ptal. A drobné jsou všechny ty malé věci, které potřebujeme dát ven, abychom mohli být zase lehcí." 
+        },
+        { 
+            name: "Groteskní", 
+            desc: "Vidí přehnanou, temnou komiku.", 
+            text: "Představ si: místnost plná zvířat, najednou přijde prasátko a zeptá se na záchod. Všichni ztuhnou – páv v půli věty, zebra s vlastním vzorem v tlamě, opice s banánem v mrazáku. Ticho, který se dá krájet. A pak někdo nastaví dlaň a z prasátka začnou padat mince. Je to groteska o tom, že někdy je nejlepší záchod nastavená ruka." 
+        }
+    ];
+
+    const buttonsDiv = document.getElementById('buttons');
+    const nameEl = document.getElementById('angleName');
+    const descEl = document.getElementById('angleDesc');
+    const textEl = document.getElementById('angleText');
+
+    // Vytvoření tlačítek
+    data.forEach((angle, index) => {
+        const btn = document.createElement('button');
+        btn.textContent = angle.name;
+        btn.addEventListener('click', () => {
+            // Zvýraznění
+            document.querySelectorAll('.angle-list button').forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+            
+            // Výpis
+            nameEl.textContent = angle.name;
+            descEl.textContent = angle.desc;
+            textEl.innerHTML = `<p>${angle.text}</p>`;
+        });
+        buttonsDiv.appendChild(btn);
+    });
+
+    // Předvolit první úhel
+    if (data.length) {
+        document.querySelector('.angle-list button').click();
+    }
+</script>
+
+<!-- Poznámka: Tímto je kompletní série dvaceti tří pohádek (myš, kocour, ryba, motýl, plameňák, čáp, liška, netopýr, lemur, moucha, žížala, zajíc, tygr, krokodýl, želva, jednorožec, pavouk, parohy, páv, vrabec, osel, žralok, prase) – všechny se stejným designem a funkcí. -->
+
+</body>
+</html>
