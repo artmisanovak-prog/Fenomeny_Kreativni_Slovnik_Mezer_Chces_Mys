@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Čáp - 12 úhlů pohledu</title>
+    <style>
+        /* --- ČERNOBÍLÝ SVĚT - ŽÁDNÉ BARVY --- */
+        html {
+            filter: grayscale(1);
+        }
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: #fff;
+            color: #000;
+            line-height: 1.7;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+        h1, h2, h3 {
+            font-weight: normal;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 0.3em;
+        }
+        /* --- ILUSTRACE --- */
+        .ilustrace {
+            text-align: center;
+            margin: 2em 0;
+        }
+        .ilustrace img {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #000;
+        }
+        /* --- POHÁDKA - SCROLLOVACÍ OKNO --- */
+        .pohadka-container {
+            max-height: 400px;
+            overflow-y: auto;
+            border: 1px solid #000;
+            padding: 0 1.5em;
+            margin: 2em 0;
+            background: #f9f9f9;
+            font-style: italic;
+        }
+        .pohadka p {
+            padding: 0.5em 0;
+            margin: 0;
+        }
+        /* --- 12 TLAČÍTEK - JEDNODUCHÁ MŘÍŽKA --- */
+        .angle-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6em;
+            margin: 2em 0;
+            justify-content: center;
+        }
+        .angle-list button {
+            background: #fff;
+            border: 1px solid #000;
+            padding: 0.7em 1.2em;
+            font-size: 0.95rem;
+            font-family: inherit;
+            cursor: pointer;
+            transition: 0.1s;
+            color: #000;
+        }
+        .angle-list button:hover {
+            background: #ddd;
+        }
+        .angle-list button.selected {
+            background: #000;
+            color: #fff;
+            border: 2px solid #000;
+            font-weight: bold;
+        }
+        /* --- VÝSTUP - POD TLAČÍTKY --- */
+        .output {
+            border: 1px solid #000;
+            padding: 2em;
+            margin-top: 2em;
+            background: #fff;
+            min-height: 180px;
+        }
+        .angle-name {
+            font-size: 1.6rem;
+            font-weight: bold;
+            margin-bottom: 0.5em;
+        }
+        .angle-desc {
+            font-size: 1.1rem;
+            font-style: italic;
+            margin-bottom: 1.5em;
+        }
+        .angle-text {
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+        .footer {
+            margin-top: 3em;
+            text-align: center;
+            font-size: 0.9rem;
+            border-top: 1px solid #ccc;
+            padding-top: 1.5em;
+        }
+        .footer a {
+            color: #000;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+<h1>👶 12 úhlů pohledu</h1>
+<p><em>„O čápovi, který nosil to, co není vidět, a o dětech, které nejsou na prodej“</em></p>
+
+<!-- ILUSTRACE ČÁPA -->
+<div class="ilustrace">
+    <img src="doma/ilustrace/cap.jpg" alt="Ilustrace čápa">
+</div>
+
+<!-- POHÁDKA -->
+<h2>KŘIVÁ POHÁDKA – ROVNÉ SVĚDECTVÍ</h2>
+<div class="pohadka-container" id="pohadka">
+    <div class="pohadka">
+        <p><em>Zapsáno rukou, která nechtěla nic vysvětlit.</em></p>
+        
+        <p><strong>O ČÁPOVI</strong></p>
+        
+        <p>1, 2 čáp letí. 3, 4 nemá děti. 5, 6 my je máme. 7, 8 NEprodáme.</p>
+        
+        <p>—</p>
+        
+        <p>Jedna dvě – čáp letí.</p>
+        <p>Tři čtyři – nemá děti.</p>
+        <p>Pět šest – my je máme.</p>
+        <p>Sedm osm – NEprodáme.</p>
+        
+        <p>—-</p>
+        
+        <p>Tak začíná říkanka, kterou si šeptají děti v trávě, když se dívají na nebe. A čáp tam opravdu je. Letí vysoko, klidně, bez nákladu. Bez uzlíku. Bez cíle. Jen tak.</p>
+        
+        <p>—</p>
+        
+        <p>Kdysi dávno se říkalo, že čáp nosí děti. Že když přistane na komíně, někdo se narodí. Ale tenhle čáp nikdy nepřistál. Jen kroužil. A začalo se o něm šeptat, že je prázdný. Že zapomněl. Že je bezradný možná i vadný.</p>
+        
+        <p>—-</p>
+        
+        <p>Ale myš věděla, že to není pravda. Čáp nebyl prázdej. Plnej byl – jen ne toho, co by šlo vidět. Nesl nápady. Nesl možnosti. Nesl to, co se nestalo, ale mohlo.</p>
+        
+        <p>—</p>
+        
+        <p>A pak se objevily děti. Nečekaně. Bez vysvětlení. Bez čápa. Jen tak. V trávě. V koutě. V náručí těch, kteří je nečekali. A lidi se ptali: „Kde se vzaly?“</p>
+        
+        <p>—--</p>
+        
+        <p>myš odpověděla: „Pět šest – my je máme.“</p>
+        
+        <p>—</p>
+        
+        <p>Začali přicházet kupci. S penězi, s smlouvami, s nabídkami. Chtěli si děti odnést. Chtěli je vlastnit. Ale myš jen zavrtěla hlavou.</p>
+        
+        <p>—</p>
+        
+        <p>„Sedm osm – NEprodáme.“</p>
+        
+        <p>—</p>
+        
+        <p>Protože některé věci nejdou koupit. Některé věci přicházejí samy. A některé věci nejsou na prodej. Něco se nedá vlastnit.</p>
+        
+        <p>—</p>
+        
+        <p>Čáp mezitím letěl dál. A v tom začal si zpívat. Ale ne jednohlasně, druhý hlas ten jeho stín zpíval s ním.. Když přeletěl nad polem, tráva se na chvíli načechrala. Když přeletěl nad vesnicí, děti se přestaly hádat. Když přeletěl nad řekou, ryby přestaly jen pokukovat a ploutvemi rovnaly vodní kruhy. protože voda se malem rozestoupila, jako by čekala, co nikdy nepřijde.</p>
+        
+        <p>—</p>
+        
+        <p>A pak jednoho dne přistál. Ne na komíně. Ale na prázdném poli. Tam, kde minule hořelo. Jak tam zaječice proskočila plamenama. Tam, se vždy dějou různé věci. Které přesto nikdo nečeká.</p>
+        
+        <p>—</p>
+        
+        <p>A ostatní se tam sešli.</p>
+        
+        <p>—</p>
+        
+        <p>Myš, kocour, zaječice, lemur, slon. Všichni, ti kdo věděli, že svět není jenom to, co se dá spočítat. A čáp se jich neptal. Jen rozprostřel křídla a z nich vypadly věty. Nedokončené. Neprodané. Nepřijaté.</p>
+        
+        <p>—</p>
+        
+        <p>A děti si je začaly sbírat. Skládaly si z nich vlastní pohádky. vlastní jména. Vlastní smysly.</p>
+        
+        <p>—</p>
+        
+        <p>A to znamena, že čáp, který nic nenosí, je ten, který nese všechno. Akorát ne to, co jsme čekali.</p>
+    </div>
+</div>
+    
+<!-- 12 ÚHLŮ -->
+<h2>Vyber úhel pohledu</h2>
+<div class="angle-list" id="buttons"></div>
+
+<!-- VÝSTUP -->
+<div class="output" id="output">
+    <div class="angle-name" id="angleName"></div>
+    <div class="angle-desc" id="angleDesc"></div>
+    <div id="angleText"></div>
+</div>
+
+<div class="footer">
+    Autorka: Art Misa Novak - metoda REPO DOMY<br>
+    <a href="mailto:chcesmys@gmail.com?subject=REPO%20DOMY%20-%20ČÁP">pro více info pište</a>
+</div>
+
+<script>
+    // --- 12 ÚHLŮ S KRÁTKÝM POPISEM A KONKRÉTNÍ VĚTOU O POHÁDCE O ČÁPOVI ---
+    const data = [
+        { 
+            name: "Absurdní", 
+            desc: "Hledá nesmysl, paradox, rozpor.", 
+            text: "Čáp, který nenosí děti, ale nápady a možnosti. Děti, které se objeví samy od sebe. Kupci, kteří chtějí koupit to, co není na prodej. A nakonec z čapích křídel vypadávají věty. Absurdní? Ano. Ale právě v té absurditě se skrývá pravda o světě, který nejde spočítat." 
+        },
+        { 
+            name: "Jazykový", 
+            desc: "Sleduje slova, rytmus, dvojznačnost.", 
+            text: "Říkanka '1,2 čáp letí' je kostrou celého příběhu. Čísla se stávají rytmem, odpovědí myši (‚Pět šest – my je máme‘) i manifestem (‚Sedm osm – NEprodáme‘). Jazyk se tady láme mezi dětskou říkankou a filozofickým poselstvím. A z křídel nakonec padají věty – ty nejzákladnější stavební kameny řeči." 
+        },
+        { 
+            name: "Ironický", 
+            desc: "Vidí rozpor mezi záměrem a výsledkem.", 
+            text: "Čáp měl nosit děti, ale nenosí nic viditelného. Lidé si myslí, že je prázdný, ale on je plný neviditelného. Kupci chtějí koupit děti, ale ty nejsou na prodej. Ironie osudu: to, co je skutečně cenné, nelze vlastnit. A ten, kdo vypadá k ničemu, nese všechno." 
+        },
+        { 
+            name: "Filozofický", 
+            desc: "Ptá se po smyslu a podstatě.", 
+            text: "Co to znamená 'nést'? Musí být náklad viditelný, aby existoval? Čáp nese možnosti – to, co se nestalo, ale mohlo. A děti? Ty se objevují tam, kde je nečekáme. Pohádka klade otázku po podstatě rodičovství, vlastnictví a smyslu. A odpověď? Některé věci prostě jsou, a není třeba je vysvětlovat." 
+        },
+        { 
+            name: "Surrealistický", 
+            desc: "Propojuje nesouvisející.", 
+            text: "Čáp, jehož stín zpívá druhým hlasem. Ryby, které ploutvemi rovnaly vodní kruhy. Pole, kde hořelo a kde se scházejí myš, kocour, zaječice, lemur a slon. A z křídel padají věty. Tohle není realistický svět – je to obraz, kde se všechno propojuje v jeden význam." 
+        },
+        { 
+            name: "Naivní", 
+            desc: "Vidí věci jednoduše, bez předsudků.", 
+            text: "Čáp letí. Děti si šeptají říkanku. Myš říká, že děti neprodá. Čáp přistane na poli a z křídel mu vypadnou věty. Děti si je sbírají a skládají pohádky. Jednoduchý příběh o tom, že nejdůležitější věci nejsou vidět a nejdou koupit." 
+        },
+        { 
+            name: "Introspektivní", 
+            desc: "Promítá do příběhu vlastní pocity.", 
+            text: "Ten čáp jsem já. Pořád nosím spoustu věcí, které nejsou vidět – sny, plány, možnosti. A lidi si myslí, že jsem prázdný. Pak se objeví děti (moje nápady) a někdo je chce koupit, použít, vlastnit. Ale já říkám: neprodám. Protože některé věci jsou moje, i když je nikdo nevidí." 
+        },
+        { 
+            name: "Betonový", 
+            desc: "Čte doslovně, fakticky.", 
+            text: "Příběh vypráví o čápovi, který létá bez viditelného nákladu, ale podle myši nosí nápady a možnosti. Objeví se děti, jejichž původ není vysvětlen. Přicházejí kupci s nabídkami, ale myš je odmítá s odkazem na říkanku. Čáp nakonec přistane na poli, kde se sejdou zvířata, a z jeho křídel vypadnou věty, které si děti sbírají." 
+        },
+        { 
+            name: "Kulturní", 
+            desc: "Hledá archetypy a paralely.", 
+            text: "Čáp jako mytologická postava – nositel života. Tady je ale převrácený: nenosí děti, ale možnosti. Je to šaman, který spojuje nebe a zemi, viditelné a neviditelné. Myš jako moudrá stařena (zde malá, ale moudrá) odpovídá hádankou. A děti sbírající věty – to jsou všichni, kdo hledají smysl v chaosu." 
+        },
+        { 
+            name: "Asociační", 
+            desc: "Vyvolává osobní vzpomínky.", 
+            text: "Připomnělo mi to, jak jsem jako dítě seděl na louce a počítal čápy. Říkanka '1,2 čáp letí' mi zněla v hlavě. A pak jsem přemýšlel, co asi nosí. Dneska vím, že nosí to, co si sami dovedeme představit. A že ty nejlepší věci v životě nejsou na prodej – to mi řekla máma, když jsem chtěl koupit kamaráda." 
+        },
+        { 
+            name: "Metaforický", 
+            desc: "Vidí symboly za věcmi.", 
+            text: "Čáp je čas, který nosí možnosti. Děti jsou budoucnost, která přichází nečekaně. Kupci jsou konzumní společnost, která chce všechno vlastnit. Pole, kde hořelo, je místo zkoušek a proměn. A věty, co padají z křídel, jsou příběhy, které si každý skládá sám. Celá pohádka je jedna velká metafora o životě." 
+        },
+        { 
+            name: "Groteskní", 
+            desc: "Vidí přehnanou, temnou komiku.", 
+            text: "Představ si: čáp, o kterém si všichni šeptají, že je vadný, protože nenosí děti. Mezitím se děti objeví samy. Přijdou kupci v oblecích a chtějí je koupit. Myš je odbude říkankou. A nakonec se na poli sejde pět zvířat a čáp z nich vysype věty. Je to fraška o tom, jak se svět snaží spočítat nespočitatelné." 
+        }
+    ];
+
+    const buttonsDiv = document.getElementById('buttons');
+    const nameEl = document.getElementById('angleName');
+    const descEl = document.getElementById('angleDesc');
+    const textEl = document.getElementById('angleText');
+
+    // Vytvoření tlačítek
+    data.forEach((angle, index) => {
+        const btn = document.createElement('button');
+        btn.textContent = angle.name;
+        btn.addEventListener('click', () => {
+            // Zvýraznění
+            document.querySelectorAll('.angle-list button').forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+            
+            // Výpis
+            nameEl.textContent = angle.name;
+            descEl.textContent = angle.desc;
+            textEl.innerHTML = `<p>${angle.text}</p>`;
+        });
+        buttonsDiv.appendChild(btn);
+    });
+
+    // Předvolit první úhel
+    if (data.length) {
+        document.querySelector('.angle-list button').click();
+    }
+</script>
+
+<!-- Poznámka: Tímto je kompletní série pohádek (myš, kocour, ryba, motýl, plameňák, čáp) – všechny se stejným designem a funkcí. -->
+
+</body>
+</html>
