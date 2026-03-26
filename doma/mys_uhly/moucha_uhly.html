@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moucha - 12 úhlů pohledu</title>
+    <style>
+        /* --- ČERNOBÍLÝ SVĚT - ŽÁDNÉ BARVY --- */
+        html {
+            filter: grayscale(1);
+        }
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: #fff;
+            color: #000;
+            line-height: 1.7;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+        h1, h2, h3 {
+            font-weight: normal;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 0.3em;
+        }
+        /* --- ILUSTRACE --- */
+        .ilustrace {
+            text-align: center;
+            margin: 2em 0;
+        }
+        .ilustrace img {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #000;
+        }
+        /* --- POHÁDKA - SCROLLOVACÍ OKNO --- */
+        .pohadka-container {
+            max-height: 400px;
+            overflow-y: auto;
+            border: 1px solid #000;
+            padding: 0 1.5em;
+            margin: 2em 0;
+            background: #f9f9f9;
+            font-style: italic;
+        }
+        .pohadka p {
+            padding: 0.5em 0;
+            margin: 0;
+        }
+        /* --- 12 TLAČÍTEK - JEDNODUCHÁ MŘÍŽKA --- */
+        .angle-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6em;
+            margin: 2em 0;
+            justify-content: center;
+        }
+        .angle-list button {
+            background: #fff;
+            border: 1px solid #000;
+            padding: 0.7em 1.2em;
+            font-size: 0.95rem;
+            font-family: inherit;
+            cursor: pointer;
+            transition: 0.1s;
+            color: #000;
+        }
+        .angle-list button:hover {
+            background: #ddd;
+        }
+        .angle-list button.selected {
+            background: #000;
+            color: #fff;
+            border: 2px solid #000;
+            font-weight: bold;
+        }
+        /* --- VÝSTUP - POD TLAČÍTKY --- */
+        .output {
+            border: 1px solid #000;
+            padding: 2em;
+            margin-top: 2em;
+            background: #fff;
+            min-height: 180px;
+        }
+        .angle-name {
+            font-size: 1.6rem;
+            font-weight: bold;
+            margin-bottom: 0.5em;
+        }
+        .angle-desc {
+            font-size: 1.1rem;
+            font-style: italic;
+            margin-bottom: 1.5em;
+        }
+        .angle-text {
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+        .footer {
+            margin-top: 3em;
+            text-align: center;
+            font-size: 0.9rem;
+            border-top: 1px solid #ccc;
+            padding-top: 1.5em;
+        }
+        .footer a {
+            color: #000;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+<h1>🪰 12 úhlů pohledu</h1>
+<p><em>„O mouše, která v cizím průseru našla ráj, a o borccích, kteří poprvé uviděli tvar svého bordelu“</em></p>
+
+<!-- ILUSTRACE MOUCHY -->
+<div class="ilustrace">
+    <img src="doma/ilustrace/moucha.jpg" alt="Ilustrace mouchy">
+</div>
+
+<!-- POHÁDKA -->
+<h2>KŘIVÁ POHÁDKA – ROVNÉ SVĚDECTVÍ</h2>
+<div class="pohadka-container" id="pohadka">
+    <div class="pohadka">
+        <p><em>Zapsáno rukou, která nechtěla nic vysvětlit.</em></p>
+        
+        <p><strong>O MORUŠI A MOUŠE</strong></p>
+        <p><strong>aneb jak se průser stal rájem</strong></p>
+        
+        <p>—</p>
+        
+        <p>Kdysi — ale klidně i dnes odpoledne —</p>
+        <p>stála na dvorku stará moruše.</p>
+        
+        <p>—</p>
+        
+        <p>Nebyla krásná.</p>
+        <p>Nebyla vznešená.</p>
+        <p>Nebyla praktická.</p>
+        
+        <p>—</p>
+        
+        <p>Padala z ní sladká, temná plíseň léta,</p>
+        <p>která barvila chodník, boty i svědomí.</p>
+        
+        <p>—</p>
+        
+        <p>Pod moruší žili bordeláři.</p>
+        <p>Ne ti dramaticky rozházení.</p>
+        <p>Ti by měli styl.</p>
+        <p>Tihle bordeláři byli tiší.</p>
+        <p>Nechávali věci tam, kde zůstaly.</p>
+        
+        <p>—</p>
+        
+        <p>Hrnek, který „ještě použiju“.</p>
+        <p>Papíry, které „se budou hodit“.</p>
+        <p>Skvrny, které „zaschnou a zmizí“.</p>
+        
+        <p>—</p>
+        
+        <p>Nezmizely.</p>
+        <p>Slunce peklo.</p>
+        <p>Moruše kapala.</p>
+        <p>Zbytky hnily.</p>
+        <p>A svět pod stromem pomalu měnil skupenství.</p>
+        
+        <p>—</p>
+        
+        <p>Pak přiletěla moucha.</p>
+        
+        <p>—</p>
+        
+        <p>Nebyla výjimečná.</p>
+        <p>Nebyla hrdinská.</p>
+        <p>Byla dokonale mouchovitá</p>
+        <p>Přiletěla z průseru.</p>
+        <p>Cizího.</p>
+        <p>Jejího ne.</p>
+        
+        <p>—</p>
+        
+        <p>Kroužila nad dvorkem.</p>
+        <p>Zachytila vůni.</p>
+        <p>Země.</p>
+        <p>Sladkosti.</p>
+        <p>Rozkladu.</p>
+        <p>Možnosti.</p>
+        <p>A přistála.</p>
+        
+        <p>—</p>
+        
+        <p>Pro bordeláře: katastrofa.</p>
+        <p>Pro mouchu: švédský stůl existence.</p>
+        
+        <p>—</p>
+        
+        <p>Sedla si na flek pod moruší,</p>
+        <p>který vznikl pomalu,</p>
+        <p>po kapkách,</p>
+        <p>bez zlého úmyslu,</p>
+        <p>bez plánu,</p>
+        <p>bez svědků.</p>
+        
+        <p>—</p>
+        
+        <p>Zabzučela.</p>
+        <p>Ne hlasitě.</p>
+        <p>Jen dost, aby to v tichu bylo slyšet.</p>
+        <p>Bordeláři zvedli hlavy.</p>
+        
+        <p>—</p>
+        
+        <p>„Fuj.“</p>
+        
+        <p>—</p>
+        
+        <p>A v tu chvíli si všimli:</p>
+        <p>skvrn,</p>
+        <p>lepkavosti,</p>
+        <p>vůně, která není vůně,</p>
+        <p>života, který se dal do pohybu.</p>
+        
+        <p>—</p>
+        
+        <p>Mávali rukama.</p>
+        <p>Nadávali.</p>
+        <p>Hledali hadr.</p>
+        <p>Hledali viníka.</p>
+        
+        <p>—</p>
+        
+        <p>Moucha si slastně zabzukala.</p>
+        <p>Ten zvuk nebyl hlasitý.</p>
+        <p>Jen nešel ignorovat.</p>
+        
+        <p>—</p>
+        
+        <p>Jeden z chlapů mávl rukou.</p>
+        <p>Druhý zaklel.</p>
+        <p>Třetí zvedl botu ze země — a zůstala přilepená k podlaze.</p>
+        <p>Čtvrtý si poprvé všiml, že skvrna není skvrna.</p>
+        <p>Je to geologie.</p>
+        
+        <p>—</p>
+        
+        <p>Moucha přeběhla o pár centimetrů dál.</p>
+        <p>A náhle to viděli.</p>
+        <p>Ne mouchu.</p>
+        <p>Sebe.</p>
+        <p>Lepkavá metafyzika reality se přilepila na jejich pozornost.</p>
+        
+        <p>—</p>
+        
+        <p>Šlápnutí zanechávalo otisky.</p>
+        <p>Otisky vytvářely vrstvy.</p>
+        <p>Vrstvy vytvářely historii.</p>
+        <p>Historie vytvářela past.</p>
+        
+        <p>—</p>
+        
+        <p>„Tohle nejde uklidit,“ řekl jeden.</p>
+        <p>„Tohle jsme my,“ řekl druhý.</p>
+        <p>Nikdo neodpověděl.</p>
+        
+        <p>—</p>
+        
+        <p>Moucha se najedla.</p>
+        <p>Pro ni to byl ráj.</p>
+        <p>Pro ně to byl konečně viditelný problém.</p>
+        <p>Ne proto, že by byl nový.</p>
+        <p>Ale protože začal bzučet.</p>
+        
+        <p>—</p>
+        
+        <p>A v tom bzučení bylo slyšet:</p>
+        <p>odkládání,</p>
+        <p>únava,</p>
+        <p>zítřek,</p>
+        <p>který nikdy nepřišel.</p>
+        
+        <p>—</p>
+        
+        <p>Jeden zvedl krabici.</p>
+        <p>Pod ní byl jiný svět.</p>
+        
+        <p>—</p>
+        
+        <p>Druhý otevřel okno.</p>
+        <p>Vzduch nevěděl, že smí dovnitř.</p>
+        
+        <p>—</p>
+        
+        <p>Třetí vynesl pytel.</p>
+        <p>Byl těžší, než čekal.</p>
+        
+        <p>—</p>
+        
+        <p>Čtvrtý se poprvé nerozhodl sednout.</p>
+        <p>Nikdo nic nesliboval.</p>
+        
+        <p>—</p>
+        
+        <p>Nikdo se nepřevtělil v lepšího člověka.</p>
+        <p>Jen poprvé uviděli tvar problému.</p>
+        
+        <p>—</p>
+        
+        <p>Moucha seděla.</p>
+        <p>Nebyl to pro průser její, ale byl pro ní.</p>
+        <p>Průser byl domov.</p>
+        <p>Tam, kde ostatní viděli zkázu,</p>
+        <p>ona viděla hojnost.</p>
+        <p>Tam, kde oni cítili hanbu,</p>
+        <p>ona cítila teplo světa.</p>
+        <p>Tam, kde oni začali uklízet,</p>
+        <p>ona začala hodovat.</p>
+        
+        <p>—</p>
+        
+        <p>A bordeláři?</p>
+        <p>Uklízeli.</p>
+        <p>A čím víc uklízeli,</p>
+        <p>tím víc zjišťovali,</p>
+        <p>že bordel nevznikl dnes.</p>
+        <p>Vznikal po kapkách.</p>
+        <p>Rozhodnutí po rozhodnutí.</p>
+        <p>Odložením po odložení.</p>
+        
+        <p>—</p>
+        
+        <p>A moucha?</p>
+        <p>Ta bzučela.</p>
+        <p>Ne jako výčitka.</p>
+        <p>Jako komentář.</p>
+        
+        <p>—</p>
+        
+        <p>Najedla se.</p>
+        <p>Ohřála se.</p>
+        <p>Pak odletěla.</p>
+        
+        <p>—</p>
+        
+        <p>Protože ráj není místo,</p>
+        <p>kde zůstaneš.</p>
+        <p>Je to místo,</p>
+        <p>které tě už nepotřebuje.</p>
+        
+        <p>—</p>
+        
+        <p>Pod moruší zůstal dvorek.</p>
+        <p>Čistší.</p>
+        <p>Pomalejší.</p>
+        <p>Trochu stydlivý.</p>
+        
+        <p>—</p>
+        
+        <p>Bordeláři stáli v tichu,</p>
+        <p>které nebylo prázdné.</p>
+        <p>A někde vysoko nad nimi</p>
+        <p>kroužila moucha,</p>
+        <p>hledající další cizí průser,</p>
+        <p>který by se dal proměnit</p>
+        <p>v dokonalý svět.</p>
+        
+        <p>—</p>
+        
+        <p>Protože pro mouchu není hovno problém.</p>
+        <p>Je to příležitost.</p>
+        <p>A svět je plný příležitostí.</p>
+        
+        <p>—</p>
+        
+        <p>Konec.</p>
+    </div>
+</div>
+    
+<!-- 12 ÚHLŮ -->
+<h2>Vyber úhel pohledu</h2>
+<div class="angle-list" id="buttons"></div>
+
+<!-- VÝSTUP -->
+<div class="output" id="output">
+    <div class="angle-name" id="angleName"></div>
+    <div class="angle-desc" id="angleDesc"></div>
+    <div id="angleText"></div>
+</div>
+
+<div class="footer">
+    Autorka: Art Misa Novak - metoda REPO DOMY<br>
+    <a href="mailto:chcesmys@gmail.com?subject=REPO%20DOMY%20-%20MOUCHA">pro více info pište</a>
+</div>
+
+<script>
+    // --- 12 ÚHLŮ S KRÁTKÝM POPISEM A KONKRÉTNÍ VĚTOU O POHÁDCE O MOUŠE ---
+    const data = [
+        { 
+            name: "Absurdní", 
+            desc: "Hledá nesmysl, paradox, rozpor.", 
+            text: "Moucha, která v cizím průseru najde ráj. Bordeláři, jejichž nepořádek má geologické vrstvy. Skvrna, která není skvrna, ale metafyzika. A pointa: pro mouchu není hovno problém, ale příležitost. Absurdní? Ano. Ale v té absurditě je víc pravdy než v mnoha uklizených světech." 
+        },
+        { 
+            name: "Jazykový", 
+            desc: "Sleduje slova, rytmus, dvojznačnost.", 
+            text: "‚Lepkavá metafyzika reality‘ – spojení, které by nikoho nenapadlo, ale tady sedí. ‚Skvrna není skvrna, je to geologie‘ – posun významu, který otevře oči. Pohádka hraje s jazykem jako moucha s prostorem – poletuje, sedá si tam, kde se to hodí, a bzučí komentáře, které nejde ignorovat." 
+        },
+        { 
+            name: "Ironický", 
+            desc: "Vidí rozpor mezi záměrem a výsledkem.", 
+            text: "Chtěli nechat věci být, až zmizí – a ony se staly geologií. Chtěli ignorovat mouchu – a ona je donutila vidět sebe. Ironie: průser, který vnímali jako katastrofu, se ukázal jako jediná cesta k uklizení. A moucha, kterou chtěli zabít, byla spasitelka." 
+        },
+        { 
+            name: "Filozofický", 
+            desc: "Ptá se po smyslu a podstatě.", 
+            text: "Co je to ‚průser‘? Je to subjektivní hodnocení, nebo objektivní stav? Pro mouchu je to ráj, pro bordeláře peklo. Pohádka klade otázku po povaze reality: vidíme věci takové, jaké jsou, nebo takové, jací jsme my? A co když to, co považujeme za problém, je ve skutečnosti příležitost?" 
+        },
+        { 
+            name: "Surrealistický", 
+            desc: "Propojuje nesouvisející.", 
+            text: "Moruše kapající plíseň léta, bordeláři s tichým nepořádkem, moucha z průseru, bota přilepená k podlaze, vzduch, který neví, že smí dovnitř. Všechno do sebe zapadá v jeden obraz – obraz pomalého rozkladu a ještě pomalejšího probuzení." 
+        },
+        { 
+            name: "Naivní", 
+            desc: "Vidí věci jednoduše, bez předsudků.", 
+            text: "Moucha přiletěla na dvorek, kde byl bordel. Bordelářům to vadilo, ale mouše ne. Ona si tam dala hostinu. Oni začali uklízet a zjistili, že ten bordel je jejich život. Pak moucha odletěla. A dvorek byl čistej. Jednoduchý, ne?" 
+        },
+        { 
+            name: "Introspektivní", 
+            desc: "Promítá do příběhu vlastní pocity.", 
+            text: "Tohle jsem já. Můj byt, moje hlava, můj život – všechno odkládám, až to jednou ‚zaschne a zmizí‘. Ale nezmizí. Vytváří to vrstvy. A pak přijde moucha – nějaká maličkost, která mě donutí se podívat. A já najednou vidím, že ten bordel nejsou věci. Jsem to já." 
+        },
+        { 
+            name: "Betonový", 
+            desc: "Čte doslovně, fakticky.", 
+            text: "Příběh vypráví o staré moruši, pod níž žijí lidé, kteří dlouhodobě zanedbávají pořádek. Na dvorek přiletí moucha, přitahována rozkládající se organickou hmotou. Její bzukot upozorní obyvatele na dlouho ignorovaný stav dvorku. Následuje úklid, během něhož si uvědomí, že nepořádek vznikal postupně v čase. Moucha se nakrmí a odletí hledat další vhodné prostředí." 
+        },
+        { 
+            name: "Kulturní", 
+            desc: "Hledá archetypy a paralely.", 
+            text: "Moucha jako archetyp – v mytologii často představuje zkázu, mor, ale taky transformaci (Belzebub – pán much). Tady je to katalyzátor změny. Bordeláři jsou jako my všichni, co odkládáme na zítřek. Moruše jako strom života, který dává sladkost i zkázu. A geologie skvrn? To je už moderní mýtus o času a vrstvách." 
+        },
+        { 
+            name: "Asociační", 
+            desc: "Vyvolává osobní vzpomínky.", 
+            text: "Připomnělo mi to sklep u babičky. Vždycky tam bylo něco, co ‚se bude hodit‘. A když jsme to po letech vyklízeli, našli jsme vrstvy – noviny z roku 1985, sklenice od přesnídávky, rezavý nářadí. A mouchy? Ty tam lítaly pořád. Babička říkávala: 'Když to necháš být, ono se to samo nespraví.' Měla pravdu." 
+        },
+        { 
+            name: "Metaforický", 
+            desc: "Vidí symboly za věcmi.", 
+            text: "Moucha je vědomí, které přilétá z cizího průseru a usedá na náš nepořádek. Její bzukot je hlas svědomí, který nejde ignorovat. Bordel jsou naše nevyřešená rozhodnutí. Geologie skvrn je historie našich odkladů. A úklid? To je terapie. A moucha odlétá, protože její úkol skončil – my už víme, co máme dělat." 
+        },
+        { 
+            name: "Groteskní", 
+            desc: "Vidí přehnanou, temnou komiku.", 
+            text: "Představ si: chlapi v bordelu, pod starou moruší, která na ně kape. Přiletí moucha a oni začnou mávat rukama, nadávat, hledat hadr. Jeden zvedne botu a ta zůstane přilepená k podlaze. A v tu ránu zjistí, že skvrna je geologie. Je to fraška o tom, jak se tváříme, že problém nevidíme, dokud nezačne bzučet." 
+        }
+    ];
+
+    const buttonsDiv = document.getElementById('buttons');
+    const nameEl = document.getElementById('angleName');
+    const descEl = document.getElementById('angleDesc');
+    const textEl = document.getElementById('angleText');
+
+    // Vytvoření tlačítek
+    data.forEach((angle, index) => {
+        const btn = document.createElement('button');
+        btn.textContent = angle.name;
+        btn.addEventListener('click', () => {
+            // Zvýraznění
+            document.querySelectorAll('.angle-list button').forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+            
+            // Výpis
+            nameEl.textContent = angle.name;
+            descEl.textContent = angle.desc;
+            textEl.innerHTML = `<p>${angle.text}</p>`;
+        });
+        buttonsDiv.appendChild(btn);
+    });
+
+    // Předvolit první úhel
+    if (data.length) {
+        document.querySelector('.angle-list button').click();
+    }
+</script>
+
+<!-- Poznámka: Tímto je kompletní série deseti pohádek (myš, kocour, ryba, motýl, plameňák, čáp, liška, netopýr, lemur, moucha) – všechny se stejným designem a funkcí. -->
+
+</body>
+</html>
