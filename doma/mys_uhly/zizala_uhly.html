@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Žížala - 12 úhlů pohledu</title>
+    <style>
+        /* --- ČERNOBÍLÝ SVĚT - ŽÁDNÉ BARVY --- */
+        html {
+            filter: grayscale(1);
+        }
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: #fff;
+            color: #000;
+            line-height: 1.7;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+        h1, h2, h3 {
+            font-weight: normal;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 0.3em;
+        }
+        /* --- ILUSTRACE --- */
+        .ilustrace {
+            text-align: center;
+            margin: 2em 0;
+        }
+        .ilustrace img {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #000;
+        }
+        /* --- POHÁDKA - SCROLLOVACÍ OKNO --- */
+        .pohadka-container {
+            max-height: 400px;
+            overflow-y: auto;
+            border: 1px solid #000;
+            padding: 0 1.5em;
+            margin: 2em 0;
+            background: #f9f9f9;
+            font-style: italic;
+        }
+        .pohadka p {
+            padding: 0.5em 0;
+            margin: 0;
+        }
+        /* --- 12 TLAČÍTEK - JEDNODUCHÁ MŘÍŽKA --- */
+        .angle-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6em;
+            margin: 2em 0;
+            justify-content: center;
+        }
+        .angle-list button {
+            background: #fff;
+            border: 1px solid #000;
+            padding: 0.7em 1.2em;
+            font-size: 0.95rem;
+            font-family: inherit;
+            cursor: pointer;
+            transition: 0.1s;
+            color: #000;
+        }
+        .angle-list button:hover {
+            background: #ddd;
+        }
+        .angle-list button.selected {
+            background: #000;
+            color: #fff;
+            border: 2px solid #000;
+            font-weight: bold;
+        }
+        /* --- VÝSTUP - POD TLAČÍTKY --- */
+        .output {
+            border: 1px solid #000;
+            padding: 2em;
+            margin-top: 2em;
+            background: #fff;
+            min-height: 180px;
+        }
+        .angle-name {
+            font-size: 1.6rem;
+            font-weight: bold;
+            margin-bottom: 0.5em;
+        }
+        .angle-desc {
+            font-size: 1.1rem;
+            font-style: italic;
+            margin-bottom: 1.5em;
+        }
+        .angle-text {
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+        .footer {
+            margin-top: 3em;
+            text-align: center;
+            font-size: 0.9rem;
+            border-top: 1px solid #ccc;
+            padding-top: 1.5em;
+        }
+        .footer a {
+            color: #000;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+<h1>🪱 12 úhlů pohledu</h1>
+<p><em>„O žížale, která se roztrhla, a o tom, že rozklad je jen jiný druh růstu“</em></p>
+
+<!-- ILUSTRACE ŽÍŽALY -->
+<div class="ilustrace">
+    <img src="doma/ilustrace/zizala.jpg" alt="Ilustrace žížaly">
+</div>
+
+<!-- POHÁDKA -->
+<h2>KŘIVÁ POHÁDKA – ROVNÉ SVĚDECTVÍ</h2>
+<div class="pohadka-container" id="pohadka">
+    <div class="pohadka">
+        <p><em>Zapsáno rukou, která nechtěla nic vysvětlit.</em></p>
+        
+        <p><strong>O ŽÍŽALE</strong></p>
+        <p><strong>-"rozklad jako růst"</strong></p>
+        
+        <p>—</p>
+        
+        <p>🪱 ŽÍŽALA</p>
+        <p>která byla na roztrhání a byla dál</p>
+        
+        <p>—</p>
+        
+        <p>Žížala se jednoho dne roztrhla.</p>
+        <p>Ne schválně. Prostě život.</p>
+        <p>Z jedné byly dvě.</p>
+        <p>A obě si myslely, že jsou ta původní.</p>
+        
+        <p>—</p>
+        
+        <p>Každá lezla jinam.</p>
+        <p>Jedna k dešti. Druhá ke kořenům.</p>
+        <p>Potkávaly se jen pod zemí, kde se nedá ukázat prstem.</p>
+        <p>Tam si šeptaly:</p>
+        <p>„Rozpad není konec. Je to rozmnožení ticha.“</p>
+        
+        <p>—</p>
+        
+        <p>A hlína jim rozuměla.</p>
+        <p>Protože hlína ví, že všechno, co se rozpadne, má víc času.</p>
+    </div>
+</div>
+    
+<!-- 12 ÚHLŮ -->
+<h2>Vyber úhel pohledu</h2>
+<div class="angle-list" id="buttons"></div>
+
+<!-- VÝSTUP -->
+<div class="output" id="output">
+    <div class="angle-name" id="angleName"></div>
+    <div class="angle-desc" id="angleDesc"></div>
+    <div id="angleText"></div>
+</div>
+
+<div class="footer">
+    Autorka: Art Misa Novak - metoda REPO DOMY<br>
+    <a href="mailto:chcesmys@gmail.com?subject=REPO%20DOMY%20-%20ŽÍŽALA">pro více info pište</a>
+</div>
+
+<script>
+    // --- 12 ÚHLŮ S KRÁTKÝM POPISEM A KONKRÉTNÍ VĚTOU O POHÁDCE O ŽÍŽALE ---
+    const data = [
+        { 
+            name: "Absurdní", 
+            desc: "Hledá nesmysl, paradox, rozpor.", 
+            text: "Žížala se roztrhne a najednou jsou dvě – a obě si myslí, že jsou ta původní. Paradox: která z nich má pravdu? A co je vlastně původní? Rozpad jako rozmnožení – absurdní, ale v říši žížal naprosto normální. A hlína tomu rozumí." 
+        },
+        { 
+            name: "Jazykový", 
+            desc: "Sleduje slova, rytmus, dvojznačnost.", 
+            text: "‚Rozklad jako růst‘ – titul, který spojuje protiklady. ‚Rozmnožení ticha‘ – slovní spojení, které nemá v běžném jazyce místo, ale tady dává smysl. Pohádka pracuje s jazykem pod zemí – tam, kde se slova šeptají a kde hlína rozumí víc než lidé." 
+        },
+        { 
+            name: "Ironický", 
+            desc: "Vidí rozpor mezi záměrem a výsledkem.", 
+            text: "Žížala nechtěla být na roztrhání, ale stalo se. Výsledek? Místo jedné žížaly jsou dvě. Ironie: to, co vypadá jako konec, je začátek. To, co bolí, se stává množením. A pod zemí, kde se nedá ukázat prstem, si šeptají: ‚Rozpad není konec.‘" 
+        },
+        { 
+            name: "Filozofický", 
+            desc: "Ptá se po smyslu a podstatě.", 
+            text: "Co je to identita? Když se žížala roztrhne na dvě, která z nich je ta původní? A záleží na tom? Možná je podstata v tom, že obě jsou dál. Rozklad není zánik, ale transformace. A hlína, ta ví – všechno, co se rozpadne, má víc času." 
+        },
+        { 
+            name: "Surrealistický", 
+            desc: "Propojuje nesouvisející.", 
+            text: "Žížaly, které se potkávají pod zemí a šeptají si o tichu. Hlína, která rozumí. Jedna leze k dešti, druhá ke kořenům. Svět pod povrchem, kde platí jiná pravidla. Tohle není realistická pohádka – je to obraz o tom, co se děje, když se nikdo nedívá." 
+        },
+        { 
+            name: "Naivní", 
+            desc: "Vidí věci jednoduše, bez předsudků.", 
+            text: "Žížala se roztrhla. Byly z ní dvě. Každá lezla jinam. Potkávaly se pod zemí a povídaly si. Říkaly, že rozpad není konec. Hlína jim rozuměla. Protože hlína ví, že když se něco rozpadne, má víc času. Jednoduchý, ne?" 
+        },
+        { 
+            name: "Introspektivní", 
+            desc: "Promítá do příběhu vlastní pocity.", 
+            text: "Tohle jsem já. Pořád se cítím roztržená – mezi povinnostmi, mezi lidmi, mezi tím, kdo jsem byla a kdo jsem teď. A ty dvě žížaly? To jsou moje já, co si myslí, že každé je to pravé. Ale pod zemí, v tichu, si šeptají, že rozpad není konec. Že je to jen víc času na bytí." 
+        },
+        { 
+            name: "Betonový", 
+            desc: "Čte doslovně, fakticky.", 
+            text: "Příběh vypráví o žížale, která se v důsledku vnějších okolností (pravděpodobně fyzického zásahu) rozdělila na dva samostatné organismy. Oba jedinci si zachovali paměť původní identity. Pohybovali se odděleně (jeden směrem k vlhkosti, druhý k vegetaci). Setkávali se v podzemních prostorách, kde komunikovali o tom, že rozpad není zánik, ale forma reprodukce. Prostředí (hlína) tuto skutečnost akceptovalo." 
+        },
+        { 
+            name: "Kulturní", 
+            desc: "Hledá archetypy a paralely.", 
+            text: "Žížala jako symbol regenerace a koloběhu života. V mnoha kulturách představuje plodnost a obnovu. Tady se roztržení stává metaforou pro zrození nového z rozpadu starého. Podzemí jako podsvětí, kde se setkávají duše. A hlína jako moudrá matka, která ví, že všechno má svůj čas." 
+        },
+        { 
+            name: "Asociační", 
+            desc: "Vyvolává osobní vzpomínky.", 
+            text: "Připomnělo mi to, jak jsem jako dítě rozřízl žížalu rýčem a ony z ní byly dvě. Měl jsem výčitky, ale děda řekl: 'Neboj, teď máš dvě kamarádky.' Tehdy mi to přišlo divný, dneska vím, že měl pravdu. Rozpad není konec, je to začátek. A hlína to ví." 
+        },
+        { 
+            name: "Metaforický", 
+            desc: "Vidí symboly za věcmi.", 
+            text: "Žížala je naše ego, které se rozpadá pod tlakem života. Dvě nové jsou nové možnosti, nové cesty. Jedna k dešti (k emocím), druhá ke kořenům (k minulosti). Pod zemí, v nevědomí, se setkávají a šeptají si: rozpad je rozmnožení ticha. A hlína (země, realita) tomu rozumí." 
+        },
+        { 
+            name: "Groteskní", 
+            desc: "Vidí přehnanou, temnou komiku.", 
+            text: "Představ si: žížala se roztrhne a najednou jsou dvě. A obě si myslí, že jsou ta původní. Hádají se o to? Ne, lezou si každá svou cestou. Potkávají se v podzemí a šeptají si filozofické hlášky. A hlína? Ta jen suše konstatuje, že všechno, co se rozpadne, má víc času. Je to suchý humor země." 
+        }
+    ];
+
+    const buttonsDiv = document.getElementById('buttons');
+    const nameEl = document.getElementById('angleName');
+    const descEl = document.getElementById('angleDesc');
+    const textEl = document.getElementById('angleText');
+
+    // Vytvoření tlačítek
+    data.forEach((angle, index) => {
+        const btn = document.createElement('button');
+        btn.textContent = angle.name;
+        btn.addEventListener('click', () => {
+            // Zvýraznění
+            document.querySelectorAll('.angle-list button').forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+            
+            // Výpis
+            nameEl.textContent = angle.name;
+            descEl.textContent = angle.desc;
+            textEl.innerHTML = `<p>${angle.text}</p>`;
+        });
+        buttonsDiv.appendChild(btn);
+    });
+
+    // Předvolit první úhel
+    if (data.length) {
+        document.querySelector('.angle-list button').click();
+    }
+</script>
+
+<!-- Poznámka: Tímto je kompletní série jedenácti pohádek (myš, kocour, ryba, motýl, plameňák, čáp, liška, netopýr, lemur, moucha, žížala) – všechny se stejným designem a funkcí. -->
+
+</body>
+</html>
