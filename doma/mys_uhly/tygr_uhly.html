@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tygr - 12 úhlů pohledu</title>
+    <style>
+        /* --- ČERNOBÍLÝ SVĚT - ŽÁDNÉ BARVY --- */
+        html {
+            filter: grayscale(1);
+        }
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: #fff;
+            color: #000;
+            line-height: 1.7;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+        h1, h2, h3 {
+            font-weight: normal;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 0.3em;
+        }
+        /* --- ILUSTRACE --- */
+        .ilustrace {
+            text-align: center;
+            margin: 2em 0;
+        }
+        .ilustrace img {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #000;
+        }
+        /* --- POHÁDKA - SCROLLOVACÍ OKNO --- */
+        .pohadka-container {
+            max-height: 400px;
+            overflow-y: auto;
+            border: 1px solid #000;
+            padding: 0 1.5em;
+            margin: 2em 0;
+            background: #f9f9f9;
+            font-style: italic;
+        }
+        .pohadka p {
+            padding: 0.5em 0;
+            margin: 0;
+        }
+        /* --- 12 TLAČÍTEK - JEDNODUCHÁ MŘÍŽKA --- */
+        .angle-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6em;
+            margin: 2em 0;
+            justify-content: center;
+        }
+        .angle-list button {
+            background: #fff;
+            border: 1px solid #000;
+            padding: 0.7em 1.2em;
+            font-size: 0.95rem;
+            font-family: inherit;
+            cursor: pointer;
+            transition: 0.1s;
+            color: #000;
+        }
+        .angle-list button:hover {
+            background: #ddd;
+        }
+        .angle-list button.selected {
+            background: #000;
+            color: #fff;
+            border: 2px solid #000;
+            font-weight: bold;
+        }
+        /* --- VÝSTUP - POD TLAČÍTKY --- */
+        .output {
+            border: 1px solid #000;
+            padding: 2em;
+            margin-top: 2em;
+            background: #fff;
+            min-height: 180px;
+        }
+        .angle-name {
+            font-size: 1.6rem;
+            font-weight: bold;
+            margin-bottom: 0.5em;
+        }
+        .angle-desc {
+            font-size: 1.1rem;
+            font-style: italic;
+            margin-bottom: 1.5em;
+        }
+        .angle-text {
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+        .footer {
+            margin-top: 3em;
+            text-align: center;
+            font-size: 0.9rem;
+            border-top: 1px solid #ccc;
+            padding-top: 1.5em;
+        }
+        .footer a {
+            color: #000;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+<h1>🐯 12 úhlů pohledu</h1>
+<p><em>„O tygrovi, žábě a jedné holčičce, která políbila přání místo prince – jazyková alchymie, kde tradice končí a láska začíná“</em></p>
+
+<!-- ILUSTRACE TYGRA -->
+<div class="ilustrace">
+    <img src="doma/ilustrace/tygr.jpg" alt="Ilustrace tygra">
+</div>
+
+<!-- POHÁDKA -->
+<h2>KŘIVÁ POHÁDKA – ROVNÉ SVĚDECTVÍ</h2>
+<div class="pohadka-container" id="pohadka">
+    <div class="pohadka">
+        <p><em>Zapsáno rukou, která nechtěla nic vysvětlit.</em></p>
+        
+        <p><strong>O TYGROVI</strong></p>
+        
+        <p>Tohle je nejen pohádka, ale jazyková alchymie.</p>
+        <p>Nejen proměna, ale překlad přání.</p>
+        <p>Nejen kouzlo, ale chyba v systému tradice, která se ukáže být pravdou.</p>
+        <p>Kde žabí logika narazí na tygří touhu.</p>
+        <p>Kde princezna nepolíbí budoucnost, ale možnost.</p>
+        
+        <p>—</p>
+        
+        <p><strong>Pohádka o princezně, žábě a tygrovi, co se nevešli do tradice</strong></p>
+        
+        <p>—</p>
+        
+        <p>Malá holka si přála být princeznou.</p>
+        <p>Nic zvláštního.</p>
+        <p>Ale ne kvůli koruně.</p>
+        <p>Jen kvůli příběhu.</p>
+        <p>Kvůli tomu, že princezny líbají žábu.</p>
+        <p>A žába se změní na prince.</p>
+        <p>Tak to má být.</p>
+        <p>Tak se to říká v knížkách.</p>
+        <p>Takhle to říkají dospělí.</p>
+        
+        <p>—</p>
+        
+        <p>Jenže v rybníčku</p>
+        <p>sice seděla žába - to jo.</p>
+        <p>Akorát že ta si přála něco jiného.</p>
+        <p>„Až vyrostu, budu tygr,“</p>
+        <p>tvrdila od pulečka.</p>
+        
+        <p>—</p>
+        
+        <p>(tenkrát myslela, že přeskočí i tu část žáby a stane se tygrem rovnou z pulce - leč - nestalo se tak - až pak)</p>
+        
+        <p>—</p>
+        
+        <p>Princ? cože - to jí ani nenapadlo.</p>
+        <p>“Co to je zač?” ptala se.</p>
+        <p>Člověk?</p>
+        <p>Výsledek polibku?</p>
+        <p>Čím? Kouzlením?</p>
+        
+        <p>—</p>
+        
+        <p>Chci být</p>
+        <p>Ale zvíře, co se nedá přeložit.</p>
+        
+        <p>—</p>
+        
+        <p>Princezna se přiblížila.</p>
+        <p>S pohledem, co věří v kouzla.</p>
+        <p>S rty, co chtějí změnu.</p>
+        <p>S očekáváním, co nepočítá s výjimkou.</p>
+        
+        <p>—</p>
+        
+        <p>A žába se zachvěla.</p>
+        <p>Ne strachem.</p>
+        <p>Ale rozhodnutím.</p>
+        <p>„Když mě políbíš, nezměním se v prince.</p>
+        <p>Změním se v to, co chci být.</p>
+        <p>A to je tygr.“</p>
+        
+        <p>—</p>
+        
+        <p>„Ale to se neříká,“ řekla princezna.</p>
+        <p>„Takhle se to neděje.“</p>
+        <p>„To se teprve začne dít,“ řekla žába.</p>
+        
+        <p>—</p>
+        
+        <p>A tak se to stalo.</p>
+        <p>Dívka a žabák a polibek.</p>
+        <p>Ne jako kouzlo.</p>
+        <p>Ale jako souhlas.</p>
+        <p>Ne jako proměna.</p>
+        <p>Ale jako překlad přání.</p>
+        
+        <p>—</p>
+        
+        <p>A před princeznou nestál princ.</p>
+        <p>Stál tam tygr.</p>
+        <p>Živej.</p>
+        <p>Divokej.</p>
+        <p>Obrovskej.</p>
+        <p>Opravdickej.</p>
+        
+        <p>—</p>
+        
+        <p>„Tohle není můj princ,“ řekla.</p>
+        <p>„Ne. Ale je to tvůj sen,“ řekla myš, co zapisovala dějiny.</p>
+        
+        <p>—</p>
+        
+        <p>A člověčice se rozmyslela.</p>
+        <p>„Možná nebudu princeznou.</p>
+        <p>Možná budu tou, co líbá tygry.“</p>
+        
+        <p>—</p>
+        
+        <p>A žába — už ne žába —</p>
+        <p>už tygr —</p>
+        <p>se usmál.</p>
+        
+        <p>---</p>
+        
+        <p>Tahle pohádka nemá konec.</p>
+        <p>Protože přání nejsou rovnice.</p>
+        <p>A láska není tradice.</p>
+        <p>Je to jazyk, co se mění podle toho, kdo mluví.</p>
+    </div>
+</div>
+    
+<!-- 12 ÚHLŮ -->
+<h2>Vyber úhel pohledu</h2>
+<div class="angle-list" id="buttons"></div>
+
+<!-- VÝSTUP -->
+<div class="output" id="output">
+    <div class="angle-name" id="angleName"></div>
+    <div class="angle-desc" id="angleDesc"></div>
+    <div id="angleText"></div>
+</div>
+
+<div class="footer">
+    Autorka: Art Misa Novak - metoda REPO DOMY<br>
+    <a href="mailto:chcesmys@gmail.com?subject=REPO%20DOMY%20-%20TYGR">pro více info pište</a>
+</div>
+
+<script>
+    // --- 12 ÚHLŮ S KRÁTKÝM POPISEM A KONKRÉTNÍ VĚTOU O POHÁDCE O TYGORVI ---
+    const data = [
+        { 
+            name: "Absurdní", 
+            desc: "Hledá nesmysl, paradox, rozpor.", 
+            text: "Žába, která se nechce stát princem, ale tygrem. Princezna, která místo prince políbí tygra. A myš, která zapisuje dějiny. Absurdní? Ano. Ale přesně v té absurditě se rodí nové možnosti. Protože proč by se žába nemohla stát tygrem, když si to přeje?" 
+        },
+        { 
+            name: "Jazykový", 
+            desc: "Sleduje slova, rytmus, dvojznačnost.", 
+            text: "‚Jazyková alchymie‘ – přesně to se tady děje. Slova mění význam: polibek není kouzlo, ale souhlas. Proměna není magie, ale překlad přání. A myš, co zapisuje dějiny, ví, že nejdůležitější věty jsou ty, které se vymykají slovníku. ‚Chci být zvíře, co se nedá přeložit‘ – to je program." 
+        },
+        { 
+            name: "Ironický", 
+            desc: "Vidí rozpor mezi záměrem a výsledkem.", 
+            text: "Princezna chtěla políbit žábu a získat prince. Místo toho získala tygra. Ironie: její sen se splnil, ale úplně jinak, než čekala. A nakonec zjistí, že možná nechce být princezna, ale ‚ta, co líbá tygry‘. Ironie osudu: co jsme chtěli, není to, co jsme potřebovali." 
+        },
+        { 
+            name: "Filozofický", 
+            desc: "Ptá se po smyslu a podstatě.", 
+            text: "Co je to proměna? Je to změna formy, nebo naplnění touhy? Žába se nestala princem, ale tygrem – stala se tím, čím vždycky chtěla být. Pohádka klade otázku: Není důležitější než kouzlo to, aby nás druzí viděli takové, jací opravdu jsme? A není polibek spíš souhlas než kouzlo?" 
+        },
+        { 
+            name: "Surrealistický", 
+            desc: "Propojuje nesouvisející.", 
+            text: "Princezna, žába, tygr a myš. Rybníček, kde žába sní o tygří existenci. Polibek, který netvoří prince, ale divokou šelmu. A myš, která to všechno zapisuje do dějin. Svět, kde se tradice láme a vznikají nové příběhy – to je surrealismus v praxi." 
+        },
+        { 
+            name: "Naivní", 
+            desc: "Vidí věci jednoduše, bez předsudků.", 
+            text: "Holka chtěla být princezna, protože princezny líbají žáby a ty se mění na prince. Ale žába chtěla být tygr. Tak se políbili a vznik tygr. Holka řekla, že to není její princ, ale myš řekla, že je to její sen. A holka se rozhodla, že bude líbat tygry. Jednoduchý, ne?" 
+        },
+        { 
+            name: "Introspektivní", 
+            desc: "Promítá do příběhu vlastní pocity.", 
+            text: "Tohle jsem já. Pořád se snažím být tím, co se ode mě čeká – princ, princezna, někdo, kdo zapadá do příběhů. Ale uvnitř mám touhu být tygr – divoký, nepřeložitelný, opravdický. A tenhle příběh mi říká, že stačí najít někoho, kdo políbí moji pravdu, ne moji masku." 
+        },
+        { 
+            name: "Betonový", 
+            desc: "Čte doslovně, fakticky.", 
+            text: "Příběh vypráví o dívce, která chtěla být princeznou a políbit žábu, aby se stal princ. Žába však od pulečkovství toužila stát se tygrem. Po vzájemném polibku (který lze interpretovat jako souhlas s žabí touhou) se žába proměnila v tygra. Dívka akceptovala novou situaci a rozhodla se pokračovat v líbání tygrů. Myš vystupuje jako kronikářka události." 
+        },
+        { 
+            name: "Kulturní", 
+            desc: "Hledá archetypy a paralely.", 
+            text: "Tradiční pohádka o princezně a žábě je tady převrácena. Žába nechce být princ – to je revoluce v archetypech. Tygr jako symbol síly, divokosti, nepoddajnosti. Princezna, která místo koruny volí tygří polibky, se stává hrdinkou nového příběhu. A myš? Ta je jako antický kronikář – zaznamenává, co se vymyká." 
+        },
+        { 
+            name: "Asociační", 
+            desc: "Vyvolává osobní vzpomínky.", 
+            text: "Připomnělo mi to, jak jsem jako dítě chtěl být hasičem, ale pak jsem zjistil, že chci být spíš básníkem. Všichni říkali: ‚To se nedělá, hasiči jsou správní chlapi.‘ A já měl pocit, že jsem žába, která chce být tygrem. Až jednou jsem potkal holku, která políbila moje sny, ne moji masku. A od té doby jsem tygr." 
+        },
+        { 
+            name: "Metaforický", 
+            desc: "Vidí symboly za věcmi.", 
+            text: "Žába je touha, která se nevejde do škatulek. Princezna je společnost s očekáváními. Polibek je okamžik, kdy se setkáme s někým, kdo vidí naši pravdu. Tygr je naše skutečné já – divoké, nepřeložitelné. A myš je paměť, která zapíše, že láska není o tom, co se čeká, ale o tom, co se stane, když se přestaneme bát být tím, kým jsme." 
+        },
+        { 
+            name: "Groteskní", 
+            desc: "Vidí přehnanou, temnou komiku.", 
+            text: "Představ si: princezna se sklání k žábě, očekává prince, a najednou před ní stojí tygr. Obrovskej, chlupatej, s drápy. A ona místo zděšení řekne: ‚Tohle není můj princ.‘ A myš suše podotkne: ‚Ale je to tvůj sen.‘ A princezna se rozhodne, že bude líbat tygry. Je to groteska o tom, že život píše lepší scénáře než pohádky." 
+        }
+    ];
+
+    const buttonsDiv = document.getElementById('buttons');
+    const nameEl = document.getElementById('angleName');
+    const descEl = document.getElementById('angleDesc');
+    const textEl = document.getElementById('angleText');
+
+    // Vytvoření tlačítek
+    data.forEach((angle, index) => {
+        const btn = document.createElement('button');
+        btn.textContent = angle.name;
+        btn.addEventListener('click', () => {
+            // Zvýraznění
+            document.querySelectorAll('.angle-list button').forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+            
+            // Výpis
+            nameEl.textContent = angle.name;
+            descEl.textContent = angle.desc;
+            textEl.innerHTML = `<p>${angle.text}</p>`;
+        });
+        buttonsDiv.appendChild(btn);
+    });
+
+    // Předvolit první úhel
+    if (data.length) {
+        document.querySelector('.angle-list button').click();
+    }
+</script>
+
+<!-- Poznámka: Tímto je kompletní série třinácti pohádek (myš, kocour, ryba, motýl, plameňák, čáp, liška, netopýr, lemur, moucha, žížala, zajíc, tygr) – všechny se stejným designem a funkcí. -->
+
+</body>
+</html>
