@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lemur - 12 úhlů pohledu</title>
+    <style>
+        /* --- ČERNOBÍLÝ SVĚT - ŽÁDNÉ BARVY --- */
+        html {
+            filter: grayscale(1);
+        }
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: #fff;
+            color: #000;
+            line-height: 1.7;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+        h1, h2, h3 {
+            font-weight: normal;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 0.3em;
+        }
+        /* --- ILUSTRACE --- */
+        .ilustrace {
+            text-align: center;
+            margin: 2em 0;
+        }
+        .ilustrace img {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #000;
+        }
+        /* --- POHÁDKA - SCROLLOVACÍ OKNO --- */
+        .pohadka-container {
+            max-height: 400px;
+            overflow-y: auto;
+            border: 1px solid #000;
+            padding: 0 1.5em;
+            margin: 2em 0;
+            background: #f9f9f9;
+            font-style: italic;
+        }
+        .pohadka p {
+            padding: 0.5em 0;
+            margin: 0;
+        }
+        /* --- 12 TLAČÍTEK - JEDNODUCHÁ MŘÍŽKA --- */
+        .angle-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6em;
+            margin: 2em 0;
+            justify-content: center;
+        }
+        .angle-list button {
+            background: #fff;
+            border: 1px solid #000;
+            padding: 0.7em 1.2em;
+            font-size: 0.95rem;
+            font-family: inherit;
+            cursor: pointer;
+            transition: 0.1s;
+            color: #000;
+        }
+        .angle-list button:hover {
+            background: #ddd;
+        }
+        .angle-list button.selected {
+            background: #000;
+            color: #fff;
+            border: 2px solid #000;
+            font-weight: bold;
+        }
+        /* --- VÝSTUP - POD TLAČÍTKY --- */
+        .output {
+            border: 1px solid #000;
+            padding: 2em;
+            margin-top: 2em;
+            background: #fff;
+            min-height: 180px;
+        }
+        .angle-name {
+            font-size: 1.6rem;
+            font-weight: bold;
+            margin-bottom: 0.5em;
+        }
+        .angle-desc {
+            font-size: 1.1rem;
+            font-style: italic;
+            margin-bottom: 1.5em;
+        }
+        .angle-text {
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+        .footer {
+            margin-top: 3em;
+            text-align: center;
+            font-size: 0.9rem;
+            border-top: 1px solid #ccc;
+            padding-top: 1.5em;
+        }
+        .footer a {
+            color: #000;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+<h1>👁️ 12 úhlů pohledu</h1>
+<p><em>„O lemurovi, který chtěl být nenápadný – a stal se mistrem viditelné neviditelnosti“</em></p>
+
+<!-- ILUSTRACE LEMURA -->
+<div class="ilustrace">
+    <img src="doma/ilustrace/lemur.jpg" alt="Ilustrace lemura">
+</div>
+
+<!-- POHÁDKA -->
+<h2>KŘIVÁ POHÁDKA – ROVNÉ SVĚDECTVÍ</h2>
+<div class="pohadka-container" id="pohadka">
+    <div class="pohadka">
+        <p><em>Zapsáno rukou, která nechtěla nic vysvětlit.</em></p>
+        
+        <p><strong>O LEMUROVI</strong></p>
+        <p><strong>který nebyl nápadný</strong></p>
+        
+        <p>—</p>
+        
+        <p>Lemur se narodil v koutku.</p>
+        <p>V koutku místnosti, v koutku světa, v koutku oka.</p>
+        <p>Tam, kde se věci obvykle nechávají být.</p>
+        <p>Tam, kde se neptá.</p>
+        <p>Tam, kde se neukazuje.</p>
+        
+        <p>—</p>
+        
+        <p>A tak si řekl:</p>
+        <p>„Budu nenápadný.“</p>
+        <p>„Budu tak nenápadný, že mě ani moje vlastní stín nepozná.“</p>
+        <p>„Budu tak tichý, že i ticho bude hlasité vedle mě.“</p>
+        
+        <p>—</p>
+        
+        <p>Jenže měl oči jak lampy.</p>
+        <p>Ocas vztyčený jak vykřičník.</p>
+        <p>A srst jako výkladní skříň, co se snaží být tapetou.</p>
+        
+        <p>—</p>
+        
+        <p>Vedle něj seděla postava.</p>
+        <p>Klidná.</p>
+        <p>Tichá.</p>
+        <p>Bez barvy.</p>
+        <p>Bez pohybu.</p>
+        <p>Bez potřeby být.</p>
+        
+        <p>—</p>
+        
+        <p>Řekla:</p>
+        <p>„Nejlepší je nechat to být. Vše ostatní je moc nápadné.“</p>
+        <p>A lemur se snažil.</p>
+        
+        <p>—</p>
+        
+        <p>Zhasl oči.</p>
+        <p>Zlomil si ocas (jen obrazně).</p>
+        <p>Přikryl se dekou z nezájmu.</p>
+        
+        <p>—</p>
+        
+        <p>Ale oči mu svítily i pod dekou.</p>
+        <p>Ocas mu trčel i bez svolení.</p>
+        <p>A srst mu zářila jako reklama na klid, co bliká.</p>
+        
+        <p>—</p>
+        
+        <p>„Nejsem nápadný,“ šeptal.</p>
+        <p>„Jsem jen… výrazně nenápadný.“</p>
+        <p>„Jsem jen… ticho, co má barvy.“</p>
+        <p>„Jsem jen… pozadí, co se nedá přehlédnout.“</p>
+        
+        <p>—</p>
+        
+        <p>Postava vedle něj neřekla nic.</p>
+        <p>Jen se dívala.</p>
+        <p>A to bylo horší než slova.</p>
+        
+        <p>—</p>
+        
+        <p>Lemur se pokusil být stínem.</p>
+        <p>Ale jeho stín měl vlastní názor.</p>
+        <p>Lemur se pokusil být flekem na zdi.</p>
+        <p>Ale flek ho odmítl, protože byl moc výrazný.</p>
+        
+        <p>—</p>
+        
+        <p>Nakonec si sedl.</p>
+        <p>Přestal se snažit.</p>
+        <p>Oči mu svítily.</p>
+        <p>Ocas mu trčel.</p>
+        <p>Srst mu zářila.</p>
+        
+        <p>—</p>
+        
+        <p>A postava vedle něj řekla:</p>
+        <p>„Teď jsi konečně neviditelný.“</p>
+        <p>„Jak to?“ zeptal se lemur.</p>
+        <p>„Protože už se nesnažíš.“</p>
+        
+        <p>—</p>
+        
+        <p>A tak se lemur stal mistrem nenápadnosti.</p>
+        <p>Ne tím, že zmizel.</p>
+        <p>Ale tím, že přestal křičet, že nechce být vidět.</p>
+        
+        <p>—</p>
+        
+        <p>Od té doby sedí v koutku.</p>
+        <p>Oči mu svítí.</p>
+        <p>Ocas mu trčí.</p>
+        <p>Srst mu září.</p>
+        
+        <p>—</p>
+        
+        <p>A každý, kdo ho uvidí, řekne:</p>
+        <p>„To je ten nenápadný lemur.“</p>
+        <p>A pak se tváří, že ho nevidí.</p>
+        <p>A to je přesně to, co chtěl.</p>
+    </div>
+</div>
+    
+<!-- 12 ÚHLŮ -->
+<h2>Vyber úhel pohledu</h2>
+<div class="angle-list" id="buttons"></div>
+
+<!-- VÝSTUP -->
+<div class="output" id="output">
+    <div class="angle-name" id="angleName"></div>
+    <div class="angle-desc" id="angleDesc"></div>
+    <div id="angleText"></div>
+</div>
+
+<div class="footer">
+    Autorka: Art Misa Novak - metoda REPO DOMY<br>
+    <a href="mailto:chcesmys@gmail.com?subject=REPO%20DOMY%20-%20LEMUR">pro více info pište</a>
+</div>
+
+<script>
+    // --- 12 ÚHLŮ S KRÁTKÝM POPISEM A KONKRÉTNÍ VĚTOU O POHÁDCE O LEMUROVI ---
+    const data = [
+        { 
+            name: "Absurdní", 
+            desc: "Hledá nesmysl, paradox, rozpor.", 
+            text: "Lemur, který chce být nenápadný, ale má oči jak lampy, ocas jak vykřičník a srst jak výkladní skříň. Snaží se zhasnout oči, zlomit si ocas, přikrýt se dekou – a pořád je vidět. Paradox: čím víc se snaží nebýt vidět, tím víc je nápadný. A řešení? Přestat se snažit." 
+        },
+        { 
+            name: "Jazykový", 
+            desc: "Sleduje slova, rytmus, dvojznačnost.", 
+            text: "‚Výrazně nenápadný‘ – oxymóron, který vystihuje celého lemura. ‚Ticho, co má barvy‘ – další spojení protikladů. ‚Pozadí, co se nedá přehlédnout‘ – věta, která popírá sama sebe. Jazyk selhává, když má popsat lemura, a proto vytváří nová slovní spojení, která jediná fungují." 
+        },
+        { 
+            name: "Ironický", 
+            desc: "Vidí rozpor mezi záměrem a výsledkem.", 
+            text: "Lemur chce být neviditelný, a čím víc se snaží, tím víc ho je vidět. Ironie: jeho snaha o nenápadnost je to nejnápadnější na něm. A když konečně přestane, stane se neviditelným – ale jen proto, že ho všichni vidí a tváří se, že ne." 
+        },
+        { 
+            name: "Filozofický", 
+            desc: "Ptá se po smyslu a podstatě.", 
+            text: "Co to znamená ‚být‘? Lemur existuje, i když se snaží nebýt. Jeho bytí je tak intenzivní, že ho nejde skrýt. Postava vedle něj představuje moudrost: pravda není v tom, co děláš, ale v tom, co jsi. A lemur je – ať chce nebo ne." 
+        },
+        { 
+            name: "Surrealistický", 
+            desc: "Propojuje nesouvisející.", 
+            text: "Lemur se snaží být stínem, ale stín má vlastní názor. Chce být flekem na zdi, ale flek ho odmítne. Postava bez barvy, bez pohybu, bez potřeby být. Svět, kde věci mají vlastní vůli a kde se nenápadnost stává viditelnou. To není realita – to je obraz." 
+        },
+        { 
+            name: "Naivní", 
+            desc: "Vidí věci jednoduše, bez předsudků.", 
+            text: "Lemur chtěl bejt nenápadnej. Ale měl velký oči a chlupatej ocas. Zkoušel všecko možný, ale furt byl vidět. Pak přestal a zjistil, že je neviditelnej, protože se nesnaží. A lidi ho vidí, ale tvářej se, že ne. A to chtěl." 
+        },
+        { 
+            name: "Introspektivní", 
+            desc: "Promítá do příběhu vlastní pocity.", 
+            text: "Tohle jsem já. Pořád se snažím zapadnout, být nenápadný, nevyčnívat. Ale ať dělám, co dělám, jsem pořád vidět. Moje oči, můj hlas, moje názory – všechno křičí. Až teď chápu: nemám přestat být vidět, mám přestat chtít nebýt vidět. Pak se uklidním." 
+        },
+        { 
+            name: "Betonový", 
+            desc: "Čte doslovně, fakticky.", 
+            text: "Příběh vypráví o lemurovi, který se narodil v koutku a rozhodl se být nenápadný. Přesto má výrazné fyzické znaky (zářící oči, vztyčený ocas, nápadnou srst). Snaží se je potlačit, ale nedaří se mu to. Po rozhovoru s anonymní postavou zjistí, že nenápadnosti dosáhne, když se přestane snažit. Od té doby ho lidé vnímají jako ‚nenápadného lemura‘ a tváří se, že ho nevidí." 
+        },
+        { 
+            name: "Kulturní", 
+            desc: "Hledá archetypy a paralely.", 
+            text: "Lemur jako archetyp toho, kdo chce zapadnout, ale nemůže. Připomíná postavy z existenciálních románů – člověka, který bojuje se svou podstatou. Postava vedle něj je jako zenový mistr – mlčí a svou přítomností učí. A pointa: ‚přestat se snažit‘ je východní filozofie v kostce." 
+        },
+        { 
+            name: "Asociační", 
+            desc: "Vyvolává osobní vzpomínky.", 
+            text: "Připomnělo mi to spolužáka, který chtěl být ‚cool‘ a nenápadný, ale měl na sobě vždycky něco křiklavého. A čím víc se snažil, tím víc byl terčem. Až jednou to vzdal a najednou byl v pohodě. Přesně jako lemur. A ta postava? Ta by mohla být moje babička, která říkávala: ‚Nesnaž se, buď.‘" 
+        },
+        { 
+            name: "Metaforický", 
+            desc: "Vidí symboly za věcmi.", 
+            text: "Lemur je každý, kdo se snaží zapadnout do společnosti. Oči, ocas, srst – to jsou jeho vlastnosti, kterých se nemůže zbavit. Postava je pravda – tichá, klidná, neměnná. A ponaučení: nejsi neviditelný tím, že zmizíš, ale tím, že přestaneš bojovat s tím, kdo jsi. Pak tě sice vidí, ale už tě to netrápí." 
+        },
+        { 
+            name: "Groteskní", 
+            desc: "Vidí přehnanou, temnou komiku.", 
+            text: "Představ si: lemur s očima jak reflektory se snaží schovat pod deku. Jeho ocas trčí ven a svítí. Zkouší být stínem, ale stín se ohrazuje. Chce být flekem, ale flek ho vyhodí. Je to fraška o tom, že když se moc snažíš nebýt vidět, jsi vidět nejvíc. A když to vzdáš, najednou jsi neviditelnej – ale všichni tě furt vidí." 
+        }
+    ];
+
+    const buttonsDiv = document.getElementById('buttons');
+    const nameEl = document.getElementById('angleName');
+    const descEl = document.getElementById('angleDesc');
+    const textEl = document.getElementById('angleText');
+
+    // Vytvoření tlačítek
+    data.forEach((angle, index) => {
+        const btn = document.createElement('button');
+        btn.textContent = angle.name;
+        btn.addEventListener('click', () => {
+            // Zvýraznění
+            document.querySelectorAll('.angle-list button').forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+            
+            // Výpis
+            nameEl.textContent = angle.name;
+            descEl.textContent = angle.desc;
+            textEl.innerHTML = `<p>${angle.text}</p>`;
+        });
+        buttonsDiv.appendChild(btn);
+    });
+
+    // Předvolit první úhel
+    if (data.length) {
+        document.querySelector('.angle-list button').click();
+    }
+</script>
+
+<!-- Poznámka: Tímto je kompletní série devíti pohádek (myš, kocour, ryba, motýl, plameňák, čáp, liška, netopýr, lemur) – všechny se stejným designem a funkcí. -->
+
+</body>
+</html>
