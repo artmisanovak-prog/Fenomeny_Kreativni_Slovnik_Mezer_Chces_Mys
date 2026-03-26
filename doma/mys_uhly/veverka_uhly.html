@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Veverka - 12 úhlů pohledu</title>
+    <style>
+        /* --- ČERNOBÍLÝ SVĚT - ŽÁDNÉ BARVY --- */
+        html {
+            filter: grayscale(1);
+        }
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: #fff;
+            color: #000;
+            line-height: 1.7;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+        h1, h2, h3 {
+            font-weight: normal;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 0.3em;
+        }
+        /* --- ILUSTRACE --- */
+        .ilustrace {
+            text-align: center;
+            margin: 2em 0;
+        }
+        .ilustrace img {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #000;
+        }
+        /* --- POHÁDKA - SCROLLOVACÍ OKNO --- */
+        .pohadka-container {
+            max-height: 400px;
+            overflow-y: auto;
+            border: 1px solid #000;
+            padding: 0 1.5em;
+            margin: 2em 0;
+            background: #f9f9f9;
+            font-style: italic;
+        }
+        .pohadka p {
+            padding: 0.5em 0;
+            margin: 0;
+        }
+        /* --- 12 TLAČÍTEK - JEDNODUCHÁ MŘÍŽKA --- */
+        .angle-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6em;
+            margin: 2em 0;
+            justify-content: center;
+        }
+        .angle-list button {
+            background: #fff;
+            border: 1px solid #000;
+            padding: 0.7em 1.2em;
+            font-size: 0.95rem;
+            font-family: inherit;
+            cursor: pointer;
+            transition: 0.1s;
+            color: #000;
+        }
+        .angle-list button:hover {
+            background: #ddd;
+        }
+        .angle-list button.selected {
+            background: #000;
+            color: #fff;
+            border: 2px solid #000;
+            font-weight: bold;
+        }
+        /* --- VÝSTUP - POD TLAČÍTKY --- */
+        .output {
+            border: 1px solid #000;
+            padding: 2em;
+            margin-top: 2em;
+            background: #fff;
+            min-height: 180px;
+        }
+        .angle-name {
+            font-size: 1.6rem;
+            font-weight: bold;
+            margin-bottom: 0.5em;
+        }
+        .angle-desc {
+            font-size: 1.1rem;
+            font-style: italic;
+            margin-bottom: 1.5em;
+        }
+        .angle-text {
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+        .footer {
+            margin-top: 3em;
+            text-align: center;
+            font-size: 0.9rem;
+            border-top: 1px solid #ccc;
+            padding-top: 1.5em;
+        }
+        .footer a {
+            color: #000;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+<h1>🐿️ 12 úhlů pohledu</h1>
+<p><em>„O veverce, která se modlí činy – protože někdy je víc v tom, co děláš, než v tom, co říkáš“</em></p>
+
+<!-- ILUSTRACE VEVERKY -->
+<div class="ilustrace">
+    <img src="doma/ilustrace/veverka.jpg" alt="Ilustrace veverky">
+</div>
+
+<!-- POHÁDKA -->
+<h2>KŘIVÁ POHÁDKA – ROVNÉ SVĚDECTVÍ</h2>
+<div class="pohadka-container" id="pohadka">
+    <div class="pohadka">
+        <p><em>Zapsáno rukou, která nechtěla nic vysvětlit.</em></p>
+        
+        <p><strong>O VEVERCE</strong></p>
+        <p><strong>která se modlí činy</strong></p>
+        
+        <p>—</p>
+        
+        <p>Veverka běžela.</p>
+        <p>Ne kvůli něčemu.</p>
+        <p>Ne od něčeho.</p>
+        <p>Běžela, protože to bylo potřeba.</p>
+        <p>A když to nebylo potřeba, tak to bylo možné.</p>
+        <p>A když to nebylo možné, tak to bylo aspoň směrem.</p>
+        
+        <p>—</p>
+        
+        <p>Oříšek.</p>
+        <p>Díra.</p>
+        <p>Zahrabat.</p>
+        <p>Zamaskovat.</p>
+        <p>Zamrkat.</p>
+        <p>Znovu.</p>
+        
+        <p>—</p>
+        
+        <p>Nikdy nemluvila.</p>
+        <p>Ale když se na ni někdo podíval, měl pocit, že mu právě něco řekla.</p>
+        <p>A že to bylo důležité.</p>
+        <p>A že to bylo na něj.</p>
+        
+        <p>—</p>
+        
+        <p>Jednou ji pozoroval jezevec.</p>
+        <p>Dlouho.</p>
+        <p>A pak si napsal na kůru stromu:</p>
+        <p>„Modli se činy.“</p>
+        <p>A pak se tvářil, že to vymyslel.</p>
+        <p>A pak se snažil běhat jako ona.</p>
+        <p>A po třetím oříšku si sedl.</p>
+        <p>A po čtvrtém si začal stěžovat, že ho bolí tlapky.</p>
+        <p>A po pátém napsal báseň o smyslu života.</p>
+        <p>A pak se šel vyspat.</p>
+        
+        <p>—</p>
+        
+        <p>Veverka mezitím doběhla na druhý konec lesa.</p>
+        <p>Zahrabala.</p>
+        <p>Zamaskovala.</p>
+        <p>Zamrkala.</p>
+        <p>Znovu.</p>
+        
+        <p>—</p>
+        
+        <p>Někdo se zeptal:</p>
+        <p>„To je prorok?“</p>
+        <p>„Ne. To je jen veverka.“  upřesnila myš.</p>
+        <p>„Aha.“</p>
+        
+        <p>—</p>
+        
+        <p>A pak někdo řekl:</p>
+        <p>„Ale co když to není o tom, co dělá?“</p>
+        <p>„Ale o tom, že to dělá?“</p>
+        <p>A nikdo neodpověděl.</p>
+        <p>Protože veverka právě běžela kolem.</p>
+        <p>A nesla další oříšek.</p>
+        <p>A nikdo se neodvážil ji zastavit.</p>
+        
+        <p>—</p>
+        
+        <p>Jednou se stalo, že někdo zahrabal oříšek tam, kde už byl.</p>
+        <p>A pak ho znovu vykopal.</p>
+        <p>A pak ho znovu zahrabal.</p>
+        <p>A pak řekl:</p>
+        <p>„Tohle je hluboký smysl.“</p>
+        <p>A veverka se na něj podívala.</p>
+        <p>A pak se podívala jinam.</p>
+        <p>A tím mu řekla všechno.</p>
+        
+        <p>—</p>
+        
+        <p>Veverka neměla čas na významy.</p>
+        <p>Neměla čas na otázky.</p>
+        <p>Neměla čas na „proč“.</p>
+        <p>Měla jen čas.</p>
+        <p>A ten běžel.</p>
+        <p>A ona s ním.</p>
+        
+        <p>—</p>
+        
+        <p>Jednou se někdo pokusil veverku napodobit.</p>
+        <p>Přesně.</p>
+        <p>Krok za krokem.</p>
+        <p>Skok za skokem.</p>
+        <p>Zahrabal.</p>
+        <p>Zamaskoval.</p>
+        <p>Zamrkal.</p>
+        <p>A pak se zastavil.</p>
+        <p>A řekl:</p>
+        <p>„A co teď?“</p>
+        <p>A nikdo mu neodpověděl.</p>
+        <p>Protože veverka už byla pryč.</p>
+        <p>A odpovědi si nenosí.</p>
+        <p>Jen oříšky.</p>
+        
+        <p>—</p>
+        
+        <p>A tak se začalo říkat:</p>
+        <p>„Modli se činy.“</p>
+        <p>Ale nikdo nevěděl, co to znamená.</p>
+        <p>A tak to začali tisknout na hrníčky.</p>
+        <p>A na trička.</p>
+        <p>A na plakáty.</p>
+        <p>A pak to přestali dělat.</p>
+        <p>Protože to nikdo nekupoval.</p>
+        <p>A protože veverka mezitím zahrabala všechny propisky.</p>
+        
+        <p>—</p>
+        
+        <p>A pak přišla zima.</p>
+        <p>A veverka měla zásoby.</p>
+        <p>A ti, co si psali citáty na kůru, měli hlad.</p>
+        <p>A ti, co si psali básně, měli omrzliny.</p>
+        <p>A ti, co si nic nepsali, ale běhali,</p>
+        <p>měli taky zásoby.</p>
+        <p>A nikdo nevěděl proč.</p>
+        
+        <p>—</p>
+        
+        <p>Ale všichni si pamatovali, že to začalo,</p>
+        <p>když se jednou objevila veverka.</p>
+        <p>A nikomu nic neřekla.</p>
+    </div>
+</div>
+    
+<!-- 12 ÚHLŮ -->
+<h2>Vyber úhel pohledu</h2>
+<div class="angle-list" id="buttons"></div>
+
+<!-- VÝSTUP -->
+<div class="output" id="output">
+    <div class="angle-name" id="angleName"></div>
+    <div class="angle-desc" id="angleDesc"></div>
+    <div id="angleText"></div>
+</div>
+
+<div class="footer">
+    Autorka: Art Misa Novak - metoda REPO DOMY<br>
+    <a href="mailto:chcesmys@gmail.com?subject=REPO%20DOMY%20-%20VEVERKA">pro více info pište</a>
+</div>
+
+<script>
+    // --- 12 ÚHLŮ S KRÁTKÝM POPISEM A KONKRÉTNÍ VĚTOU O POHÁDCE O VEVERCE ---
+    const data = [
+        { 
+            name: "Absurdní", 
+            desc: "Hledá nesmysl, paradox, rozpor.", 
+            text: "Veverka, která nikdy nemluví, ale lidé mají pocit, že jim říká důležité věci. Jezevec, který si napíše na kůru ‚Modli se činy‘ a pak napíše báseň místo toho, aby běhal. A nakonec někdo zahrabává oříšek na stejném místě a říká, že je to hluboký smysl. Absurdní? Ano. Ale co je absurdnější než svět, kde se víc cení citáty než činy?" 
+        },
+        { 
+            name: "Jazykový", 
+            desc: "Sleduje slova, rytmus, dvojznačnost.", 
+            text: "„Oříšek. Díra. Zahrabat. Zamaskovat. Zamrkat. Znovu.“ – to je jazyk veverky. Žádná slova, jen rytmus činů. Jezevec píše na kůru, lidé tisknou na hrníčky, ale nikdo neví, co to znamená. Jazyk selhává, když má popsat to, co veverka dělá. Protože ona nemluví – ona běží." 
+        },
+        { 
+            name: "Ironický", 
+            desc: "Vidí rozpor mezi záměrem a výsledkem.", 
+            text: "Jezevec chce být jako veverka, ale po třetím oříšku si sedne a napíše báseň. Někdo zahrabává oříšek na stejném místě a myslí si, že je to hluboké. Lidé tisknou ‚Modli se činy‘ na trička, ale nikdo to nedělá. Ironie: všichni mluví o činech, ale jen veverka jedná. A když přijde zima, jen ona má zásoby." 
+        },
+        { 
+            name: "Filozofický", 
+            desc: "Ptá se po smyslu a podstatě.", 
+            text: "Co je to smysl? Je to v tom, co děláš, nebo v tom, co o tom říkáš? Veverka nemá čas na ‚proč‘. Jen běží a zahrabává. A ti, co se ptají, zůstávají s otázkami. Pohádka klade otázku: Není nakonec pravda v tom, že činy mluví hlasitěji než slova? A že modlitba nemusí být jen slova, ale celý život?" 
+        },
+        { 
+            name: "Surrealistický", 
+            desc: "Propojuje nesouvisející.", 
+            text: "Veverka, která svým pohledem řekne víc než jezevec svými básněmi. Oříšky, které se stávají symboly. Zima, která rozsoudí ty, co psali citáty, a ty, co běhali. Myš, která upřesňuje: ‚To je jen veverka.‘ Svět, kde se realita mísí s metaforou a kde každý oříšek je malý vesmír." 
+        },
+        { 
+            name: "Naivní", 
+            desc: "Vidí věci jednoduše, bez předsudků.", 
+            text: "Veverka běhala a zahrabávala oříšky. Nemluvila, ale lidi si mysleli, že jim něco říká. Jezevec to chtěl taky dělat, ale bolely ho tlapky a napsal báseň. Někdo zahrabal oříšek na stejným místě a myslel si, že je to hluboký. Pak přišla zima a veverka měla zásoby. A ti, co psali, měli hlad. Jednoduchý, ne?" 
+        },
+        { 
+            name: "Introspektivní", 
+            desc: "Promítá do příběhu vlastní pocity.", 
+            text: "Tohle jsem já. Pořád se snažím něco dělat, ale pak o tom píšu, přemýšlím, analyzuju. A ta veverka ve mně – ta pravá, co jen běží a dělá – ta je utlumená. A pak přijde zima a já zjistím, že jsem si jen psal básně místo toho, abych zahrabával oříšky. A ty zásoby? Ty nemám." 
+        },
+        { 
+            name: "Betonový", 
+            desc: "Čte doslovně, fakticky.", 
+            text: "Příběh vypráví o veverce, která vykonává opakovanou činnost – sběr a zahrabávání oříšků. Nemluví, ale její chování je pozorováno a interpretováno ostatními zvířaty. Jezevec se pokouší o nápodobu, ale vzdává to. Lidé (nebo zvířata) vytvářejí fráze a komerční produkty na základě jejího chování. Když přijde zima, veverka má díky své činnosti zásoby, zatímco ostatní, kteří pouze psali nebo mluvili, strádají." 
+        },
+        { 
+            name: "Kulturní", 
+            desc: "Hledá archetypy a paralely.", 
+            text: "Veverka jako archetyp píle, budoucnosti, připravenosti. Je to opak jezevce, který je symbolem lenosti a teoretizování. Myš jako moudrá postava (opět) uvádí věci na pravou míru. A pointa: ‚Modli se činy‘ – to je jako benediktinské „Ora et labora“, ale tady bez modlitby, jen s činy. A komerce s tímto sloganem je kritikou konzumní společnosti." 
+        },
+        { 
+            name: "Asociační", 
+            desc: "Vyvolává osobní vzpomínky.", 
+            text: "Připomnělo mi to dědečka. Nikdy nemluvil o tom, co dělá, ale každý den něco spravoval, sázel, stavěl. A když přišla zima, měl vždycky zásoby. A my jsme se divili, odkud se berou. Až později jsem pochopil – on byl ta veverka. A jeho činy byly jeho modlitba." 
+        },
+        { 
+            name: "Metaforický", 
+            desc: "Vidí symboly za věcmi.", 
+            text: "Veverka je život, který se žije, ne ten, o kterém se mluví. Oříšky jsou malé každodenní činy, které se hromadí. Jezevec je intelekt, který analyzuje, ale nejedná. Zima je krize, zkouška. A pointa: když přijde krize, nepomohou ti citáty na tričku, ale jen to, co jsi skutečně udělal. Veverka to ví – proto běží." 
+        },
+        { 
+            name: "Groteskní", 
+            desc: "Vidí přehnanou, temnou komiku.", 
+            text: "Představ si: jezevec píše na kůru ‚Modli se činy‘, pak zkusí běhat, po třetím oříšku si sedne a napíše báseň. Někdo zahrabává oříšek na stejným místě a říká: ‚Tohle je hluboký smysl.‘ A veverka se jen podívá jinam. Pak to začnou tisknout na hrníčky, ale nikdo to nekupuje, protože veverka zahrabala všechny propisky. A pak zima a všichni mají hlad – jen veverka má zásoby. Je to groteska o tom, že žvanění nepřežije zimu." 
+        }
+    ];
+
+    const buttonsDiv = document.getElementById('buttons');
+    const nameEl = document.getElementById('angleName');
+    const descEl = document.getElementById('angleDesc');
+    const textEl = document.getElementById('angleText');
+
+    // Vytvoření tlačítek
+    data.forEach((angle, index) => {
+        const btn = document.createElement('button');
+        btn.textContent = angle.name;
+        btn.addEventListener('click', () => {
+            // Zvýraznění
+            document.querySelectorAll('.angle-list button').forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+            
+            // Výpis
+            nameEl.textContent = angle.name;
+            descEl.textContent = angle.desc;
+            textEl.innerHTML = `<p>${angle.text}</p>`;
+        });
+        buttonsDiv.appendChild(btn);
+    });
+
+    // Předvolit první úhel
+    if (data.length) {
+        document.querySelector('.angle-list button').click();
+    }
+</script>
+
+<!-- Poznámka: Tímto je kompletní série dvaceti sedmi pohádek (myš, kocour, ryba, motýl, plameňák, čáp, liška, netopýr, lemur, moucha, žížala, zajíc, tygr, krokodýl, želva, jednorožec, pavouk, parohy, páv, vrabec, osel, žralok, prase, krávy, slon, beran, veverka) – všechny se stejným designem a funkcí. -->
+
+</body>
+</html>
