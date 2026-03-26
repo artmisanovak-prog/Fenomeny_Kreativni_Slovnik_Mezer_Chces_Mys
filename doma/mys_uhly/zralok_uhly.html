@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Žralok - 12 úhlů pohledu</title>
+    <style>
+        /* --- ČERNOBÍLÝ SVĚT - ŽÁDNÉ BARVY --- */
+        html {
+            filter: grayscale(1);
+        }
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: #fff;
+            color: #000;
+            line-height: 1.7;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+        h1, h2, h3 {
+            font-weight: normal;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 0.3em;
+        }
+        /* --- ILUSTRACE --- */
+        .ilustrace {
+            text-align: center;
+            margin: 2em 0;
+        }
+        .ilustrace img {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #000;
+        }
+        /* --- POHÁDKA - SCROLLOVACÍ OKNO --- */
+        .pohadka-container {
+            max-height: 400px;
+            overflow-y: auto;
+            border: 1px solid #000;
+            padding: 0 1.5em;
+            margin: 2em 0;
+            background: #f9f9f9;
+            font-style: italic;
+        }
+        .pohadka p {
+            padding: 0.5em 0;
+            margin: 0;
+        }
+        /* --- 12 TLAČÍTEK - JEDNODUCHÁ MŘÍŽKA --- */
+        .angle-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6em;
+            margin: 2em 0;
+            justify-content: center;
+        }
+        .angle-list button {
+            background: #fff;
+            border: 1px solid #000;
+            padding: 0.7em 1.2em;
+            font-size: 0.95rem;
+            font-family: inherit;
+            cursor: pointer;
+            transition: 0.1s;
+            color: #000;
+        }
+        .angle-list button:hover {
+            background: #ddd;
+        }
+        .angle-list button.selected {
+            background: #000;
+            color: #fff;
+            border: 2px solid #000;
+            font-weight: bold;
+        }
+        /* --- VÝSTUP - POD TLAČÍTKY --- */
+        .output {
+            border: 1px solid #000;
+            padding: 2em;
+            margin-top: 2em;
+            background: #fff;
+            min-height: 180px;
+        }
+        .angle-name {
+            font-size: 1.6rem;
+            font-weight: bold;
+            margin-bottom: 0.5em;
+        }
+        .angle-desc {
+            font-size: 1.1rem;
+            font-style: italic;
+            margin-bottom: 1.5em;
+        }
+        .angle-text {
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+        .footer {
+            margin-top: 3em;
+            text-align: center;
+            font-size: 0.9rem;
+            border-top: 1px solid #ccc;
+            padding-top: 1.5em;
+        }
+        .footer a {
+            color: #000;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+<h1>🦈 12 úhlů pohledu</h1>
+<p><em>„O žralokovi, který si hlídal poměr 1:1 mezi nad a pod – protože rovnováha mezi viditelným a skrytým je to, co dělá žraloka žralokem“</em></p>
+
+<!-- ILUSTRACE ŽRALOKA -->
+<div class="ilustrace">
+    <img src="doma/ilustrace/zralok.jpg" alt="Ilustrace žraloka">
+</div>
+
+<!-- POHÁDKA -->
+<h2>KŘIVÁ POHÁDKA – ROVNÉ SVĚDECTVÍ</h2>
+<div class="pohadka-container" id="pohadka">
+    <div class="pohadka">
+        <p><em>Zapsáno rukou, která nechtěla nic vysvětlit.</em></p>
+        
+        <p><strong>O ŽRALOKOVI</strong></p>
+        <p><strong>který měl poměr</strong></p>
+        
+        <p>—</p>
+        
+        <p><em>nad : pod = 1 : 1</em></p>
+        
+        <p>—</p>
+        
+        <p>Zní to jako rovnice, ale zároveň jako hádanka. Žralok je tvor, co se tváří, že je dole, ale občas se vynoří. Nad hladinou je jen na chvíli, pod ní je doma. A přesto — poměr je 1:1. Jako kdyby to, co je vidět, bylo stejně důležité jako to, co není.</p>
+        
+        <p>—</p>
+        
+        <p>Žralok žil pod vodou.</p>
+        <p>To se ví.</p>
+        <p>Tam je doma.</p>
+        <p>Tam je klid.</p>
+        <p>Tam se neptá nikdo na nic.</p>
+        
+        <p>—</p>
+        
+        <p>Ale jednou za čas se vynořil.</p>
+        <p>Jen na chvíli.</p>
+        <p>Jen na nádech.</p>
+        <p>Jen na pohled.</p>
+        
+        <p>—</p>
+        
+        <p>A pokaždé, když se vynořil, někdo ho uviděl.</p>
+        <p>A řekl:</p>
+        <p>„Žralok! Pozor!“</p>
+        <p>„Nebezpečí!“</p>
+        <p>„Zuby!“</p>
+        
+        <p>—</p>
+        
+        <p>A žralok se zase ponořil.</p>
+        <p>Pod hladinu.</p>
+        <p>Do ticha.</p>
+        <p>Do místa, kde nikdo nekřičí.</p>
+        
+        <p>—</p>
+        
+        <p>Ale začal si počítat.</p>
+        <p>Kolikrát je nad.</p>
+        <p>Kolikrát je pod.</p>
+        <p>A zjistil:</p>
+        <p>1 : 1</p>
+        
+        <p>—</p>
+        
+        <p>Jednou nahoře.</p>
+        <p>Jednou dole.</p>
+        <p>Jednou viděn.</p>
+        <p>Jednou skryt.</p>
+        
+        <p>—</p>
+        
+        <p>„To je spravedlivé,“ řekl si.</p>
+        <p>„To je rovnováha.“</p>
+        <p>„To je život.“</p>
+        
+        <p>—</p>
+        
+        <p>Ale pak přišla ryba.</p>
+        <p>Malá.</p>
+        <p>Zvědavá.</p>
+        <p>A zeptala se:</p>
+        <p>„Proč se vůbec vynořuješ?“</p>
+        <p>„Aby si mě všimli,“ řekl žralok.</p>
+        <p>„Aby věděli, že jsem.“</p>
+        <p>„Ale pak se bojí,“ řekla ryba.</p>
+        <p>„To je jejich věc,“ řekl žralok.</p>
+        <p>„Já jsem jen poměr.“</p>
+        
+        <p>—</p>
+        
+        <p>Ryba si to zapsala.</p>
+        <p>Do bubliny.</p>
+        <p>Do kruhu na vodě.</p>
+        <p>Do paměti.</p>
+        
+        <p>—</p>
+        
+        <p>A pak se zeptala:</p>
+        <p>„A co kdyby ses vynořil dvakrát?“</p>
+        <p>„Pak bych byl víc nad než pod,“ řekl žralok.</p>
+        <p>„A to už nejsem já.“</p>
+        
+        <p>—</p>
+        
+        <p>Od té doby si žralok hlídá poměr.</p>
+        <p>Jednou nahoře.</p>
+        <p>Jednou dole.</p>
+        <p>Nikdy víc.</p>
+        <p>Nikdy míň.</p>
+        
+        <p>—</p>
+        
+        <p>A když ho někdo zahlédne,</p>
+        <p>je to přesně ten okamžik, co má být.</p>
+        <p>Ne dřív.</p>
+        <p>Ne později.</p>
+    </div>
+</div>
+    
+<!-- 12 ÚHLŮ -->
+<h2>Vyber úhel pohledu</h2>
+<div class="angle-list" id="buttons"></div>
+
+<!-- VÝSTUP -->
+<div class="output" id="output">
+    <div class="angle-name" id="angleName"></div>
+    <div class="angle-desc" id="angleDesc"></div>
+    <div id="angleText"></div>
+</div>
+
+<div class="footer">
+    Autorka: Art Misa Novak - metoda REPO DOMY<br>
+    <a href="mailto:chcesmys@gmail.com?subject=REPO%20DOMY%20-%20ŽRALOK">pro více info pište</a>
+</div>
+
+<script>
+    // --- 12 ÚHLŮ S KRÁTKÝM POPISEM A KONKRÉTNÍ VĚTOU O POHÁDCE O ŽRALOKOVI ---
+    const data = [
+        { 
+            name: "Absurdní", 
+            desc: "Hledá nesmysl, paradox, rozpor.", 
+            text: "Žralok, který si počítá, kolikrát je nad a kolikrát pod hladinou, a udržuje přísný poměr 1:1. Ryba se ptá: ‚Proč se vynořuješ?‘ A on: ‚Aby si mě všimli.‘ Ale když si ho všimnou, bojí se. Absurdní? Ano. Ale co je absurdnější než existence, která je definována rovnováhou mezi viditelností a nebezpečím?" 
+        },
+        { 
+            name: "Jazykový", 
+            desc: "Sleduje slova, rytmus, dvojznačnost.", 
+            text: "„nad : pod = 1 : 1“ – rovnice jako název pohádky. Jazyk se tady stává matematikou. Žralok je poměr, není to jen tvor, ale vztah. Ryba si zapisuje do bubliny, do kruhu na vodě – do pomíjivých médií. Slova se rozplývají jako kruhy, ale poměr zůstává." 
+        },
+        { 
+            name: "Ironický", 
+            desc: "Vidí rozpor mezi záměrem a výsledkem.", 
+            text: "Žralok se vynořuje, aby si ho všimli, aby věděli, že je. Ale když ho uvidí, křičí strachem. Ironie: jeho existence je potvrzována zděšením. A přesto si hlídá poměr 1:1 – jako kdyby ten strach byl přesně to, co potřebuje k rovnováze." 
+        },
+        { 
+            name: "Filozofický", 
+            desc: "Ptá se po smyslu a podstatě.", 
+            text: "Co je to existence? Je to být viděn, nebo být skryt? Žralok definuje sám sebe poměrem 1:1 – stejně důležité je být nad i pod, být viděn i nebýt. Ryba se ptá: ‚Proč se vynořuješ?‘ A on: ‚Aby věděli, že jsem.‘ Pohádka klade otázku: Není naše existence také jen poměr mezi tím, co ukazujeme, a tím, co skrýváme?" 
+        },
+        { 
+            name: "Surrealistický", 
+            desc: "Propojuje nesouvisející.", 
+            text: "Žralok pod hladinou v tichu, nad hladinou v křiku. Ryba, která se ptá a zapisuje do bublin. Rovnice 1:1 jako zákon života. Svět, kde se realita měří poměry a kde každý nádech je matematicky přesný. To není pohádka, to je obraz." 
+        },
+        { 
+            name: "Naivní", 
+            desc: "Vidí věci jednoduše, bez předsudků.", 
+            text: "Žralok žil pod vodou. Občas se vynořil. Když ho viděli, křičeli. On se zase ponořil. Spočítal si, že je jednou nahoře a jednou dole. Ryba se ptala, proč to dělá. Řekl, že aby ho viděli. A že kdyby se vynořil dvakrát, nebyl by to on. Jednoduchý, ne?" 
+        },
+        { 
+            name: "Introspektivní", 
+            desc: "Promítá do příběhu vlastní pocity.", 
+            text: "Tohle jsem já. Někdy se vynořím – napíšu něco, řeknu něco, ukážu se. A lidi se bojí, křičí, odsuzují. Pak se zase ponořím do ticha. A hlídám si poměr, aby to bylo vyvážený. Abych nebyl víc vidět než skrytý. Protože kdybych se vynořil dvakrát, nebyl bych to já." 
+        },
+        { 
+            name: "Betonový", 
+            desc: "Čte doslovně, fakticky.", 
+            text: "Příběh vypráví o žralokovi, který žije převážně pod vodou, ale pravidelně se vynořuje na hladinu. Lidé na jeho vynoření reagují strachem. Žralok si začne uvědomovat frekvenci svých vynoření a zjistí, že je v poměru 1:1 (jeden vynoření na jeden ponor). Tento poměr považuje za svou definici. Ryba (zřejmě jiný druh) mu klade otázky ohledně smyslu jeho chování. Žralok odmítá změnu poměru, protože by tím ztratil svou identitu." 
+        },
+        { 
+            name: "Kulturní", 
+            desc: "Hledá archetypy a paralely.", 
+            text: "Žralok jako archetyp nebezpečí, síly, tajemna. Tady je ale spíše filozofem, který hledá rovnováhu. Je to jako by Plútón vystupoval z podsvětí na světlo, aby připomněl svou existenci. Ryba jako tazatelka (opět připomíná myš z jiných pohádek) přináší do příběhu sokratovský dialog. A poměr 1:1 je jako Tao – jin a jang, nad a pod, vidět a být skryt." 
+        },
+        { 
+            name: "Asociační", 
+            desc: "Vyvolává osobní vzpomínky.", 
+            text: "Připomnělo mi to, jak jsem jako dítě chodil k rybníku a čekal, až se něco vynoří. Bál jsem se i kapra. A teď si říkám, že možná ten kapr měl taky svůj poměr 1:1 – jednou nahoře, jednou dole. A že když jsem ho uviděl, byl to přesně ten okamžik, co měl být. Ne dřív, ne později." 
+        },
+        { 
+            name: "Metaforický", 
+            desc: "Vidí symboly za věcmi.", 
+            text: "Žralok je každý z nás, kdo žije na hranici dvou světů – vnitřního a vnějšího. Nad hladinou je to, co ukazujeme světu. Pod hladinou je naše pravé já. Poměr 1:1 je ideál rovnováhy – nebýt víc vidět, než jsme, a nebýt víc skryti, než je zdrávo. Ryba je naše svědomí, které se ptá: ‚Proč to děláš?‘ A my víme, že kdybychom se vynořili dvakrát, ztratili bychom se." 
+        },
+        { 
+            name: "Groteskní", 
+            desc: "Vidí přehnanou, temnou komiku.", 
+            text: "Představ si: žralok, co si hlídá diář, aby se vynořil přesně jednou za dvě příležitosti. Když se vynoří, lidi křičí hrůzou. On se ponoří a spokojeně si odškrtne: ‚Jedna nahoře, jedna dole.‘ Přijde ryba a ptá se: ‚Proč se vynořuješ?‘ On: ‚Aby se báli.‘ Ryba: ‚A proč zase?‘ On: ‚Aby byl klid.‘ Je to groteska o tom, že i děs může být součástí rovnováhy." 
+        }
+    ];
+
+    const buttonsDiv = document.getElementById('buttons');
+    const nameEl = document.getElementById('angleName');
+    const descEl = document.getElementById('angleDesc');
+    const textEl = document.getElementById('angleText');
+
+    // Vytvoření tlačítek
+    data.forEach((angle, index) => {
+        const btn = document.createElement('button');
+        btn.textContent = angle.name;
+        btn.addEventListener('click', () => {
+            // Zvýraznění
+            document.querySelectorAll('.angle-list button').forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+            
+            // Výpis
+            nameEl.textContent = angle.name;
+            descEl.textContent = angle.desc;
+            textEl.innerHTML = `<p>${angle.text}</p>`;
+        });
+        buttonsDiv.appendChild(btn);
+    });
+
+    // Předvolit první úhel
+    if (data.length) {
+        document.querySelector('.angle-list button').click();
+    }
+</script>
+
+<!-- Poznámka: Tímto je kompletní série dvaceti dvou pohádek (myš, kocour, ryba, motýl, plameňák, čáp, liška, netopýr, lemur, moucha, žížala, zajíc, tygr, krokodýl, želva, jednorožec, pavouk, parohy, páv, vrabec, osel, žralok) – všechny se stejným designem a funkcí. -->
+
+</body>
+</html>
