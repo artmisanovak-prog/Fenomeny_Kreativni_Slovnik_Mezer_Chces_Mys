@@ -189,7 +189,7 @@ footer a{color:var(--a)}
 
 <section class="hero">
   <div class="hero-img">
-    <img src="../../../ilustrace/krokodyl.jpg" alt="Krokodýl" onerror="this.parentElement.style.display='none'">
+    <img src="doma/ilustrace/krokodyl.jpg" alt="Krokodýl" onerror="this.parentElement.style.display='none'">
     <span class="hero-img-cap">ilustrace · krokodýl</span>
   </div>
   <p class="hero-label">Fyzika jazyka · Karta Krokodýl</p>
@@ -201,9 +201,9 @@ footer a{color:var(--a)}
   </div>
   <a class="audio-link" href="https://youtube.com/shorts/LdMgHEBKoyc?is=sM5aRHblgby9Cpbj" target="_blank" rel="noopener">▶ Poslechnout pohádku ↗</a>
   <div class="var-bar">
-    <button class="var-btn active" onclick="setVar('A',this)">🎲 Náhodně</button>
-    <button class="var-btn" onclick="setVar('B',this)">🧭 Podle nálady</button>
-    <button class="var-btn" onclick="setVar('C',this)">🔍 Diagnosticky</button>
+    <button class="var-btn active" onclick="setVar('A',this)">🌬️ Náhodně</button>
+    <button class="var-btn" onclick="setVar('B',this)">🛝 Podle nálady</button>
+    <button class="var-btn" onclick="setVar('C',this)">🧪 Diagnosticky</button>
   </div>
   <div class="var-popis" id="var-popis">Zavřete oči, ťukněte prstem — a jděte na úhel, který vybere prst.</div>
 </section>
@@ -475,7 +475,7 @@ function setVar(v,btn) {
   document.querySelectorAll('.var-btn').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
   const p = {
-    A:'Zavřete oči, ťukněte prstem — a jděte na úhel, který vybere prst.',
+    A:'Ťukněte prstem - system vybere náhodný úhel',
     B:'Projděte záhlaví 12 úhlů níže a vyberte ten, který vás teď přitahuje.',
     C:'Odpovězte na tři otázky — systém nabídne váš úhel.'
   };
@@ -660,16 +660,16 @@ function buildUhly(){
 
         <div class="dl-detail" id="d${i}_3">
           <div class="dl-lbl">Jak pohádku čte Myš — klíče k tomuto úhlu</div>
-          <div class="dl-txt" style="margin-bottom:10px">Myš, která si zapisuje do skulin mezi slovy, v téhle pohádce sleduje tragikomický příběh identity. Vidí krokodýla, který se stal obětí vlastního obrazu. Myš si všímá, že jeho pláč už nikdo nevěří, protože byl příliš mnohokrát zlevněn. Zapíše si do deníčku: „Když se z bytosti stane zboží, i slzy jsou jen součástí letáku. Ale co když je to jediný způsob, jak dnes plakat?“</div>
-          <a class="btn btn-g" href="../../../mys_uhly/krokodyl_uhly.html" target="_blank" style="font-size:.62rem">Otevřít klíče Myši ↗</a>
+          <div class="dl-txt" style="margin-bottom:10px">Myš, která si zapisuje do mezer mezi slovy, v téhle pohádce sleduje tragikomický příběh identity. Vidí krokodýla, který se stal obětí vlastního obrazu. Myš si všímá, že jeho pláč už nikdo nevěří, protože byl příliš mnohokrát zlevněn. Zapíše si: „Když se z bytosti stane zboží, i slzy jsou jen součástí letáku. Ale co když je to jediný způsob, jak dnes plakat?“</div>
+          <a class="btn btn-g" href="doma/mys_uhly/krokodyl_uhly.html" target="_blank" style="font-size:.62rem">Otevřít klíče Myši ↗</a>
         </div>
 
         <div class="dl-detail" id="d${i}_4">
           <div class="dl-lbl">Nástroje pro práci s textem</div>
           <div class="dl-txt" style="margin-bottom:10px">Otevřete si zápisník pro ukládání textů nebo analyzátor pro detailní pohled na své jazykové struktury.</div>
           <div class="btn-row">
-            <a class="btn btn-g" href="../../nastroje/zapisnik.html" target="_blank" style="font-size:.62rem">📓 Otevřít zápisník</a>
-            <a class="btn btn-g" href="../../nastroje/analyzer.html" target="_blank" style="font-size:.62rem">🔍 Otevřít analyzátor</a>
+            <a class="btn btn-g" href="../../nastroje/zapisnik.html" target="_blank" style="font-size:.62rem">🗳️ Otevřít zápisník</a>
+            <a class="btn btn-g" href="../../nastroje/analyzer.html" target="_blank" style="font-size:.62rem">🧿 Otevřít analyzátor</a>
           </div>
         </div>
       </div>`;
