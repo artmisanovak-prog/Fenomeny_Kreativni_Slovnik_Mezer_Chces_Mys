@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Želva - 12 úhlů pohledu</title>
+    <style>
+        /* --- ČERNOBÍLÝ SVĚT - ŽÁDNÉ BARVY --- */
+        html {
+            filter: grayscale(1);
+        }
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: #fff;
+            color: #000;
+            line-height: 1.7;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+        h1, h2, h3 {
+            font-weight: normal;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 0.3em;
+        }
+        /* --- ILUSTRACE --- */
+        .ilustrace {
+            text-align: center;
+            margin: 2em 0;
+        }
+        .ilustrace img {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #000;
+        }
+        /* --- POHÁDKA - SCROLLOVACÍ OKNO --- */
+        .pohadka-container {
+            max-height: 400px;
+            overflow-y: auto;
+            border: 1px solid #000;
+            padding: 0 1.5em;
+            margin: 2em 0;
+            background: #f9f9f9;
+            font-style: italic;
+        }
+        .pohadka p {
+            padding: 0.5em 0;
+            margin: 0;
+        }
+        /* --- 12 TLAČÍTEK - JEDNODUCHÁ MŘÍŽKA --- */
+        .angle-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6em;
+            margin: 2em 0;
+            justify-content: center;
+        }
+        .angle-list button {
+            background: #fff;
+            border: 1px solid #000;
+            padding: 0.7em 1.2em;
+            font-size: 0.95rem;
+            font-family: inherit;
+            cursor: pointer;
+            transition: 0.1s;
+            color: #000;
+        }
+        .angle-list button:hover {
+            background: #ddd;
+        }
+        .angle-list button.selected {
+            background: #000;
+            color: #fff;
+            border: 2px solid #000;
+            font-weight: bold;
+        }
+        /* --- VÝSTUP - POD TLAČÍTKY --- */
+        .output {
+            border: 1px solid #000;
+            padding: 2em;
+            margin-top: 2em;
+            background: #fff;
+            min-height: 180px;
+        }
+        .angle-name {
+            font-size: 1.6rem;
+            font-weight: bold;
+            margin-bottom: 0.5em;
+        }
+        .angle-desc {
+            font-size: 1.1rem;
+            font-style: italic;
+            margin-bottom: 1.5em;
+        }
+        .angle-text {
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+        .footer {
+            margin-top: 3em;
+            text-align: center;
+            font-size: 0.9rem;
+            border-top: 1px solid #ccc;
+            padding-top: 1.5em;
+        }
+        .footer a {
+            color: #000;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+<h1>🐢 12 úhlů pohledu</h1>
+<p><em>„O želvě, která běží závod celé roky, a o zajíci, který posílá pohlednice z míst, kde nikdy nebyla – a přesto jsou její“</em></p>
+
+<!-- ILUSTRACE ŽELVY -->
+<div class="ilustrace">
+    <img src="doma/ilustrace/zelva.jpg" alt="Ilustrace želvy">
+</div>
+
+<!-- POHÁDKA -->
+<h2>KŘIVÁ POHÁDKA – ROVNÉ SVĚDECTVÍ</h2>
+<div class="pohadka-container" id="pohadka">
+    <div class="pohadka">
+        <p><em>Zapsáno rukou, která nechtěla nic vysvětlit.</em></p>
+        
+        <p><strong>O ŽELVĚ</strong></p>
+        <p><strong>která běží závod, a zajíci, který posílá pohlednice</strong></p>
+        
+        <p>—</p>
+        
+        <p>Želva běží závod.</p>
+        <p>Celé roky.</p>
+        <p>Ne pomalu.</p>
+        <p>Jen důkladně.</p>
+        <p>Každý krok je jako otisk.</p>
+        <p>Každý otisk stopy jako razítko.</p>
+        <p>Každý den jako další stránka v kalendáři, co nikdo neotáčí.</p>
+        
+        <p>—</p>
+        
+        <p>Zajíc už dávno doběhl.</p>
+        <p>Pak se vrátil.</p>
+        <p>Pak zase odběhl.</p>
+        <p>Pak si sedl.</p>
+        <p>Pak si lehl.</p>
+        <p>A pak začal psát.</p>
+        
+        <p>—</p>
+        
+        <p>Poslal pohlednici ze Sicílie.</p>
+        <p>„Tady je slunce, co se tváří jako výmluva.“</p>
+        <p>Poslal pohlednici z Madridu.</p>
+        <p>„Tady se běhá akorát v myšlenkách.“</p>
+        <p>Poslal pohlednici z Grónska.</p>
+        <p>„Tady je ticho, co se nedá doběhnout.“</p>
+        <p>A nakonec z Nemanic.</p>
+        <p>„Tady není nic. Ale to nevadí.“</p>
+        
+        <p>—</p>
+        
+        <p>Želva běží.</p>
+        <p>Dlouho</p>
+        <p>Nečte hned.</p>
+        <p>Času má dost.</p>
+        <p>Ale každý pohled jí přistane na krunýři.</p>
+        <p>A ona je nese.</p>
+        <p>Jako důkazy.</p>
+        <p>Jako sny.</p>
+        <p>Jako možnosti.</p>
+        <p>Jako mapy míst, kde nikdy nebyla, ale možná jednou bude.</p>
+        
+        <p>—</p>
+        
+        <p>Ale někdy po cestě,</p>
+        <p>když se zastaví,</p>
+        <p>ba chvíli</p>
+        <p>třeba kvůli křovisu, co se tváří</p>
+        <p>jako večeře — vytáhne jednu.</p>
+        
+        <p>—</p>
+        
+        <p>Sicílie.</p>
+        <p>Slunce, co se tváří jako výmluva.</p>
+        <p>A želva si řekne: „Tam bych mohla jednou dojít.“</p>
+        <p>A běží dál.</p>
+        
+        <p>—</p>
+        
+        <p>Madrid.</p>
+        <p>Město, kde se běhá jenom v myšlenkách.</p>
+        <p>To ji zaujme.</p>
+        <p>Protože ona běží tělem..</p>
+        <p>Ale možná by mohla i v myšlenkách?</p>
+        <p>A tak si to poznamená.</p>
+        <p>Do krunýře.</p>
+        <p>Do vzoru.</p>
+        
+        <p>—</p>
+        
+        <p>Grónsko.</p>
+        <p>Ticho, který se nedá předběhnout.</p>
+        <p>To ji dojme.</p>
+        <p>Protože to ona zná.</p>
+        <p>Ale nikdy to nepředběhla.</p>
+        <p>Jen jí to něco přesně připomíná.</p>
+        
+        <p>—</p>
+        
+        <p>Nemanice.</p>
+        <p>Nic.</p>
+        <p>Ale to nevadí.</p>
+        <p>To je její oblíbená.</p>
+        <p>Protože nic je místo, kde se může stát všechno.</p>
+        
+        <p>—</p>
+        
+        <p>A tak želva běží.</p>
+        <p>A čte.</p>
+        <p>A každý pohled má jako směr.</p>
+        <p>Ne cíl.</p>
+        <p>Ale důvod.</p>
+        
+        <p>—</p>
+        
+        <p>Zajíc mezitím píše dál.</p>
+        <p>Ne proto, že by musel.</p>
+        <p>Ale protože želva běží.</p>
+        <p>A dokud běží, má komu psát.</p>
+        
+        <p>—</p>
+        
+        <p>Jednou napíše:</p>
+        <p>„Tady jsem si uvědomil, že možná nejde o to, kdo doběhne.</p>
+        <p>Ale o to, kdo má kam psát.“</p>
+        
+        <p>—</p>
+        
+        <p>A želva si to přečte.</p>
+        <p>A usměje se.</p>
+        <p>Ne proto, že by to bylo vtipné.</p>
+        <p>Ale protože to je pravda.</p>
+        
+        <p>—</p>
+        
+        <p>A tak běží dál.</p>
+        <p>A pohlednice jí šustí na zádech.</p>
+        <p>Slova se splétají jako mašle.</p>
+        <p>A vítr je čte s ní.</p>
+        <p>A slunce je bledne.</p>
+        <p>A déšť je rozmazává.</p>
+        
+        <p>—</p>
+        
+        <p>A zajíc píše dál.</p>
+        <p>Z míst, která možná</p>
+        <p>ani eexistující.</p>
+        <p>Ale pokud je želva</p>
+        <p>jednou přečte,</p>
+        <p>možná začnou.</p>
+        
+        <p>—</p>
+        
+        <p>A každý z nich běží závod.</p>
+        <p>Jiný cíl, stejný důvod.</p>
+        <p>„Zajíc běží, aby mohl psát.</p>
+        <p>A želva běží, aby mohla číst.“</p>
+        <p>a želva čte, aby zajíc mohl psát.”</p>
+        <p>a zajíc píše, aby želva měla co číst.</p>
+        
+        <p>—</p>
+        
+        <p>A že závod není o čase.</p>
+        <p>Je o tom, kdo si pamatuje, proč vůbec závodil.</p>
+    </div>
+</div>
+    
+<!-- 12 ÚHLŮ -->
+<h2>Vyber úhel pohledu</h2>
+<div class="angle-list" id="buttons"></div>
+
+<!-- VÝSTUP -->
+<div class="output" id="output">
+    <div class="angle-name" id="angleName"></div>
+    <div class="angle-desc" id="angleDesc"></div>
+    <div id="angleText"></div>
+</div>
+
+<div class="footer">
+    Autorka: Art Misa Novak - metoda REPO DOMY<br>
+    <a href="mailto:chcesmys@gmail.com?subject=REPO%20DOMY%20-%20ŽELVA">pro více info pište</a>
+</div>
+
+<script>
+    // --- 12 ÚHLŮ S KRÁTKÝM POPISEM A KONKRÉTNÍ VĚTOU O POHÁDCE O ŽELVĚ ---
+    const data = [
+        { 
+            name: "Absurdní", 
+            desc: "Hledá nesmysl, paradox, rozpor.", 
+            text: "Želva běží závod celé roky, zajíc už dávno doběhl a posílá pohlednice. Závod, který nikdy neskončí, a psaní, které nemá adresáta? Ale ono má – želva čte a nese pohledy na krunýři. Paradox: nejde o cíl, ale o to, mít komu psát a mít co číst." 
+        },
+        { 
+            name: "Jazykový", 
+            desc: "Sleduje slova, rytmus, dvojznačnost.", 
+            text: "„Slunce, co se tváří jako výmluva“ – věta, která by mohla být básní. „Ticho, který se nedá doběhnout“ – oxymóron, který vystihuje Grónsko. Pohádka je sama o sobě sbírkou jazykových hříček a obrazů, které želva nosí na zádech a vítr je čte s ní." 
+        },
+        { 
+            name: "Ironický", 
+            desc: "Vidí rozpor mezi záměrem a výsledkem.", 
+            text: "Zajíc vyhrál závod, ale místo oslav píše pohlednice. Želva prohrává, ale získává svět. Ironie: ten, kdo doběhl první, ztrácí smysl, ten, kdo běží pomalu, nachází důvod. A nejde o čas, ale o to, kdo má kam psát." 
+        },
+        { 
+            name: "Filozofický", 
+            desc: "Ptá se po smyslu a podstatě.", 
+            text: "Co je to cíl? Je to meta, nebo jen záminka k cestě? Želva běží, ale její cíl se neustále posouvá – je na pohlednicích, v myšlenkách, v tichu. Zajíc píše, ale jeho psaní nemá adresáta – má želvu. Pohádka klade otázku: Není důležitější než vítězství to, že máme pro koho psát a pro co běžet?" 
+        },
+        { 
+            name: "Surrealistický", 
+            desc: "Propojuje nesouvisející.", 
+            text: "Sicílie, Madrid, Grónsko, Nemanice – místa reálná i nereálná se mísí na krunýři želvy. Slunce jako výmluva, ticho, co se nedá doběhnout, nic, kde se může stát všechno. A zajíc píše z míst, která možná ani neexistují. Svět, kde se geologie snoubí s poezií." 
+        },
+        { 
+            name: "Naivní", 
+            desc: "Vidí věci jednoduše, bez předsudků.", 
+            text: "Želva běží závod. Zajíc jí posílá pohlednice. Ona je čte, až když má čas. Nosí je na krunýři. Každá pohlednice je jako důvod běžet dál. Zajíc píše, protože ví, že želva čte. A oba jsou spokojení. Jednoduchý, ne?" 
+        },
+        { 
+            name: "Introspektivní", 
+            desc: "Promítá do příběhu vlastní pocity.", 
+            text: "Tohle jsem já. Pořád někam běžím, ale nevím přesně kam. A občas mi přijde dopis od někoho, kdo už dávno dorazil. A já si ho schovám a nesu ho s sebou. A v těch dopisech je občas víc než v celé cestě. Protože nejde o to, kam dojdu, ale o to, co po cestě dostanu." 
+        },
+        { 
+            name: "Betonový", 
+            desc: "Čte doslovně, fakticky.", 
+            text: "Příběh vypráví o želvě, která se účastní běžeckého závodu (pravděpodobně narážka na Ezopovu bajku) a běží ho velmi dlouho. Zajíc, který závod dokončil, posílá želvě pohlednice z různých míst (Sicílie, Madrid, Grónsko, Nemanice). Želva si pohlednice ukládá na krunýř, čte je a používá je jako motivaci k dalšímu běhu. Zajíc píše, protože želva běží, a želva běží, protože zajíc píše – vytváří se vzájemná závislost." 
+        },
+        { 
+            name: "Kulturní", 
+            desc: "Hledá archetypy a paralely.", 
+            text: "Ezopova bajka o zajíci a želvě je tady převrácena. Zajíc neprohrává, ale vyhrává – a pak píše. Želva nevyhrává, ale běží dál. Je to příběh o tom, že vítězství není cíl, ale proces. Pohlednice jako moderní verze poselství – místo holubů papírové obrázky. A Nemanice? To je česká díra, která se stává existenciální metaforou." 
+        },
+        { 
+            name: "Asociační", 
+            desc: "Vyvolává osobní vzpomínky.", 
+            text: "Připomnělo mi to, jak jsem jako dítě dostával pohledy od babičky z lázní. Nikdy jsem tam nebyl, ale díky těm pohledům jsem věděl, že existují. A taky jsem si je schovával, jako želva na krunýř. A pak jsem jednou jel do těch lázní a všechno bylo přesně tak, jak babička psala. Pohledy byly mapy." 
+        },
+        { 
+            name: "Metaforický", 
+            desc: "Vidí symboly za věcmi.", 
+            text: "Želva je pomalé, ale vytrvalé bytí. Zajíc je rychlá, ale prchavá myšlenka. Pohlednice jsou sny, které nám posílá život. Krunýř je paměť, na kterou si ukládáme to, co nás přesahuje. A Nemanice? To je místo, kde nic není – a proto se tam může stát všechno. Závod není o vítězství, ale o tom, co si na tu cestu naložíme." 
+        },
+        { 
+            name: "Groteskní", 
+            desc: "Vidí přehnanou, temnou komiku.", 
+            text: "Představ si: želva běží závod, co trvá roky. Zajíc, kterej už dávno vyhrál, jí posílá pohlednice z dovolených. Ona si je lepí na krunýř a čte je, když se zastaví u křoví. A nakonec zjistí, že nejde o závod, ale o to, mít komu psát. Je to groteska o tom, že komunikace je důležitější než soutěžení." 
+        }
+    ];
+
+    const buttonsDiv = document.getElementById('buttons');
+    const nameEl = document.getElementById('angleName');
+    const descEl = document.getElementById('angleDesc');
+    const textEl = document.getElementById('angleText');
+
+    // Vytvoření tlačítek
+    data.forEach((angle, index) => {
+        const btn = document.createElement('button');
+        btn.textContent = angle.name;
+        btn.addEventListener('click', () => {
+            // Zvýraznění
+            document.querySelectorAll('.angle-list button').forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+            
+            // Výpis
+            nameEl.textContent = angle.name;
+            descEl.textContent = angle.desc;
+            textEl.innerHTML = `<p>${angle.text}</p>`;
+        });
+        buttonsDiv.appendChild(btn);
+    });
+
+    // Předvolit první úhel
+    if (data.length) {
+        document.querySelector('.angle-list button').click();
+    }
+</script>
+
+<!-- Poznámka: Tímto je kompletní série patnácti pohádek (myš, kocour, ryba, motýl, plameňák, čáp, liška, netopýr, lemur, moucha, žížala, zajíc, tygr, krokodýl, želva) – všechny se stejným designem a funkcí. -->
+
+</body>
+</html>
