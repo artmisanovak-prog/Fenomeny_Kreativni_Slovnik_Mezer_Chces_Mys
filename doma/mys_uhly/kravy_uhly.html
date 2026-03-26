@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Krávy - 12 úhlů pohledu</title>
+    <style>
+        /* --- ČERNOBÍLÝ SVĚT - ŽÁDNÉ BARVY --- */
+        html {
+            filter: grayscale(1);
+        }
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: #fff;
+            color: #000;
+            line-height: 1.7;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+        h1, h2, h3 {
+            font-weight: normal;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 0.3em;
+        }
+        /* --- ILUSTRACE --- */
+        .ilustrace {
+            text-align: center;
+            margin: 2em 0;
+        }
+        .ilustrace img {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #000;
+        }
+        /* --- POHÁDKA - SCROLLOVACÍ OKNO --- */
+        .pohadka-container {
+            max-height: 400px;
+            overflow-y: auto;
+            border: 1px solid #000;
+            padding: 0 1.5em;
+            margin: 2em 0;
+            background: #f9f9f9;
+            font-style: italic;
+        }
+        .pohadka p {
+            padding: 0.5em 0;
+            margin: 0;
+        }
+        /* --- 12 TLAČÍTEK - JEDNODUCHÁ MŘÍŽKA --- */
+        .angle-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6em;
+            margin: 2em 0;
+            justify-content: center;
+        }
+        .angle-list button {
+            background: #fff;
+            border: 1px solid #000;
+            padding: 0.7em 1.2em;
+            font-size: 0.95rem;
+            font-family: inherit;
+            cursor: pointer;
+            transition: 0.1s;
+            color: #000;
+        }
+        .angle-list button:hover {
+            background: #ddd;
+        }
+        .angle-list button.selected {
+            background: #000;
+            color: #fff;
+            border: 2px solid #000;
+            font-weight: bold;
+        }
+        /* --- VÝSTUP - POD TLAČÍTKY --- */
+        .output {
+            border: 1px solid #000;
+            padding: 2em;
+            margin-top: 2em;
+            background: #fff;
+            min-height: 180px;
+        }
+        .angle-name {
+            font-size: 1.6rem;
+            font-weight: bold;
+            margin-bottom: 0.5em;
+        }
+        .angle-desc {
+            font-size: 1.1rem;
+            font-style: italic;
+            margin-bottom: 1.5em;
+        }
+        .angle-text {
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+        .footer {
+            margin-top: 3em;
+            text-align: center;
+            font-size: 0.9rem;
+            border-top: 1px solid #ccc;
+            padding-top: 1.5em;
+        }
+        .footer a {
+            color: #000;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+<h1>🐄 12 úhlů pohledu</h1>
+<p><em>„O kravách, které blbnou hlavy – protože bú není slovo, ale stav, a louka nesnáší jistotu“</em></p>
+
+<!-- ILUSTRACE KRAV -->
+<div class="ilustrace">
+    <img src="doma/ilustrace/kravy.jpg" alt="Ilustrace krav">
+</div>
+
+<!-- POHÁDKA -->
+<h2>KŘIVÁ POHÁDKA – ROVNÉ SVĚDECTVÍ</h2>
+<div class="pohadka-container" id="pohadka">
+    <div class="pohadka">
+        <p><em>Zapsáno rukou, která nechtěla nic vysvětlit.</em></p>
+        
+        <p><strong>O KRÁVÁCH</strong></p>
+        <p><strong>které blbnou hlavy</strong></p>
+        
+        <p>—</p>
+        
+        <p>Na konci louky,</p>
+        <p>kde tráva rostla jako z vody</p>
+        <p>a plot byl jen nedotažený nápad,</p>
+        <p>žilo stádo krav.</p>
+        
+        <p>—</p>
+        
+        <p>Ale ne jen tak nějakých.</p>
+        <p>Tyhle krávy mluvily.</p>
+        <p>Ne bučely.</p>
+        <p>Mluvily.</p>
+        <p>Jako krávy.</p>
+        <p>Ne Bubáci.</p>
+        <p>Ale neříkaly nic užitečného.</p>
+        
+        <p>—</p>
+        
+        <p>Říkaly:</p>
+        
+        <p>„Bu bu bu, blbnu ti hlavu, bu bu.“</p>
+        
+        <p>—</p>
+        
+        <p>A to nebyla hrozba.</p>
+        <p>To byla metoda.</p>
+        
+        <p>—</p>
+        
+        <p>Krávy se totiž bez plotu nudily,</p>
+        <p>chyběly jim mantynely.</p>
+        <p>a tak se rozhodly, že</p>
+        <p>je realita strašně pevná.</p>
+        <p>Aihnhoooooonn ne jen pro ně - pro všechny</p>
+        <p>Že věty jsou hrozně rovné.</p>
+        <p>Že výrazy se tváří,</p>
+        <p>jako by byly jediné.</p>
+        
+        <p>—</p>
+        
+        <p>A tak se rozhodly:</p>
+        <p>Zamlžíme jazyk.</p>
+        <p>Zkomolíme smysl.</p>
+        <p>Zblbneme hlavy.</p>
+        
+        <p>—</p>
+        
+        <p>Každé ráno vstaly, přežvykovaly slovni druhy a pak se vydaly do vesnice.</p>
+        <p>Tam si stouply na náves a začaly:</p>
+        
+        <p>—</p>
+        
+        <p>„Bu bu bu, blbnu ti hlavu, bu bu.“</p>
+        
+        <p>—</p>
+        
+        <p>Lidé se nejdřív smáli.</p>
+        <p>Pak se začali škrábat na hlavě.</p>
+        <p>Pak začali pochybovat,</p>
+        <p>jestlip ta hlava je vůbec jejich,</p>
+        <p>čí hlavu to drbou?</p>
+        <p>a jestli „hlava“ je vůbec správné slovo.</p>
+        <p>A nakonec si nebyli jistí ani tím, jestli jsou to oni, kdo myslí, nebo jestli za ně myslí krávy?</p>
+        
+        <p>—</p>
+        
+        <p>Jednou se někdo zeptal:</p>
+        <p>„Co tím myslíte?“</p>
+        <p>Kráva odpověděla:</p>
+        <p>„Bu není slovo.</p>
+        <p>Bu je stav.</p>
+        <p>Bu je jazyk beze smyslu.</p>
+        <p>Bu je volnost.“</p>
+        
+        <p>—</p>
+        
+        <p>A pak dodala:</p>
+        <p>„Blbnu ti hlavu, protože hlava je si moc jistá. A louka nesnáší jistotu.“</p>
+        
+        <p>—</p>
+        
+        <p>Od té doby se ve vesnici mluví opatrně.</p>
+        <p>Lidi si tam radši dávaj pozor, aby neřekli nic moc smysluplného.</p>
+        <p>A když někdo náhodou řekne něco jasného,</p>
+        <p>v dálce se ozve:</p>
+        
+        <p>—</p>
+        
+        <p>„Bu bu bu…“</p>
+        
+        <p>—</p>
+        
+        <p>A všichni vědí, že krávy poslouchají.</p>
+        <p>A že význam je vratký.</p>
+        <p>A že jazyk je postava,</p>
+        <p>A že i on má svou vlastní hlavu</p>
+        <p>A že hlava je jen louka, kde se dá bloudit.</p>
+    </div>
+</div>
+    
+<!-- 12 ÚHLŮ -->
+<h2>Vyber úhel pohledu</h2>
+<div class="angle-list" id="buttons"></div>
+
+<!-- VÝSTUP -->
+<div class="output" id="output">
+    <div class="angle-name" id="angleName"></div>
+    <div class="angle-desc" id="angleDesc"></div>
+    <div id="angleText"></div>
+</div>
+
+<div class="footer">
+    Autorka: Art Misa Novak - metoda REPO DOMY<br>
+    <a href="mailto:chcesmys@gmail.com?subject=REPO%20DOMY%20-%20KRÁVY">pro více info pište</a>
+</div>
+
+<script>
+    // --- 12 ÚHLŮ S KRÁTKÝM POPISEM A KONKRÉTNÍ VĚTOU O POHÁDCE O KRÁVÁCH ---
+    const data = [
+        { 
+            name: "Absurdní", 
+            desc: "Hledá nesmysl, paradox, rozpor.", 
+            text: "Krávy, které mluví, ale neříkají nic užitečného. Jejich ‚bú bú bú, blbnu ti hlavu‘ není hrozba, ale metoda. Rozhodnou se zamlžit jazyk, protože realita je strašně pevná a věty hrozně rovné. Absurdní? Ano. Ale co je absurdnější než jazyk, který si sám sebou není jistý?" 
+        },
+        { 
+            name: "Jazykový", 
+            desc: "Sleduje slova, rytmus, dvojznačnost.", 
+            text: "„Bu není slovo. Bu je stav.“ Krávy přežvykují slovní druhy a znejisťují význam. Jejich mantra ‚bú bú bú‘ je jazyk beze smyslu, který ale dává svobodu. Jazyk se tady stává pastvinou, kde se pase význam a občas se utrhne ze řetězu." 
+        },
+        { 
+            name: "Ironický", 
+            desc: "Vidí rozpor mezi záměrem a výsledkem.", 
+            text: "Krávy chtějí znejistět lidi, aby nebyli tak pevní. A povede se jim to dokonale – lidé začnou pochybovat o vlastní hlavě, o slovech, o tom, kdo vlastně myslí. Ironie: čím víc krávy blbnou hlavy, tím víc lidé přemýšlejí. A nakonec si nejsou jistí, jestli za ně nemyslí krávy." 
+        },
+        { 
+            name: "Filozofický", 
+            desc: "Ptá se po smyslu a podstatě.", 
+            text: "Co je to jistota? A proč ji louka nesnáší? Krávy učí, že hlava je si moc jistá, a to je problém. Jejich ‚bú‘ je výzvou k pochybnosti. Pohádka klade otázku: Není náš jazyk příliš rovný? Nepotřebujeme občas zablbnout hlavu, abychom viděli, že význam je vratký a že pravda je louka, kde se dá bloudit?" 
+        },
+        { 
+            name: "Surrealistický", 
+            desc: "Propojuje nesouvisející.", 
+            text: "Krávy, které přežvykují slovní druhy, stojí na návsi a opakují ‚bú bú bú‘. Lidé se škrábou na hlavě a neví, čí vlastně je. Jazyk se stává postavou a hlava loukou. Svět, kde se realita mísí s metaforou a kde krávy jsou filozofky." 
+        },
+        { 
+            name: "Naivní", 
+            desc: "Vidí věci jednoduše, bez předsudků.", 
+            text: "Krávy na louce se nudily, tak začaly mluvit. Říkaly jen ‚bú bú bú, blbnu ti hlavu‘. Lidi si mysleli, že je to legrace, ale pak začali pochybovat. A jedna kráva řekla, že bú není slovo, ale stav. A že hlava je moc jistá. Od té doby si lidi dávaj pozor, co říkaj. Jednoduchý, ne?" 
+        },
+        { 
+            name: "Introspektivní", 
+            desc: "Promítá do příběhu vlastní pocity.", 
+            text: "Tohle jsem já. Někdy mám pocit, že moje hlava je moc jistá – vím, co si myslím, vím, co říkám. A pak přijde něco jako ty krávy – pochybnost, nejistota, ‚bú‘. A najednou si nejsem jistý, jestli za mě nemyslí někdo jiný. A možná je to dobře. Možná je to únik z rovných vět." 
+        },
+        { 
+            name: "Betonový", 
+            desc: "Čte doslovně, fakticky.", 
+            text: "Příběh vypráví o stádu krav, které získalo schopnost mluvit (ne pouze bučet). Jejich verbální projev se omezuje na frázi „Bu bu bu, blbnu ti hlavu, bu bu“, kterou opakovaně pronášejí na návsi. Tato fráze způsobuje u lidí postupnou ztrátu jistoty ohledně vlastní identity, významu slov a původu myšlenek. Krávy tento stav vysvětlují jako metodu znejistění jazyka a reality. Vesničané následně mluví opatrně, aby neřekli nic příliš jasného." 
+        },
+        { 
+            name: "Kulturní", 
+            desc: "Hledá archetypy a paralely.", 
+            text: "Krávy jako symbol klidu, tuposti, žití. Tady se stávají filozofy a jazykovými teroristy. Je to převrácení archetypu – z pasivních přežvýkavců se stávají aktivní hybatelé myšlení. Připomíná to orákula, která mluvila v hádankách. Jejich ‚bú‘ je jako věštba – zdánlivě nesmyslná, ale plná významu. A pointa: hlava je louka, kde se dá bloudit – to je zenový kóan." 
+        },
+        { 
+            name: "Asociační", 
+            desc: "Vyvolává osobní vzpomínky.", 
+            text: "Připomnělo mi to, jak jsme jako děti na táboře seděli u ohně a někdo začal zpívat ‚Bú, bú, bú‘. A najednou jsme všichni ztichli a přemýšleli, co to znamená. Nic. Ale to nic bylo tak silný, že jsme o tom mluvili celej večer. Přesně jako ty krávy – jejich bú není slovo, je to stav." 
+        },
+        { 
+            name: "Metaforický", 
+            desc: "Vidí symboly za věcmi.", 
+            text: "Krávy jsou pochybnost, která se pasе na naší jistotě. Jejich ‚bú‘ je hlas, který narušuje naše rovné věty. Louka je naše mysl – místo, kde může růst cokoli, ale také kde se dá bloudit. A hlava? Ta je jen další louka. Když si je moc jistá, krávy přijdou a zablbnou ji, aby nezapomněla, že pravda je vratká." 
+        },
+        { 
+            name: "Groteskní", 
+            desc: "Vidí přehnanou, temnou komiku.", 
+            text: "Představ si: krávy na návsi, přežvykujou slovní druhy a opakujou ‚bú bú bú‘. Lidi se škrabou na hlavě a nevědí, jestli je to jejich. Někdo se zeptá: ‚Co tím myslíte?‘ A kráva mu vysvětlí, že bú je stav a že louka nesnáší jistotu. Je to groteska o tom, že nejistota je někdy větší svoboda než jistota." 
+        }
+    ];
+
+    const buttonsDiv = document.getElementById('buttons');
+    const nameEl = document.getElementById('angleName');
+    const descEl = document.getElementById('angleDesc');
+    const textEl = document.getElementById('angleText');
+
+    // Vytvoření tlačítek
+    data.forEach((angle, index) => {
+        const btn = document.createElement('button');
+        btn.textContent = angle.name;
+        btn.addEventListener('click', () => {
+            // Zvýraznění
+            document.querySelectorAll('.angle-list button').forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+            
+            // Výpis
+            nameEl.textContent = angle.name;
+            descEl.textContent = angle.desc;
+            textEl.innerHTML = `<p>${angle.text}</p>`;
+        });
+        buttonsDiv.appendChild(btn);
+    });
+
+    // Předvolit první úhel
+    if (data.length) {
+        document.querySelector('.angle-list button').click();
+    }
+</script>
+
+<!-- Poznámka: Tímto je kompletní série dvaceti čtyř pohádek (myš, kocour, ryba, motýl, plameňák, čáp, liška, netopýr, lemur, moucha, žížala, zajíc, tygr, krokodýl, želva, jednorožec, pavouk, parohy, páv, vrabec, osel, žralok, prase, krávy) – všechny se stejným designem a funkcí. -->
+
+</body>
+</html>
