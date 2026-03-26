@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Liška - 12 úhlů pohledu</title>
+    <style>
+        /* --- ČERNOBÍLÝ SVĚT - ŽÁDNÉ BARVY --- */
+        html {
+            filter: grayscale(1);
+        }
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: #fff;
+            color: #000;
+            line-height: 1.7;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+        h1, h2, h3 {
+            font-weight: normal;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 0.3em;
+        }
+        /* --- ILUSTRACE --- */
+        .ilustrace {
+            text-align: center;
+            margin: 2em 0;
+        }
+        .ilustrace img {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #000;
+        }
+        /* --- POHÁDKA - SCROLLOVACÍ OKNO --- */
+        .pohadka-container {
+            max-height: 400px;
+            overflow-y: auto;
+            border: 1px solid #000;
+            padding: 0 1.5em;
+            margin: 2em 0;
+            background: #f9f9f9;
+            font-style: italic;
+        }
+        .pohadka p {
+            padding: 0.5em 0;
+            margin: 0;
+        }
+        /* --- 12 TLAČÍTEK - JEDNODUCHÁ MŘÍŽKA --- */
+        .angle-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6em;
+            margin: 2em 0;
+            justify-content: center;
+        }
+        .angle-list button {
+            background: #fff;
+            border: 1px solid #000;
+            padding: 0.7em 1.2em;
+            font-size: 0.95rem;
+            font-family: inherit;
+            cursor: pointer;
+            transition: 0.1s;
+            color: #000;
+        }
+        .angle-list button:hover {
+            background: #ddd;
+        }
+        .angle-list button.selected {
+            background: #000;
+            color: #fff;
+            border: 2px solid #000;
+            font-weight: bold;
+        }
+        /* --- VÝSTUP - POD TLAČÍTKY --- */
+        .output {
+            border: 1px solid #000;
+            padding: 2em;
+            margin-top: 2em;
+            background: #fff;
+            min-height: 180px;
+        }
+        .angle-name {
+            font-size: 1.6rem;
+            font-weight: bold;
+            margin-bottom: 0.5em;
+        }
+        .angle-desc {
+            font-size: 1.1rem;
+            font-style: italic;
+            margin-bottom: 1.5em;
+        }
+        .angle-text {
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+        .footer {
+            margin-top: 3em;
+            text-align: center;
+            font-size: 0.9rem;
+            border-top: 1px solid #ccc;
+            padding-top: 1.5em;
+        }
+        .footer a {
+            color: #000;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+<h1>🦊 12 úhlů pohledu</h1>
+<p><em>„O lišce, které vzali všechno – a přesto zůstala celá“</em></p>
+
+<!-- ILUSTRACE LIŠKY -->
+<div class="ilustrace">
+    <img src="doma/ilustrace/liska.jpg" alt="Ilustrace lišky">
+</div>
+
+<!-- POHÁDKA -->
+<h2>KŘIVÁ POHÁDKA – ROVNÉ SVĚDECTVÍ</h2>
+<div class="pohadka-container" id="pohadka">
+    <div class="pohadka">
+        <p><em>Zapsáno rukou, která nechtěla nic vysvětlit.</em></p>
+        
+        <p><strong>O LIŠCE</strong></p>
+        <p><strong>která byla z části</strong></p>
+        
+        <p>—</p>
+        
+        <p>Kdysi, v krajině, kde se stromy nekláněly kvůli větru, ale kvůli tíze slov, žila liška. Ne ta z dětských knížek, co krade slepice a směje se pod fousy. Tahle liška byla jiná. Tichá. Pozorující. A hlavně – celá.</p>
+        
+        <p>—</p>
+        
+        <p>Měla kožich, který se leskl jako podzimní večer. Tlapky, které uměly chodit po sněhu, aniž by ho rušily. Oči, které viděly věci, co se ještě nestaly. A srdce – těžké, tvrdé, ale průzračné. Diamant. Velký. Ne pro parádu. Pro tíhu.</p>
+        
+        <p>—</p>
+        
+        <p>Ale svět si všiml. A jakmile si svět všimne, začne chtít.</p>
+        
+        <p>—</p>
+        
+        <p>První přišli obchodníci. S měřítky, s cenami, s rukama připravenýma brát.</p>
+        <p>„Ten kožich,“ řekli. „To je přesně ono. Luxus. Teplo. Lesk.“</p>
+        <p>A tak lišce vzali srst.</p>
+        <p>Zůstala nahá. Ale ne slabá. Jen jiná.</p>
+        
+        <p>—</p>
+        
+        <p>Pak přišli ti, co chodí v botách z hadí kůže. znají cestu. My chceme směr.“</p>
+        <p>A tak jí vzali chodidla.</p>
+        <p>Zůstaly jí jen vzpomínky na stopy.</p>
+        
+        <p>—</p>
+        
+        <p>Potom přišli šperkaři. Ne pro krásu, ale pro sílu.</p>
+        <p>„Zuby z mrožoviny? Pche. Ale liščí zuby – to je elegance s ostřím.“</p>
+        <p>A tak jí vzali úsměv.</p>
+        <p>Zůstalo mlčení.</p>
+        
+        <p>—</p>
+        
+        <p>Nakonec přišel někdo, kdo se neptal. Nepředstavil se. Jen sáhl do její hrudi a vytáhl srdce.</p>
+        <p>Byl to kámen. Diamant. Velký.</p>
+        <p>„Tohle je to nejcennější,“ řekl.</p>
+        <p>A odešel.</p>
+        
+        <p>—</p>
+        
+        <p>A liška?</p>
+        <p>Zůstala. Bez srsti. Bez tlapek. Bez smíchu. Bez srdce.</p>
+        <p>Ale pořád tam byla.</p>
+        <p>Ne jako zvíře. Jako stín. Jako paměť.</p>
+        
+        <p>—</p>
+        
+        <p>Začala se pohybovat jinak. Ne kráčet – ale klouzat. Ne mluvit – ale šeptat. Ne žít – ale být.</p>
+        
+        <p>—</p>
+        
+        <p>A v tom bytí se začalo něco dít.</p>
+        <p>Lidé, kteří si z ní vzali, začali ztrácet.</p>
+        <p>Kožich se rozpadl na chlupy, které se nedaly sešít.</p>
+        <p>Boty z hadí kůže se rozpadly na šupiny, které klouzaly z nohou.</p>
+        <p>Šperky ze zubů se začaly třepit, jako by se smály těm, kdo je nosí.</p>
+        <p>A diamant? Ten zčernal. Ne z špíny. Z pravdy.</p>
+        
+        <p>—</p>
+        
+        <p>Protože to, co se vezme násilím, se neudrží.</p>
+        <p>A to, co se vezme z lišky, se nehodí nikomu jinému.</p>
+        
+        <p>—</p>
+        
+        <p>Liška se mezitím stala legendou.</p>
+        <p>Ne tou, co se vypráví dětem.</p>
+        <p>Tou, co se šeptá mezi stromy.</p>
+        <p>„Viděli jste ji?“</p>
+        <p>„Ne, ale cítili jsme ji.“</p>
+        <p>„Jak?“</p>
+        <p>„Jako ticho, které má tvar.“</p>
+        
+        <p>—</p>
+        
+        <p>A tak se začalo říkat, že někde běhá liška, která nemá nic –</p>
+        <p>a právě proto má všechno.</p>
+        
+        <p>—</p>
+        
+        <p>Její srdce je kámen.</p>
+        <p>Ale ne ten, co se nosí.</p>
+        <p>Ten, co se nese.</p>
+    </div>
+</div>
+    
+<!-- 12 ÚHLŮ -->
+<h2>Vyber úhel pohledu</h2>
+<div class="angle-list" id="buttons"></div>
+
+<!-- VÝSTUP -->
+<div class="output" id="output">
+    <div class="angle-name" id="angleName"></div>
+    <div class="angle-desc" id="angleDesc"></div>
+    <div id="angleText"></div>
+</div>
+
+<div class="footer">
+    Autorka: Art Misa Novak - metoda REPO DOMY<br>
+    <a href="mailto:chcesmys@gmail.com?subject=REPO%20DOMY%20-%20LIŠKA">pro více info pište</a>
+</div>
+
+<script>
+    // --- 12 ÚHLŮ S KRÁTKÝM POPISEM A KONKRÉTNÍ VĚTOU O POHÁDCE O LIŠCE ---
+    const data = [
+        { 
+            name: "Absurdní", 
+            desc: "Hledá nesmysl, paradox, rozpor.", 
+            text: "Liška, které berou srst, tlapky, zuby i srdce – a ona pořád je. A dokonce se stává legendou. Paradox: čím víc jí berou, tím víc jí zbývá. A ti, co brali, nakonec ztrácejí. Absurdní? Možná. Ale v té absurditě je zákonitost." 
+        },
+        { 
+            name: "Jazykový", 
+            desc: "Sleduje slova, rytmus, dvojznačnost.", 
+            text: "‚Být z části‘ – název, který je sám o sobě hádankou. Liška, která byla celá, se stává ‚z části‘, ale nakonec je víc než celá. Jazyk selhává, když má popsat něco, co je ‚ticho, které má tvar‘. Pohádka pracuje s významy, které se vymykají slovům – a přesto je musíme použít." 
+        },
+        { 
+            name: "Ironický", 
+            desc: "Vidí rozpor mezi záměrem a výsledkem.", 
+            text: "Chtěli vzít to nejcennější – a nakonec zjistili, že se to nedá udržet. Kožich se rozpadl, boty se rozpadly, šperky se třepily, diamant zčernal. Ironie osudu: co jsme si vzali, nás ničí. A liška? Ta jen klouže dál, lehčí než předtím." 
+        },
+        { 
+            name: "Filozofický", 
+            desc: "Ptá se po smyslu a podstatě.", 
+            text: "Co je to ‚být‘, když nemáš nic? Liška přestala žít, ale začala být. Stala se pamětí, stínem, legendou. Ptá se nás: co je naší podstatou, když nám vezmou všechno, co považujeme za své? A je vůbec možné něco skutečně vlastnit?" 
+        },
+        { 
+            name: "Surrealistický", 
+            desc: "Propojuje nesouvisející.", 
+            text: "Kožich se rozpadá na chlupy, které nejdou sešít. Boty na šupiny, které kloužou. Diamant zčerná pravdou. A liška klouže světem jako ticho s tvarem. Realita se tady láme do obrazů, které nejdou logicky spojit – a přesto dávají smysl." 
+        },
+        { 
+            name: "Naivní", 
+            desc: "Vidí věci jednoduše, bez předsudků.", 
+            text: "Liška měla kožich, tlapky, zuby a srdce. Přišli lidi a vzali jí to. Ona zůstala. Pak se těm lidem věci rozpadly. A liška teď běhá jako legenda. Jednoduchý příběh o tom, že když ti něco vezmou, můžeš být pořád. A že brát se nevyplácí." 
+        },
+        { 
+            name: "Introspektivní", 
+            desc: "Promítá do příběhu vlastní pocity.", 
+            text: "Tohle jsem já. Pořád mi někdo bere kousky – čas, energii, víru. A já mám pocit, že se zmenšuju. Ale tahle pohádka mi říká, že i když mi vezmou všechno, pořád můžu být. Ne jako dřív, ale jako ticho, které má tvar. A to stačí." 
+        },
+        { 
+            name: "Betonový", 
+            desc: "Čte doslovně, fakticky.", 
+            text: "Příběh vypráví o lišce, které postupně skupiny lidí odebraly srst, tlapky, zuby a srdce (diamant). Poté, co o vše přišla, existovala dál jako nehmotná entita (stín, paměť). Jejím bývalým majetkům se začalo dařit špatně – rozpadaly se nebo ztrácely hodnotu. Liška se stala legendou, kterou lidé vnímají jako ‚ticho s tvarem‘." 
+        },
+        { 
+            name: "Kulturní", 
+            desc: "Hledá archetypy a paralely.", 
+            text: "Liška jako archetyp moudrosti a mazanosti je tady převrácena – není to šibal, ale oběť. Připomíná mytologické postavy, které byly rozebrány a staly se nesmrtelnými (Orfeus, Osiris). Její proměna v legendu je starý motiv: to, co je zničeno, se stává posvátným. A diamant, který zčerná pravdou? To je už moderní mýtus." 
+        },
+        { 
+            name: "Asociační", 
+            desc: "Vyvolává osobní vzpomínky.", 
+            text: "Připomnělo mi to babičku. Taky jí vzali všechno – dům, zdraví, nakonec i vzpomínky. A přesto, když jsme si o ní vyprávěli, byla víc než zaživa. Stala se příběhem. Jako ta liška. A ten diamant, co zčerná? To je pravda, kterou nechceme vidět." 
+        },
+        { 
+            name: "Metaforický", 
+            desc: "Vidí symboly za věcmi.", 
+            text: "Liška je lidská duše. Kožich je tělo, tlapky jsou cesta, zuby jsou hlas, srdce je esence. Svět bere, ale duše zůstává. A co si vezmeš násilím, ztratíš. Liška se stává tichem – tím, co zbývá, když zmizí všechno povrchní. Její srdce je kámen, který se nenosí, ale nese." 
+        },
+        { 
+            name: "Groteskní", 
+            desc: "Vidí přehnanou, temnou komiku.", 
+            text: "Představ si: lišce vezmou srst, ona je nahá. Vezmou jí tlapky, ona klouže. Vezmou jí zuby, mlčí. Vezmou jí srdce, a ona pořád je. A pak se těm zlodějům všechno rozpadne – kožich na chlupy, boty na šupiny. Je to tragikomedie o tom, že se nevyplácí brát, a že to nejcennější stejně neudržíš." 
+        }
+    ];
+
+    const buttonsDiv = document.getElementById('buttons');
+    const nameEl = document.getElementById('angleName');
+    const descEl = document.getElementById('angleDesc');
+    const textEl = document.getElementById('angleText');
+
+    // Vytvoření tlačítek
+    data.forEach((angle, index) => {
+        const btn = document.createElement('button');
+        btn.textContent = angle.name;
+        btn.addEventListener('click', () => {
+            // Zvýraznění
+            document.querySelectorAll('.angle-list button').forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+            
+            // Výpis
+            nameEl.textContent = angle.name;
+            descEl.textContent = angle.desc;
+            textEl.innerHTML = `<p>${angle.text}</p>`;
+        });
+        buttonsDiv.appendChild(btn);
+    });
+
+    // Předvolit první úhel
+    if (data.length) {
+        document.querySelector('.angle-list button').click();
+    }
+</script>
+
+<!-- Poznámka: Tímto je kompletní série sedmi pohádek (myš, kocour, ryba, motýl, plameňák, čáp, liška) – všechny se stejným designem a funkcí. -->
+
+</body>
+</html>
