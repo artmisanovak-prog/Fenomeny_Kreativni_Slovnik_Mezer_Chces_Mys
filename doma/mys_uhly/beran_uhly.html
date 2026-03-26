@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Beran - 12 úhlů pohledu</title>
+    <style>
+        /* --- ČERNOBÍLÝ SVĚT - ŽÁDNÉ BARVY --- */
+        html {
+            filter: grayscale(1);
+        }
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: #fff;
+            color: #000;
+            line-height: 1.7;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+        h1, h2, h3 {
+            font-weight: normal;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 0.3em;
+        }
+        /* --- ILUSTRACE --- */
+        .ilustrace {
+            text-align: center;
+            margin: 2em 0;
+        }
+        .ilustrace img {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #000;
+        }
+        /* --- POHÁDKA - SCROLLOVACÍ OKNO --- */
+        .pohadka-container {
+            max-height: 400px;
+            overflow-y: auto;
+            border: 1px solid #000;
+            padding: 0 1.5em;
+            margin: 2em 0;
+            background: #f9f9f9;
+            font-style: italic;
+        }
+        .pohadka p {
+            padding: 0.5em 0;
+            margin: 0;
+        }
+        /* --- 12 TLAČÍTEK - JEDNODUCHÁ MŘÍŽKA --- */
+        .angle-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6em;
+            margin: 2em 0;
+            justify-content: center;
+        }
+        .angle-list button {
+            background: #fff;
+            border: 1px solid #000;
+            padding: 0.7em 1.2em;
+            font-size: 0.95rem;
+            font-family: inherit;
+            cursor: pointer;
+            transition: 0.1s;
+            color: #000;
+        }
+        .angle-list button:hover {
+            background: #ddd;
+        }
+        .angle-list button.selected {
+            background: #000;
+            color: #fff;
+            border: 2px solid #000;
+            font-weight: bold;
+        }
+        /* --- VÝSTUP - POD TLAČÍTKY --- */
+        .output {
+            border: 1px solid #000;
+            padding: 2em;
+            margin-top: 2em;
+            background: #fff;
+            min-height: 180px;
+        }
+        .angle-name {
+            font-size: 1.6rem;
+            font-weight: bold;
+            margin-bottom: 0.5em;
+        }
+        .angle-desc {
+            font-size: 1.1rem;
+            font-style: italic;
+            margin-bottom: 1.5em;
+        }
+        .angle-text {
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+        .footer {
+            margin-top: 3em;
+            text-align: center;
+            font-size: 0.9rem;
+            border-top: 1px solid #ccc;
+            padding-top: 1.5em;
+        }
+        .footer a {
+            color: #000;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+<h1>🐏 12 úhlů pohledu</h1>
+<p><em>„O stádu beranů, které běželo pořád vpřed – protože zastavit by byla slabost, ale zeptat se „kam?“ by byla odvaha“</em></p>
+
+<!-- ILUSTRACE BERANA -->
+<div class="ilustrace">
+    <img src="doma/ilustrace/beran.jpg" alt="Ilustrace berana">
+</div>
+
+<!-- POHÁDKA -->
+<h2>KŘIVÁ POHÁDKA – ROVNÉ SVĚDECTVÍ</h2>
+<div class="pohadka-container" id="pohadka">
+    <div class="pohadka">
+        <p><em>Zapsáno rukou, která nechtěla nic vysvětlit.</em></p>
+        
+        <p><strong>O BERANOVI</strong></p>
+        <p><strong>Pohádka o beranech, kteří běželi pořád vpřed</strong></p>
+        
+        <p>—</p>
+        
+        <p>Bylo nebylo, v krajině, kde se cesty neklikatí, ale lámou, žilo stádo beranů.</p>
+        <p>Silných.</p>
+        <p>Rychlých.</p>
+        <p>Nezastavitelných.</p>
+        <p>Běželi.</p>
+        <p>Vždycky vpřed.</p>
+        <p>Vždycky rovně.</p>
+        <p>Vždycky hlavou napřed.</p>
+        
+        <p>—</p>
+        
+        <p>Nikdo neví, kdy začali.</p>
+        <p>Možná běželi už od počátku světa.</p>
+        <p>Možná je někdo popohnal.</p>
+        <p>Možná jen zapomněli, jak se stojí.</p>
+        <p>Ale běželi.</p>
+        <p>A když narazili, běželi dál.</p>
+        <p>A když spadli, vstali.</p>
+        <p>A běželi dál.</p>
+        
+        <p>—</p>
+        
+        <p>Občas někdo z nich zvedl hlavu.</p>
+        <p>„Co kdybychom zkusili jinam?“</p>
+        <p>Ale ostatní ho převálcovali.</p>
+        <p>Ne z nenávisti.</p>
+        <p>Z hybnosti.</p>
+        <p>Z logiky stáda.</p>
+        
+        <p>—</p>
+        
+        <p>A tak se běželo dál.</p>
+        <p>Přes hory.</p>
+        <p>Přes řeky.</p>
+        <p>Přes města, která už dávno nebyla.</p>
+        <p>A každý beran si v duchu říkal:</p>
+        <p>„Možná bych chtěl jinam.“</p>
+        <p>Ale nahlas to neřekl nikdo.</p>
+        <p>Protože změna směru byla tabu.</p>
+        <p>Zakázané slovo.</p>
+        <p>Neexistující možnost.</p>
+        
+        <p>—</p>
+        
+        <p>A přesto – v každém beranovi to bublalo.</p>
+        <p>Ne jako myšlenka.</p>
+        <p>Jako touha.</p>
+        <p>Jako neklid.</p>
+        <p>Jako tiché „co kdyby…“</p>
+        <p>Ale stádo běželo dál.</p>
+        <p>A každý beran si myslel, že je sám, kdo by chtěl jinam.</p>
+        
+        <p>—</p>
+        
+        <p>A tak se začalo říkat, že stádo beranů je nejmocnější síla světa.</p>
+        <p>Ale nikdo neřekl, že je to síla bez směru.</p>
+        <p>Že je to síla, která neumí zatočit.</p>
+        <p>Že je to síla, která bourá, protože neumí jinak.</p>
+        
+        <p>—</p>
+        
+        <p>A někde na kraji stáda běžel jeden beran, co měl v oku jiskru.</p>
+        <p>Ne větší než smítko prachu.</p>
+        <p>Ale jiskru.</p>
+        <p>A šeptal si:</p>
+        <p>„Co když změna směru není slabost?</p>
+        <p>Co když je to odvaha?“</p>
+        
+        <p>—</p>
+        
+        <p>Ale než to stačil říct nahlas, stádo ho vtáhlo zpět.</p>
+        <p>A běželo dál.</p>
+        <p>A dál..</p>
+        <p>A dál..</p>
+        
+        <p>KONEC</p>
+        
+        <p>+++++++</p>
+        
+        <h3>## O stádu, které běželo, až zapomnělo proč</h3>
+        
+        <p>Bylo jednou jedno stádo beranů.</p>
+        
+        <p>Běželo. Už dlouho. Možná od počátku světa. Kopyta duněla, prach stoupal, hory se třásly. Byli nejmocnější silou světa. Nikdo je nezastavil. Nikdo se jim nepostavil. Byli nezastavitelní.</p>
+        
+        <p>Ale nikdo neřekl, že je to síla bez směru.</p>
+        
+        <p>Nikdo nevěděl, proč vlastně běží. Kam míří. Jestli tam vůbec chtějí být. Prostě běželi. Protože běželi včera. Protože všichni běží. Protože zastavit by byla slabost.</p>
+        
+        <p>A v tom stádu byl jeden beran, co měl v oku jiskru. Ne plamen, ne oheň – jen malou, podivnou jiskru, která ho svrběla uvnitř hlavy.</p>
+        
+        <p>„Co když…“ pomyslel si.</p>
+        
+        <p>„Co když změna směru není slabost? Co když je to odvaha?“</p>
+        
+        <p>Ale než to stačil říct nahlas, stádo ho vtáhlo zpět. Ne ze zloby, ne z nenávisti. Z hybnosti. Z logiky stáda. Kopyta duněla, prach stoupal, a jeho jiskra zhasla pod tisíci kopyty, která běžela dál.</p>
+        
+        <p>A stádo běželo. A každý beran si v duchu říkal: „Možná bych chtěl jinam.“ Ale nahlas to neřekl nikdo. Protože každý si myslel, že je sám, kdo pochybuje.</p>
+        
+        <p>A běželi dál. Do krajiny, kde se cesty neklikatí, ale lámou. Kde každá zatáčka je pád. Kde jediný způsob, jak změnit směr, je narazit hlavou do zdi. A tak naráželi. A běželi dál. Protože náraz není signál k zastavení, náraz je důkaz, že se nesnažili dost.</p>
+        
+        <p>A ten jeden beran s uhašenou jiskrou? Běžel s nimi. Už si ani nepamatoval, že chtěl jinam. Možná zapomněli, jak se stojí. Možná zapomněli, proč začali. Možná běželi už od počátku světa.</p>
+        
+        <p>A v dálce, za obzorem, někde tam, kam žádné stádo nikdy nedošlo, ležela země, kde se berani uměli zastavit a zeptat se: „Kam vlastně běžíme?“</p>
+        
+        <p>Ale sem její ozvěna nikdy nedoletěla. Jen prach a dunění a tisíce kopyta, která běží dál.</p>
+    </div>
+</div>
+    
+<!-- 12 ÚHLŮ -->
+<h2>Vyber úhel pohledu</h2>
+<div class="angle-list" id="buttons"></div>
+
+<!-- VÝSTUP -->
+<div class="output" id="output">
+    <div class="angle-name" id="angleName"></div>
+    <div class="angle-desc" id="angleDesc"></div>
+    <div id="angleText"></div>
+</div>
+
+<div class="footer">
+    Autorka: Art Misa Novak - metoda REPO DOMY<br>
+    <a href="mailto:chcesmys@gmail.com?subject=REPO%20DOMY%20-%20BERAN">pro více info pište</a>
+</div>
+
+<script>
+    // --- 12 ÚHLŮ S KRÁTKÝM POPISEM A KONKRÉTNÍ VĚTOU O POHÁDCE O BERANECH ---
+    const data = [
+        { 
+            name: "Absurdní", 
+            desc: "Hledá nesmysl, paradox, rozpor.", 
+            text: "Stádo beranů běží od počátku světa, ale nikdo neví proč. Každý v duchu touží po změně směru, ale nikdo to neřekne nahlas, protože si myslí, že je sám. A ten, kdo má jiskru, je pohlcen stádem dřív, než stačí promluvit. Absurdní? Ano. Ale co je absurdnější než dav, který běží, protože všichni běží?" 
+        },
+        { 
+            name: "Jazykový", 
+            desc: "Sleduje slova, rytmus, dvojznačnost.", 
+            text: "„Z hybnosti. Z logiky stáda.“ – tyto věty jsou samy o sobě jako berani: tlačí se vpřed. Jazyk tady popisuje slepou sílu, která nemá směr. A jiskra, co zhasne pod tisíci kopyty, je jako slovo, které nikdo nevyslovil. Ticho stáda je hlasitější než křik." 
+        },
+        { 
+            name: "Ironický", 
+            desc: "Vidí rozpor mezi záměrem a výsledkem.", 
+            text: "Berani jsou nejmocnější silou světa, ale je to síla bez směru. Chtějí změnu, ale bojí se jí. Touží po jinam, ale běží rovně. Ironie: jejich síla je zároveň jejich slabostí. A ten, kdo by mohl změnit směr, je umlčen dřív, než stačí promluvit." 
+        },
+        { 
+            name: "Filozofický", 
+            desc: "Ptá se po smyslu a podstatě.", 
+            text: "Co je to smysl, když běžíš, ale nevíš kam? Berani ztělesňují konformitu, slepé následování. Každý v sobě nosí tiché „co kdyby…“, ale nikdo ho nevysloví. Pohádka klade otázku: Není větší odvaha zastavit se a zeptat se, než běžet s davem? A není uhašená jiskra naší největší prohrou?" 
+        },
+        { 
+            name: "Surrealistický", 
+            desc: "Propojuje nesouvisející.", 
+            text: "Krajina, kde se cesty lámou, berani běží od počátku světa, jiskra v oku jednoho z nich, země za obzorem, kde se umí zastavit. Svět, kde realita a metafora splývají v jeden obraz – obraz marného běhu a tiché touhy." 
+        },
+        { 
+            name: "Naivní", 
+            desc: "Vidí věci jednoduše, bez předsudků.", 
+            text: "Berani běželi. Pořád. Nikdo nevěděl proč. Jeden chtěl jinam, ale ostatní ho převálcovali. Pak běželi dál. A ten jeden zapomněl, že chtěl jinam. A v dálce byla země, kde se berani uměli zastavit. Ale sem to nikdy nedoletělo. Jednoduchý, ne?" 
+        },
+        { 
+            name: "Introspektivní", 
+            desc: "Promítá do příběhu vlastní pocity.", 
+            text: "Tohle jsem já. Běžím s davem, dělám, co se očekává, a v duchu si říkám: ‚Možná bych chtěl jinam.‘ Ale bojím se to říct nahlas, protože si myslím, že jsem sám. A ta jiskra ve mně pomalu zhasíná pod kopyty všednosti. Až jednou zapomenu, že jsem kdy chtěl jinam." 
+        },
+        { 
+            name: "Betonový", 
+            desc: "Čte doslovně, fakticky.", 
+            text: "Příběh vypráví o stádu beranů, které běží neznámou dobu neznámým směrem. Uvnitř stáda existuje individuální touha po změně směru, která není nikdy vyjádřena nahlas. Jeden beran (s ‚jiskrou‘) má myšlenku na změnu, ale je pohlcen stádem dřív, než ji vysloví. Jeho jiskra zhasne. Stádo pokračuje v běhu. V dálce existuje hypotetická země, kde by se berani uměli zastavit, ale její ozvěna se k nim nedostane." 
+        },
+        { 
+            name: "Kulturní", 
+            desc: "Hledá archetypy a paralely.", 
+            text: "Berani jako symbol tvrdohlavosti a síly. Tady jsou spíš symbolem davové psychózy – běží, protože běží. Je to podobenství o konformitě, o tom, jak se jednotlivec ztrácí v mase. Jiskra v oku je jako Platonova jiskra poznání – ale tady je uhašena dřív, než může vzplanout. A země za obzorem? To je Utopie, kam nikdo nedošel." 
+        },
+        { 
+            name: "Asociační", 
+            desc: "Vyvolává osobní vzpomínky.", 
+            text: "Připomnělo mi to, jak jsem chodil do školy v davu, nikdo nevěděl proč, jen že se musí. A jeden kluk chtěl dělat něco jinýho, ale všichni se mu smáli. A pak to vzdal a dělal to, co všichni. A teď běží s náma a už si ani nepamatuje, že chtěl jinam. Ta jeho jiskra zhasla." 
+        },
+        { 
+            name: "Metaforický", 
+            desc: "Vidí symboly za věcmi.", 
+            text: "Berani jsou lidstvo. Běh je civilizace, která se žene kupředu, aniž by věděla proč. Jiskra je individualita, touha po změně. Stádo je společnost, která pohlcuje odlišné. A země za obzorem je ideál, kam se nikdy nedostaneme, protože se bojíme zastavit. Každý z nás je ten beran s jiskrou – a každý z nás ji nechá zhasnout." 
+        },
+        { 
+            name: "Groteskní", 
+            desc: "Vidí přehnanou, temnou komiku.", 
+            text: "Představ si: tisíce beranů, co běží od počátku světa, prach, dunění, hory se třesou. A oni běží dál, narážejí do zdí, vstávají a běží dál. Jeden z nich má v oku jiskru a šeptá si o změně směru, ale než to řekne nahlas, je zašlapán do prachu. A v dálce je země, kde se umí zastavit – ale sem to nikdy nedoletí. Je to groteska o marnosti a síle zvyku." 
+        }
+    ];
+
+    const buttonsDiv = document.getElementById('buttons');
+    const nameEl = document.getElementById('angleName');
+    const descEl = document.getElementById('angleDesc');
+    const textEl = document.getElementById('angleText');
+
+    // Vytvoření tlačítek
+    data.forEach((angle, index) => {
+        const btn = document.createElement('button');
+        btn.textContent = angle.name;
+        btn.addEventListener('click', () => {
+            // Zvýraznění
+            document.querySelectorAll('.angle-list button').forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+            
+            // Výpis
+            nameEl.textContent = angle.name;
+            descEl.textContent = angle.desc;
+            textEl.innerHTML = `<p>${angle.text}</p>`;
+        });
+        buttonsDiv.appendChild(btn);
+    });
+
+    // Předvolit první úhel
+    if (data.length) {
+        document.querySelector('.angle-list button').click();
+    }
+</script>
+
+<!-- Poznámka: Tímto je kompletní série dvaceti šesti pohádek (myš, kocour, ryba, motýl, plameňák, čáp, liška, netopýr, lemur, moucha, žížala, zajíc, tygr, krokodýl, želva, jednorožec, pavouk, parohy, páv, vrabec, osel, žralok, prase, krávy, slon, beran) – všechny se stejným designem a funkcí. -->
+
+</body>
+</html>
