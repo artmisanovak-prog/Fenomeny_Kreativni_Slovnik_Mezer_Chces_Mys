@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plameňák - 12 úhlů pohledu</title>
+    <style>
+        /* --- ČERNOBÍLÝ SVĚT - ŽÁDNÉ BARVY --- */
+        html {
+            filter: grayscale(1);
+        }
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: #fff;
+            color: #000;
+            line-height: 1.7;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+        h1, h2, h3 {
+            font-weight: normal;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 0.3em;
+        }
+        /* --- ILUSTRACE --- */
+        .ilustrace {
+            text-align: center;
+            margin: 2em 0;
+        }
+        .ilustrace img {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #000;
+        }
+        /* --- POHÁDKA - SCROLLOVACÍ OKNO --- */
+        .pohadka-container {
+            max-height: 400px;
+            overflow-y: auto;
+            border: 1px solid #000;
+            padding: 0 1.5em;
+            margin: 2em 0;
+            background: #f9f9f9;
+            font-style: italic;
+        }
+        .pohadka p {
+            padding: 0.5em 0;
+            margin: 0;
+        }
+        /* --- 12 TLAČÍTEK - JEDNODUCHÁ MŘÍŽKA --- */
+        .angle-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6em;
+            margin: 2em 0;
+            justify-content: center;
+        }
+        .angle-list button {
+            background: #fff;
+            border: 1px solid #000;
+            padding: 0.7em 1.2em;
+            font-size: 0.95rem;
+            font-family: inherit;
+            cursor: pointer;
+            transition: 0.1s;
+            color: #000;
+        }
+        .angle-list button:hover {
+            background: #ddd;
+        }
+        .angle-list button.selected {
+            background: #000;
+            color: #fff;
+            border: 2px solid #000;
+            font-weight: bold;
+        }
+        /* --- VÝSTUP - POD TLAČÍTKY --- */
+        .output {
+            border: 1px solid #000;
+            padding: 2em;
+            margin-top: 2em;
+            background: #fff;
+            min-height: 180px;
+        }
+        .angle-name {
+            font-size: 1.6rem;
+            font-weight: bold;
+            margin-bottom: 0.5em;
+        }
+        .angle-desc {
+            font-size: 1.1rem;
+            font-style: italic;
+            margin-bottom: 1.5em;
+        }
+        .angle-text {
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+        .footer {
+            margin-top: 3em;
+            text-align: center;
+            font-size: 0.9rem;
+            border-top: 1px solid #ccc;
+            padding-top: 1.5em;
+        }
+        .footer a {
+            color: #000;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+<h1>🦩 12 úhlů pohledu</h1>
+<p><em>„O plameňákovi, který padal s grácií a zpíval, i když nevěděl kam“</em></p>
+
+<!-- ILUSTRACE PLAMEŇÁKA -->
+<div class="ilustrace">
+    <img src="doma/ilustrace/plamenak.jpg" alt="Ilustrace plameňáka">
+</div>
+
+<!-- POHÁDKA -->
+<h2>KŘIVÁ POHÁDKA – ROVNÉ SVĚDECTVÍ</h2>
+<div class="pohadka-container" id="pohadka">
+    <div class="pohadka">
+        <p><em>Zapsáno rukou, která nechtěla nic vysvětlit.</em></p>
+        
+        <p><strong>O PLAMEŇÁKOVI</strong></p>
+        <p><strong>který byl na hlavu</strong></p>
+        
+        <p>__________</p>
+        
+        <p>Plameňák zpíval.</p>
+        <p>Lalalá.</p>
+        <p>Vysoko, výš než měl.</p>
+        <p>Výš než bylo bezpečné.</p>
+        <p>Výš než bylo rozumné.</p>
+        
+        <p>„Poletíme spolu!“ křičel.</p>
+        <p>„Zřídíme se dolů! Až na dno vesmíru!“</p>
+        <p>A nikdo mu neřekl, že vesmír žádné dno nemá.</p>
+        <p>Protože plameňák měl růžové peří a hlas, co se nedal přerušit.</p>
+        
+        <p>„Lalalá!“ zpíval.</p>
+        <p>„Budeme na hlavu!“</p>
+        <p>A opravdu — letěl hlavou dolů.</p>
+        <p>Nohy mu trčely k nebi.</p>
+        <p>Křídla mu vlála jako šály.</p>
+        <p>A oči měl dokořán.</p>
+        
+        <p>„Tohle není let,“ řeklo mu klíště.</p>
+        <p>„To je pád.“</p>
+        <p>„To je jedno!“ křičel plameňák.</p>
+        <p>„Hlavně že to má směr!“</p>
+        
+        <p>A padal dál.</p>
+        <p>Kolem něj se míhaly hvězdy,</p>
+        <p>mlhoviny i sny a vedle něj se zavlnila prádelní šňůra s jednou ponožkou - tou, co ráno nenašel.</p>
+        
+        <p>„Kam letíš?“ ptal se komár, co se také držel jeho peří.</p>
+        <p>„Nevím!“ smál se plameňák.</p>
+        <p>„Ale letí se mi krásně!“</p>
+        
+        <p>A pak —</p>
+        <p>ticho.</p>
+        <p>Ticho tak hluboké, že i vesmír zadržel dech.</p>
+        <p>Plameňák dopadl.</p>
+        <p>Ne na zem.</p>
+        <p>Na dno.</p>
+        <p>Na dno vesmíru.</p>
+        <p>Kde nikdo nebyl.</p>
+        <p>Kromě něj, komára a klíštěte co měl.</p>
+        <p>A jedné myši, co si zapisovala, co se stalo.</p>
+        
+        <p>„Jsi v pořádku?“ zeptala se.</p>
+        <p>„Jsem na hlavu,“ řekl plameňák.</p>
+        <p>„Ale jinak výborně.“</p>
+        
+        <p>Myš si poznamenala:</p>
+        <p>“Plameňák – padá s grácií. I když neví kam. Hlavně že zpívá.”</p>
+        
+        <p>A plameňák se usmál.</p>
+        <p>Z peří mu vypadl omámený komár.</p>
+        <p>A z kapsy mu vypadla mapa, co ukazovala jen dolů.</p>
+        
+        <p>„Příště poletím ještě níž,“ řekl.</p>
+        <p>„A co když už níž nejde?“</p>
+        <p>„Tak si vymyslím nové dno.“</p>
+        
+        <p>A znovu se vznesl.</p>
+        <p>Hlavou dolů.</p>
+        <p>Srdcem vzhůru.</p>
+        <p>A zpíval:</p>
+        <p>„Lalaláááááááááááááááááááááááááááááááááááááááááááááááááááááááááááááááááááááááááááááááááááááááááááááááááááááááááá</p>
+        
+        <p>KONEC</p>
+    </div>
+</div>
+    
+<!-- 12 ÚHLŮ -->
+<h2>Vyber úhel pohledu</h2>
+<div class="angle-list" id="buttons"></div>
+
+<!-- VÝSTUP -->
+<div class="output" id="output">
+    <div class="angle-name" id="angleName"></div>
+    <div class="angle-desc" id="angleDesc"></div>
+    <div id="angleText"></div>
+</div>
+
+<div class="footer">
+    Autorka: Art Misa Novak - metoda REPO DOMY<br>
+    <a href="mailto:chcesmys@gmail.com?subject=REPO%20DOMY%20-%20PLAMEŇÁK">pro více info pište</a>
+</div>
+
+<script>
+    // --- 12 ÚHLŮ S KRÁTKÝM POPISEM A KONKRÉTNÍ VĚTOU O POHÁDCE O PLAMEŇÁKOVI ---
+    const data = [
+        { 
+            name: "Absurdní", 
+            desc: "Hledá nesmysl, paradox, rozpor.", 
+            text: "Plameňák, který letí hlavou dolů, protože ‚hlavně že to má směr‘. Klíště mu říká, že to není let, ale pád. A on je rád. Vesmír nemá dno, ale on na něj dopadne. A pak si vymyslí nové. Tahle pohádka je oslava absurdity – a právě v ní je svobodná." 
+        },
+        { 
+            name: "Jazykový", 
+            desc: "Sleduje slova, rytmus, dvojznačnost.", 
+            text: "Lalalá jako zpěv, jako výkřik, jako mantra. ‚Být na hlavu‘ – frazém, který se tady bere doslova. Plameňák není blázen, je to básník pohybu. Jeho řeč je pád, jeho pád je řeč. A myš to zapisuje, protože ví, že někdy je nejdůležitější věta ta, která nedává smysl." 
+        },
+        { 
+            name: "Ironický", 
+            desc: "Vidí rozpor mezi záměrem a výsledkem.", 
+            text: "Chtěl letět vysoko, ale padá dolů. Chtěl najít dno vesmíru, a ono existuje – ale jen pro něj. Všichni kolem pochybují, on je nadšený. Ironie plameňákova života: čím víc padá, tím víc zpívá. A nakonec zjistí, že dno si může vymyslet sám." 
+        },
+        { 
+            name: "Filozofický", 
+            desc: "Ptá se po smyslu a podstatě.", 
+            text: "Co je směr? Je to cíl, nebo jen iluze pohybu? Plameňák letí hlavou dolů, ale srdcem vzhůru. Hledá dno vesmíru, i když ví, že není. Klade otázku: Musíme vědět, kam jdeme, aby naše cesta dávala smysl? Nebo stačí ‚letí se mi krásně‘?" 
+        },
+        { 
+            name: "Surrealistický", 
+            desc: "Propojuje nesouvisející.", 
+            text: "Prádelní šňůra s ponožkou mezi hvězdami. Komár a klíště jako pasažéři pádu. Myš, která si zapisuje na dně vesmíru. Plameňák, co padá a zpívá. Tohle není realita – je to obraz, kde se všechno může spojit s čímkoli. A funguje to." 
+        },
+        { 
+            name: "Naivní", 
+            desc: "Vidí věci jednoduše, bez předsudků.", 
+            text: "Plameňák chtěl letět a zpívat. Tak letěl a zpíval. Spadl na dno vesmíru, potkal myš a zase letěl dál. Nevěděl kam, ale to nevadí. Prostě se mu to líbilo. Jednoduchý, ne?" 
+        },
+        { 
+            name: "Introspektivní", 
+            desc: "Promítá do příběhu vlastní pocity.", 
+            text: "Tohle jsem já. Pořád padám, pořád nevím kam, a všichni mi říkají, že bych měl letět správně. Ale mně se ten pád líbí. Kolem mě lítají vzpomínky (komáři) a starosti (klíšťata), a občas potkám myš, která zapíše, co jsem právě provedl. A já si pak vymyslím nový cíl." 
+        },
+        { 
+            name: "Betonový", 
+            desc: "Čte doslovně, fakticky.", 
+            text: "Příběh vypráví o plameňákovi, který se rozhodl letět hlavou dolů, ignoroval fyzikální zákony, během pádu minul hvězdy a mlhoviny, narazil na prádelní šňůru s ponožkou, vzal s sebou komára a klíště, dopadl na dno vesmíru (kde se nacházela myš), prohlásil, že je v pořádku, a pak se znovu vznesl s tím, že si příště vymyslí nové dno." 
+        },
+        { 
+            name: "Kulturní", 
+            desc: "Hledá archetypy a paralely.", 
+            text: "Plameňák jako Ikaros, ale bez vosku a slunce – padá, protože chce, ne protože musí. Je to existencialista v ptačím těle: smysl si tvoří sám pádem. Myš jako kronikářka (Múza) zapisuje jeho činy pro věčnost. A komár s klíštětem? To jsou ti, co se přiživují na velkých snech." 
+        },
+        { 
+            name: "Asociační", 
+            desc: "Vyvolává osobní vzpomínky.", 
+            text: "Připomnělo mi to, jak jsem jako dítě skákal z houpačky a na chvíli jsem měl pocit, že letím. Nevěděl jsem, kam dopadnu, ale byl to nejlepší pocit na světě. Přesně jako plameňák. A ta myš? Ta jsem já dnes, když si zapisuju, co jsem tenkrát cítil." 
+        },
+        { 
+            name: "Metaforický", 
+            desc: "Vidí symboly za věcmi.", 
+            text: "Plameňák je člověk, který se odváží žít jinak. Pád je jeho cesta – neúspěch, který prožívá jako úspěch. Dno vesmíru je bod, kde si myslíme, že už nemůže být hůř – a on tam potká myš (pochopení). Mapa, co ukazuje jen dolů, je osud. A on ji zahodí a vymyslí si vlastní směr." 
+        },
+        { 
+            name: "Groteskní", 
+            desc: "Vidí přehnanou, temnou komiku.", 
+            text: "Představ si: růžový pták letí hlavou dolů, na zádech mu sedí komár a klíště, kolem lítají hvězdy a prádelní šňůra. Dopadne na dno vesmíru, kde na něj čeká myš s notesem. A on vstane a řekne: ‚Jsem na hlavu, ale jinak výborně.‘ Je to groteska o tom, že i pád může být show." 
+        }
+    ];
+
+    const buttonsDiv = document.getElementById('buttons');
+    const nameEl = document.getElementById('angleName');
+    const descEl = document.getElementById('angleDesc');
+    const textEl = document.getElementById('angleText');
+
+    // Vytvoření tlačítek
+    data.forEach((angle, index) => {
+        const btn = document.createElement('button');
+        btn.textContent = angle.name;
+        btn.addEventListener('click', () => {
+            // Zvýraznění
+            document.querySelectorAll('.angle-list button').forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+            
+            // Výpis
+            nameEl.textContent = angle.name;
+            descEl.textContent = angle.desc;
+            textEl.innerHTML = `<p>${angle.text}</p>`;
+        });
+        buttonsDiv.appendChild(btn);
+    });
+
+    // Předvolit první úhel
+    if (data.length) {
+        document.querySelector('.angle-list button').click();
+    }
+</script>
+
+<!-- Poznámka: Tímto je kompletní série pohádek (myš, kocour, ryba, motýl, plameňák) – všechny se stejným designem a funkcí. -->
+
+</body>
+</html>
