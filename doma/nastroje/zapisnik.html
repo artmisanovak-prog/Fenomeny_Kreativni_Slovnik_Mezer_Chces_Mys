@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kreativní notebook · Fyzika jazyka · Chceš myš?</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --bg: #0f0d0a;
+      --surface: #171410;
+      --surface2: #1e1a14;
+      --cream: #e8e0d0;
+      --dim: rgba(232,224,208,.42);
+      --dim2: rgba(232,224,208,.2);
+      --accent: #a89880;
+      --accent2: #786858;
+      --border: rgba(168,152,128,.15);
+      --border-hi: rgba(168,152,128,.3);
+      --serif: 'Cormorant Garamond', Georgia, serif;
+      --mono: 'DM Mono', monospace;
+    }
+    body {
+      background: var(--bg);
+      color: var(--cream);
+      font-family: var(--mono);
+      font-size: 13px;
+      line-height: 1.8;
+      padding: 1.5rem 1rem;
+    }
+    .wrap {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 0.5rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+    .nav-brand { font-family: var(--serif); font-size: 1rem; }
+    .nav-brand em { color: var(--accent); font-style: italic; }
+    .nav-links a {
+      margin-left: 1rem;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--dim);
+      text-decoration: none;
+      border-bottom: 1px solid transparent;
+    }
+    .nav-links a:hover { color: var(--cream); border-bottom-color: var(--accent); }
+    h1 {
+      font-family: var(--serif);
+      font-size: 2rem;
+      font-weight: 300;
+      margin-bottom: 0.5rem;
+    }
+    h1 em { color: var(--accent); font-style: italic; }
+    .sub { color: var(--dim); font-size: 0.8rem; margin-bottom: 2rem; }
+
+    .two-column {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      margin: 1rem 0;
+    }
+    .panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 1.2rem;
+      margin-bottom: 1.5rem;
+    }
+    .selector-row {
+      display: flex;
+      gap: 0.8rem;
+      flex-wrap: wrap;
+      margin-bottom: 1rem;
+      align-items: flex-end;
+    }
+    .selector-group {
+      flex: 1;
+      min-width: 130px;
+    }
+    .selector-group label {
+      display: block;
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--accent);
+      margin-bottom: 0.2rem;
+    }
+    select, button, textarea {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      color: var(--cream);
+      font-family: var(--mono);
+      font-size: 0.8rem;
+      padding: 0.4rem 0.6rem;
+      cursor: pointer;
+    }
+    select:focus, button:focus, textarea:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+    button {
+      background: var(--surface2);
+      transition: all 0.2s;
+    }
+    button:hover {
+      background: var(--accent);
+      color: var(--bg);
+      border-color: var(--accent);
+    }
+    .task-box {
+      background: var(--surface2);
+      border-left: 3px solid var(--accent);
+      padding: 0.8rem 1rem;
+      margin: 1rem 0;
+      font-family: var(--serif);
+      font-size: 0.9rem;
+      line-height: 1.7;
+    }
+    textarea {
+      width: 100%;
+      min-height: 180px;
+      resize: vertical;
+      font-family: var(--serif);
+      font-size: 0.9rem;
+      line-height: 1.8;
+      padding: 0.8rem;
+      margin: 0.5rem 0;
+    }
+    .action-row {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin: 0.8rem 0;
+    }
+    .result-panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 1rem;
+      margin: 1rem 0;
+      display: none;
+    }
+    .result-panel.visible { display: block; }
+    .angle-bars {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.5rem;
+      margin-top: 0.8rem;
+    }
+    .angle-bar-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.7rem;
+    }
+    .angle-bar-label {
+      width: 70px;
+      text-align: right;
+    }
+    .angle-bar-bg {
+      flex: 1;
+      height: 5px;
+      background: var(--border);
+      overflow: hidden;
+    }
+    .angle-bar-fill {
+      height: 100%;
+      width: 0%;
+      background: var(--accent);
+    }
+    .figure-check {
+      margin-top: 0.8rem;
+      font-size: 0.75rem;
+      color: var(--dim);
+      border-top: 1px solid var(--border);
+      padding-top: 0.5rem;
+    }
+    .figure-check strong { color: var(--accent); }
+    .history-list {
+      max-height: 500px;
+      overflow-y: auto;
+    }
+    .history-item {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      margin-bottom: 0.5rem;
+      padding: 0.6rem 1rem;
+      cursor: pointer;
+      transition: background 0.1s;
+    }
+    .history-item:hover { background: var(--surface); }
+    .history-meta {
+      font-size: 0.7rem;
+      color: var(--dim);
+      display: flex;
+      gap: 1rem;
+      justify-content: space-between;
+      flex-wrap: wrap;
+    }
+    .history-preview {
+      font-family: var(--serif);
+      font-size: 0.8rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .figures-library {
+      margin-top: 2rem;
+      border-top: 1px solid var(--border);
+      padding-top: 1rem;
+    }
+    details {
+      border: 1px solid var(--border);
+      margin-bottom: 0.5rem;
+    }
+    details summary {
+      padding: 0.5rem;
+      cursor: pointer;
+      background: var(--surface2);
+      font-size: 0.8rem;
+    }
+    .fig-encyclopedia {
+      padding: 0.8rem;
+      font-size: 0.8rem;
+      line-height: 1.7;
+    }
+    .fig-encyclopedia h4 {
+      color: var(--accent);
+      margin-top: 0.8rem;
+      margin-bottom: 0.2rem;
+    }
+    .example {
+      font-style: italic;
+      border-left: 2px solid var(--accent);
+      padding-left: 0.8rem;
+      margin: 0.5rem 0;
+      color: var(--dim);
+    }
+    footer {
+      margin-top: 2rem;
+      border-top: 1px solid var(--border);
+      padding-top: 1rem;
+      font-size: 0.7rem;
+      color: var(--dim2);
+      text-align: right;
+    }
+    @media (max-width: 700px) {
+      .two-column { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <nav>
+    <span class="nav-brand"><em>Fyzika jazyka</em> — kreativní notebook</span>
+    <div class="nav-links">
+      <a href="../../../index.html">← Zvířata</a>
+      <a href="knihovna_figur.html">Knihovna figur</a>
+      <a href="analyzer.html">Analyzátor</a>
+    </div>
+  </nav>
+
+  <h1>Zápisník <em>mezer</em></h1>
+  <p class="sub">Zapisuje do ticha. Mapuje vaši cestu 12 úhly.</p>
+
+  <div class="two-column">
+    <!-- levý sloupec: zadání + psaní + analýza -->
+    <div>
+      <div class="panel">
+        <div class="selector-row">
+          <div class="selector-group">
+            <label>Karta</label>
+            <select id="cardSelect"></select>
+          </div>
+          <div class="selector-group">
+            <label>Úhel</label>
+            <select id="angleSelect"></select>
+          </div>
+          <button id="loadTaskBtn">Načíst úkol</button>
+        </div>
+        <div id="taskDisplay" class="task-box" style="display:none;"></div>
+        <textarea id="userText" placeholder="Sem napiš svůj text…"></textarea>
+        <div class="action-row">
+          <button id="analyzeBtn">🔍 Analyzovat</button>
+          <button id="saveBtn">💾 Uložit</button>
+          <button id="clearBtn">🗑 Smazat text</button>
+        </div>
+        <div id="analysisResult" class="result-panel"></div>
+      </div>
+
+      <div class="panel">
+        <h3 style="font-size:0.9rem; margin-bottom:0.5rem;">📚 Knihovna figur</h3>
+        <details id="figuresLibrary">
+          <summary>Rozbalit knihovnu</summary>
+          <div id="figuresList"></div>
+        </details>
+      </div>
+    </div>
+
+    <!-- pravý sloupec: historie -->
+    <div class="panel">
+      <h3 style="font-size:0.9rem; margin-bottom:0.5rem;">📋 Historie</h3>
+      <div id="historyList" class="history-list">
+        <p style="color:var(--dim); font-style:italic;">Zatím žádné záznamy.</p>
+      </div>
+      <div class="action-row" style="margin-top:0.8rem;">
+        <button id="exportAllBtn">↓ Export vše</button>
+        <button id="clearHistoryBtn">🗑 Smazat vše</button>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    Kreativní notebook · Chceš myš? · © 2026 Michaela Nováková
+  </footer>
+</div>
+
+<script>
+// ------------------------------------------------------------
+// 1. DATA – ÚKOLY (karty, úhly, zadání, očekávané figury)
+// ------------------------------------------------------------
+const tasksData = {
+  "Krokodýl": {
+    name: "Krokodýl",
+    angles: {
+      0: { name: "Analytický", task: "Napiš inventář někoho, kdo se stal zbožím. Vypiš všechny jeho součásti, vlastnosti, ceny, materiály, funkce. Ale dělej to tak, aby z každého řádku bylo cítit, že to kdysi bylo živé. Že to kdysi dýchalo.",
+           expected: ["vycet", "elipsa", "gradace"] },
+      30: { name: "Kulturní", task: "Napiš text, který je reklamou na smutek. Vymysli značku, slogan, leták, kampaň. Prodávej v ní něco, co prodat nejde. Ale nech v tom zaznít ozvěnu něčeho skutečného, co se ztratilo.",
+           expected: ["kulturni_reference", "ironie", "neologismus"] },
+      60: { name: "Filozofický", task: "Napiš text o někom, kdo je na prodej. O tom, co to s ním dělá, když zjistí, že má cenu. Ne hodnotu. Cenu. A co se stane s jeho nitrem, když ho nikdo nechce koupit. Nebo když ho koupí ten nejhorší.",
+           expected: ["paradox", "otazka", "aforismus"] },
+      90: { name: "Naivní", task: "Napiš text o krokodýlovi, kterého si paní koupila do bytu. O tom, jak si s ním hraje, co jí říká, proč je smutný. Jako by to vyprávělo malé dítě, které všemu věří a všemu rozumí po svém.",
+           expected: ["jednoducha_veta", "personifikace", "apostrofa"] },
+      120: { name: "Jazykový", task: "Napiš text, ve kterém se řeč stane hmotnou. Ve kterém slova mají váhu, cenu, obal, trvanlivost. Ve kterém se jazyk prodává v akci a vety se kazí jako potraviny. Nech v tom textu cítit, jak se řeč rozkládá.",
+           expected: ["fyzikalizace", "neologismus", "metafora"] },
+      150: { name: "Metaforický", task: "Vezmi si nějaký známý idiom (např. „vlčí mládí“, „lví podíl“, „oslí úsměv“) a napiš krátký metaforický příběh, ve kterém tento idiom doslova zhmotníš a dáš mu nový význam.",
+           expected: ["metafora", "symbol", "retezova_metafora"] },
+      180: { name: "Asociační", task: "Napiš proud vědomí na téma „nákup“. Piš 5 minut bez přemýšlení, nech své myšlenky putovat od nákupního košíku k cenám, od cen k penězům, od peněz k pocitům... Nech to plynout.",
+           expected: ["fragment", "apoziopeze", "volna_asociace"] },
+      210: { name: "Introspektivní", task: "Napiš vnitřní monolog krokodýla, když sedí na poličce vedle keramického smutku a plastového soucitu. Na co myslí? Co cítí, když ho paní zmáčkne?",
+           expected: ["vnitrni_hlas", "prvni_osoba", "sebereflexe"] },
+      240: { name: "Ironický", task: "Napiš krátký ironický text o tom, jak se dneska „prodávají“ city na sociálních sítích. Použij kontrast mezi upřímným gestem a jeho kvantifikací (počet lajků, sdílení).",
+           expected: ["ironie", "kontrast", "imperativ"] },
+      270: { name: "Groteskní", task: "Vytvoř si vlastní absurdní „koutek emocí“ – vymysli tři předměty, které by na něm neměly chybět (např. „skleněná radost“, „železná něha“, „igelitové přátelství“). Popiš je.",
+           expected: ["hyperbola", "absurdni_obraz", "nadsazka"] },
+      300: { name: "Absurdní", task: "Napiš krátký text, který bude celý postavený na absurdní premise (např. „Vzduch je zpoplatněn a dýchá se na splátky“). Drž se jedné myšlenky a rozvíjej ji, jako by byla naprosto normální.",
+           expected: ["paradox", "fragment", "nelogicke_spojeni"] },
+      330: { name: "Surrealistický", task: "Popiš svůj vlastní sen, ve kterém se objeví nějaká abstraktní bytost (např. Myšlenka, Pravda, Sen). Jak vypadá? Co dělá? Můžeš použít synestezii (např. „Jeho hlas byl fialový a chutnal po mátě“).",
+           expected: ["snovy_obraz", "synestezie", "metamorfoza"] }
+    }
+  },
+  // zde lze přidat další karty (Ryba, Slon, ...) stejnou strukturou
+};
+
+// ------------------------------------------------------------
+// 2. ENCYKLOPEDIE FIGUR (pro knihovnu)
+// ------------------------------------------------------------
+const figureEncyclopedia = {
+  vycet: { name: "Výčet", desc: "Série položek oddělených čárkami nebo číslovaný seznam.", psych: "Systematické myšlení, potřeba uspořádat informace.", ex: "„keramický smutek, plastový soucit, skleněná radost“" },
+  elipsa: { name: "Elipsa", desc: "Vynechání slov, která by gramaticky patřila do věty.", psych: "Snaha o úspornost, zkratkovitost, možný stres.", ex: "„Ne zvíře. Ne postava. Ne symbol.“" },
+  gradace: { name: "Gradace", desc: "Stupňování – řazení výrazů od nejslabšího po nejsilnější.", psych: "Vnímání intenzity, hierarchické myšlení.", ex: "„Ne zvíře. Ne postava. Ne symbol. Ale produkt.“" },
+  kulturni_reference: { name: "Kulturní reference", desc: "Odkaz na známé kulturní jevy, fráze, mýty.", psych: "Ukazuje, jak člověk zapadá do společnosti.", ex: "„emo chleba“, „krokodýlí slzy“" },
+  ironie: { name: "Ironie", desc: "Vyjádření opaku toho, co se myslí.", psych: "Nadhled, schopnost odstupu.", ex: "„To je emoce. Ale levná. Už není čerstvá.“" },
+  neologismus: { name: "Neologismus", desc: "Nově vytvořené slovo.", psych: "Kreativita, potřeba pojmenovat něco nového.", ex: "„rapujou“, „sebe-klam“" },
+  paradox: { name: "Paradox", desc: "Zdánlivě nesmyslné tvrzení, které může obsahovat pravdu.", psych: "Kreativita, vnitřní konflikt.", ex: "„význam v akci“, „sleva na smysl“" },
+  otazka: { name: "Rétorická otázka", desc: "Otázka, na kterou se neočekává odpověď.", psych: "Hledání smyslu, otevřenost.", ex: "„Co by zbylo, kdyby ji dostal?“" },
+  aforismus: { name: "Aforismus", desc: "Krátká, zhutněná moudrost.", psych: "Shrnutí zkušenosti, kognitivní berlička.", ex: "„Krokodýlí slzy nejsou falešné. Jsou jen snadno dostupné.“" },
+  jednoducha_veta: { name: "Jednoduchá věta", desc: "Věta o 1–5 slovech.", psych: "Přímý, nekomplikovaný projev.", ex: "„Jedna paní si ho koupila.“" },
+  personifikace: { name: "Personifikace", desc: "Přiřazení lidských vlastností neživým věcem.", psych: "Animismus, oživování světa.", ex: "„keramický smutek“" },
+  apostrofa: { name: "Apostrofa", desc: "Oslovení nepřítomné osoby nebo čtenáře.", psych: "Vtahování do děje, pocit blízkosti.", ex: "„Buďte dojatí.“" },
+  fyzikalizace: { name: "Fyzikalizace", desc: "Abstraktní pojmy se chovají jako hmotné objekty.", psych: "Zhmotnění emocí, konkrétní myšlení.", ex: "„výkřik v obalu“" },
+  metafora: { name: "Metafora", desc: "Přenos významu na základě podobnosti.", psych: "Abstraktní myšlení, obraznost.", ex: "„flow je king“" },
+  symbol: { name: "Symbol", desc: "Předmět nebo obraz zastupující abstraktní myšlenku.", psych: "Schopnost nahlížet za povrch.", ex: "„Krokodýl jako symbol ztracené autenticity“" },
+  retezova_metafora: { name: "Řetězová metafora", desc: "Více metafor v řadě.", psych: "Komplexní propojování významů.", ex: "„flow je king a king je ryba“" },
+  fragment: { name: "Fragment", desc: "Neúplná věta, útržek.", psych: "Rozpad myšlení, chaotičnost nebo kreativní proud.", ex: "„Něčeho... Možná... Kdysi...“" },
+  apoziopeze: { name: "Apoziopeze", desc: "Náhlé přerušení výpovědi (tři tečky, pomlčka).", psych: "Váhání, otevřenost.", ex: "„Kdo ví..?“" },
+  volna_asociace: { name: "Volná asociace", desc: "Skok v tématu bez logické návaznosti.", psych: "Nevědomé spojení, proud vědomí.", ex: "Od krokodýla k paní, od paní k jazyku." },
+  vnitrni_hlas: { name: "Vnitřní hlas", desc: "Řeč postavy určená sobě.", psych: "Sebevědomí, vnitřní dialog.", ex: "„že jeho slzy nejsou falešné“" },
+  prvni_osoba: { name: "První osoba", desc: "Použití zájmena já, my.", psych: "Osobní zaujetí, sebestřednost nebo autenticita.", ex: "„Já mám hlad.“" },
+  sebereflexe: { name: "Sebereflexe", desc: "Postava si uvědomuje svůj stav.", psych: "Uvědomění si sebe sama.", ex: "„přišel o jazyk, když ztratil smysl“" },
+  kontrast: { name: "Kontrast", desc: "Stavění protikladů vedle sebe.", psych: "Diferenciace, vnímání rozdílů.", ex: "kdysi × teď" },
+  hyperbola: { name: "Hyperbola", desc: "Záměrné přehánění.", psych: "Emocionální důraz, nadsázka.", ex: "„zem se slehla“" },
+  absurdni_obraz: { name: "Absurdní obraz", desc: "Nesmyslná, bizarní situace.", psych: "Odklon od racionality, humor.", ex: "„motýl v polívce“" },
+  nadsazka: { name: "Nadsázka", desc: "Přehánění pro efekt.", psych: "Důraz, expresivita.", ex: "„obrovský, strašně“" },
+  nelogicke_spojeni: { name: "Nelogické spojení", desc: "Spojení dvou nesouvisejících věcí.", psych: "Surrealistická imaginace.", ex: "„pláč v akci“" },
+  snovy_obraz: { name: "Snový obraz", desc: "Iracionální, snová logika.", psych: "Přímý přístup k nevědomí.", ex: "„přišel jazyk, také se smyslem“" },
+  synestezie: { name: "Synestezie", desc: "Mísení smyslů.", psych: "Kreativní vnímání světa.", ex: "„hlas byl fialový“" },
+  metamorfoza: { name: "Metamorfóza", desc: "Proměna jedné věci v jinou.", psych: "Flexibilita identity, imaginace.", ex: "„Horac se převlékl za banán“" }
+};
+
+// ------------------------------------------------------------
+// 3. DETEKTORY (zjednodušené – pro ukázku)
+// ------------------------------------------------------------
+function detectElipsy(text) {
+  const sentences = text.split(/[.!?…]+/).filter(s=>s.trim().length>0);
+  return sentences.filter(s => {
+    const words = s.trim().split(/\s+/);
+    return words.length <= 3 && !s.match(/\b(l|la|lo|li|ly|t)\b/);
+  }).length;
+}
+function detectVyčet(text) { return (text.match(/[^,]+,[^,]+,[^,]+/g)||[]).length; }
+function detectGradace(text) { return (text.match(/\b(\w+)(ější|ější|ější|ší|ší|ější|ější|ejší|ejší)\b/gi)||[]).length; }
+function detectKulturniReference(text) { return (text.match(/\b(emo|gospel|chanson|sleva|výprodej|reklama|marketing)\b/gi)||[]).length; }
+function detectIronie(text) { return (text.match(/\b(samozřejmě|ovšem|jistě|pochopitelně)\b/gi)||[]).length; }
+function detectNeologismus(text) { return (text.match(/\b(rapujou|sebe-klam|motýlkovat)\b/gi)||[]).length; }
+function detectParadox(text) { return (text.match(/\b(paradox|ale přesto|a přece)\b/gi)||[]).length; }
+function detectOtazka(text) { return (text.match(/\?/g)||[]).length; }
+function detectAforismus(text) {
+  const sentences = text.split(/[.!?]+/).filter(s=>s.trim().length>0);
+  return sentences.filter(s => s.trim().split(/\s+/).length <= 12 && /\b(smysl|pravda|bytí|důležité|stačí)\b/i.test(s)).length;
+}
+function detectJednoduchaVeta(text) {
+  const sentences = text.split(/[.!?…]+/).filter(s=>s.trim().length>0);
+  return sentences.filter(s => s.trim().split(/\s+/).length <= 5).length;
+}
+function detectPersonifikace(text) { return (text.match(/\b(smutek|soucit|radost|krokodýl)\s+(řekl|zeptal|usmál|plakal|vysvětloval)\b/gi)||[]).length; }
+function detectApostrofa(text) { return (text.match(/\b(představte si|buďte|podívej se)\b/gi)||[]).length; }
+function detectFyzikalizace(text) { return (text.match(/\b(slova|věta|jazyk|řeč)\s+(má|nese|váží|teče|padá)\b/gi)||[]).length; }
+function detectMetafora(text) { return (text.match(/\b(\w+)\s+(je|jsou|byl|byla)\s+(\w+)\b/gi)||[]).length; }
+function detectSymbol(text) { return (text.match(/\b(krokodýl|slzy|rohlík)\b/gi)||[]).length; }
+function detectRetezovaMetafora(text) { return (text.match(/\b(\w+)\s+je\s+(\w+)\s+a\s+(\w+)\s+je\s+(\w+)\b/gi)||[]).length; }
+function detectFragment(text) { const s = text.split(/[.!?…]+/).filter(s=>s.trim().length>0); return s.filter(s => s.trim().split(/\s+/).length <= 2).length; }
+function detectApoziopeze(text) { return (text.match(/\.\.\.|…/g)||[]).length; }
+function detectVolnaAsociace(text) { return (text.match(/\b(najednou|a pak|mimochodem)\b/gi)||[]).length; }
+function detectVnitrniHlas(text) { return (text.match(/\b(cítím|myslím|uvědomuji|vím)\b/gi)||[]).length; }
+function detectPrvniOsoba(text) { return (text.match(/\b(já|jsem|mi|mě|můj|my|nás)\b/gi)||[]).length; }
+function detectSebereflexe(text) { return (text.match(/\b(uvědomil|pochopil|zjistil|přišel o)\b/gi)||[]).length; }
+function detectKontrast(text) { return (text.match(/\b(ale|naopak|avšak|přesto)\b/gi)||[]).length; }
+function detectHyperbola(text) { return (text.match(/\b(strašně|hrozně|neuvěřitelně|vždy|nikdy)\b/gi)||[]).length; }
+function detectAbsurdniObraz(text) { return (text.match(/\b(motýl|krokodýl|rohlík)\s+(v|na)\s+(polívka|lednička|políčko)\b/gi)||[]).length; }
+function detectNadsazka(text) { return detectHyperbola(text); }
+function detectNelogickeSpojeni(text) { return (text.match(/\b(slzy\s+v\s+akci|pláč\s+v\s+letáku)\b/gi)||[]).length; }
+function detectSnovyObraz(text) { return (text.match(/\b(sen|zdálo|magický|podivný)\b/gi)||[]).length; }
+function detectSynestezie(text) { return (text.match(/\b(barva|zvuk|vůně|chuť)\s+[a-záčďéěíňóřšťůúýž]+\b/gi)||[]).length; }
+function detectMetamorfoza(text) { return (text.match(/\b(proměnil|převlékl|změnil se)\b/gi)||[]).length; }
+
+const figureDetectors = {
+  vycet: detectVyčet,
+  elipsa: detectElipsy,
+  gradace: detectGradace,
+  kulturni_reference: detectKulturniReference,
+  ironie: detectIronie,
+  neologismus: detectNeologismus,
+  paradox: detectParadox,
+  otazka: detectOtazka,
+  aforismus: detectAforismus,
+  jednoducha_veta: detectJednoduchaVeta,
+  personifikace: detectPersonifikace,
+  apostrofa: detectApostrofa,
+  fyzikalizace: detectFyzikalizace,
+  metafora: detectMetafora,
+  symbol: detectSymbol,
+  retezova_metafora: detectRetezovaMetafora,
+  fragment: detectFragment,
+  apoziopeze: detectApoziopeze,
+  volna_asociace: detectVolnaAsociace,
+  vnitrni_hlas: detectVnitrniHlas,
+  prvni_osoba: detectPrvniOsoba,
+  sebereflexe: detectSebereflexe,
+  kontrast: detectKontrast,
+  hyperbola: detectHyperbola,
+  absurdni_obraz: detectAbsurdniObraz,
+  nadsazka: detectNadsazka,
+  nelogicke_spojeni: detectNelogickeSpojeni,
+  snovy_obraz: detectSnovyObraz,
+  synestezie: detectSynestezie,
+  metamorfoza: detectMetamorfoza
+};
+
+// ------------------------------------------------------------
+// 4. ANALÝZA TEXTU (12 úhlů a kontrola figur)
+// ------------------------------------------------------------
+const angleProfile = {
+  "Analytický": ["vycet", "elipsa", "gradace"],
+  "Kulturní": ["kulturni_reference", "ironie", "neologismus"],
+  "Filozofický": ["paradox", "otazka", "aforismus"],
+  "Naivní": ["jednoducha_veta", "personifikace", "apostrofa"],
+  "Jazykový": ["fyzikalizace", "neologismus", "metafora"],
+  "Metaforický": ["metafora", "symbol", "retezova_metafora"],
+  "Asociační": ["fragment", "apoziopeze", "volna_asociace"],
+  "Introspektivní": ["vnitrni_hlas", "prvni_osoba", "sebereflexe"],
+  "Ironický": ["ironie", "kontrast", "imperativ"],
+  "Groteskní": ["hyperbola", "absurdni_obraz", "nadsazka"],
+  "Absurdní": ["paradox", "fragment", "nelogicke_spojeni"],
+  "Surrealistický": ["snovy_obraz", "synestezie", "metamorfoza"]
+};
+
+function analyzeText(text) {
+  const angleScores = {};
+  for (let [angle, figs] of Object.entries(angleProfile)) {
+    let score = 0;
+    for (let fig of figs) {
+      if (figureDetectors[fig]) score += figureDetectors[fig](text);
+    }
+    angleScores[angle] = score;
+  }
+  const total = Object.values(angleScores).reduce((a,b)=>a+b,0) || 1;
+  const anglePercent = {};
+  for (let angle in angleScores) {
+    anglePercent[angle] = (angleScores[angle] / total * 100).toFixed(1);
+  }
+  return anglePercent;
+}
+
+function checkExpectedFigures(text, expectedList) {
+  const result = {};
+  for (let fig of expectedList) {
+    if (figureDetectors[fig]) {
+      result[fig] = figureDetectors[fig](text);
+    } else {
+      result[fig] = 0;
+    }
+  }
+  return result;
+}
+
+// ------------------------------------------------------------
+// 5. SPRÁVA ZÁZNAMŮ (localStorage, mapa 'main')
+// ------------------------------------------------------------
+const STORAGE_KEY = 'chcesmys_zapisnik';
+const MAP_ID = 'main';
+
+function loadEntries() {
+  try {
+    const data = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+    if (!data[MAP_ID]) {
+      data[MAP_ID] = { name: 'Zápisník mezer', popis: '', entries: [], created: Date.now() };
+    }
+    return data[MAP_ID].entries || [];
+  } catch(e) { return []; }
+}
+
+function saveEntry(entry) {
+  const data = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+  if (!data[MAP_ID]) data[MAP_ID] = { name: 'Zápisník mezer', popis: '', entries: [], created: Date.now() };
+  data[MAP_ID].entries.unshift(entry);
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+}
+
+function deleteEntry(id) {
+  const data = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+  if (data[MAP_ID]) {
+    data[MAP_ID].entries = data[MAP_ID].entries.filter(e => e.id !== id);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  }
+  renderHistory();
+}
+
+function clearAllEntries() {
+  const data = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+  if (data[MAP_ID]) data[MAP_ID].entries = [];
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  renderHistory();
+}
+
+function exportAll() {
+  const entries = loadEntries();
+  const blob = new Blob([JSON.stringify(entries, null, 2)], {type: 'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `zapisnik_export_${new Date().toISOString().slice(0,19)}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+// ------------------------------------------------------------
+// 6. UI A INICIALIZACE
+// ------------------------------------------------------------
+const cardSelect = document.getElementById('cardSelect');
+const angleSelect = document.getElementById('angleSelect');
+const taskDisplay = document.getElementById('taskDisplay');
+const userText = document.getElementById('userText');
+const analysisResult = document.getElementById('analysisResult');
+const historyList = document.getElementById('historyList');
+const loadTaskBtn = document.getElementById('loadTaskBtn');
+const analyzeBtn = document.getElementById('analyzeBtn');
+const saveBtn = document.getElementById('saveBtn');
+const clearBtn = document.getElementById('clearBtn');
+const exportAllBtn = document.getElementById('exportAllBtn');
+const clearHistoryBtn = document.getElementById('clearHistoryBtn');
+const figuresList = document.getElementById('figuresList');
+
+let currentCard = null;
+let currentAngle = null;
+let currentTaskText = null;
+let currentExpectedFigs = [];
+
+function populateCards() {
+  cardSelect.innerHTML = '<option value="">-- vyber kartu --</option>';
+  for (let card in tasksData) {
+    cardSelect.innerHTML += `<option value="${card}">${tasksData[card].name}</option>`;
+  }
+}
+function populateAngles(card) {
+  angleSelect.innerHTML = '<option value="">-- vyber úhel --</option>';
+  if (!card || !tasksData[card]) return;
+  const angles = tasksData[card].angles;
+  for (let deg in angles) {
+    angleSelect.innerHTML += `<option value="${deg}">${deg}° ${angles[deg].name}</option>`;
+  }
+}
+
+function loadTask() {
+  const card = cardSelect.value;
+  const deg = angleSelect.value;
+  if (!card || !deg || !tasksData[card] || !tasksData[card].angles[deg]) return;
+  currentCard = card;
+  currentAngle = parseInt(deg);
+  const angleData = tasksData[card].angles[deg];
+  currentTaskText = angleData.task;
+  currentExpectedFigs = angleData.expected || [];
+  taskDisplay.innerHTML = `<strong>${card} – ${deg}° ${angleData.name}</strong><br>${currentTaskText}`;
+  taskDisplay.style.display = 'block';
+}
+
+function renderHistory() {
+  const entries = loadEntries();
+  if (entries.length === 0) {
+    historyList.innerHTML = '<p style="color:var(--dim); font-style:italic;">Zatím žádné záznamy.</p>';
+    return;
+  }
+  let html = '';
+  entries.forEach(e => {
+    const date = new Date(e.ts).toLocaleString('cs-CZ');
+    const preview = (e.text || '').slice(0, 60) + (e.text?.length > 60 ? '…' : '');
+    html += `
+      <div class="history-item" data-id="${e.id}">
+        <div class="history-meta">
+          <span>${e.karta || '?'} ${e.uhel !== undefined ? e.uhel+'°' : ''} – ${e.nazev || 'volný'}</span>
+          <span>${date}</span>
+        </div>
+        <div class="history-preview">${escapeHtml(preview)}</div>
+      </div>`;
+  });
+  historyList.innerHTML = html;
+  document.querySelectorAll('.history-item').forEach(el => {
+    el.addEventListener('click', () => {
+      const id = el.dataset.id;
+      const entry = loadEntries().find(e => e.id === id);
+      if (entry) {
+        userText.value = entry.text;
+        if (entry.karta && entry.uhel !== undefined) {
+          cardSelect.value = entry.karta;
+          populateAngles(entry.karta);
+          angleSelect.value = entry.uhel;
+          loadTask();
+        } else {
+          taskDisplay.style.display = 'none';
+          currentCard = null;
+          currentAngle = null;
+          currentTaskText = null;
+          currentExpectedFigs = [];
+        }
+        analyzeTextAndDisplay();
+      }
+    });
+  });
+}
+
+function analyzeTextAndDisplay() {
+  const text = userText.value.trim();
+  if (!text) { alert('Napište nejprve text.'); return; }
+  const anglePercent = analyzeText(text);
+  let resultHtml = `<h4 style="margin-bottom:0.5rem;">📊 Profil 12 úhlů</h4><div class="angle-bars">`;
+  for (let [angle, percent] of Object.entries(anglePercent)) {
+    resultHtml += `
+      <div class="angle-bar-item">
+        <div class="angle-bar-label">${angle}</div>
+        <div class="angle-bar-bg"><div class="angle-bar-fill" style="width:${percent}%"></div></div>
+        <div>${percent}%</div>
+      </div>`;
+  }
+  resultHtml += `</div>`;
+  if (currentExpectedFigs && currentExpectedFigs.length > 0) {
+    const figResults = checkExpectedFigures(text, currentExpectedFigs);
+    resultHtml += `<div class="figure-check"><strong>Kontrola úkolu:</strong> `;
+    const totalFigs = currentExpectedFigs.length;
+    const matched = Object.values(figResults).filter(v => v > 0).length;
+    resultHtml += `${matched} / ${totalFigs} očekávaných figur nalezeno.`;
+    if (matched === totalFigs) resultHtml += ` ✅ Skvěle! Úkol splněn.`;
+    else resultHtml += ` ⚠️ Zkuste doplnit chybějící figury.`;
+    resultHtml += `<br><span style="font-size:0.7rem;">Požadované figury: ${currentExpectedFigs.join(', ')}</span>`;
+    resultHtml += `</div>`;
+  }
+  analysisResult.innerHTML = resultHtml;
+  analysisResult.classList.add('visible');
+}
+
+function saveCurrent() {
+  const text = userText.value.trim();
+  if (!text) { alert('Napište nejprve text.'); return; }
+  const anglePercent = analyzeText(text);
+  const entry = {
+    id: 'e_' + Date.now(),
+    ts: Date.now(),
+    text: text,
+    angleProfile: anglePercent,
+    karta: currentCard || null,
+    uhel: currentAngle !== null ? currentAngle : null,
+    nazev: currentCard && currentAngle !== null ? tasksData[currentCard]?.angles[currentAngle]?.name : null,
+    poeticky: null
+  };
+  saveEntry(entry);
+  renderHistory();
+  alert('Text uložen.');
+}
+
+function renderFiguresLibrary() {
+  let html = '<div class="fig-encyclopedia">';
+  for (let [key, fig] of Object.entries(figureEncyclopedia)) {
+    html += `
+      <details>
+        <summary>${fig.name}</summary>
+        <p><strong>Definice:</strong> ${fig.desc}</p>
+        <p><strong>Psychologie:</strong> ${fig.psych}</p>
+        <div class="example">Příklad: ${fig.ex}</div>
+      </details>`;
+  }
+  html += '</div>';
+  figuresList.innerHTML = html;
+}
+
+function escapeHtml(str) { return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+// Inicializace
+populateCards();
+renderFiguresLibrary();
+renderHistory();
+
+cardSelect.addEventListener('change', () => {
+  populateAngles(cardSelect.value);
+  taskDisplay.style.display = 'none';
+  currentCard = null;
+  currentAngle = null;
+});
+loadTaskBtn.addEventListener('click', loadTask);
+analyzeBtn.addEventListener('click', analyzeTextAndDisplay);
+saveBtn.addEventListener('click', saveCurrent);
+clearBtn.addEventListener('click', () => { userText.value = ''; analysisResult.classList.remove('visible'); });
+exportAllBtn.addEventListener('click', exportAll);
+clearHistoryBtn.addEventListener('click', () => { if(confirm('Smazat celou historii?')) clearAllEntries(); });
+
+// URL parametry pro otevření z karty
+const urlParams = new URLSearchParams(window.location.search);
+const cardParam = urlParams.get('card');
+const angleParam = urlParams.get('angle');
+if (cardParam && angleParam !== null && tasksData[cardParam] && tasksData[cardParam].angles[angleParam]) {
+  cardSelect.value = cardParam;
+  populateAngles(cardParam);
+  angleSelect.value = angleParam;
+  loadTask();
+}
+</script>
+</body>
+</html>
