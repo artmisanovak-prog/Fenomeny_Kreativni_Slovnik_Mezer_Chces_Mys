@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grafický generátor · Fyzika linky</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; }
+        :root { --bg:#0f0d0a; --surface:#171410; --surface2:#1e1a14; --cream:#e8e0d0; --dim:rgba(232,224,208,.42); --accent:#a89880; --serif:'Cormorant Garamond',Georgia,serif; --mono:'DM Mono',monospace; }
+        body { background:var(--bg); color:var(--cream); font-family:var(--mono); font-size:13px; padding:2rem 1rem; }
+        .wrap { max-width:1400px; margin:0 auto; }
+        h1 { font-family:var(--serif); font-size:2rem; margin-bottom:0.5rem; }
+        h1 em { color:var(--accent); font-style:italic; }
+        .panel { background:var(--surface); border:1px solid rgba(168,152,128,.15); padding:1.4rem; margin-bottom:2rem; border-radius:4px; }
+        .cards-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(110px,1fr)); gap:1rem; margin-bottom:2rem; }
+        .card { background:var(--surface2); border:1px solid var(--accent); padding:4px; cursor:grab; }
+        .card img { width:100%; height:auto; display:block; border-radius:2px; }
+        .layout { 
+            min-height:420px; 
+            border:2px dashed var(--accent); 
+            background:var(--surface2); 
+            padding:8px; 
+            margin-bottom:2rem; 
+            display:grid; 
+            grid-template-columns: repeat(4, 118px);   /* 4 karty vedle sebe */
+            gap:4px;                                   /* velmi malá mezera - linky na sebe navazují */
+            align-content:start; 
+        }
+        .layout .card { width:118px; cursor:move; }
+        button { background:var(--accent); color:var(--bg); border:none; padding:0.8rem 2rem; font-size:1rem; cursor:pointer; margin-top:1rem; }
+        .result { background:var(--surface2); border:2px solid var(--accent); padding:1.8rem; display:none; }
+        pre { background:#171410; padding:1rem; font-size:0.8rem; overflow:auto; white-space:pre-wrap; }
+    </style>
+</head>
+<body>
+<div class="wrap">
+    <h1>Grafický generátor <em>Fyzika linky</em></h1>
+    <p style="color:var(--dim);">Přetáhni karty do layoutu (teď se vejde 4 vedle sebe, můžeš víc řádků) → linky na sebe přímo navazují</p>
+
+    <div class="panel">
+        <div style="margin-bottom:1rem;">1. Tvé konkrétní karty (20 ks)</div>
+        <div class="cards-grid" id="cardsGrid"></div>
+    </div>
+
+    <div class="panel">
+        <div style="margin-bottom:1rem;">2. Rozložení (přetahuj a přehazuj – těsně vedle sebe)</div>
+        <div class="layout" id="layout" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+    </div>
+
+    <button onclick="analyzeStructure()">Analyzovat strukturu → vygenerovat metadata + multimedia návrhy</button>
+
+    <div id="result" class="result">
+        <h2>Nový grafický blok vytvořen</h2>
+        <pre id="metadataOutput"></pre>
+        <div id="suggestions" style="margin-top:1rem;"></div>
+        <button onclick="copyMetadata()" style="margin-top:1rem;">📋 Zkopírovat metadata</button>
+    </div>
+</div>
+
+<script>
+// === CESTA K TVÝM OBRÁZKŮM ===
+const baseUrl = "https://artmisanovak-prog.github.io/dataset_multi_fenomen/doma/ilustrace/";
+
+const myCards = [
+    {id:"mys", name:"Myš", file:"mys.jpg"},
+    {id:"kocour", name:"Kocour", file:"kocour.jpg"},
+    {id:"zajic", name:"Zajíc", file:"zajic.jpg"},
+    {id:"ryba", name:"Ryba", file:"ryba.jpg"},
+    {id:"krokodyl", name:"Krokodýl", file:"krokodyl.jpg"},
+    {id:"netopyr", name:"Netopýr", file:"netopyr.jpg"},
+    {id:"liska", name:"Liška", file:"liska.jpg"},
+    {id:"hyena", name:"Hyena", file:"hyena.jpg"},
+    {id:"pav", name:"Páv", file:"pav.jpg"},
+    {id:"lemur", name:"Lemur", file:"lemur.jpg"},
+    {id:"motyl", name:"Motýl", file:"motyl.jpg"},
+    {id:"parohy", name:"Parohy", file:"parohy.jpg"},
+    {id:"husy", name:"Husy", file:"husy.jpg"},
+    {id:"beran", name:"Beran", file:"beran.jpg"},
+    {id:"jednorozec", name:"Jednorožec", file:"jednorozec.jpg"},
+    {id:"zizala", name:"Žížala", file:"zizala.jpg"},
+    {id:"cap", name:"Čáp", file:"cap.jpg"},
+    {id:"pavouk", name:"Pavouk", file:"pavouk.jpg"},
+    {id:"drak", name:"Drak", file:"drak.jpg"},
+    {id:"veverka", name:"Veverka", file:"veverka.jpg"}
+];
+
+let layoutCards = [];
+
+// Vykreslení karet s obrázky
+function renderCards() {
+    const grid = document.getElementById('cardsGrid');
+    grid.innerHTML = '';
+    myCards.forEach(card => {
+        const el = document.createElement('div');
+        el.className = 'card';
+        el.draggable = true;
+        el.ondragstart = e => e.dataTransfer.setData('text', card.id);
+        el.innerHTML = `<img src="\( {baseUrl} \){card.file}" alt="\( {card.name}"><strong> \){card.name}</strong>`;
+        grid.appendChild(el);
+    });
+}
+
+function allowDrop(ev) { ev.preventDefault(); }
+function drop(ev) {
+    ev.preventDefault();
+    const id = ev.dataTransfer.getData('text');
+    const card = myCards.find(c => c.id === id);
+    if (!card) return;
+
+    const layout = document.getElementById('layout');
+    const clone = document.createElement('div');
+    clone.className = 'card';
+    clone.innerHTML = `<img src="\( {baseUrl} \){card.file}" alt="\( {card.name}"><strong> \){card.name}</strong>`;
+    clone.dataset.id = card.id;
+    layout.appendChild(clone);
+    layoutCards.push(card);
+}
+
+// Analýza (používá tvých 12 grafických prvků)
+function analyzeStructure() {
+    if (layoutCards.length < 2) {
+        alert('Přetáhni prosím aspoň 2 karty.');
+        return;
+    }
+
+    const detected = ["tok","pretekani","echo","krizeni","trhlina","hustota","obrat","smycka","vetev","komprese","expanze","rozpad"];
+
+    const metadata = {
+        id: "G-" + Date.now().toString(36),
+        source_cards: layoutCards.map(c => c.id),
+        graphic_elements: detected,
+        flow_direction: "těsný_tok_bez_mezery",
+        density: "stredni",
+        rhythm: "opakujici_se_echo_s_trhlinou",
+        function: "generuje plynulý tok s náhlým přerušením a opakováním motivu",
+        movement: "tok → přetékání → echo → trhlina",
+        intensity: "vysoká",
+        multimedia_suggestions: {
+            zvuk: "dlouhý spojitý tón + náhlé ticho + opakující se echo",
+            tanec: "plynulý pohyb přes scénu + náhlé freeze + opakování gesta",
+            choreografie: "hlavní dráha = tok linky, detaily = tečky jako malé kroky",
+            video: "slow-motion přechod + náhlý cut na trhlinu",
+            instalace: "projekce karet, kde linky svítí a přetékají přímo"
+        }
+    };
+
+    document.getElementById('metadataOutput').textContent = JSON.stringify(metadata, null, 2);
+    const sugg = document.getElementById('suggestions');
+    sugg.innerHTML = `<strong>Multimedia návrhy:</strong><br>` + 
+        Object.entries(metadata.multimedia_suggestions).map(([k,v]) => `<div style="margin:0.5rem 0"><strong>${k}:</strong> ${v}</div>`).join('');
+    document.getElementById('result').style.display = 'block';
+}
+
+function copyMetadata() {
+    const text = document.getElementById('metadataOutput').textContent;
+    navigator.clipboard.writeText(text).then(() => alert('✅ Metadata zkopírována'));
+}
+
+renderCards();
+</script>
+</body>
+</html>
