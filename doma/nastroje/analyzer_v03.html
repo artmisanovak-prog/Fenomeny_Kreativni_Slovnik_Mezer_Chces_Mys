@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analyzátor textu · Chceš myš?</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --bg: #0f0d0a;
+            --surface: #171410;
+            --surface2: #1e1a14;
+            --cream: #e8e0d0;
+            --dim: rgba(232,224,208,.42);
+            --dim2: rgba(232,224,208,.2);
+            --accent: #a89880;
+            --accent2: #786858;
+            --border: rgba(168,152,128,.15);
+            --border-hi: rgba(168,152,128,.3);
+            --serif: 'Cormorant Garamond', Georgia, serif;
+            --mono: 'DM Mono', monospace;
+        }
+        body {
+            background: var(--bg);
+            color: var(--cream);
+            font-family: var(--mono);
+            font-size: 13px;
+            line-height: 1.8;
+            padding: 2rem 1rem;
+        }
+        .wrap {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 0.5rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+        .nav-brand {
+            font-family: var(--serif);
+            font-size: 1rem;
+        }
+        .nav-brand em {
+            color: var(--accent);
+            font-style: italic;
+        }
+        .nav-links a {
+            margin-left: 1rem;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--dim);
+            text-decoration: none;
+            border-bottom: 1px solid transparent;
+        }
+        .nav-links a:hover {
+            color: var(--cream);
+            border-bottom-color: var(--accent);
+        }
+        h1 {
+            font-family: var(--serif);
+            font-size: 2rem;
+            font-weight: 300;
+            margin-bottom: 0.5rem;
+        }
+        h1 em {
+            color: var(--accent);
+            font-style: italic;
+        }
+        .sub {
+            color: var(--dim);
+            font-size: 0.8rem;
+            margin-bottom: 2rem;
+        }
+        .panel {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            padding: 1.2rem;
+            margin-bottom: 2rem;
+        }
+        textarea {
+            width: 100%;
+            min-height: 200px;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            color: var(--cream);
+            font-family: var(--mono);
+            font-size: 0.85rem;
+            padding: 0.8rem;
+            margin: 1rem 0;
+            resize: vertical;
+        }
+        button {
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            color: var(--cream);
+            font-family: var(--mono);
+            font-size: 0.8rem;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        button:hover {
+            background: var(--accent);
+            color: var(--bg);
+            border-color: var(--accent);
+        }
+        .results {
+            margin-top: 2rem;
+        }
+        .angle-bars {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.8rem;
+            margin-top: 1rem;
+        }
+        .angle-bar-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .angle-bar-label {
+            width: 70px;
+            font-size: 0.75rem;
+            text-align: right;
+        }
+        .angle-bar-bg {
+            flex: 1;
+            height: 8px;
+            background: var(--border);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .angle-bar-fill {
+            height: 100%;
+            width: 0%;
+            background: var(--accent);
+        }
+        .angle-percent {
+            width: 45px;
+            font-size: 0.7rem;
+            text-align: right;
+        }
+        .feedback {
+            background: var(--surface2);
+            border-left: 3px solid var(--accent);
+            padding: 0.8rem;
+            margin-bottom: 1rem;
+            font-size: 0.85rem;
+        }
+        footer {
+            margin-top: 2rem;
+            border-top: 1px solid var(--border);
+            padding-top: 1rem;
+            font-size: 0.7rem;
+            color: var(--dim2);
+            text-align: right;
+        }
+        @media (max-width: 700px) {
+            .angle-bars {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="wrap">
+    <nav>
+        <span class="nav-brand"><em>Fyzika jazyka</em> · analyzátor textu</span>
+        <div class="nav-links">
+            <a href="zapisnik.html">Zápisník</a>
+            <a href="knihovna_figur.html">Knihovna figur</a>
+        </div>
+    </nav>
+
+    <h1>Co říká váš jazyk — <em>ne obsah, ale forma.</em></h1>
+    <p class="sub">Analyzátor čte strukturu textu a přiřazuje ji ke 12 kognitivním úhlům. Každý úhel má vlastní 100% stupnici podle svých figur.</p>
+
+    <div class="panel">
+        <p style="margin-bottom:0.5rem;">Vložte libovolný text:</p>
+        <textarea id="inputText" placeholder="Například text napsaný na základě kreativního úkolu z karty…"></textarea>
+        <button id="analyzeBtn">Analyzovat</button>
+    </div>
+
+    <div id="feedback" class="feedback" style="display:none;"></div>
+    <div id="results" class="results" style="display:none;">
+        <h2>Profil textu</h2>
+        <div class="angle-bars" id="angleBars"></div>
+    </div>
+
+    <footer>
+        Jazykový analyzátor · systém Chceš myš? · © 2026 Michaela Nováková
+    </footer>
+</div>
+
+<script>
+// ============================================================
+// DEFINICE FIGUR PODLE ÚHLŮ (finální verze)
+// Každá figura je přiřazena k jednomu úhlu a má detekční funkci.
+// ============================================================
+
+const figureDetectors = {
+    // 0° Analytický
+    gradace: (text) => /(\w+,\s*){2,}\w+\s+a\s+\w+|\b(nej\w+\s+[\w\s]+nej\w+)\b/i.test(text) ||
+        /(výš\s+než|víc\s+než|méně\s+než).*?(\1)/i.test(text),
+    dlouhe_vety: (text) => text.split(/[.!?]+/).some(v => v.trim().split(/\s+/).length >= 20),
+    polysyndeton: (text) => /(a\s+[^,.]*?a\s+[^,.]*?a)/i.test(text),
+    apozicni_definice: (text) => /(\w+)\s*,\s*(které?|jenž|což)\s+je\s+(\w+)/i.test(text),
+    hypotaxe: (text) => /(protože|když|ačkoli|přestože|jelikož|aby)/i.test(text),
+
+    // 30° Kulturní
+    intertextualita: (text) => /(bible|homér|mýtus|pohádka|legenda|krokodýlí slzy)/i.test(text),
+    parabola: (text) => false, // těžké – necháme na výklad
+    zmena_role: (text) => {
+        const first = /(\b(já|jsem|mám|můj|mi|mě)\b)/i.test(text);
+        const third = /(\b(on|ona|ono|oni|jeho|její|jejich)\b)/i.test(text);
+        return first && third;
+    },
+    kolokace: (text) => /(krokodýlí slzy|totální výprodej|tři za cenu jedné|rybí rap|flow je king)/i.test(text),
+    zmena_casu: (text) => /(včera|dnes|zítra|potom|předtím|nyní|tehdy|pak)/i.test(text),
+    redundance: (text) => /(\b\w+\b\s+\b\w+\b\s+\b\w+\b)\s+\b\1\b/i.test(text),
+
+    // 60° Filozofický
+    metatext: (text) => /(tento příběh|tato věta|jak jsem napsal|jak jistě víte|zapsáno rukou)/i.test(text),
+    deklarace: (text) => /(\bto je\b|\bto jsou\b|\bznamená to\b|\bpravda je\b)/i.test(text),
+    antiteze: (text) => /(ale|naopak|avšak|přesto|zatímco)/i.test(text),
+    neologismus: (text) => /(\b\w{4,}\b)(?![a-záčďéěíňóřšťůúýž])/i.test(text) && text.length > 20, // zjednodušeně
+    chiasmus: (text) => false,
+    zmena_kontextu: (text) => /(najednou|náhle|zčistajasna)/i.test(text),
+    performativita: (text) => /(slibuji|nařizuji|prohlašuji|žádám|varuji|děkuji|omlouvám se)/i.test(text),
+
+    // 90° Naivní
+    elipsa: (text) => text.split(/[.!?]+/).some(v => {
+        const words = v.trim().split(/\s+/);
+        return words.length <= 3 && !/\b\w{3,}ovat\b/i.test(v);
+    }),
+    komprese: (text) => text.split(/[.!?]+/).some(v => v.trim().split(/\s+/).length <= 3),
+    nerozhodnost: (text) => /(možná|snad|asi|třeba|akorát|že|asi tak)/i.test(text),
+
+    // 120° Jazykový
+    anafora: (text) => {
+        const sents = text.split(/[.!?]+/).filter(s => s.trim().length > 0);
+        for (let i = 1; i < sents.length; i++) {
+            const w1 = sents[i-1].trim().split(/\s+/)[0];
+            const w2 = sents[i].trim().split(/\s+/)[0];
+            if (w1 && w2 && w1.toLowerCase() === w2.toLowerCase()) return true;
+        }
+        return false;
+    },
+    epifora: (text) => {
+        const sents = text.split(/[.!?]+/).filter(s => s.trim().length > 0);
+        for (let i = 1; i < sents.length; i++) {
+            const w1 = sents[i-1].trim().split(/\s+/).pop();
+            const w2 = sents[i].trim().split(/\s+/).pop();
+            if (w1 && w2 && w1.toLowerCase() === w2.toLowerCase()) return true;
+        }
+        return false;
+    },
+    rytmika: (text) => {
+        const lens = text.split(/[.!?]+/).filter(s => s.trim().length > 0).map(s => s.trim().split(/\s+/).length);
+        let long = 0, short = 0;
+        lens.forEach(l => { if (l > 15) long++; if (l < 5) short++; });
+        return long >= 2 && short >= 2;
+    },
+    asonance: (text) => /(a[aeiouyáéíóúůý]|e[aeiouyáéíóúůý]|i[aeiouyáéíóúůý]|o[aeiouyáéíóúůý]|u[aeiouyáéíóúůý])/i.test(text),
+    aliterace: (text) => /(\b\w\w*\s+\1\w*\s+\1\w*)/i.test(text),
+    paralelismus: (text) => /(\b\w+\b.*\n\b\w+\b)/i.test(text) && /(\b\w+\b\s+\w+\b\s+\w+\b)/.test(text),
+
+    // 150° Metaforický
+    metafora: (text) => {
+        const matches = text.match(/\b([a-záčďéěíňóřšťůúýž]+)\s+je\s+([a-záčďéěíňóřšťůúýž]+)/gi);
+        if (!matches) return false;
+        for (let m of matches) {
+            if (!/^(já|ty|on|ona|ono|my|vy|oni|to)$/i.test(m.split(/\s+/)[0])) return true;
+        }
+        return false;
+    },
+    prirovnani: (text) => /(jako|jakoby|jako by)/i.test(text),
+    apostrofa: (text) => /(ty|vy|pane|slečno|vodo|lese|slunce)/i.test(text) && /!/.test(text),
+
+    // 180° Asociační
+    fragmenty: (text) => text.split(/[.!?]+/).some(v => v.trim().split(/\s+/).length <= 2 && !/\b\w{3,}ovat\b/i.test(v)),
+    parataxe: (text) => /(a\s+\w+\s+\w+\s+a\s+\w+)/i.test(text) || /(i\s+\w+\s+\w+\s+i\s+\w+)/i.test(text),
+    enumerace: (text) => /(\d+\.|\*|-)\s+\w+/i.test(text) || /(\w+,\s+\w+,\s+\w+)/.test(text),
+    imperativ: (text) => /(buďte|přestaňte|dělej|hledej|zapomeň|řekni|poslouchej)/i.test(text),
+
+    // 210° Introspektivní
+    zmena_tempa: (text) => {
+        const lens = text.split(/[.!?]+/).filter(s => s.trim().length > 0).map(s => s.trim().split(/\s+/).length);
+        let long = 0, short = 0;
+        lens.forEach(l => { if (l > 15) long++; if (l < 5) short++; });
+        return long >= 2 && short >= 2;
+    },
+    performace: (text) => /(pro sebe|sám sobě|vnitřně|cítím|myslím|uvědomuji)/i.test(text),
+    detaily: (text) => /(\d+|\b(červen|modr|žlut|zelen|bíl|čern)\w*|(přesně|konkrétně))/i.test(text),
+
+    // 240° Ironický
+    negace: (text) => (text.match(/\b(ne|nic|nikdo|žádný|bez)\b/gi) || []).length >= 2,
+    ironie: (text) => /(je\s+\w+\s+ale|není\s+\w+\s+ale)/i.test(text) || /(samozřejmě|ovšem|jistě).*ale/i.test(text),
+    kontrast: (text) => /(ale|naopak|avšak|přesto)/i.test(text),
+    parenteze: (text) => /[\(\)]|—.*—|–.*–/.test(text),
+    deformovana_frazeologie: (text) => /(význam v akci|sleva na smysl|krokodýlí slzy jsou)/i.test(text),
+
+    // 270° Groteskní
+    hyperbola: (text) => /(totální|naprosto|strašně|nej\w+)/i.test(text),
+    tautologie: (text) => /(\b\w+\b\s+\b\w+\b\s+\b\w+\b)\s+\b\1\b/i.test(text),
+    inverze: (text) => /^(?:[a-záčďéěíňóřšťůúýž]+\s+)[a-záčďéěíňóřšťůúýž]+\s+[a-záčďéěíňóřšťůúýž]+\s+[a-záčďéěíňóřšťůúýž]+\s+[a-záčďéěíňóřšťůúýž]+$/i.test(text) && !/^(Já|Ty|On)/.test(text),
+    ilokuce: (text) => /(slibuji|nařizuji|prohlašuji|příkaz)/i.test(text),
+    anastrofa: (text) => /(\w+\s+\w+\s+\w+\s+\w+\s+\w+)/i.test(text) && !/^[A-Z][a-z]+/.test(text),
+
+    // 300° Absurdní
+    paradox: (text) => /(paradox|protimluv|a přesto|a zároveň)/i.test(text),
+    synestezie: (text) => {
+        const senses = {
+            sight: /\b(barva|vidět|jasný|temný|světlý|barevný|červen|modr|žlut)\b/gi,
+            sound: /\b(zvuk|slyšet|hlasitý|ticho|hluk|hřmot)\b/gi,
+            touch: /\b(hladký|tvrdý|měkký|teplý|studený)\b/gi,
+            taste: /\b(sladký|hořký|kyselý|slaný|chutnat)\b/gi,
+            smell: /\b(vůně|pach|vonět|smrdět)\b/gi
+        };
+        let found = 0;
+        for (let sense in senses) {
+            if (senses[sense].test(text)) found++;
+        }
+        return found >= 2;
+    },
+    fyzikalizace_abstrakci: (text) => /(\b(smysl|význam|emoce|myšlenka|pravda|láska)\b\s+\b(teče|padá|leží|visí|váží|tíží)\b)/i.test(text),
+    preskok: (text) => /(najednou|náhle|zčistajasna|a pak)/i.test(text),
+    oxymoron: (text) => /(ticho\s+hluk|temnota\s+světlo|smutek\s+radost|živá\s+mrtvola)/i.test(text),
+    dekonstruktualizace: (text) => /\.\.\./.test(text) && /,\s*,\s*,/.test(text),
+
+    // 330° Surrealistický
+    prolinani: (text) => /(voda\s+hudba|hudba\s+voda|mlha\s+flow|ryba\s+rap)/i.test(text),
+    zmena_mista: (text) => /(najednou\s+na\s+|\s+vedle\s+|\s+uprostřed\s+)/i.test(text),
+    ztrata_souseda: (text) => /(není\s+\w+\s+ale|nejsou\s+\w+\s+ale)/i.test(text),
+    gramaticka_deviace: (text) => /[A-Za-záčďéěíňóřšťůúýž]+\s+\w+\s+\w+\s+\w+\s+\w+/.test(text) && !/[.!?]/.test(text.slice(-1)),
+    permutace: (text) => /(\w+\s+\w+\s+\w+\s+\w+).*\1/.test(text),
+    hapax: (text) => false,
+    lagomena: (text) => false,
+    asyndeton: (text) => /([^,.]*\s+[^,.]*\s+[^,.]*)[^,.]*[.!?]/.test(text) && !/,/.test(text),
+    vyplnova_slova: (text) => /(jakoby|prostě|teda|vlastně|no tak|asi tak)/i.test(text)
+};
+
+// Seznam figur pro každý úhel (pouze ty, které se detekují)
+const angleFigures = {
+    0: ["gradace", "dlouhe_vety", "polysyndeton", "apozicni_definice", "hypotaxe"],
+    30: ["intertextualita", "zmena_role", "kolokace", "zmena_casu", "redundance"],
+    60: ["metatext", "deklarace", "antiteze", "neologismus", "zmena_kontextu", "performativita"],
+    90: ["elipsa", "komprese", "nerozhodnost"],
+    120: ["anafora", "epifora", "rytmika", "asonance", "aliterace", "paralelismus"],
+    150: ["metafora", "prirovnani", "apostrofa"],
+    180: ["fragmenty", "parataxe", "enumerace", "imperativ"],
+    210: ["zmena_tempa", "performace", "detaily"],
+    240: ["negace", "ironie", "kontrast", "parenteze", "deformovana_frazeologie"],
+    270: ["hyperbola", "tautologie", "inverze", "ilokuce", "anastrofa"],
+    300: ["paradox", "synestezie", "fyzikalizace_abstrakci", "preskok", "oxymoron", "dekonstruktualizace"],
+    330: ["prolinani", "zmena_mista", "ztrata_souseda", "gramaticka_deviace", "permutace", "asyndeton", "vyplnova_slova"]
+};
+
+function analyzeText(text) {
+    const scores = {};
+    for (let angle in angleFigures) {
+        const figures = angleFigures[angle];
+        let hitCount = 0;
+        for (let fig of figures) {
+            if (figureDetectors[fig] && figureDetectors[fig](text)) {
+                hitCount++;
+            }
+        }
+        scores[angle] = Math.round((hitCount / figures.length) * 100);
+    }
+    return scores;
+}
+
+function displayResults(scores, targetAngle) {
+    const barsDiv = document.getElementById('angleBars');
+    barsDiv.innerHTML = '';
+    const anglesSorted = Object.keys(scores).map(Number).sort((a,b)=>a-b);
+    for (let angle of anglesSorted) {
+        const percent = scores[angle];
+        const bar = document.createElement('div');
+        bar.className = 'angle-bar-item';
+        bar.innerHTML = `
+            <div class="angle-bar-label">${angle}°</div>
+            <div class="angle-bar-bg"><div class="angle-bar-fill" style="width: ${percent}%;"></div></div>
+            <div class="angle-percent">${percent}%</div>
+        `;
+        barsDiv.appendChild(bar);
+    }
+
+    const resultsDiv = document.getElementById('results');
+    resultsDiv.style.display = 'block';
+
+    const feedbackDiv = document.getElementById('feedback');
+    if (targetAngle !== undefined && targetAngle !== null) {
+        const targetScore = scores[targetAngle] || 0;
+        feedbackDiv.style.display = 'block';
+        feedbackDiv.innerHTML = `<strong>🎯 Cílový úhel ${targetAngle}°:</strong> Tvůj text obsahuje ${targetScore}% figur tohoto úhlu. ${targetScore >= 70 ? 'Skvěle!' : (targetScore >= 40 ? 'Dobrý základ, zkus doplnit chybějící figury.' : 'Zkus se zaměřit na figury uvedené v zadání.')}`;
+    } else {
+        feedbackDiv.style.display = 'none';
+    }
+}
+
+document.getElementById('analyzeBtn').addEventListener('click', () => {
+    const text = document.getElementById('inputText').value.trim();
+    if (!text) {
+        alert('Vložte text k analýze.');
+        return;
+    }
+    const urlParams = new URLSearchParams(window.location.search);
+    const targetAngle = urlParams.get('angle') ? parseInt(urlParams.get('angle')) : null;
+    const scores = analyzeText(text);
+    displayResults(scores, targetAngle);
+});
+</script>
+</body>
+</html>
