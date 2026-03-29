@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mapování figur – jazyková analýza textu</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: #fefaf5;
+            color: #1a1a1a;
+            line-height: 1.6;
+            padding: 2rem 1rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            font-weight: normal;
+            letter-spacing: -0.01em;
+            border-left: 4px solid #a55;
+            padding-left: 1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .sub {
+            color: #666;
+            font-size: 0.85rem;
+            margin-bottom: 1.5rem;
+            font-style: italic;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 1rem;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            background: #fff;
+            resize: vertical;
+            min-height: 200px;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #a55;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin: 1rem 0;
+        }
+
+        button {
+            background: #2c3e2f;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            font-size: 0.85rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-family: inherit;
+            transition: 0.1s;
+        }
+
+        button:hover {
+            background: #1f2c21;
+        }
+
+        button.secondary {
+            background: #7a6a5a;
+        }
+
+        button.secondary:hover {
+            background: #5e4f3f;
+        }
+
+        .panel {
+            background: #fff;
+            border: 1px solid #e0d6cc;
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+
+        .highlighted-text {
+            background: #fef8f0;
+            border: 1px solid #e6dbcf;
+            border-radius: 8px;
+            padding: 1rem;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            line-height: 1.7;
+            white-space: pre-wrap;
+            max-height: 400px;
+            overflow-y: auto;
+            display: none;
+        }
+
+        .figure-span {
+            cursor: help;
+            border-radius: 2px;
+            padding: 0 1px;
+            transition: background 0.1s;
+        }
+
+        .figure-span:hover {
+            filter: brightness(0.95);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+            font-size: 0.85rem;
+        }
+
+        th, td {
+            text-align: left;
+            padding: 0.6rem 0.4rem;
+            border-bottom: 1px solid #e0d6cc;
+        }
+
+        th {
+            font-weight: 600;
+            background: #f5efe8;
+        }
+
+        .warning {
+            background: #fff0e0;
+            border-left: 4px solid #c77;
+            padding: 0.4rem 0.6rem;
+            margin-top: 0.5rem;
+            font-size: 0.8rem;
+        }
+
+        .figure-detail {
+            background: #faf6f0;
+            border-left: 4px solid #a55;
+            padding: 1rem;
+            margin-top: 1rem;
+            display: none;
+        }
+
+        .figure-detail h3 {
+            font-size: 1rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .rule {
+            font-family: monospace;
+            background: #eee;
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+        }
+
+        .legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+            margin: 0.5rem 0;
+            font-size: 0.7rem;
+        }
+
+        .legend-color {
+            width: 12px;
+            height: 12px;
+            display: inline-block;
+            border-radius: 2px;
+            margin-right: 4px;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 0.5rem;
+            margin: 1rem 0;
+        }
+
+        .stat-card {
+            background: #f5efe8;
+            padding: 0.5rem;
+            text-align: center;
+            border-radius: 6px;
+        }
+
+        .stat-number {
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: #2c3e2f;
+        }
+
+        footer {
+            margin-top: 2rem;
+            font-size: 0.7rem;
+            color: #888;
+            text-align: center;
+            border-top: 1px solid #e0d6cc;
+            padding-top: 1rem;
+        }
+
+        @media (max-width: 700px) {
+            .stats {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>🔍 Mapování figur</h1>
+    <div class="sub">Strukturální analýza textu – detekce jazykových figur a jejich forenzní interpretace</div>
+
+    <textarea id="inputText" placeholder="Vložte text (výpověď, email, přepis výslechu, smlouvu…)"></textarea>
+    <div class="btn-group">
+        <button id="analyzeBtn">🔎 Analyzovat</button>
+        <button id="clearBtn" class="secondary">✕ Smazat</button>
+        <button id="toggleViewBtn" class="secondary">📄 Zobrazit zvýrazněný text</button>
+    </div>
+
+    <div id="highlightedContainer" class="highlighted-text"></div>
+
+    <div id="resultsPanel" style="display: none;">
+        <div class="stats" id="statsPanel"></div>
+        <div class="panel">
+            <h2 style="font-size:1.2rem;">📊 Tabulka figur</h2>
+            <div style="overflow-x: auto;">
+                <table id="figuresTable">
+                    <thead>
+                        <tr><th>Figura</th><th>Výskytů</th><th>na 100 slov</th><th>⚠️</th></tr>
+                    </thead>
+                    <tbody id="tableBody"></tbody>
+                </table>
+            </div>
+            <div class="legend" id="legend"></div>
+        </div>
+        <div id="detailPanel" class="figure-detail"></div>
+    </div>
+
+    <footer>
+        Mapování figur – offline nástroj pro forenzní analýzu jazyka. Detekce je mechanická, každý nález je třeba posoudit v kontextu případu.
+    </footer>
+</div>
+
+<script>
+// ============================================================
+//  KNIHOVNA FIGUR – definice, detekce, popisy
+// ============================================================
+
+const FIGURES = [
+    {
+        id: "anafora",
+        name: "Anafora",
+        description: "Opakování stejného slova na začátku sousedních vět.",
+        forensic: "V běžné výpovědi vzácné; časté u naučených, rétoricky připravených textů.",
+        detectMicro: (sentence, idx, sentences) => {
+            if (idx === 0) return false;
+            const prevFirst = sentences[idx-1].trim().split(/\s+/)[0];
+            const currFirst = sentence.trim().split(/\s+/)[0];
+            return prevFirst && currFirst && prevFirst.toLowerCase() === currFirst.toLowerCase();
+        },
+        detectMacro: null,
+        color: "#e6c3a0"
+    },
+    {
+        id: "polysyndeton",
+        name: "Polysyndeton",
+        description: "Nadbytek spojek (a, i, nebo, ale, však).",
+        forensic: "Může signalizovat emoční přetok, bezbřehost, nebo naopak snahu o slavnostnost.",
+        detectMicro: (sentence) => {
+            const conjunctions = (sentence.match(/\b(a|i|nebo|ale|však|ani|či)\b/gi) || []).length;
+            const wordCount = sentence.split(/\s+/).length;
+            return conjunctions / Math.max(wordCount, 1) > 0.15;
+        },
+        detectMacro: null,
+        color: "#c8b18a"
+    },
+    {
+        id: "hypotaxe",
+        name: "Hypotaxe",
+        description: "Složitá souvětí s podřadnými větami.",
+        forensic: "Signalizuje racionalitu, odbornost; v mluveném projevu nepřirozená, často značí připravenost.",
+        detectMicro: (sentence) => {
+            const subord = (sentence.match(/\b(který|že|aby|když|protože|jestliže|ačkoli|jakmile|dokud|pokud)\b/gi) || []).length;
+            return subord >= 2;
+        },
+        detectMacro: null,
+        color: "#b0a088"
+    },
+    {
+        id: "parataxe",
+        name: "Parataxe",
+        description: "Řazení krátkých hlavních vět vedle sebe.",
+        forensic: "Dynamika, přímost, typické pro mluvený projev, může značit spontánnost.",
+        detectMicro: (sentence) => {
+            const words = sentence.split(/\s+/).length;
+            return words <= 6;
+        },
+        detectMacro: null,
+        color: "#b8c4a0"
+    },
+    {
+        id: "tempus_shift",
+        name: "Změna času",
+        description: "Náhlý přechod mezi minulým, přítomným a budoucím časem.",
+        forensic: "Emoční zaujetí, trauma, nebo naopak nesoulad v rekonstrukci děje.",
+        detectMicro: null,
+        detectMacro: (text) => {
+            const past = /\b(byl|byla|bylo|byli|šel|šla|řekl|řekla|viděl|viděla|udělal|udělala)\b/gi.test(text);
+            const present = /\b(je|jsou|má|mám|jde|říká|vidí|cítí|dělá)\b/gi.test(text);
+            const future = /\b(bude|budu|budeme|půjde|přijde|udělá)\b/gi.test(text);
+            return (past && present) || (past && future) || (present && future);
+        },
+        color: "#e0b87a"
+    },
+    {
+        id: "role_shift",
+        name: "Změna role",
+        description: "Střídání 1. a 3. osoby, přechod z vlastní perspektivy na cizí.",
+        forensic: "Svědek přepíná mezi vlastním prožitkem a doslechem; podezření na nepůvodní informaci.",
+        detectMicro: null,
+        detectMacro: (text) => {
+            const first = /\b(já|jsem|mě|mi|můj|moje|my|nás|nám)\b/gi.test(text);
+            const third = /\b(on|ona|ono|oni|jej|jeho|její|jejich)\b/gi.test(text);
+            return first && third;
+        },
+        color: "#a0b88a"
+    },
+    {
+        id: "negace",
+        name: "Negace",
+        description: "Záporná slova (ne, nikdo, nic, nikdy).",
+        forensic: "Obranný postoj, popírání, může indikovat klamání nebo vyhýbavost.",
+        detectMicro: (sentence) => {
+            const neg = (sentence.match(/\b(ne|není|nejsem|nemá|nemám|nikdo|nic|nikdy|nikde|nijak)\b/gi) || []).length;
+            return neg >= 2;
+        },
+        detectMacro: null,
+        color: "#d08c7a"
+    },
+    {
+        id: "elipsa",
+        name: "Elipsa",
+        description: "Vynechání podmětu (zejména „já“) v případech, kde by byl očekáván.",
+        forensic: "Snaha vyhnout se osobní odpovědnosti nebo zamlčení agens.",
+        detectMicro: (sentence) => {
+            if (/\b(já|jsem)\b/i.test(sentence)) return false;
+            const hasVerb = /\b(šel|šla|řekl|řekla|viděl|viděla|udělal|udělala|byl|byla|měl|měla)\b/i.test(sentence);
+            return hasVerb;
+        },
+        detectMacro: null,
+        color: "#a0a8b8"
+    },
+    {
+        id: "parenteze",
+        name: "Parenteze",
+        description: "Vsuvky oddělené čárkami, závorkami, pomlčkami.",
+        forensic: "Dodatečné upřesňování, ladění výpovědi za běhu – může značit konstruování nepravdivé verze.",
+        detectMicro: (sentence) => {
+            return /[–—]|\(|\)|„[^"]*“/.test(sentence);
+        },
+        detectMacro: null,
+        color: "#c0b0b0"
+    },
+    {
+        id: "fixace",
+        name: "Fixace",
+        description: "Opakování stejného slova v krátkém úseku (3× a více).",
+        forensic: "Zaseknutí na jednom bodě, stres, snaha zahlcovat nebo nedostatek slovní zásoby.",
+        detectMicro: null,
+        detectMacro: (text) => {
+            const words = text.toLowerCase().split(/\s+/).map(w => w.replace(/[.,!?;:]/g, ''));
+            const freq = {};
+            words.forEach(w => { if (w.length > 3) freq[w] = (freq[w] || 0) + 1; });
+            return Object.values(freq).some(c => c >= 3);
+        },
+        color: "#d8a88a"
+    },
+    {
+        id: "hyperbola",
+        name: "Hyperbola",
+        description: "Nadsázka, přehánění (superlativy, absolutizující výrazy).",
+        forensic: "Emoční přetlak, snaha zdůraznit pravdivost, může být manipulativní.",
+        detectMicro: (sentence) => {
+            return /\b(nej|absolutně|naprosto|totálně|vůbec|vždy|nikdy|tisíckrát|milokrát)\b/i.test(sentence);
+        },
+        detectMacro: null,
+        color: "#e0a07a"
+    },
+    {
+        id: "gradace",
+        name: "Gradace",
+        description: "Stupňování intenzity (např. délky vět, síly výrazů).",
+        forensic: "Budování napětí, promyšlená rétorická struktura.",
+        detectMicro: null,
+        detectMacro: (text, sentences) => {
+            const lens = sentences.map(s => s.split(/\s+/).length);
+            let inc = 0, dec = 0;
+            for (let i = 2; i < lens.length; i++) {
+                if (lens[i] > lens[i-1] && lens[i-1] > lens[i-2]) inc++;
+                if (lens[i] < lens[i-1] && lens[i-1] < lens[i-2]) dec++;
+            }
+            return inc >= 2 || dec >= 2;
+        },
+        color: "#b8a87a"
+    },
+    {
+        id: "kontrast",
+        name: "Kontrast",
+        description: "Protiklad vyjádřený spojkami ale, avšak, naopak.",
+        forensic: "Vymezování postoje, racionální argumentace, může být obranné.",
+        detectMicro: (sentence) => {
+            return /\b(ale|avšak|naopak|přesto|i\s+tak)\b/i.test(sentence);
+        },
+        detectMacro: null,
+        color: "#c0a87a"
+    },
+    {
+        id: "ironie",
+        name: "Ironie / výsměch",
+        description: "Spojení kladného a záporného tvrzení s kontrastem.",
+        forensic: "Obranná reakce, nadhled, nebo snaha o diskreditaci.",
+        detectMicro: (sentence) => {
+            const hasBe = /\b(byl|byla|bylo|je|jsou|jsem|jsi)\b/i.test(sentence);
+            const hasNeg = /\b(ne|není|nejsem)\b/i.test(sentence);
+            const hasContrast = /\b(ale|však|přesto)\b/i.test(sentence);
+            return hasBe && hasNeg && hasContrast;
+        },
+        detectMacro: null,
+        color: "#d0a08a"
+    },
+    {
+        id: "deklarace",
+        name: "Deklarace / performativum",
+        description: "Prohlašovací slovesa v 1. osobě (prohlašuji, slibuji).",
+        forensic: "Vytváří právní závazek, dodává výpovědi váhu, často citace právní formulace.",
+        detectMicro: (sentence) => {
+            return /\b(prohlašuji|slibuji|potvrzuji|konstatuji|tvrdím|říkám\s+že)\b/i.test(sentence);
+        },
+        detectMacro: null,
+        color: "#a8b09a"
+    },
+    {
+        id: "metafora",
+        name: "Metafora",
+        description: "Přenos významu – podstatné jméno + být + podstatné jméno (X je Y).",
+        forensic: "Obrazné vyjadřování, může značit kreativitu, ale i snahu o poetizaci.",
+        detectMicro: (sentence) => {
+            const match = sentence.match(/\b\w{3,}\s+(je|jsou|byl|byla)\s+\w{3,}\b/i);
+            if (!match) return false;
+            const before = sentence.substring(0, match.index).toLowerCase();
+            return !/\b(já|ty|on|ona|ono|my|vy|oni)\b/.test(before);
+        },
+        detectMacro: null,
+        color: "#b0b88a"
+    },
+    {
+        id: "prirovnani",
+        name: "Přirovnání",
+        description: "Srovnání pomocí jako, podobně jako.",
+        forensic: "Názornost, srozumitelnost; v obhajobě může být snaha o vysvětlení.",
+        detectMicro: (sentence) => {
+            return /\b(jako|podobně\s+jako|jako\s+by)\b/i.test(sentence);
+        },
+        detectMacro: null,
+        color: "#b0b0a0"
+    },
+    {
+        id: "personifikace",
+        name: "Personifikace",
+        description: "Neživému předmětu přisuzovány lidské vlastnosti.",
+        forensic: "Oživování, emocionální vztah k předmětu, nebo literární styl.",
+        detectMicro: (sentence) => {
+            const inanimate = /\b(ticho|čas|světlo|tma|věc|slovo|myšlenka|vítr|voda|zbraň|nůž|dům|auto)\b/i.test(sentence);
+            const humanVerb = /\b(řekl|říká|myslí|cítí|ví|chce|rozhodl|smál|plakal|volal|slyší)\b/i.test(sentence);
+            return inanimate && humanVerb;
+        },
+        detectMacro: null,
+        color: "#b0a0a0"
+    },
+    {
+        id: "synestezie",
+        name: "Synestezie",
+        description: "Spojení slov z různých smyslových domén (např. horká barva).",
+        forensic: "Zintenzivňuje vjem, působí originálně, aktivuje více smyslů.",
+        detectMicro: (sentence) => {
+            const sense = [
+                /\b(barva|červen|modr|zelen|žlut|bíl|čern|tmav|světl|vidět|pohled)\b/i,
+                /\b(zvuk|tón|hluk|šum|tich|hlas|slyšet|hučet|hřmět)\b/i,
+                /\b(chuť|sladk|kysel|hořk|slan|ochutnat|chutnat)\b/i,
+                /\b(dotek|hladk|hrub|tepl|studen|cítit|dotýkat)\b/i,
+                /\b(vůně|zápach|vonět|páchnout|aroma)\b/i
+            ];
+            let cnt = 0;
+            for (let s of sense) if (s.test(sentence)) cnt++;
+            return cnt >= 2;
+        },
+        detectMacro: null,
+        color: "#b0b8a0"
+    },
+    {
+        id: "onomatopoeia",
+        name: "Onomatopoeia",
+        description: "Zvukomalba (bum, prásk, šust).",
+        forensic: "Autentické oživení, dramatizace; v psaném textu může značit snahu o názornost.",
+        detectMicro: (sentence) => {
+            return /\b(bum|prásk|žbluňk|šum|huk|šust|bzzz|mňau|haf|čvacht|klap|cink|břink)\b/i.test(sentence);
+        },
+        detectMacro: null,
+        color: "#d0b88a"
+    }
+];
+
+// ============================================================
+//  DETEKCE
+// ============================================================
+
+function splitSentences(text) {
+    return text.split(/(?<=[.!?…])\s+|(?<=…)\s*|\n(?=\S)/).map(s => s.trim()).filter(s => s.length > 1);
+}
+
+function detectFigures(text) {
+    const sentences = splitSentences(text);
+    const allWords = text.split(/\s+/).filter(w => w.length > 0);
+    const totalWords = allWords.length;
+    const results = [];
+
+    FIGURES.forEach(fig => {
+        let count = 0;
+        let matches = [];
+
+        // Mikro detekce (věta)
+        if (fig.detectMicro) {
+            sentences.forEach((s, idx) => {
+                if (fig.detectMicro(s, idx, sentences)) {
+                    count++;
+                    matches.push(s.substring(0, 60));
+                }
+            });
+        }
+
+        // Makro detekce (celý text)
+        if (fig.detectMacro) {
+            if (fig.detectMacro(text, sentences)) {
+                count++;
+                matches.push("(celý text)");
+            }
+        }
+
+        const per100 = (count / totalWords) * 100;
+        results.push({
+            id: fig.id,
+            name: fig.name,
+            count: count,
+            per100: per100.toFixed(1),
+            description: fig.description,
+            forensic: fig.forensic,
+            color: fig.color,
+            matches: matches.slice(0, 3)
+        });
+    });
+
+    return results;
+}
+
+// ============================================================
+//  ZVÝRAZNĚNÍ TEXTU (jednoduché – jen ukázka, plná implementace by vyžadovala složitější overlay)
+// ============================================================
+function highlightText(text, results) {
+    // Pro ukázku jednoduché zvýraznění podle klíčových slov figur
+    let highlighted = text;
+    const keywords = {
+        anafora: [],
+        polysyndeton: ["a", "i", "nebo", "ale", "však"],
+        hypotaxe: ["který", "že", "aby", "protože", "když"],
+        parataxe: [],
+        tempus_shift: ["byl", "byla", "je", "bude"],
+        role_shift: ["já", "on", "ona", "my", "oni"],
+        negace: ["ne", "není", "nikdo", "nic", "nikdy"],
+        elipsa: [],
+        parenteze: ["(", ")", "–", "—", "„"],
+        fixace: [],
+        hyperbola: ["nej", "absolutně", "naprosto", "vždy", "nikdy"],
+        gradace: [],
+        kontrast: ["ale", "avšak", "naopak"],
+        ironie: ["ale", "však"],
+        deklarace: ["prohlašuji", "slibuji", "potvrzuji"],
+        metafora: ["je", "byl"],
+        prirovnani: ["jako", "podobně"],
+        personifikace: ["ticho", "čas", "světlo", "voda", "vítr"],
+        synestezie: ["barva", "zvuk", "chuť", "dotek", "vůně"],
+        onomatopoeia: ["bum", "prásk", "šum", "huk"]
+    };
+
+    for (let fig of results) {
+        const kw = keywords[fig.id];
+        if (!kw) continue;
+        for (let k of kw) {
+            const re = new RegExp(`\\b${k}\\b`, 'gi');
+            highlighted = highlighted.replace(re, `<span class="figure-span" style="background:${fig.color}33; border-bottom:1px solid ${fig.color}" title="${fig.name}: ${fig.forensic}">$&</span>`);
+        }
+    }
+    return highlighted;
+}
+
+// ============================================================
+//  UI RENDER
+// ============================================================
+
+let currentResults = null;
+let currentText = "";
+
+function analyze() {
+    const textarea = document.getElementById('inputText');
+    const text = textarea.value.trim();
+    if (!text) {
+        alert('Vložte text k analýze.');
+        return;
+    }
+    currentText = text;
+    const results = detectFigures(text);
+    currentResults = results;
+    renderStats(results);
+    renderTable(results);
+    renderLegend(results);
+    document.getElementById('resultsPanel').style.display = 'block';
+    document.getElementById('highlightedContainer').innerHTML = highlightText(text, results);
+}
+
+function renderStats(results) {
+    const total = results.reduce((sum, r) => sum + r.count, 0);
+    const words = currentText.split(/\s+/).filter(w => w.length > 0).length;
+    const sentences = splitSentences(currentText).length;
+    const statsDiv = document.getElementById('statsPanel');
+    statsDiv.innerHTML = `
+        <div class="stat-card"><div class="stat-number">${words}</div>slov</div>
+        <div class="stat-card"><div class="stat-number">${sentences}</div>vět</div>
+        <div class="stat-card"><div class="stat-number">${total}</div>figur celkem</div>
+        <div class="stat-card"><div class="stat-number">${(total/words*100).toFixed(1)}%</div>figur / slovo</div>
+    `;
+}
+
+function renderTable(results) {
+    const tbody = document.getElementById('tableBody');
+    tbody.innerHTML = '';
+    results.forEach(r => {
+        const warning = r.count > 0 ? (r.per100 > 2 ? '⚠️ vysoký' : '') : '';
+        const row = `<tr style="cursor:pointer" data-id="${r.id}">
+            <td><strong>${r.name}</strong><br><span style="font-size:0.7rem;color:#666">${r.description}</span></td>
+            <td>${r.count}</td>
+            <td>${r.per100}</td>
+            <td>${warning}</td>
+        </tr>`;
+        tbody.insertAdjacentHTML('beforeend', row);
+    });
+    // attach click handlers
+    document.querySelectorAll('#tableBody tr').forEach(tr => {
+        tr.addEventListener('click', () => {
+            const id = tr.getAttribute('data-id');
+            const fig = results.find(r => r.id === id);
+            if (fig) showDetail(fig);
+        });
+    });
+}
+
+function renderLegend(results) {
+    const legendDiv = document.getElementById('legend');
+    legendDiv.innerHTML = results.filter(r => r.count > 0).map(r => `
+        <span><span class="legend-color" style="background:${r.color}33; border:1px solid ${r.color}"></span> ${r.name}</span>
+    `).join('');
+}
+
+function showDetail(fig) {
+    const panel = document.getElementById('detailPanel');
+    panel.innerHTML = `
+        <h3>${fig.name}</h3>
+        <p><strong>Popis:</strong> ${fig.description}</p>
+        <p><strong>Forenzní význam:</strong> ${fig.forensic}</p>
+        <p><strong>Detekováno:</strong> ${fig.count}× (${fig.per100} na 100 slov)</p>
+        <p><strong>Detekční pravidlo:</strong> <span class="rule">${fig.id === 'anafora' ? '2+ po sobě jdoucí věty začínající stejným slovem' : 
+            fig.id === 'polysyndeton' ? 'poměr spojek > 0,15' :
+            fig.id === 'hypotaxe' ? '≥ 2 podřadné spojky ve větě' :
+            fig.id === 'parataxe' ? 'věta ≤ 6 slov' :
+            fig.id === 'tempus_shift' ? 'přítomnost minulého a přítomného/budoucího času' :
+            fig.id === 'role_shift' ? 'přítomnost 1. a 3. osoby' :
+            fig.id === 'negace' ? '≥ 2 záporných výrazů ve větě' :
+            fig.id === 'elipsa' ? 'věta se slovesem bez podmětu já/jsme' :
+            fig.id === 'parenteze' ? 'závorky, pomlčky, uvozovky' :
+            fig.id === 'fixace' ? 'slovo opakováno ≥ 3× v textu' :
+            fig.id === 'hyperbola' ? 'superlativy, absolutizující výrazy' :
+            fig.id === 'gradace' ? 'délky vět rostou/klesají 2× po sobě' :
+            fig.id === 'kontrast' ? 'výskyt ale, avšak, naopak' :
+            fig.id === 'ironie' ? 'být + negace + ale' :
+            fig.id === 'deklarace' ? 'performativní sloveso v 1.os.' :
+            fig.id === 'metafora' ? 'X je Y (bez zájmena)' :
+            fig.id === 'prirovnani' ? 'jako, podobně jako' :
+            fig.id === 'personifikace' ? 'neživý podmět + lidské sloveso' :
+            fig.id === 'synestezie' ? '≥ 2 smyslových domén ve větě' :
+            'specifický vzor'}</span></p>
+    `;
+    panel.style.display = 'block';
+}
+
+// UI handlers
+document.getElementById('analyzeBtn').addEventListener('click', analyze);
+document.getElementById('clearBtn').addEventListener('click', () => {
+    document.getElementById('inputText').value = '';
+    document.getElementById('resultsPanel').style.display = 'none';
+    document.getElementById('highlightedContainer').innerHTML = '';
+    document.getElementById('detailPanel').style.display = 'none';
+    currentResults = null;
+});
+document.getElementById('toggleViewBtn').addEventListener('click', () => {
+    const hlDiv = document.getElementById('highlightedContainer');
+    if (hlDiv.style.display === 'none' || hlDiv.style.display === '') {
+        hlDiv.style.display = 'block';
+        document.getElementById('toggleViewBtn').textContent = '📄 Skrýt zvýraznění';
+    } else {
+        hlDiv.style.display = 'none';
+        document.getElementById('toggleViewBtn').textContent = '📄 Zobrazit zvýrazněný text';
+    }
+});
+</script>
+</body>
+</html>
