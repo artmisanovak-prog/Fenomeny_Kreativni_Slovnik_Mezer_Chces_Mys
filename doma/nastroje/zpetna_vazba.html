@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zpětná vazba – Kognitivní mapa případu</title>
+    <style>
+        body {
+            font-family: 'Georgia', serif;
+            max-width: 700px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+            line-height: 1.7;
+            background: #fefefe;
+            color: #111;
+        }
+        h1 { border-bottom: 2px solid #111; padding-bottom: 0.3rem; }
+        label { display: block; margin-top: 1.2rem; font-weight: bold; }
+        input, textarea, select {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #111;
+            font-family: inherit;
+            font-size: 1rem;
+            margin-top: 0.3rem;
+        }
+        button {
+            background: #111;
+            color: #fff;
+            border: none;
+            padding: 0.7rem 2rem;
+            font-size: 1.2rem;
+            cursor: pointer;
+            margin: 2rem 0;
+        }
+        button:hover { background: #333; }
+        footer { margin-top: 3rem; border-top: 1px solid #ccc; padding-top: 1rem; text-align: center; }
+    </style>
+</head>
+<body>
+    <h1>📬 Zpětná vazba – Kognitivní mapa případu</h1>
+    <p>Děkuji, že si nástroj zkoušíte. Vaše připomínky mi pomohou ho vylepšit. Vyplňte prosím krátký formulář.</p>
+
+    <form action="https://formspree.io/f/vas_email" method="POST">
+        <!-- Nahraď 'vas_email' svým skutečným emailovým kontaktem na Formspree -->
+        <label>Vaše jméno (nepovinné)</label>
+        <input type="text" name="jmeno" placeholder="např. Jan Novák">
+
+        <label>Vaše role</label>
+        <select name="role" required>
+            <option value="">-- vyberte --</option>
+            <option value="advokat">Advokát / advokátka</option>
+            <option value="soudce">Soudce / soudkyně</option>
+            <option value="vysetrovatel">Vyšetřovatel / vyšetřovatelka</option>
+            <option value="student">Student / studentka</option>
+            <option value="jine">Jiné</option>
+        </select>
+
+        <label>Jak hodnotíte nástroj celkově? (1–5)</label>
+        <input type="number" name="hodnoceni" min="1" max="5" required>
+
+        <label>Co funguje dobře?</label>
+        <textarea name="funguje" rows="3" placeholder="např. baseline, zvýrazňování, mapa..."></textarea>
+
+        <label>Co nefunguje, chybí, nebo je matoucí?</label>
+        <textarea name="nefunguje" rows="3" placeholder="např. detekce času, tisk, návod..."></textarea>
+
+        <label>Jaké další funkce byste uvítal/a?</label>
+        <textarea name="napady" rows="3" placeholder="např. export do PDF, porovnání více výpovědí..."></textarea>
+
+        <label>Váš email (pro případ upřesňujících otázek, nepovinné)</label>
+        <input type="email" name="email" placeholder="vas@email.cz">
+
+        <button type="submit">Odeslat zpětnou vazbu</button>
+    </form>
+
+    <footer>
+        <p><a href="../README.md">Zpět na hlavní stránku</a></p>
+    </footer>
+</body>
+</html>
