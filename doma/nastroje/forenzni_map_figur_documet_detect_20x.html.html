@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manuál – Mapování figur | 20 detekovaných jevů</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: #fefaf5;
+            color: #1a1a1a;
+            line-height: 1.6;
+            padding: 2rem 1rem;
+        }
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+        h1 {
+            font-size: 2rem;
+            font-weight: normal;
+            border-left: 5px solid #a55;
+            padding-left: 1rem;
+            margin-bottom: 0.5rem;
+        }
+        .sub {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 2rem;
+            font-style: italic;
+        }
+        .intro {
+            background: #f5efe8;
+            padding: 1.2rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            font-size: 0.85rem;
+        }
+        th, td {
+            border: 1px solid #e0d6cc;
+            padding: 0.8rem 0.6rem;
+            vertical-align: top;
+            text-align: left;
+        }
+        th {
+            background: #e8dfd4;
+            font-weight: 600;
+        }
+        .rule {
+            font-family: 'Courier New', monospace;
+            background: #f0eae2;
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            display: inline-block;
+        }
+        .badge {
+            display: inline-block;
+            background: #2c3e2f;
+            color: white;
+            font-size: 0.7rem;
+            padding: 0.2rem 0.5rem;
+            border-radius: 20px;
+            margin-right: 0.4rem;
+        }
+        footer {
+            margin-top: 3rem;
+            border-top: 1px solid #e0d6cc;
+            padding-top: 1rem;
+            font-size: 0.75rem;
+            color: #888;
+            text-align: center;
+        }
+        @media (max-width: 700px) {
+            table, thead, tbody, th, td, tr {
+                display: block;
+            }
+            th, td {
+                border: none;
+                padding: 0.4rem;
+            }
+            tr {
+                border-bottom: 1px solid #e0d6cc;
+                margin-bottom: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>📖 Mapování figur – manuál</h1>
+    <div class="sub">Dokumentace k offline nástroji pro strukturální analýzu textu</div>
+
+    <div class="intro">
+        <p><strong>Princip:</strong> Nástroj detekuje <strong>20 jazykových figur</strong> čistě mechanicky – pomocí regulárních výrazů, počítání slov a jednoduchých syntaktických vzorců. Žádná černá skříňka, žádné strojové učení. Každý nález je pouze upozorněním, interpretace patří uživateli (právníkovi, znalci, vyšetřovateli).</p>
+        <p style="margin-top: 0.5rem;"><strong>Detekce probíhá ve dvou úrovních:</strong> <span class="badge">mikro</span> na úrovni jednotlivých vět, <span class="badge">makro</span> na úrovni celého textu. Výsledná četnost je vztažena na 100 slov, aby byly srovnatelné různě dlouhé texty.</p>
+    </div>
+
+    <h2 style="margin-top: 1rem;">🔍 20 detekovaných figur</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Figura</th>
+                <th>Popis</th>
+                <th>Detekční pravidlo</th>
+                <th>Forenzní význam (co může značit)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td><strong>Anafora</strong></td><td>Opakování stejného slova na začátku sousedních vět.</td><td class="rule">Dvě a více po sobě jdoucích vět začínají stejným slovem (ignoruje stopwords).</td><td>Častá v připravených, naučených výpovědích. V přirozeném projevu vzácná.</td></tr>
+            <tr><td><strong>Polysyndeton</strong></td><td>Nadbytek spojek (a, i, nebo, ale, však).</td><td class="rule">Poměr spojek k počtu slov ve větě > 0,15.</td><td>Emoční přetok, naléhavost, slavnostnost; v mluveném projevu nepřirozené.</td></tr>
+            <tr><td><strong>Hypotaxe</strong></td><td>Složitá souvětí s podřadnými větami.</td><td class="rule">≥ 2 podřadné spojky (který, že, aby, protože, když, jestliže) v jedné větě.</td><td>Odbornost, racionalita; v mluveném projevu často značí předem připravený text.</td></tr>
+            <tr><td><strong>Parataxe</strong></td><td>Krátké věty, často hlavní.</td><td class="rule">Věta o ≤ 6 slovech.</td><td>Dynamika, přímost, spontánnost – typické pro mluvený projev.</td></tr>
+            <tr><td><strong>Změna času</strong></td><td>Střídání minulého, přítomného a budoucího času v textu.</td><td class="rule">Text obsahuje současně minulý a přítomný (nebo budoucí) čas.</td><td>Emoční zaujetí, trauma, nebo naopak nesoulad v rekonstrukci děje.</td></tr>
+            <tr><td><strong>Změna role</strong></td><td>Přechod mezi 1. a 3. osobou.</td><td class="rule">Text obsahuje zájmena 1. osoby (já, my) i 3. osoby (on, ona, oni).</td><td>Svědek přepíná mezi vlastní zkušeností a doslechem – možná nepůvodní informace.</td></tr>
+            <tr><td><strong>Negace</strong></td><td>Záporná slova, popírání.</td><td class="rule">≥ 2 záporných výrazů (ne, není, nikdo, nic, nikdy) v jedné větě.</td><td>Obranný postoj, vyhýbavost, může indikovat klamání nebo snahu se distancovat.</td></tr>
+            <tr><td><strong>Elipsa</strong></td><td>Vynechání podmětu (zejména „já“) u slovesa.</td><td class="rule">Věta obsahuje sloveso minulého času nebo dějové sloveso, ale chybí „já“ nebo „jsem“.</td><td>Snaha vyhnout se osobní odpovědnosti, zamlčení agens.</td></tr>
+            <tr><td><strong>Parenteze</strong></td><td>Vsuvky oddělené čárkami, závorkami, pomlčkami.</td><td class="rule">Přítomnost závorek, pomlček nebo uvozovek uvnitř věty.</td><td>Dodatečné upřesňování, ladění výpovědi za běhu – může značit konstruování nepravdivé verze.</td></tr>
+            <tr><td><strong>Fixace</strong></td><td>Opakování stejného slova v krátkém úseku.</td><td class="rule">Některé slovo delší než 3 znaky se v textu vyskytuje alespoň 3×.</td><td>Stres, zahlcování, nedostatek slovní zásoby, nebo úmyslné zdůraznění.</td></tr>
+            <tr><td><strong>Hyperbola</strong></td><td>Nadsázka, přehánění.</td><td class="rule">Superlativy (nej-), absolutizující výrazy (absolutně, naprosto, vždy, nikdy, tisíckrát).</td><td>Emoční přetlak, snaha zdůraznit pravdivost, může být manipulativní.</td></tr>
+            <tr><td><strong>Gradace</strong></td><td>Stupňování intenzity (délky vět, síly výrazů).</td><td class="rule">Délka vět dvakrát po sobě roste nebo klesá (alespoň 2 trojice vět).</td><td>Budování napětí, promyšlená rétorická struktura.</td></tr>
+            <tr><td><strong>Kontrast</strong></td><td>Protiklad vyjádřený spojkami.</td><td class="rule">Přítomnost spojek ale, avšak, naopak, přesto, i tak.</td><td>Vymezování postoje, racionální argumentace, obranná strategie.</td></tr>
+            <tr><td><strong>Ironie / výsměch</strong></td><td>Spojení kladného a záporného tvrzení s kontrastem.</td><td class="rule">V jedné větě sloveso být + negace + kontrastní spojka (ale, však).</td><td>Obranná reakce, nadhled, nebo snaha o diskreditaci.</td></tr>
+            <tr><td><strong>Deklarace / performativum</strong></td><td>Prohlašovací slovesa v 1. osobě.</td><td class="rule">Výskyt slov prohlašuji, slibuji, potvrzuji, konstatuji, tvrdím, říkám že.</td><td>Vytváří závazek, dodává výpovědi váhu; často citace právní formulace.</td></tr>
+            <tr><td><strong>Metafora</strong></td><td>Přenos významu (X je Y).</td><td class="rule">Struktura „podstatné jméno + je/byl + podstatné jméno“, kde před „je“ není zájmeno.</td><td>Obrazné vyjadřování, kreativita, někdy snaha o poetizaci nebo zastření.</td></tr>
+            <tr><td><strong>Přirovnání</strong></td><td>Explicitní srovnání.</td><td class="rule">Přítomnost spojek jako, podobně jako, jako by.</td><td>Názornost, srozumitelnost; v obhajobě může být snaha o vysvětlení.</td></tr>
+            <tr><td><strong>Personifikace</strong></td><td>Neživému předmětu přisuzovány lidské vlastnosti.</td><td class="rule">Neživotné podstatné jméno (ticho, čas, světlo, voda, vítr) + lidské sloveso (řekl, myslí, cítí).</td><td>Oživování, emocionální vztah, literární styl.</td></tr>
+            <tr><td><strong>Synestezie</strong></td><td>Spojení slov z různých smyslových domén.</td><td class="rule">Ve větě se vyskytují slova alespoň ze dvou smyslových okruhů (zrak, sluch, chuť, hmat, čich).</td><td>Zintenzivňuje vjem, působí originálně, aktivuje více smyslů.</td></tr>
+            <tr><td><strong>Onomatopoeia</strong></td><td>Zvukomalba.</td><td class="rule">Přítomnost zvukomalebných slov (bum, prásk, šust, bzzz, mňau, cink, břink).</td><td>Autentické oživení, dramatizace; v psaném textu snaha o názornost.</td></tr>
+        </tbody>
+    </table>
+
+    <h2>📊 Jak číst výsledky</h2>
+    <ul style="margin-left: 1.5rem; margin-bottom: 1rem;">
+        <li><strong>Počet výskytů</strong> – kolikrát byla figura detekována (součet mikro a makro nálezů).</li>
+        <li><strong>na 100 slov</strong> – normalizovaná hodnota pro srovnání textů různé délky. Čím vyšší, tím nápadnější je figura v textu.</li>
+        <li><strong>Varování ⚠️ vysoký</strong> – pokud je hodnota na 100 slov > 2, nástroj upozorní, že figura je výrazně zastoupena. Práh je nastaven konzervativně – uživatel by měl takové místo podrobit bližšímu zkoumání.</li>
+        <li><strong>Barevné zvýraznění</strong> – v přepnutém režimu „Zobrazit zvýrazněný text“ jsou nalezené figury podbarveny. Při najetí myší se zobrazí název figury a forenzní poznámka.</li>
+    </ul>
+
+    <h2>⚙️ Detekční poznámky</h2>
+    <ul style="margin-left: 1.5rem;">
+        <li><strong>Mikro vs. makro:</strong> Některé figury se detekují na úrovni věty (anafora, polysyndeton), jiné až na úrovni celého textu (fixace, gradace).</li>
+        <li><strong>Překryv:</strong> Jedna věta může obsahovat více figur najednou – každá se počítá samostatně.</li>
+        <li><strong>Falešné poplachy:</strong> Mechanická detekce není stoprocentní. Např. elipsa může být jen běžnou gramatickou konstrukcí, nikoli vyhýbavostí. Výsledky vždy posuzujte v kontextu případu.</li>
+        <li><strong>Práh varování:</strong> Uživatel si může v budoucích verzích nastavit vlastní práh citlivosti (aktuálně je pevný: >2 výskyty na 100 slov).</li>
+    </ul>
+
+    <h2>📁 Integrace s ostatními nástroji</h2>
+    <p>Tento nástroj je součástí balíčku Repo dům. Jeho výstupy (tabulku figur) lze použít jako vstup pro <strong>Porovnávač výpovědí</strong> a <strong>Detektor vzorců</strong>, které pracují na stejné sadě figur. Detekční jádro je sdílené a plně transparentní.</p>
+
+    <footer>
+        © Michaela – Mapování figur | Verze 1.0 | Offline nástroj pro forenzní lingvistiku<br>
+        Detekce je mechanická, nenahrazuje znalecký posudek.
+    </footer>
+</div>
+</body>
+</html>
