@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chceš myš? — Fyzika jazyka</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0f0d0a;--s:#171410;--s2:#1e1a14;
+  --cream:#e8e0d0;--dim:rgba(232,224,208,.45);--dim2:rgba(232,224,208,.22);
+  --gold:#c8a860;--gold2:#8a6a30;
+  --border:rgba(200,168,96,.14);--border-hi:rgba(200,168,96,.3);
+  --serif:'Cormorant Garamond',Georgia,serif;--mono:'DM Mono',monospace;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--cream);font-family:var(--mono);font-size:14px;line-height:1.8;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+.wrap{max-width:840px;margin:0 auto;padding:0 28px}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:16px 28px;display:flex;justify-content:space-between;align-items:center;background:rgba(15,13,10,.82);backdrop-filter:blur(18px);border-bottom:1px solid var(--border)}
+.nav-logo{font-family:var(--serif);font-size:1rem;font-weight:300;letter-spacing:.04em}
+.nav-logo em{font-style:italic;color:var(--gold)}
+.nav-links{display:flex;gap:20px;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim)}
+.nav-links a{transition:color .15s}.nav-links a:hover{color:var(--cream)}
+.nav-cta{padding:7px 16px;border:1px solid var(--gold);color:var(--gold);font-size:10px;letter-spacing:.14em;text-transform:uppercase;transition:all .15s}
+.nav-cta:hover{background:var(--gold);color:var(--bg)}
+
+/* HERO */
+.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:120px 0 80px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 40%,rgba(200,168,96,.06) 0%,transparent 70%);pointer-events:none}
+.hero-over{font-size:10px;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);margin-bottom:20px;opacity:.8}
+.hero h1{font-family:var(--serif);font-size:clamp(3rem,8vw,6.5rem);font-weight:300;line-height:1.0;margin-bottom:28px;letter-spacing:-.01em}
+.hero h1 em{font-style:italic;color:var(--gold)}
+.hero h1 .sub{display:block;font-size:clamp(1.2rem,3vw,2.2rem);color:var(--dim);margin-top:10px;letter-spacing:.02em}
+.hero-perex{font-size:clamp(.82rem,1.8vw,.98rem);color:var(--dim);max-width:520px;line-height:1.9;margin-bottom:36px}
+.hero-btns{display:flex;gap:10px;flex-wrap:wrap}
+.btn-main{padding:13px 28px;background:var(--gold);color:var(--bg);font-family:var(--mono);font-size:.76rem;letter-spacing:.12em;text-transform:uppercase;transition:all .15s;border:none;cursor:pointer;display:inline-block}
+.btn-main:hover{background:#e0c080}
+.btn-sec{padding:13px 28px;background:transparent;color:var(--cream);border:1px solid var(--border-hi);font-family:var(--mono);font-size:.76rem;letter-spacing:.12em;text-transform:uppercase;transition:all .15s;display:inline-block}
+.btn-sec:hover{border-color:var(--gold);color:var(--gold)}
+.hero-mys{position:absolute;right:-40px;top:50%;transform:translateY(-50%);font-family:var(--serif);font-size:clamp(8rem,18vw,16rem);color:rgba(200,168,96,.04);font-style:italic;pointer-events:none;line-height:1;user-select:none}
+
+/* SEKCE */
+section{padding:80px 0;border-top:1px solid var(--border)}
+.sec-label{font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:var(--gold);margin-bottom:16px;opacity:.8}
+h2{font-family:var(--serif);font-size:clamp(1.6rem,4vw,2.8rem);font-weight:300;line-height:1.1;margin-bottom:14px}
+h2 em{font-style:italic;color:var(--gold)}
+.sec-perex{font-size:.88rem;color:var(--dim);max-width:560px;line-height:1.9;margin-bottom:36px}
+
+/* KOLEČKO 12 ÚHLŮ */
+.uhly-intro{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center}
+@media(max-width:640px){.uhly-intro{grid-template-columns:1fr}}
+.uhel-kolecko{width:280px;height:280px;position:relative;margin:0 auto}
+.kolecko-svg{width:100%;height:100%}
+.uhly-seznam{display:flex;flex-direction:column;gap:2px}
+.uhel-item{display:flex;align-items:center;gap:10px;padding:5px 0;font-size:.72rem;color:var(--dim);border-bottom:1px solid rgba(200,168,96,.06);cursor:default;transition:color .1s}
+.uhel-item:hover{color:var(--cream)}
+.uhel-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.uhel-st{font-family:var(--mono);font-size:.58rem;color:var(--gold2);min-width:26px}
+.uhel-n{flex:1}
+.uhel-pair{font-size:.58rem;color:rgba(200,168,96,.3);text-align:right}
+
+/* POHÁDKY GRID */
+.pohadky-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1px;background:var(--border)}
+.pohadka-card{background:var(--s);padding:22px 20px;transition:background .15s;position:relative;overflow:hidden}
+.pohadka-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px}
+.pohadka-card:hover{background:var(--s2)}
+.pk-zvire{font-size:1.6rem;margin-bottom:10px;display:block}
+.pk-nazev{font-family:var(--serif);font-size:1.05rem;font-weight:300;margin-bottom:4px}
+.pk-veta{font-family:var(--serif);font-style:italic;font-size:.78rem;color:var(--dim);line-height:1.6;margin-bottom:10px}
+.pk-fen{font-size:.64rem;color:rgba(200,168,96,.5);letter-spacing:.08em;line-height:1.6}
+.pk-link{font-size:.64rem;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-top:10px;display:block}
+.pk-link:hover{opacity:.7}
+
+/* JAK TO FUNGUJE */
+.jak-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border)}
+@media(max-width:580px){.jak-grid{grid-template-columns:1fr}}
+.jak-step{background:var(--s);padding:24px 20px}
+.jak-num{font-family:var(--serif);font-size:2.4rem;font-weight:300;color:rgba(200,168,96,.18);line-height:1;margin-bottom:10px}
+.jak-title{font-size:.8rem;color:var(--cream);margin-bottom:6px;letter-spacing:.04em}
+.jak-text{font-size:.74rem;color:var(--dim);line-height:1.8}
+
+/* NÁSTROJE */
+.nastroje-list{display:flex;flex-direction:column;gap:1px;background:var(--border)}
+.nastroj{background:var(--s);padding:18px 20px;display:flex;align-items:flex-start;gap:16px;transition:background .1s}
+.nastroj:hover{background:var(--s2)}
+.nast-icon{font-size:1.2rem;flex-shrink:0;padding-top:2px}
+.nast-meta{}
+.nast-name{font-size:.82rem;color:var(--cream);margin-bottom:3px}
+.nast-desc{font-size:.72rem;color:var(--dim);line-height:1.7}
+.nast-link{font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);margin-top:5px;display:block}
+
+/* CITÁT */
+.citat-blok{padding:48px 0;text-align:center}
+.citat-text{font-family:var(--serif);font-size:clamp(1.1rem,3vw,1.8rem);font-style:italic;font-weight:300;color:var(--cream);max-width:640px;margin:0 auto 16px;line-height:1.6}
+.citat-zdroj{font-size:.7rem;color:var(--gold);letter-spacing:.14em;text-transform:uppercase}
+
+/* O SYSTÉMU */
+.o-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);margin-bottom:32px}
+@media(max-width:580px){.o-grid{grid-template-columns:1fr}}
+.o-box{background:var(--s);padding:22px 20px}
+.o-label{font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:8px;opacity:.7}
+.o-text{font-size:.78rem;color:var(--dim);line-height:1.8}
+
+/* FOOTER */
+footer{padding:40px 0;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:20px}
+.footer-brand{font-family:var(--serif);font-size:1.1rem;font-weight:300}
+.footer-brand em{font-style:italic;color:var(--gold)}
+.footer-info{font-size:.68rem;color:var(--dim2);margin-top:4px;line-height:1.7}
+.footer-links{display:flex;flex-direction:column;gap:4px;text-align:right;font-size:.68rem;color:var(--dim);letter-spacing:.1em;text-transform:uppercase}
+.footer-links a:hover{color:var(--cream)}
+
+/* SCROLL ANIMATION */
+.fade-in{opacity:0;transform:translateY(20px);transition:opacity .6s ease,transform .6s ease}
+.fade-in.visible{opacity:1;transform:translateY(0)}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo"><em>Chceš myš?</em> · Fyzika jazyka</div>
+  <div class="nav-links">
+    <a href="#pohadky">Pohádky</a>
+    <a href="#jak">Jak to funguje</a>
+    <a href="#nastroje">Nástroje</a>
+    <a href="#o" class="nav-cta">O systému</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="wrap" style="position:relative;z-index:1">
+    <p class="hero-over">Kreativní systém · Jazyková diagnostika · Literární workshopy</p>
+    <h1>Fyzika<br><em>jazyka</em><span class="sub">Jak myslíš — tak píšeš.</span></h1>
+    <p class="hero-perex">Jazyk prozrazuje způsob myšlení. Systém 12 kognitivních úhlů pohledu — mapovaných na jazykové figury — ukazuje, jakým způsobem vnímáš, tvoříš a komunikuješ. Prostřednictvím originálních pohádek, kreativních cvičení a diagnostiky.</p>
+    <div class="hero-btns">
+      <a href="#pohadky" class="btn-main">Prozkoumat pohádky →</a>
+      <a href="doma/nastroje/analyzer.html" class="btn-sec">Analyzovat text</a>
+    </div>
+  </div>
+  <div class="hero-mys">Myš</div>
+</section>
+
+<!-- 12 ÚHLŮ -->
+<section id="uhly">
+  <div class="wrap">
+    <div class="fade-in">
+      <p class="sec-label">Základ systému</p>
+      <h2>12 úhlů <em>pohledu</em></h2>
+      <p class="sec-perex">Každý způsob myšlení má svůj jazyk. Analytický tíhne k dlouhým větám a výčtům. Naivní pracuje s elipsou a přímou řečí. Surrealistický s asyndeton a výplňovými slovy. Systém tyto vazby mapuje — a dělá je viditelné.</p>
+    </div>
+    <div class="uhly-intro fade-in">
+      <div>
+        <div class="uhel-kolecko">
+          <svg class="kolecko-svg" viewBox="0 0 280 280">
+            <!-- Vnější kruh -->
+            <circle cx="140" cy="140" r="120" fill="none" stroke="rgba(200,168,96,.08)" stroke-width="1"/>
+            <circle cx="140" cy="140" r="80" fill="none" stroke="rgba(200,168,96,.05)" stroke-width="1"/>
+            <!-- Střed -->
+            <circle cx="140" cy="140" r="4" fill="rgba(200,168,96,.4)"/>
+            <!-- 12 bodů a čáry -->
+            <g id="uhly-svg"></g>
+          </svg>
+        </div>
+      </div>
+      <div class="uhly-seznam" id="uhly-seznam"></div>
+    </div>
+  </div>
+</section>
+
+<!-- POHÁDKY -->
+<section id="pohadky">
+  <div class="wrap">
+    <div class="fade-in">
+      <p class="sec-label">Vstupní bod</p>
+      <h2>Pohádky jako <em>diagnostika</em></h2>
+      <p class="sec-perex">Každá pohádka je záměrně napsána tak, aby rovnoměrně obsahovala všech 12 úhlů pohledu. Nejsou to ilustrace — jsou to vstupní brány. Co tě v pohádce zaujme, napoví, kde je tvůj dominantní úhel.</p>
+    </div>
+    <div class="pohadky-grid fade-in" id="pohadky-grid"></div>
+  </div>
+</section>
+
+<!-- CITÁT -->
+<div class="wrap">
+  <div class="citat-blok fade-in">
+    <p class="citat-text">„Myš si to zapisovala do koutů. A mezi ostatní zvířata se to také rozneslo."</p>
+    <p class="citat-zdroj">O hadovi, který mluvil jinak · Fyzika jazyka</p>
+  </div>
+</div>
+
+<!-- JAK TO FUNGUJE -->
+<section id="jak">
+  <div class="wrap">
+    <div class="fade-in">
+      <p class="sec-label">Průvodce</p>
+      <h2>Jak to <em>funguje</em></h2>
+      <p class="sec-perex">Systém pracuje ve třech vrstvách — vstupní pohádka, kreativní cvičení a diagnostická zpětná vazba. Každá vrstva je volitelná. Lze začít kdekoliv.</p>
+    </div>
+    <div class="jak-grid fade-in">
+      <div class="jak-step">
+        <div class="jak-num">01</div>
+        <div class="jak-title">Přečtěte pohádku</div>
+        <div class="jak-text">Každá pohádka nese fenomén — způsob bytí ve světě. Čtěte pomalu. Všimněte si, co vás zastaví.</div>
+      </div>
+      <div class="jak-step">
+        <div class="jak-num">02</div>
+        <div class="jak-title">Vyberte úhel</div>
+        <div class="jak-text">Náhodně, podle nálady nebo diagnosticky. Každý z 12 úhlů nabídne kreativní úkol a jazykové zaměření.</div>
+      </div>
+      <div class="jak-step">
+        <div class="jak-num">03</div>
+        <div class="jak-title">Pište a analyzujte</div>
+        <div class="jak-text">Napište text. Analyzátor ukáže, které úhly jsou v textu přítomné — a kde jsou slepá místa.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- NÁSTROJE -->
+<section id="nastroje">
+  <div class="wrap">
+    <div class="fade-in">
+      <p class="sec-label">Volný přístup</p>
+      <h2>Nástroje <em>systému</em></h2>
+    </div>
+    <div class="nastroje-list fade-in">
+      <div class="nastroj">
+        <span class="nast-icon">🔬</span>
+        <div class="nast-meta">
+          <div class="nast-name">Analyzátor textu</div>
+          <div class="nast-desc">Vložte libovolný text — systém projde každou větu i celek a pro každý ze 12 úhlů ukáže kolik procent daného úhlu text obsahuje. Každý úhel má vlastních 100%. Kliknutím na figuru se označí konkrétní místa v textu.</div>
+          <a class="nast-link" href="doma/nastroje/analyzer.html">Otevřít analyzátor →</a>
+        </div>
+      </div>
+      <div class="nastroj">
+        <span class="nast-icon">📓</span>
+        <div class="nast-meta">
+          <div class="nast-name">Zápisník mezer</div>
+          <div class="nast-desc">Kognitivní mapa cvičení. Ukládá texty z karet, vizualizuje které úhly procvičujete a kde jsou slepá místa. Data zůstávají v prohlížeči — žádný server, žádné přihlašování.</div>
+          <a class="nast-link" href="doma/nastroje/zapisnik.html">Otevřít zápisník →</a>
+        </div>
+      </div>
+      <div class="nastroj">
+        <span class="nast-icon">📚</span>
+        <div class="nast-meta">
+          <div class="nast-name">Knihovna figur</div>
+          <div class="nast-desc">27 jazykových figur s definicemi, příklady z pohádek a cvičeními. Filtry podle karty a typu figury. Vizuální přehled stylů. Quiz pro ověření znalostí.</div>
+          <a class="nast-link" href="doma/nastroje/knihovna_figur.html">Otevřít knihovnu →</a>
+        </div>
+      </div>
+      <div class="nastroj">
+        <span class="nast-icon">🔎</span>
+        <div class="nast-meta">
+          <div class="nast-name">Forenzní kognitivní mapa</div>
+          <div class="nast-desc">Nástroj pro analýzu textu z hlediska jazykových anomálií — pro odborné použití v terapii, koučingu nebo lingvistické práci.</div>
+          <a class="nast-link" href="doma/nastroje/kogmapa.html">Otevřít forenzní nástroj →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- O SYSTÉMU -->
+<section id="o">
+  <div class="wrap">
+    <div class="fade-in">
+      <p class="sec-label">O systému</p>
+      <h2><em>Chceš myš?</em></h2>
+      <p class="sec-perex">Systém vznikal v reálném čase — jako způsob, jak propojit jazykovou analýzu, kreativní psaní a kognitivní mapování do jednoho koherentního celku.</p>
+    </div>
+    <div class="o-grid fade-in">
+      <div class="o-box">
+        <div class="o-label">Filozofie</div>
+        <div class="o-text">Každý ze 12 úhlů pohledu je způsob myšlení, který má svůj jazyk. Systém nehodnotí — mapuje. Neexistuje špatný úhel, existují jen rozvinuté a nerozvinuté. Cílem je vidět celé spektrum.</div>
+      </div>
+      <div class="o-box">
+        <div class="o-label">Repo dům</div>
+        <div class="o-text">Všechny soubory jsou samostatné HTML — bez serveru, bez cloudu, bez závislostí. Stáhnete a vlastníte. Data zůstávají v prohlížeči. Systém funguje offline.</div>
+      </div>
+      <div class="o-box">
+        <div class="o-label">Pohádky</div>
+        <div class="o-text">Každá pohádka je záměrně konstruovaná — rovnoměrné zastoupení všech 12 úhlů. Nejsou to ilustrace teorie. Jsou to primární text, ze kterého teorie vyrůstá.</div>
+      </div>
+      <div class="o-box">
+        <div class="o-label">Autorka</div>
+        <div class="o-text">Michaela Nováková — česká spisovatelka a designérka kreativních systémů. Systém Chceš myš? vzniká na průsečíku literární struktury, lingvistiky a kognitivní vědy.</div>
+      </div>
+    </div>
+    <div class="fade-in" style="margin-top:24px">
+      <a href="mailto:chcesmys@gmail.com" class="btn-sec" style="display:inline-block">Kontakt · chcesmys@gmail.com</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap" style="width:100%;display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:20px">
+    <div>
+      <div class="footer-brand"><em>Chceš myš?</em> · Fyzika jazyka</div>
+      <div class="footer-info">© 2026 Michaela Nováková · Všechna práva vyhrazena<br>Systém je ve vývoji · Obsah se průběžně rozrůstá</div>
+    </div>
+    <div class="footer-links">
+      <a href="doma/nastroje/analyzer.html">Analyzátor</a>
+      <a href="doma/nastroje/zapisnik.html">Zápisník</a>
+      <a href="doma/nastroje/knihovna_figur.html">Knihovna figur</a>
+      <a href="mailto:chcesmys@gmail.com">Kontakt</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+// ── DATA ──
+const UHLY_DATA = [
+  {st:0,   nazev:'Analytický',      barva:'#4a9ec8', prot:'Asociační'},
+  {st:30,  nazev:'Kulturní',        barva:'#7a9e5a', prot:'Introspektivní'},
+  {st:60,  nazev:'Filozofický',     barva:'#c8903a', prot:'Ironický'},
+  {st:90,  nazev:'Naivní',          barva:'#b8607a', prot:'Groteskní'},
+  {st:120, nazev:'Jazykový',        barva:'#6a8c78', prot:'Absurdní'},
+  {st:150, nazev:'Metaforický',     barva:'#9e6a4a', prot:'Surrealistický'},
+  {st:180, nazev:'Asociační',       barva:'#8050b8', prot:'Analytický'},
+  {st:210, nazev:'Introspektivní',  barva:'#4a8888', prot:'Kulturní'},
+  {st:240, nazev:'Ironický',        barva:'#b8a040', prot:'Filozofický'},
+  {st:270, nazev:'Groteskní',       barva:'#9e4a6a', prot:'Naivní'},
+  {st:300, nazev:'Absurdní',        barva:'#5a8a5a', prot:'Jazykový'},
+  {st:330, nazev:'Surrealistický',  barva:'#7070b8', prot:'Metaforický'},
+];
+
+const POHADKY = [
+  {zvire:'🐟', nazev:'Ryba',     veta:'"ticho které není prázdné"',    fen:'Rytmus a mlčení / pohyb pod hladinou', path:'doma/karty/Ryba/index.html', barva:'#4a9ec8'},
+  {zvire:'🐘', nazev:'Slon',     veta:'"jednu třešeň ti dám slone, když mě dohoníš"', fen:'Tíha která se rozbíhá / běh za nedosažitelným', path:'doma/karty/Slon/slon_karta.html', barva:'#c8903a'},
+  {zvire:'🐷', nazev:'Prasátko', veta:'"tady není záchod?"',           fen:'Drobné a drobné nedorozumění',       path:'doma/karty/Prase/prase_karta.html', barva:'#b8607a'},
+  {zvire:'🦇', nazev:'Netopýr',  veta:'"krása která ráno se nehodí"',  fen:'Noční jazyk / kocovina jako důkaz',  path:'doma/karty/Netopyr/netopyr_karta.html', barva:'#8050b8'},
+  {zvire:'🪿', nazev:'Husy',     veta:'"já ja jajaja jaja ja"',         fen:'Kolektivní singular / já v ozvěně', path:'doma/karty/Husy/husy_karta.html', barva:'#6a8c78'},
+  {zvire:'🐭', nazev:'Myš',      veta:'"zapisuje do skulin mezi slovy"', fen:'Meziprostor / pozorovatelka ticha', path:'doma/karty/Mys/index.html', barva:'#a89060'},
+];
+
+// ── KOLEČKO ──
+const svg = document.getElementById('uhly-svg');
+const cx=140,cy=140,r=112,ri=72;
+UHLY_DATA.forEach((u,i)=>{
+  const rad = (u.st-90)*Math.PI/180;
+  const x=cx+r*Math.cos(rad), y=cy+r*Math.sin(rad);
+  const xi=cx+ri*Math.cos(rad), yi=cy+ri*Math.sin(rad);
+  // Čára ke středu
+  const line=document.createElementNS('http://www.w3.org/2000/svg','line');
+  line.setAttribute('x1',cx);line.setAttribute('y1',cy);
+  line.setAttribute('x2',x);line.setAttribute('y2',y);
+  line.setAttribute('stroke',u.barva);line.setAttribute('stroke-width','0.5');line.setAttribute('opacity','0.3');
+  svg.appendChild(line);
+  // Bod
+  const circle=document.createElementNS('http://www.w3.org/2000/svg','circle');
+  circle.setAttribute('cx',x);circle.setAttribute('cy',y);circle.setAttribute('r','5');
+  circle.setAttribute('fill',u.barva);circle.setAttribute('opacity','0.7');
+  svg.appendChild(circle);
+  // Stupeň label
+  const text=document.createElementNS('http://www.w3.org/2000/svg','text');
+  const lx=cx+(r+18)*Math.cos(rad), ly=cy+(r+18)*Math.sin(rad);
+  text.setAttribute('x',lx);text.setAttribute('y',ly);
+  text.setAttribute('text-anchor','middle');text.setAttribute('dominant-baseline','middle');
+  text.setAttribute('font-size','8');text.setAttribute('font-family','DM Mono,monospace');
+  text.setAttribute('fill',u.barva);text.setAttribute('opacity','0.6');
+  text.textContent=u.st+'°';
+  svg.appendChild(text);
+});
+
+// ── SEZNAM ÚHLŮ ──
+const seznam = document.getElementById('uhly-seznam');
+UHLY_DATA.forEach(u=>{
+  const div=document.createElement('div');
+  div.className='uhel-item';
+  div.innerHTML=`<span class="uhel-dot" style="background:${u.barva}"></span><span class="uhel-st">${u.st}°</span><span class="uhel-n">${u.nazev}</span><span class="uhel-pair">↔ ${u.prot}</span>`;
+  seznam.appendChild(div);
+});
+
+// ── POHÁDKY ──
+const grid = document.getElementById('pohadky-grid');
+POHADKY.forEach(p=>{
+  const div=document.createElement('div');
+  div.className='pohadka-card';
+  div.style.setProperty('--card-color',p.barva);
+  div.querySelector?.('before')?.style.setProperty('background',p.barva);
+  div.innerHTML=`<style>.pk-${p.nazev.toLowerCase()}::before{background:${p.barva}}</style>
+    <span class="pk-zvire">${p.zvire}</span>
+    <div class="pk-nazev">${p.nazev}</div>
+    <div class="pk-veta">${p.veta}</div>
+    <div class="pk-fen">${p.fen}</div>
+    <a class="pk-link" href="${p.path}">Otevřít kartu →</a>`;
+  div.style.borderTop=`2px solid ${p.barva}22`;
+  grid.appendChild(div);
+});
+
+// ── SCROLL FADE ──
+const observer=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.1});
+document.querySelectorAll('.fade-in').forEach(el=>observer.observe(el));
+</script>
+</body>
+</html>
