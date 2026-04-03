@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jazykový analyzátor — Chceš myš?</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0f0f0f;--surface:#161616;--surface2:#1c1c1c;
+  --cream:#e8e0d0;--dim:rgba(232,224,208,.42);--accent:#a89880;
+  --border:rgba(168,152,128,.15);--border-hi:rgba(168,152,128,.35);
+  --serif:'Cormorant Garamond',Georgia,serif;--mono:'DM Mono',monospace;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--cream);font-family:var(--mono);font-size:13px;line-height:1.8;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+header nav{position:sticky;top:0;z-index:100;border-bottom:1px solid var(--border);background:rgba(15,15,15,.94);backdrop-filter:blur(14px);padding:13px 32px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.nav-brand{font-family:var(--serif);font-size:.9rem;font-weight:300;letter-spacing:.06em}.nav-brand em{font-style:italic;color:var(--accent)}
+.nav-links{display:flex;gap:16px;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim)}.nav-links a:hover{color:var(--cream)}
+.wrap{max-width:1100px;margin:0 auto;padding:0 32px}
+.hero{padding:52px 0 40px;border-bottom:1px solid var(--border)}
+.hero-label{font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:var(--accent);margin-bottom:14px}
+.hero h1{font-family:var(--serif);font-size:clamp(2.2rem,5vw,4rem);font-weight:300;line-height:1.05;margin-bottom:10px}
+.hero h1 em{font-style:italic;color:var(--accent)}
+.hero-desc{font-size:.82rem;color:var(--dim);max-width:540px;line-height:1.9}
+.co-analyzuje{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border:1px solid var(--border);margin:36px 0}
+@media(max-width:700px){.co-analyzuje{grid-template-columns:1fr}}
+.co-item{background:var(--surface);padding:20px 22px}
+.co-num{font-family:var(--serif);font-size:2.2rem;font-weight:300;color:rgba(168,152,128,.18);line-height:1;margin-bottom:8px}
+.co-title{font-size:.76rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:8px}
+.co-text{font-size:.8rem;color:var(--dim);line-height:1.8}
+.main{display:grid;grid-template-columns:1fr 380px;gap:0;padding:40px 0;border-bottom:1px solid var(--border)}
+@media(max-width:860px){.main{grid-template-columns:1fr}}
+.panel-left{padding-right:40px;border-right:1px solid var(--border)}
+@media(max-width:860px){.panel-left{padding-right:0;border-right:none;padding-bottom:32px;border-bottom:1px solid var(--border)}}
+.panel-label{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);margin-bottom:12px}
+textarea{width:100%;background:var(--surface);border:1px solid var(--border);color:var(--cream);padding:16px;font-family:var(--mono);font-size:.85rem;line-height:1.85;resize:vertical;min-height:220px;transition:border-color .15s}
+textarea:focus{outline:none;border-color:var(--border-hi)}
+textarea::placeholder{color:rgba(232,224,208,.16)}
+.btn-row{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+.btn{padding:11px 24px;font-family:var(--mono);font-size:.78rem;letter-spacing:.1em;text-transform:uppercase;border:none;cursor:pointer;transition:background .12s,color .12s}
+.btn-primary{background:var(--accent);color:var(--bg)}.btn-primary:hover{background:#c0aa90}
+.btn-ghost{background:transparent;color:var(--dim);border:1px solid var(--border)}.btn-ghost:hover{color:var(--cream);border-color:var(--border-hi)}.btn-ghost.active{color:var(--accent);border-color:var(--accent)}
+.highlighted-box{display:none;margin-top:16px;border:1px solid var(--border);background:var(--surface);padding:16px;font-family:var(--serif);font-size:.88rem;line-height:2.2;white-space:pre-wrap;max-height:280px;overflow-y:auto}
+.highlighted-box::-webkit-scrollbar{width:2px}.highlighted-box::-webkit-scrollbar-thumb{background:var(--accent)}
+.panel-right{padding-left:40px;display:flex;flex-direction:column;align-items:center}
+@media(max-width:860px){.panel-right{padding-left:0;padding-top:32px}}
+canvas{display:block;width:100%;max-width:320px;height:auto;cursor:pointer}
+.wheel-hint{font-size:.72rem;color:var(--dim);text-align:center;margin-top:8px;letter-spacing:.06em}
+.results{padding:40px 0;border-bottom:1px solid var(--border)}
+.results-label{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);margin-bottom:20px}
+.dominant-box{border:1px solid var(--accent);background:rgba(168,152,128,.06);padding:20px 24px;margin-bottom:16px}
+.dominant-angle{font-family:var(--serif);font-size:1.8rem;font-weight:300;margin-bottom:4px}
+.dominant-angle em{font-style:italic;color:var(--accent)}
+.dominant-meta{font-size:.78rem;color:var(--dim);line-height:1.9}
+.results-actions{display:flex;gap:10px;flex-wrap:wrap;margin:16px 0 20px}
+.btn-outline{background:transparent;border:1px solid var(--border);color:var(--dim);padding:8px 18px;cursor:pointer;font-family:var(--mono);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;transition:all .12s}
+.btn-outline:hover{border-color:var(--accent);color:var(--cream)}
+.scores-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border:1px solid var(--border)}
+@media(max-width:600px){.scores-grid{grid-template-columns:repeat(2,1fr)}}
+.score-cell{background:var(--surface);padding:12px 14px;cursor:pointer;transition:background .1s}
+.score-cell:hover,.score-cell.hi{background:var(--surface2)}
+.score-cell.hi{background:rgba(168,152,128,.1)}
+.sc-name{font-size:.72rem;color:var(--cream);margin-bottom:4px}
+.sc-dot{width:6px;height:6px;border-radius:50%;display:inline-block;margin-right:5px;vertical-align:middle}
+.sc-bar{height:2px;background:var(--border);margin-bottom:4px;overflow:hidden}
+.sc-fill{height:100%;background:var(--accent);transition:width .4s ease}
+.sc-val{font-size:.68rem;color:var(--dim)}
+.angle-detail{display:none;padding:40px 0;border-bottom:1px solid var(--border)}
+.angle-detail.visible{display:block}
+.ad-label{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);margin-bottom:16px}
+.ad-title{font-family:var(--serif);font-size:1.6rem;font-weight:300;margin-bottom:8px}
+.ad-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:var(--border);border:1px solid var(--border);margin-top:16px}
+@media(max-width:700px){.ad-grid{grid-template-columns:1fr}}
+.ad-cell{background:var(--surface);padding:16px 18px}
+.ad-cell-label{font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;color:var(--accent);margin-bottom:8px}
+.ad-cell-text{font-size:.82rem;color:rgba(232,224,208,.7);line-height:1.8}
+.fig-found-item{padding:6px 0;border-bottom:1px solid var(--border);display:flex;gap:8px;align-items:flex-start;font-size:.72rem}
+.fig-found-item:last-child{border-bottom:none}
+.fig-found-name{min-width:90px;flex-shrink:0;font-size:.64rem;letter-spacing:.06em;opacity:.7}
+.fig-found-match{flex:1;font-family:var(--serif);font-style:italic;color:rgba(232,224,208,.75);font-size:.76rem;line-height:1.5}
+.fig-found-link{font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);cursor:pointer;white-space:nowrap}
+.fig-found-link:hover{opacity:.7}
+.fig-empty{font-size:.78rem;color:var(--dim);font-style:italic}
+footer{padding:32px 0;border-top:1px solid var(--border);display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
+footer p{font-size:.74rem;color:var(--dim)}footer a{color:var(--accent)}
+</style>
+</head>
+<body>
+<header>
+<nav>
+  <span class="nav-brand"><em>Chceš myš?</em> — jazykový analyzátor</span>
+  <div class="nav-links">
+    <a href="../../../index.html">← Zvířata</a>
+    <a href="knihovna_figur.html">Figury</a>
+    <a href="zapisnik.html">Zápisník</a>
+  </div>
+</nav>
+</header>
+
+<main class="wrap">
+
+<section class="hero">
+  <p class="hero-label">Nástroj · Strukturní analýza textu</p>
+  <h1>Co říká váš jazyk —<br><em>ne obsah, ale forma.</em></h1>
+  <p class="hero-desc">Analyzátor čte strukturu textu, ne jeho téma. Zjistí, jaké jazykové figury a vzorce převažují a přiřadí je ke 12 kognitivním úhlům. Každý úhel se počítá nezávisle — výsledek ukazuje dominantní způsoby vyjádření.</p>
+</section>
+
+<section class="co-analyzuje">
+  <article class="co-item">
+    <div class="co-num">01</div>
+    <h2 class="co-title">Figury a struktury</h2>
+    <p class="co-text">Každý úhel má přiřazeny figury — elipsa, anafora, metafora, fragment, paradox. Analyzátor je detekuje na úrovni věty (mikro) i celého textu (makro).</p>
+  </article>
+  <article class="co-item">
+    <div class="co-num">02</div>
+    <h2 class="co-title">Mikro a makro rovina</h2>
+    <p class="co-text">Mikro: věta po větě — elipsa, přímá řeč, negace, závorky. Makro: celý text — anafora, gradace délek, změna času, hapax legomena. Obě roviny jsou nezávislé.</p>
+  </article>
+  <article class="co-item">
+    <div class="co-num">03</div>
+    <h2 class="co-title">Jazyk, figury, myšlení</h2>
+    <p class="co-text">Figura není jen ozdoba. Každá proměňuje způsob, jak věta myslí. Elipsa zkracuje a nechává prázdnotu. Fragment zrychluje a znepřehledňuje. Metafora přenáší a propojuje vzdálené. Dominantní úhel ukazuje, jaký způsob myšlení je v textu přítomný.</p>
+  </article>
+</section>
+
+<div class="main">
+  <section class="panel-left">
+    <p class="panel-label">Váš text — vložte cokoli</p>
+    <textarea id="txt" placeholder="Vložte text — odpovědi na otázky k pohádce, kreativní cvičení, e-mail, zprávu, deník... Analyzátor pracuje se strukturou, ne tématem."></textarea>
+    <div class="btn-row">
+      <button class="btn btn-primary" id="analyzeBtn">Analyzovat →</button>
+      <button class="btn btn-ghost" id="highlightBtn">Zvýraznit figury</button>
+      <button class="btn btn-ghost" id="resetBtn">Smazat</button>
+    </div>
+    <div class="highlighted-box" id="highlighted"></div>
+  </section>
+  <section class="panel-right">
+    <p class="panel-label" style="align-self:flex-start">12 úhlů · klikněte na segment</p>
+    <canvas id="wheel" width="320" height="320"></canvas>
+    <p class="wheel-hint">Po analýze se rozsvítí aktivní úhly · kliknutím zobrazíte figury</p>
+  </section>
+</div>
+
+<section class="results" id="results" style="display:none">
+  <p class="results-label">Výsledek analýzy</p>
+  <div class="dominant-box">
+    <div class="dominant-angle" id="res-dominant"></div>
+    <div class="dominant-meta" id="res-meta"></div>
+  </div>
+  <div class="results-actions">
+    <button class="btn-outline" id="saveBtn">💾 Uložit do zápisníku</button>
+    <button class="btn-outline" id="downloadBtn">⬇ Stáhnout JSON</button>
+    <button class="btn-outline" id="printBtn">🖨 Tisknout</button>
+    <a class="btn-outline" href="zapisnik.html">📓 Otevřít zápisník</a>
+    <span id="save-msg" style="font-size:.7rem;color:var(--accent);display:none;align-self:center">✓ Uloženo</span>
+  </div>
+  <div class="scores-grid" id="scores-grid"></div>
+</section>
+
+<section class="angle-detail" id="angle-detail">
+  <p class="ad-label" id="ad-label">Detail úhlu</p>
+  <h2 class="ad-title" id="ad-title"></h2>
+  <div class="ad-grid">
+    <article class="ad-cell">
+      <h3 class="ad-cell-label">Figury nalezené v textu</h3>
+      <div id="ad-figury"></div>
+    </article>
+    <article class="ad-cell">
+      <h3 class="ad-cell-label">Popis úhlu</h3>
+      <p class="ad-cell-text" id="ad-popis"></p>
+    </article>
+    <article class="ad-cell">
+      <h3 class="ad-cell-label">Jazyk a myšlení</h3>
+      <p class="ad-cell-text" id="ad-mysleni"></p>
+    </article>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <p>Jazykový analyzátor · Chceš myš? · © 2026 Michaela Nováková</p>
+  <p><a href="mailto:chcesmys@gmail.com">chcesmys@gmail.com</a></p>
+</footer>
+
+<script>
+// ═══════════════════════════════════════════
+// DATA — 12 ÚHLŮ
+// ═══════════════════════════════════════════
+const UHLY = [
+  {i:0, st:0,   barva:'#5a7fa8',
+   nazev:'Analytický', gen:'struktury · výčty · dlouhé věty',
+   popis:'Hledá fakta, logické závislosti a struktury. Pracuje s dlouhými větami, polysyndeton (mnoho spojek), apoziční definice a paralelní konstrukce. Text v tomto úhlu buduje argumenty, řadí, třídí.',
+   mysleni:'Text plný dlouhých vět a výčtů myslí analyticky — organizuje svět do kategorií. Polysyndeton (a…a…a) vytváří pocit kompletnosti. Apoziční definice upřesňuje a kontroluje. Fixace klíčových slov signalizuje, co mysl považuje za centrální.',
+   mikro:['Dlouhá věta (20+ slov)','Polysyndeton','Apoziční definice','Parataxe'],
+   makro:['Fixace (opakovaná slova)']},
+  {i:1, st:30,  barva:'#6a9e72',
+   nazev:'Kulturní', gen:'minulý čas · role · tradice',
+   popis:'Pracuje s minulým časem (bez 1. osoby), parabolami, kulturními citacemi a změnou rolí (přechod mezi zájmeny já/ty/my/vy). Text odkazuje na sdílené vzorce, tradici, archetypy.',
+   mysleni:'Minulý čas bez 1. osoby přenáší odpovědnost na kolektiv nebo tradici. Parabola myslí analogicky — "je to jako...". Změna rolí signalizuje, že mluvčí vidí sebe i druhé. Kulturní odkaz zakořeňuje text v sdílené paměti.',
+   mikro:['Minulý čas (bez 1.os.j.č.)','Parabola','Intertextualita','Kulturní odkaz'],
+   makro:['Změna role (zájmen)']},
+  {i:2, st:60,  barva:'#9b72b5',
+   nazev:'Filozofický', gen:'metatext · otázky · deklarace',
+   popis:'Klade otázky, vyhlašuje pravdy, reflektuje sám sebe jako text. Pracuje s metatextem (text o textu), deklaracemi, paradoxem (2× sloveso být bez ale) a filozofickou kolokací.',
+   mysleni:'Otázka bez odpovědi nechává prostor pro pochybnost. Deklarace ustavuje jistotu. Metatext je myšlení o myšlení — text se dívá sám na sebe. Paradox (dvakrát být v jedné větě) zachycuje neslučitelné stavy jako jednu pravdu.',
+   mikro:['Metatext','Deklarace','Otázka (ne v přímé řeči)','Paradox (2× být bez ale)','Filozofická kolokace'],
+   makro:[]},
+  {i:3, st:90,  barva:'#5fa8a0',
+   nazev:'Naivní', gen:'elipsa · přímá řeč · nerozhodnost',
+   popis:'Pracuje s elipsou (věta bez slovesa), kompresí, nerozhodnostními výrazy (možná/snad/nevím), přímou řečí a performativitou (kdybych/kéž). Text je otevřený, přímý, bez analytické distance.',
+   mysleni:'Elipsa myslí v záblescích — vynechává to, co je "jasné". Nerozhodnost (možná, snad) nechává věci otevřené. Přímá řeč přivádí hlas postavy bez filtrování. Komprese říká maximum minimem.',
+   mikro:['Elipsa (bez slovesa)','Komprese','Nerozhodnost','Přímá řeč','Performativita'],
+   makro:[]},
+  {i:4, st:120, barva:'#8e7248',
+   nazev:'Jazykový', gen:'anafora · aliterace · paralelismus',
+   popis:'Soustředí se na zvuk, rytmus a opakování. Anafora (stejné začátky vět), epifora (stejné konce), aliterace (stejná první písmena), paralelismus (věty podobné délky), onomatopoeia.',
+   mysleni:'Anafora buduje rytmus a důraz — čtenář čeká na opakování. Aliterace vytváří zvukový vzorek, který text sceluje. Paralelismus organizuje myšlenky do symetrie. Tento úhel myslí hudbou — formou, ne obsahem.',
+   mikro:['Onomatopoeia'],
+   makro:['Anafora','Epifora','Aliterace','Paralelismus']},
+  {i:5, st:150, barva:'#5a8a5a',
+   nazev:'Metaforický', gen:'metafora · přirovnání · apostrofa',
+   popis:'Hledá přenosy významu — metaforu (X je Y bez zájmena), přirovnání (jako), apostrofu (ó/hej/poslyš), závorky a pomlčky jako nositele vedlejšího smyslu.',
+   mysleni:'Metafora myslí přenosem — vzdálené se najednou dotýká. Přirovnání pojmenovává přes analogii. Závorky a pomlčky nesou komentář, který se nevejde do hlavního proudu. Apostrofa oslovuje nepřítomné — text věří, že adresát slyší.',
+   mikro:['Metafora','Přirovnání','Závorky','Pomlčka','Apostrofa'],
+   makro:[]},
+  {i:6, st:180, barva:'#a85a5a',
+   nazev:'Asociační', gen:'fragment · imperativ · číslovky',
+   popis:'Pracuje s krátkými větami se slovesem (fragment), výčty čárkami (enumerace), imperativy, číslovkami/číslicemi a znaménky (+=/&). Tok asociací, rychlé střídání.',
+   mysleni:'Fragment myslí skoky — každá věta je samostatný svět. Imperativ myslí výzvou — zapojuje druhého. Výčet čárkami katalogizuje bez hierarchie. Čísla vnášejí konkrétnost do abstraktního. Znaménka zrychlují a zhuštují.',
+   mikro:['Fragment (krátká věta)','Enumerace (čárky)','Vykřičník','Číslovka/číslice','Znaménko'],
+   makro:[]},
+  {i:7, st:210, barva:'#c8a832',
+   nazev:'Introspektivní', gen:'1.os.j.č. · detaily · tempo',
+   popis:'Přítomnost 1. osoby jednotného čísla (bez změny rolí), smyslové detaily a změna tempa vět v textu. Text se dívá dovnitř a popisuje přesnost prožitku.',
+   mysleni:'1. osoba bez střídání signalizuje fokus na vlastní hledisko. Smyslový detail (barvy, textury, teploty) ukotvuje text v těle. Změna tempa (krátké věty po dlouhých) vytváří emocionální rytmus — zpomalení pro důraz.',
+   mikro:['1. osoba j.č.','Smyslový detail'],
+   makro:['Změna tempa vět']},
+  {i:8, st:240, barva:'#c8722a',
+   nazev:'Ironický', gen:'negace · kontrast · ironie',
+   popis:'Hledá negaci (2+ záporů v jedné větě), sémantický kontrast (kladné/záporné věty za sebou), parentéze, ironii (2× být + ale) a deformovanou frazeologii.',
+   mysleni:'Negace myslí přes vyloučení — definuje co věc není. Ironie (2× být + ale) říká obojí najednou. Sémantický kontrast staví protilehlé pohled za sebou — napětí jako myšlení. Deformovaná frazeologie narušuje očekávání.',
+   mikro:['Negace (2+ záporů)','Parentéze','Ironie (2× být + ale)','Deformovaná frazeologie'],
+   makro:['Kontrast (sémantický)']},
+  {i:9, st:270, barva:'#a83060',
+   nazev:'Groteskní', gen:'gradace · hyperbola · vykřičník',
+   popis:'Pracuje se stupňováním (gradace délek vět), hyperbolou, vykřičníkem, ilokucí (řečový akt + !) a změnou času (přechod časů v textu).',
+   mysleni:'Gradace zesiluje — myšlení eskaluje. Hyperbola přehání pro zdůraznění. Vykřičník aktivuje — něco se musí stát. Změna času narušuje linearitu — text skáče mezi stavy. Tautologie opakuje pro sílení efektu.',
+   mikro:['Hyperbola','Tautologie','Vykřičník','Ilokuce (řečový akt + !)'],
+   makro:['Gradace (délka vět)','Změna času']},
+  {i:10,st:300, barva:'#6080a0',
+   nazev:'Absurdní', gen:'paradox · oxymóron · personifikace',
+   popis:'Hledá aposiopeze (…), synestetické obrazy (2+ smyslů), personifikaci, oxymóron, neologismy a přeskoky (náhlá změna rytmu).',
+   mysleni:'Aposiopeze nechává větu nedokončenou — myšlení odmítá uzavřít. Synestezie míchá smysly. Personifikace dává neživému vůli. Oxymóron drží protiklady pohromadě. Neologismus pojmenovává to, pro co jazyk výraz nemá.',
+   mikro:['Aposiopeze (…)','Synestezie (2+ smysly)','Personifikace','Oxymóron','Neologismus'],
+   makro:['Přeskok (náhlá změna)']},
+  {i:11,st:330, barva:'#8060b0',
+   nazev:'Surrealistický', gen:'asyndeton · sen · výplňová slova',
+   popis:'Prolínání míst a časů, výplňová slova (vlastně/jaksi/prostě), snovost, asyndeton (série krátkých vět bez spojek) a hapax legomena (jedinečná slova).',
+   mysleni:'Výplňová slova jsou trhliny v plynulosti — text hledá, jak dál. Snovost (klíčová slova) přenáší do jiného modu reality. Asyndeton vytváří zahuštěný proud bez logiky. Prolínání míst a časů ruší kauzalitu. Hapax legomena jsou izolované ostrovy slova.',
+   mikro:['Výplňová slova','Sen (klíčová slova)'],
+   makro:['Asyndeton','Prolínání míst a časů','Hapax legomena']},
+];
+
+// Vizuální styl per angle (jako v kartách)
+const HIGHLIGHT_STYLE = {
+  0: (c) => `border-bottom:2px dashed ${c};cursor:help`,
+  1: (c) => `border-bottom:1px solid ${c};cursor:help`,
+  2: (c) => `border-bottom:2px dotted ${c};border-top:1px dotted ${c};padding-top:1px;cursor:help`,
+  3: (c) => `border-bottom:1px dotted ${c};cursor:help`,
+  4: (c) => `text-decoration:underline wavy ${c};cursor:help`,
+  5: (c) => `border-bottom:2px solid ${c};cursor:help`,
+  6: (c) => `border-bottom:1px dotted ${c};letter-spacing:.03em;cursor:help`,
+  7: (c) => `background:${c}22;padding:0 2px;cursor:help`,
+  8: (c) => `text-decoration:line-through;text-decoration-color:${c};cursor:help`,
+  9: (c) => `background:${c}18;padding:0 2px;cursor:help`,
+  10:(c) => `border-bottom:3px solid ${c};cursor:help`,
+  11:(c) => `font-style:italic;border:1px solid ${c}44;padding:0 2px;cursor:help`,
+};
+
+const STOP = new Set(['a','ale','nebo','i','ani','ze','co','jak','kde','kdy','kdo','tam','tady','to','ten','ta','te','je','jsou','byl','byla','bylo','byt','se','si','na','v','ve','do','z','ze','o','po','pri','pro','k','ke','s','u','nad','pod','za','pred','mezi','uz','jeste','jen','take','proto','pak','tak','tedy','prece','stale','jinak']);
+
+// ═══════════════════════════════════════════
+// DETEKTORY MIKRO
+// ═══════════════════════════════════════════
+function detectMicro(sentence, si) {
+  const s=sentence,sl=s.toLowerCase();
+  const words=s.split(/\s+/).filter(Boolean),wl=words.length;
+  const R=[];
+  function hit(uhel,figura,match){R.push({uhel,figura,match,si,type:'mikro'});}
+
+  // ANALYTICKÝ (0)
+  if(wl>20) hit(0,'Dlouhá věta (20+ slov)',s.slice(0,55)+'…');
+  const conj=(sl.match(/\b(a\b|ale\b|nebo\b|i\b|ani\b|avšak|jenže|přitom|protože|když|pokud|než|jestliže|ačkoli|neboť)\b/g)||[]).length;
+  if(conj>=3) hit(0,'Polysyndeton',conj+'× spojka');
+  if(/,\s*(který|která|které|jenž|jež)\b/i.test(s)) hit(0,'Apoziční definice',s.slice(0,45));
+  if(/\b(a\b|ale\b|nebo\b)\b[^,]{5,}/i.test(s)&&wl>8) hit(0,'Parataxe',s.slice(0,45));
+
+  // KULTURNÍ (1)
+  const pastV=s.match(/\b\w+(al|ala|alo|ali|aly|byl|byla|bylo|byli|byly)\b/gi)||[];
+  if(pastV.length>0&&!/\b(jsem|jsem\s+byl|jsem\s+byla)\b/i.test(s)) hit(1,'Minulý čas (bez 1.os.j.č.)',pastV[0]);
+  if(/jako\s+\w+\s+v\s+|podobně\s+jako|příběh\s+o|bajka|legenda|mýtus/i.test(s)) hit(1,'Parabola',s.slice(0,45));
+  if(/„[^"]+"|"[^"]+"/i.test(s)) hit(1,'Intertextualita',s.slice(0,45));
+  if(/\b(tradice|kultura|dějiny|minulost|archetyp|symbol|rituál)\b/i.test(s)) hit(1,'Kulturní odkaz',s.match(/\b(tradice|kultura|dějiny|minulost|archetyp|symbol|rituál)\b/i)[0]);
+
+  // FILOZOFICKÝ (2)
+  if(/\b(tento\s+text|tato\s+věta|píšu|říkám\s+to|mluvím\s+o|jazyk\s+sám)\b/i.test(s)) hit(2,'Metatext',s.slice(0,45));
+  if(/\b(pravda\s+je|jsem\s+přesvědčen|tvrdím|prohlašuji|je\s+zřejmé|faktem\s+je)\b/i.test(s)) hit(2,'Deklarace',s.slice(0,45));
+  if(s.trim().endsWith('?')&&!/„[^"]*\?/.test(s)&&!/"[^"]*\?/.test(s)) hit(2,'Otázka (ne v přímé řeči)',s.slice(0,55));
+  {const beC=(sl.match(/\bjsem\b|\bje\b|\bjsou\b|\bbýt\b/g)||[]).length;if(beC>=2&&!/\bale\b|\bpřesto\b|\bi\s+tak\b/.test(sl)) hit(2,'Paradox (2× být bez ale)',s.slice(0,45));}
+  if(/\b(kolokace|fixace|dekonstrukce|epistéme|ontologie|bytí|jsoucno)\b/i.test(s)) hit(2,'Filozofická kolokace',s.slice(0,45));
+
+  // NAIVNÍ (3)
+  {const hasV=/\b(jsem|jsi|je\b|jsme|jste|jsou|byl|byla|bylo|být|mám|máš|má\b|jdu|šel|šla|říká|vidí|cítí|vím|mohu|musím|chci|dal|vzal|přišel)\b/i.test(s);if(!hasV&&wl>1) hit(3,'Elipsa (bez slovesa)',s.slice(0,45));}
+  if(wl<=5&&wl>=2&&/\b(jsem|jsi|je\b|jsme|jste|jsou|byl|byla|mám|máš|jdu|stojí)\b/i.test(s)) hit(3,'Komprese',s.slice(0,35));
+  if(/\b(možná|snad|nevím|doufám|pravděpodobně|myslím\s+si|asi|zdá\s+se|zřejmě|skoro|jaksi)\b/i.test(s)) hit(3,'Nerozhodnost',s.match(/\b(možná|snad|nevím|doufám|pravděpodobně|myslím\s+si|asi|zdá\s+se|zřejmě|skoro|jaksi)\b/i)[0]);
+  if(/„[^"]+"|"[^"]+"/i.test(s)) hit(3,'Přímá řeč',s.slice(0,45));
+  if(/\b(kdybych|kdybychom|přál\s+bych\s+si|nechť|kéž|ať\b)\b/i.test(s)) hit(3,'Performativita',s.slice(0,35));
+
+  // JAZYKOVÝ (4) - onomatopoeia mikro
+  if(/\b(bum|prásk|žbluňk|šum|hukot|šelest|šustí|sykot|hřmot|dunění|vrčí|klepot|vrzá|cinká|zvoní|hučí|šepotá|kvičí|prská)\b/i.test(s)) hit(4,'Onomatopoeia',s.match(/\b(bum|prásk|žbluňk|šum|hukot|šelest|šustí|sykot|hřmot|dunění|vrčí|klepot|vrzá|cinká|zvoní|hučí|šepotá|kvičí|prská)\b/i)[0]);
+
+  // METAFORICKÝ (5)
+  {const mM=s.match(/(\b\w{3,}\b)\s+(je|jsou|byl|byla|bylo)\s+(\b\w{3,}\b)/gi)||[];mM.forEach(m=>{const idx=s.indexOf(m);const before=s.slice(Math.max(0,idx-12),idx).toLowerCase();if(!/\b(já|ty|on|ona|ono|my|vy|oni|ony|se|si)\b/.test(before)) hit(5,'Metafora',m.slice(0,45));});}
+  if(/\b(jako\b|jako\s+by|podobně\s+jako|připomíná|jako\s+kdyby)\b/i.test(s)) hit(5,'Přirovnání',s.slice(0,45));
+  if(/[()]/.test(s)) hit(5,'Závorky',s.slice(0,45));
+  if(/[—–]/.test(s)) hit(5,'Pomlčka',s.slice(0,45));
+  if(/\b(ó|ach|hej|poslyš|pohleď)\b/i.test(s)) hit(5,'Apostrofa',s.slice(0,35));
+
+  // ASOCIAČNÍ (6)
+  {const hasV=/\b(jsem|jsi|je\b|jsme|jste|jsou|byl|byla|bylo|mám|máš|má\b|jdu|jdeš|říkám|vidím|cítím|vím|chci|mohu|musím)\b/i.test(s);if(hasV&&wl<=6&&wl>=2) hit(6,'Fragment (krátká věta)',s.slice(0,35));}
+  {const cm=(s.match(/,/g)||[]).length;if(cm>=2) hit(6,'Enumerace (čárky)',cm+'× čárka');}
+  if(/[!]/.test(s)) hit(6,'Vykřičník',s.slice(0,35));
+  if(/\b\d+\b/.test(s)) hit(6,'Číslovka/číslice',s.match(/\b\d+\b/)[0]);
+  if(/[+=#&\/;]/.test(s)) hit(6,'Znaménko',s.match(/[+=#&\/;]/)[0]);
+
+  // INTROSPEKTIVNÍ (7)
+  if(/\b(já\b|jsem\b|mě\b|mi\b|mou\b|moje\b|moji\b|mám\b|cítím\b|říkám\b|vím\b)\b/i.test(s)) hit(7,'1. osoba j.č.',s.slice(0,45));
+  {const dM=s.match(/\b(\d+\s*(cm|mm|kg|°C|ml|m\b|km)|červen\w+|moder\w+|zelen\w+|žlut\w+|bíl\w+|černý|bílý|teplý|studený|hladký|hrubý|tmavý|světlý|sladký|kyselý|hořký|slaný)\b/i);if(dM) hit(7,'Smyslový detail',dM[0]);}
+
+  // IRONICKÝ (8)
+  {const negs=(sl.match(/\bne\b|\bni\b|\bbez\b|\bnikdy\b|\bnikdo\b|\bnic\b|\bnení\b|\bnemá\b|\bnemám\b|\bnemohu\b|\bnemohl\b|\bnebylo?\b|\bneví\b|\bnechce\b/g)||[]).length;if(negs>=2) hit(8,'Negace (2+ záporů)',negs+'× negace');}
+  if(/[()]/.test(s)) hit(8,'Parentéze',s.slice(0,45));
+  {const beC=(sl.match(/\bjsem\b|\bjsi\b|\bje\b|\bjsme\b|\bjste\b|\bjsou\b|\bbyl\b|\bbyla\b/g)||[]).length;const hasAle=/\bale\b|\bpřesto\b|\bi\s+tak\b|\bvšak\b|\bjenže\b/.test(sl);if(beC>=2&&hasAle) hit(8,'Ironie (2× být + ale)',s.slice(0,45));}
+  if(/\b(samozřejmě|pochopitelně|jasně|no\s+jo|jak\s+jinak)\b/i.test(s)) hit(8,'Deformovaná frazeologie',s.match(/\b(samozřejmě|pochopitelně|jasně|no\s+jo|jak\s+jinak)\b/i)[0]);
+
+  // GROTESKNÍ (9)
+  if(/\b(naprosto|absolutně|zcela|totálně|nejvíc|nejhůř|nejlépe|nikdy\s+v\s+životě|stoprocentně)\b/i.test(s)) hit(9,'Hyperbola',s.match(/\b(naprosto|absolutně|zcela|totálně|nejvíc|nejhůř|nejlépe|stoprocentně)\b/i)[0]);
+  {const wA=words.map(w=>w.toLowerCase().replace(/[.,!?;:]/g,''));const seen={};let tau=false;wA.forEach(w=>{if(w.length>3&&!STOP.has(w)){if(seen[w])tau=true;seen[w]=true;}});if(tau) hit(9,'Tautologie',s.slice(0,45));}
+  if(/[!]/.test(s)) hit(9,'Vykřičník',s.slice(0,35));
+  {const reci=/\b(říká|říkal|řekl|řekla|křičí|křičel|šeptal|volá|volal|prohlašuje|tvrdí)\b/i.test(s);if(reci&&/[!]/.test(s)) hit(9,'Ilokuce',s.slice(0,35));}
+
+  // ABSURDNÍ (10)
+  if(/\.\.\.|…/.test(s)) hit(10,'Aposiopeze (…)',s.slice(0,45));
+  {const zr=/\b(barva|červen\w+|moder\w+|světl\w+|tmav\w+|vidět)\b/i.test(s);const sl2=/\b(zvuk|tón|melodie|hluk|tich\w+|slyšet)\b/i.test(s);const chu=/\b(chuť|sladký|kyselý|hořký|slaný|ochutnat)\b/i.test(s);const hm=/\b(dotyk|hladký|hrubý|teplý|studený|hebký|tvrdý|měkký)\b/i.test(s);const vu=/\b(vůně|zápach|vonět|páchnout|parfém)\b/i.test(s);if([zr,sl2,chu,hm,vu].filter(Boolean).length>=2) hit(10,'Synestezie (2+ smysly)',s.slice(0,45));}
+  {const ina=/\b(ticho|čas|světlo|tma|slova?|myšlenky?|vzduch|vítr|voda|kameny?|strom\w+|krajina|mlha|sen\w+)\b/i.test(s);const hv=/\b(řekl|říká|myslí|cítí|ví|chce|vzpomíná|snívá|smál|plakal|volal)\b/i.test(s);if(ina&&hv) hit(10,'Personifikace',s.slice(0,45));}
+  {const oxy=/\b(živá\s+smrt|sladká\s+bolest|veselý\s+smutek|hlučné\s+ticho|světlá\s+tma|radostný\s+pláč)\b/i.test(s);if(oxy) hit(10,'Oxymóron',s.slice(0,35));}
+  {const neo=s.match(/\b\w+-\w+\b/g)||[];if(neo.length>0) hit(10,'Neologismus',neo[0]);}
+
+  // SURREALISTICKÝ (11)
+  {const vy=(s.match(/\b(vlastně|jaksi|prostě|no\b|tedy|tak\b|víte|víš|ehm|hm\b|teda|takže\b)\b/gi)||[]);if(vy.length>0) hit(11,'Výplňová slova',vy.slice(0,3).join(', '));}
+  if(/\b(sen\b|snový|zdálo\s+se|snil\b|sny\b|noční\b|spánek|přisnil|snít)\b/i.test(s)) hit(11,'Sen (klíčová slova)',s.slice(0,35));
+
+  return R;
+}
+
+// ═══════════════════════════════════════════
+// DETEKTORY MAKRO
+// ═══════════════════════════════════════════
+function detectMakro(sentences, fullText) {
+  const R=[];
+  const fl=fullText.toLowerCase();
+  const words=fullText.split(/\s+/).filter(Boolean).map(w=>w.toLowerCase().replace(/[.,!?;:„""\-—–()]/g,''));
+  function hit(uhel,figura,match){R.push({uhel,figura,match,si:-1,type:'makro'});}
+
+  // ANALYTICKÝ (0) - Fixace
+  const wfreq={};words.forEach(w=>{if(w.length>3&&!STOP.has(w))wfreq[w]=(wfreq[w]||0)+1;});
+  const fixW=Object.entries(wfreq).filter(([w,c])=>c>=3).sort((a,b)=>b[1]-a[1]);
+  if(fixW.length>0) hit(0,'Fixace (opakovaná slova)',fixW.slice(0,3).map(([w,c])=>'"'+w+'" '+c+'×').join(', '));
+
+  // KULTURNÍ (1) - Změna role
+  {const psets=sentences.map(s=>{const p=new Set();if(/\bjá\b|\bjsem\b/i.test(s))p.add('já');if(/\bty\b|\btě\b/i.test(s))p.add('ty');if(/\bmy\b|\bnám\b/i.test(s))p.add('my');if(/\bvy\b|\bvám\b/i.test(s))p.add('vy');return p;});const allP=new Set(psets.flatMap(s=>[...s]));if(allP.size>=2) hit(1,'Změna role (zájmen)','přechod: '+[...allP].join(' → '));}
+
+  // JAZYKOVÝ (4) - Anafora, Epifora, Aliterace, Paralelismus
+  {let an=0;for(let i=1;i<sentences.length;i++){const w1=(sentences[i-1].trim().split(/\s+/)[0]||'').toLowerCase();const w2=(sentences[i].trim().split(/\s+/)[0]||'').toLowerCase();if(w1.length>1&&w1===w2)an++;}if(an>=2) hit(4,'Anafora',an+'× stejné začátky vět');}
+  {let ep=0;for(let i=1;i<sentences.length;i++){const a=sentences[i-1].trim().split(/\s+/);const b=sentences[i].trim().split(/\s+/);const wa=(a[a.length-1]||'').toLowerCase().replace(/[.!?,;]/g,'');const wb=(b[b.length-1]||'').toLowerCase().replace(/[.!?,;]/g,'');if(wa.length>1&&wa===wb)ep++;}if(ep>=2) hit(4,'Epifora',ep+'× stejné konce vět');}
+  {let al=false;sentences.forEach(s=>{const ws=s.split(/\s+/).map(w=>w.toLowerCase().replace(/[^a-záčďéěíňóřšťůúýž]/g,''));const ic={};ws.forEach(w=>{if(w.length>1)ic[w[0]]=(ic[w[0]]||0)+1;});if(Object.values(ic).some(c=>c>=3))al=true;});if(al) hit(4,'Aliterace','3+ slov se stejným písmenem v větě');}
+  {let par=0;for(let i=1;i<sentences.length;i++){const la=sentences[i-1].split(/\s+/).length,lb=sentences[i].split(/\s+/).length;if(Math.abs(la-lb)<=2&&la>=3&&lb>=3)par++;}if(par>=3) hit(4,'Paralelismus',par+' větné páry podobné délky');}
+
+  // INTROSPEKTIVNÍ (7) - Změna tempa
+  {const lens=sentences.map(s=>s.split(/\s+/).length);if(lens.length>=3){const mx=Math.max(...lens),mn=Math.min(...lens);if(mx/Math.max(mn,1)>=4) hit(7,'Změna tempa vět','délky: '+mn+'–'+mx+' slov');}}
+
+  // IRONICKÝ (8) - Kontrast sémantický
+  {const pos=/\b(krásný|dobrý|šťastný|radost|úspěch|láska|naděje|světlo|skvělý|milý)\b/i;const neg=/\b(ošklivý|špatný|smutný|smutek|neúspěch|nenávist|beznaděj|tma|strašný|hrozný)\b/i;let ct=0;for(let i=1;i<sentences.length;i++){if((pos.test(sentences[i-1])&&neg.test(sentences[i]))||(neg.test(sentences[i-1])&&pos.test(sentences[i])))ct++;}if(ct>=1) hit(8,'Kontrast (sémantický)',ct+'× protikladné věty');}
+
+  // GROTESKNÍ (9) - Gradace, Změna času
+  {const lens=sentences.map(s=>s.split(/\s+/).length);let gu=0,gd=0;for(let i=2;i<lens.length;i++){if(lens[i]>lens[i-1]&&lens[i-1]>lens[i-2])gu++;if(lens[i]<lens[i-1]&&lens[i-1]<lens[i-2])gd++;}if(gu>=2||gd>=2) hit(9,'Gradace (délka vět)',gu>=2?'narůstající '+gu+'×':'klesající '+gd+'×');}
+  {const hp=/\b\w+(al|ala|alo|ali|aly|byl|byla|bylo)\b/i.test(fullText);const hpr=/\b(je\b|jsou\b|má\b|mám\b|jde\b|říká)\b/i.test(fullText);const hf=/\b(bude\b|budu\b|budeme\b|budou\b)\b/i.test(fullText);if([hp,hpr,hf].filter(Boolean).length>=2) hit(9,'Změna času','přechod časů v textu');}
+
+  // ABSURDNÍ (10) - Přeskok
+  {for(let i=1;i<sentences.length;i++){const la=sentences[i-1].split(/\s+/).length,lb=sentences[i].split(/\s+/).length;if(Math.abs(la-lb)>15&&lb<4) hit(10,'Přeskok (náhlá změna)',sentences[i].slice(0,35));}}
+
+  // SURREALISTICKÝ (11) - Asyndeton, Prolínání, Hapax
+  {let as=0;for(let i=1;i<sentences.length;i++){if(sentences[i-1].split(/\s+/).length<=5&&sentences[i].split(/\s+/).length<=5&&!/^(a\b|nebo\b|ale\b)/i.test(sentences[i].trim()))as++;}if(as>=3) hit(11,'Asyndeton',as+'× krátké věty bez spojky');}
+  {const mi=(fl.match(/\b(tady|tam|zde|venku|uvnitř|nahoru|dolů|nahoře|dole|daleko|blízko)\b/g)||[]);const ca=(fl.match(/\b(dnes|včera|zítra|teď|nyní|tehdy|dávno|brzy|najednou|jednou)\b/g)||[]);if(mi.length>=2&&ca.length>=2) hit(11,'Prolínání míst a časů',mi.length+'× místo, '+ca.length+'× čas');}
+  {if(words.length>50){const hapax=Object.entries(wfreq).filter(([w,c])=>c===1&&w.length>5&&!STOP.has(w));const ratio=hapax.length/words.length;if(ratio>0.7) hit(11,'Hapax legomena',hapax.length+' unikátních slov ('+Math.round(ratio*100)+'%)');}}
+
+  return R;
+}
+
+// ═══════════════════════════════════════════
+// STAV
+// ═══════════════════════════════════════════
+let lastAnalysis=null, highlightOn=false, selectedDeg=null, lastText='';
+
+function splitVety(t){return t.split(/(?<=[.!?\u2026])\s+|\n(?=\S)/).map(s=>s.trim()).filter(s=>s.length>1);}
+
+// ═══════════════════════════════════════════
+// ANALYZUJ
+// ═══════════════════════════════════════════
+function analyze() {
+  const text=document.getElementById('txt').value.trim();
+  if(!text) return;
+  lastText=text;
+  const sentences=splitVety(text);
+  const allWords=text.split(/\s+/).filter(Boolean);
+
+  const micro=[];sentences.forEach((s,si)=>detectMicro(s,si).forEach(h=>micro.push(h)));
+  const macro=detectMakro(sentences,text);
+  const allHits=[...micro,...macro];
+
+  // Per-angle 100%: max = mikro_detektorů × sentences + makro_detektorů
+  const scores=UHLY.map(u=>{
+    const hits=allHits.filter(h=>h.uhel===u.i);
+    const mc=hits.filter(h=>h.type==='mikro').length;
+    const xc=hits.filter(h=>h.type==='makro').length;
+    const maxM=u.mikro.length*sentences.length;
+    const maxX=u.makro.length;
+    const total=maxM+maxX;
+    const pct=total>0?Math.min(100,Math.round((mc+xc)/total*100)):0;
+    return {uhel:u.i,hits,pct,mc,xc};
+  });
+
+  const uniW=new Set(allWords.map(w=>w.toLowerCase().replace(/[.,!?;:„""\-—–]/g,'')));
+  const avg=sentences.length?Math.round(allWords.length/sentences.length*10)/10:0;
+  const top=scores.reduce((a,b)=>b.pct>a.pct?b:a,scores[0]);
+  const topU=UHLY[top.uhel];
+
+  lastAnalysis={text,sentences,allHits,scores,allWords,uniW};
+
+  document.getElementById('results').style.display='block';
+  document.getElementById('res-dominant').innerHTML='<span style="color:'+topU.barva+'">'+topU.st+'° '+topU.nazev+'</span>';
+  document.getElementById('res-meta').innerHTML=
+    'Slov: '+allWords.length+' · Vět: '+sentences.length+' · Slov/větu: '+avg+
+    ' · Lex. bohatost: '+Math.round(uniW.size/allWords.length*100)+'%<br>'+
+    'Figur celkem: '+allHits.length+' · Dominantní úhel: '+top.pct+'%';
+
+  buildScoresGrid(scores,top.uhel);
+  drawWheel(top.uhel,scores);
+  showDetail(UHLY[top.uhel].st);
+  document.getElementById('results').scrollIntoView({behavior:'smooth',block:'start'});
+  if(highlightOn) highlightText(text,allHits);
+}
+
+// ═══════════════════════════════════════════
+// KOLO (canvas) - fills from center like v3
+// ═══════════════════════════════════════════
+const canvas=document.getElementById('wheel');
+const ctx=canvas.getContext('2d');
+const CX=160,CY=160,RMAX=140,RMIN=40;
+
+function drawWheel(highlightDeg=null, scores=null) {
+  ctx.clearRect(0,0,320,320);
+  const segAngle=(Math.PI*2)/12;
+
+  UHLY.forEach((u,i)=>{
+    const startA=-Math.PI/2+i*segAngle+0.03;
+    const endA=startA+segAngle-0.06;
+    const pct=scores?scores[i].pct:0;
+    const fillR=RMIN+(RMAX-RMIN)*(pct/100);
+    const isHi=highlightDeg===u.st;
+
+    // Background
+    ctx.beginPath();ctx.moveTo(CX,CY);
+    ctx.arc(CX,CY,RMAX,startA,endA);ctx.closePath();
+    ctx.fillStyle=u.barva+'14';ctx.fill();
+    ctx.strokeStyle='rgba(168,152,128,.1)';ctx.lineWidth=1;ctx.stroke();
+
+    // Fill from center
+    if(pct>0){
+      ctx.beginPath();ctx.moveTo(CX,CY);
+      ctx.arc(CX,CY,fillR,startA,endA);ctx.closePath();
+      ctx.fillStyle=isHi?u.barva+'d0':u.barva+(pct>50?'90':'55');
+      ctx.fill();
+    }
+
+    // Rim highlight
+    if(isHi){
+      ctx.beginPath();ctx.arc(CX,CY,RMAX+2,startA,endA);
+      ctx.strokeStyle=u.barva;ctx.lineWidth=2;ctx.stroke();
+    }
+
+    // Label
+    const midA=startA+(segAngle-0.06)/2;
+    const lr=(RMAX+RMIN)/2+10;
+    const lx=CX+Math.cos(midA)*lr,ly=CY+Math.sin(midA)*lr;
+    ctx.save();ctx.translate(lx,ly);ctx.rotate(midA+Math.PI/2);
+    ctx.fillStyle=isHi?'#e8e0d0':(pct>0?u.barva:'rgba(168,152,128,.25)');
+    ctx.font=(isHi?'400':'300')+' 8px DM Mono,monospace';
+    ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.fillText(u.nazev,0,0);ctx.restore();
+  });
+
+  // Inner circle
+  ctx.beginPath();ctx.arc(CX,CY,RMIN,0,Math.PI*2);
+  ctx.fillStyle='#0f0f0f';ctx.fill();
+  ctx.strokeStyle='rgba(168,152,128,.2)';ctx.lineWidth=1;ctx.stroke();
+
+  if(highlightDeg!==null){
+    const u=UHLY.find(x=>x.st===highlightDeg);
+    if(u){
+      ctx.fillStyle=u.barva;ctx.font='300 10px DM Mono';ctx.textAlign='center';ctx.textBaseline='middle';
+      ctx.fillText(u.st+'°',CX,CY-8);
+      ctx.fillStyle='#e8e0d0';ctx.font='300 8px Cormorant Garamond,serif';
+      ctx.fillText(u.nazev,CX,CY+8);
+    }
+  } else {
+    ctx.fillStyle='rgba(168,152,128,.25)';ctx.font='300 10px DM Mono';
+    ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('12 úhlů',CX,CY);
+  }
+}
+drawWheel();
+
+// Click on wheel
+canvas.addEventListener('click',e=>{
+  const rect=canvas.getBoundingClientRect();
+  const sc=320/rect.width;
+  const mx=(e.clientX-rect.left)*sc-CX;
+  const my=(e.clientY-rect.top)*sc-CY;
+  const dist=Math.sqrt(mx*mx+my*my);
+  if(dist<RMIN||dist>RMAX) return;
+  let angle=Math.atan2(my,mx)+Math.PI/2;
+  if(angle<0) angle+=Math.PI*2;
+  const idx=Math.floor(angle/(Math.PI*2/12));
+  if(UHLY[idx]) showDetail(UHLY[idx].st);
+});
+
+// ═══════════════════════════════════════════
+// SCORE GRID
+// ═══════════════════════════════════════════
+function buildScoresGrid(scores, domUhel) {
+  const grid=document.getElementById('scores-grid');
+  grid.innerHTML='';
+  const sorted=[...scores].sort((a,b)=>b.pct-a.pct);
+  sorted.forEach(sc=>{
+    const u=UHLY[sc.uhel];
+    const cell=document.createElement('div');
+    cell.className='score-cell'+(sc.uhel===domUhel?' hi':'');
+    cell.setAttribute('data-deg',u.st);
+    cell.addEventListener('click',()=>showDetail(u.st));
+    cell.innerHTML=
+      '<div class="sc-name"><span class="sc-dot" style="background:'+u.barva+'"></span>'+u.st+'° '+u.nazev+'</div>'+
+      '<div class="sc-bar"><div class="sc-fill" style="width:0%;background:'+u.barva+'" id="sf'+sc.uhel+'"></div></div>'+
+      '<div class="sc-val">'+sc.pct+'%</div>';
+    grid.appendChild(cell);
+    setTimeout(()=>{const f=document.getElementById('sf'+sc.uhel);if(f)f.style.width=sc.pct+'%';},60);
+  });
+}
+
+// ═══════════════════════════════════════════
+// DETAIL ÚHLU
+// ═══════════════════════════════════════════
+function showDetail(deg) {
+  const u=UHLY.find(x=>x.st===deg);
+  if(!u) return;
+  selectedDeg=deg;
+  const sc=lastAnalysis?lastAnalysis.scores[u.i]:null;
+
+  document.getElementById('angle-detail').className='angle-detail visible';
+  document.getElementById('ad-label').textContent='Detail úhlu · '+deg+'°';
+  document.getElementById('ad-title').innerHTML='<span style="color:'+u.barva+'">'+u.nazev+'</span>';
+  document.getElementById('ad-popis').textContent=u.popis;
+  document.getElementById('ad-mysleni').textContent=u.mysleni;
+
+  // Figury nalezené v textu
+  const figDiv=document.getElementById('ad-figury');
+  if(!sc||sc.hits.length===0){
+    figDiv.innerHTML='<div class="fig-empty">Žádné figury tohoto úhlu nebyly v textu nalezeny.</div>';
+  } else {
+    const grouped={};sc.hits.forEach(h=>{if(!grouped[h.figura])grouped[h.figura]=[];grouped[h.figura].push(h);});
+    figDiv.innerHTML='<div style="margin-bottom:8px;font-size:.62rem;color:var(--dim)">'+sc.hits.length+' výskytů · '+sc.pct+'% · kliknutím zvýrazníte v textu</div>'+
+      Object.entries(grouped).map(([fig,hs])=>
+        '<div class="fig-found-item" onclick="highlightFig('+u.i+',' + "'" + fig.replace(/'/g,"\\'")+  "'" +',this)" style="color:'+u.barva+'">'+
+        '<span class="fig-found-name">'+fig+'</span>'+
+        '<span class="fig-found-match">'+hs.map(h=>h.match).slice(0,2).join(' · ')+'</span>'+
+        '<a class="fig-found-link" href="knihovna_figur.html#'+encodeURIComponent(fig)+'" target="_blank" onclick="event.stopPropagation()">↗ knihovna</a>'+
+        '</div>'
+      ).join('');
+  }
+
+  if(lastAnalysis) drawWheel(deg, lastAnalysis.scores);
+  document.getElementById('angle-detail').scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
+// ═══════════════════════════════════════════
+// HIGHLIGHT
+// ═══════════════════════════════════════════
+function highlightText(text, allHits) {
+  const box=document.getElementById('highlighted');
+  box.style.display='block';
+  let html=text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/\n/g,'<br>');
+  const {sentences}=lastAnalysis;
+  // Highlight each sentence that has a hit, with the angle's visual style
+  const sentHits={};
+  allHits.filter(h=>h.si>=0).forEach(h=>{
+    if(!sentHits[h.si]) sentHits[h.si]=[];
+    sentHits[h.si].push(h);
+  });
+  sentences.forEach((s,si)=>{
+    if(!sentHits[si]) return;
+    // Use the angle with most hits in this sentence
+    const counts={};sentHits[si].forEach(h=>counts[h.uhel]=(counts[h.uhel]||0)+1);
+    const topUhel=parseInt(Object.entries(counts).sort((a,b)=>b[1]-a[1])[0][0]);
+    const u=UHLY[topUhel];
+    const style=HIGHLIGHT_STYLE[topUhel](u.barva);
+    const esc=s.replace(/&/g,'&amp;').replace(/</g,'&lt;');
+    const figList=[...new Set(sentHits[si].map(h=>h.figura))].join(', ');
+    html=html.replace(esc,'<span style="'+style+'" title="'+topUhel+'° '+u.nazev+': '+figList+'">'+esc+'</span>');
+  });
+  box.innerHTML=html;
+}
+
+function toggleHighlight() {
+  highlightOn=!highlightOn;
+  const btn=document.getElementById('highlightBtn');
+  const box=document.getElementById('highlighted');
+  btn.classList.toggle('active',highlightOn);
+  if(highlightOn&&lastText&&lastAnalysis){
+    highlightText(lastText,lastAnalysis.allHits);
+  } else {
+    box.style.display='none';
+    box.innerHTML='';
+  }
+}
+
+function highlightFig(uhelIdx, figura, el) {
+  event.stopPropagation();
+  if(!lastAnalysis) return;
+  const u=UHLY[uhelIdx];
+  const hits=lastAnalysis.allHits.filter(h=>h.uhel===uhelIdx&&h.figura===figura&&h.si>=0);
+  const box=document.getElementById('highlighted');
+  box.style.display='block';
+  let html=lastText.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/\n/g,'<br>');
+  const style=HIGHLIGHT_STYLE[uhelIdx](u.barva);
+  lastAnalysis.sentences.forEach((s,si)=>{
+    if(hits.some(h=>h.si===si)){
+      const esc=s.replace(/&/g,'&amp;').replace(/</g,'&lt;');
+      html=html.replace(esc,'<span style="'+style+'" title="'+figura+'">'+esc+'</span>');
+    }
+  });
+  box.innerHTML=html;
+  box.scrollIntoView({behavior:'smooth',block:'nearest'});
+  // Panel scroll up
+  document.querySelector('.panel-left').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+// ═══════════════════════════════════════════
+// ZÁPISNÍK
+// ═══════════════════════════════════════════
+function saveToZapisnik() {
+  if(!lastAnalysis) return;
+  const ts=Date.now();
+  const top=lastAnalysis.scores.sort((a,b)=>b.pct-a.pct).slice(0,3);
+  const topStr=top.map(s=>UHLY[s.uhel].nazev+' '+s.pct+'%').join(' · ');
+  const zapis={
+    id:'az_'+ts,ts,typ:'analyza',
+    nazev:'Analýza — '+new Date(ts).toLocaleDateString('cs-CZ'),
+    text:'Slov: '+lastAnalysis.allWords.length+' | Vět: '+lastAnalysis.sentences.length+
+      ' | Figur: '+lastAnalysis.allHits.length+'\nTop úhly: '+topStr+
+      '\n\nÚryvek:\n'+lastAnalysis.text.slice(0,200)+(lastAnalysis.text.length>200?'…':'')
+  };
+  try{
+    const key='chcesmys_zapisnik';
+    const data=JSON.parse(localStorage.getItem(key)||'{}');
+    const mk=Object.keys(data);const mid=mk.length>0?mk[0]:'map_default';
+    if(!data[mid])data[mid]={name:'Zápisník mezer',popis:'',entries:[],created:ts};
+    data[mid].entries.unshift(zapis);
+    localStorage.setItem(key,JSON.stringify(data));
+    const msg=document.getElementById('save-msg');
+    msg.style.display='inline';setTimeout(()=>msg.style.display='none',3500);
+  }catch(e){alert('Nepodařilo se uložit.');}
+}
+
+function downloadResults() {
+  if(!lastAnalysis) return;
+  const data={
+    timestamp:new Date().toISOString(),
+    slova:lastAnalysis.allWords.length,
+    vety:lastAnalysis.sentences.length,
+    scores:lastAnalysis.scores.map(s=>({uhel:UHLY[s.uhel].nazev,st:UHLY[s.uhel].st,pct:s.pct,hits:s.hits.length})),
+    urvek:lastAnalysis.text.slice(0,300)
+  };
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);
+  a.download='analyza_'+new Date().toISOString().slice(0,10)+'.json';a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+function resetAll() {
+  document.getElementById('txt').value='';
+  document.getElementById('highlighted').innerHTML='';document.getElementById('highlighted').style.display='none';
+  document.getElementById('results').style.display='none';
+  document.getElementById('angle-detail').className='angle-detail';
+  document.getElementById('highlightBtn').classList.remove('active');
+  highlightOn=false;lastText='';lastAnalysis=null;selectedDeg=null;
+  drawWheel();
+}
+
+// Events
+document.getElementById('analyzeBtn').addEventListener('click',analyze);
+document.getElementById('highlightBtn').addEventListener('click',toggleHighlight);
+document.getElementById('resetBtn').addEventListener('click',resetAll);
+document.getElementById('saveBtn').addEventListener('click',saveToZapisnik);
+document.getElementById('downloadBtn').addEventListener('click',downloadResults);
+document.getElementById('printBtn').addEventListener('click',()=>window.print());
+</script>
+</body>
+</html>
